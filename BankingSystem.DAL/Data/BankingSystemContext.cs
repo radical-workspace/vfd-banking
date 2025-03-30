@@ -8,5 +8,9 @@ namespace BankingSystem.DAL.Data
 {
     public class BankingSystemContext
     {
+        public BankingSystemContext()
+        {
+            
+        }
     }
 }
