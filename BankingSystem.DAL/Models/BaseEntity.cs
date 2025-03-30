@@ -11,6 +11,7 @@ namespace BankingSystem.DAL.Models
     {
         public int Id { get; set; }
         //sobhe
+        //sobhe 2
 
     }
 }
