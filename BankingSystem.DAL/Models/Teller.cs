@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Models
 {
-   public class BaseEntity
+    public class Teller:User
     {
-        public int Id { get; set; }
+
     }
 }

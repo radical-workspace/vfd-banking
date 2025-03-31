@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Models
 {
-   public class BaseEntity
+    public class Department:BaseEntity
     {
-        public int Id { get; set; }
+        public string Name { get; set; } = null!;
+        public bool IsDeleted { get; set; }
+
     }
 }
