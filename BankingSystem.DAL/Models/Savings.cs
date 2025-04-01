@@ -7,19 +7,15 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Models
 {
-    public class Department:BaseEntity
+    public class Savings : BaseEntity
     {
-        public string Name { get; set; } = null!;
         public bool IsDeleted { get; set; }
-
-
-        [ForeignKey(nameof(Manager))]
-        public int ManagerId{ get; set; }
-        public Manager Manager { get; set; } = null!;
-
         [ForeignKey(nameof(Branch))]
-        public int BranchId { get; set; }
+        public int BracketId { get; set; }
         public Branch Branch { get; set; } = null!;
+        public string Currency { get; set; }=null!;
+        public decimal Balance{ get; set; }
+
 
 
     }

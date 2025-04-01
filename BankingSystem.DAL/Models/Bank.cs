@@ -7,13 +7,16 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Models
 {
-    public  class Bank:BaseEntity
+    public class Bank : BaseEntity
     {
         public string Name { get; set; } = null!;
         public string CentralAddress { get; set; } = null!;
+       
         public int ManagerId { get; set; }
 
         [ForeignKey(nameof(ManagerId))]
-        public Manager Manager { get; set; } = null!; 
+        public Manager Manager { get; set; } = null!;
+
+        public List<Branch> Branches { get; set; } = [];
     }
 }
