@@ -1,3 +1,6 @@
+using BankingSystem.DAL.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace BankingSystem.PL
 {
     public class Program
@@ -6,8 +9,12 @@ namespace BankingSystem.PL
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            #region Configure Services
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddDbContext<BankingSystemContext>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            #endregion
 
             var app = builder.Build();
 

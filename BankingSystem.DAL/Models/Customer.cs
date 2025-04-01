@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Models
 {
-   public class BaseEntity
+    public class Customer :User
     {
-        public int Id { get; set; }
-        //sobhe
-        //sobhe 2
-
+        public List<Transactionn>? Transactionns { get; set; }
+       
+        public List<Loan>? Loans { get; set; } 
     }
 }
