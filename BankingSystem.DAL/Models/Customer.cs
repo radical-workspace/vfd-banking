@@ -8,6 +8,8 @@ namespace BankingSystem.DAL.Models
 {
     public class Customer :User
     {
-        
+        public List<Transactionn>? Transactionns { get; set; }
+       
+        public List<Loan>? Loans { get; set; } 
     }
 }

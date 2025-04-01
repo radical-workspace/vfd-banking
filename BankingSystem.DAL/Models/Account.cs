@@ -19,5 +19,6 @@ namespace BankingSystem.DAL.Models
         public bool IsDeleted { get; set; }
 
         public AccountType AccountType { get; set; }
+        public List<Transactionn>? AccountTransactionns{ get; set; }
     }
 }

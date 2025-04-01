@@ -8,5 +8,7 @@ namespace BankingSystem.DAL.Models
 {
     public class Manager :User
     {
+        public Branch Branch { get; set; } = null!;
+        public Bank  Bank{ get; set; } = null!;
     }
 }

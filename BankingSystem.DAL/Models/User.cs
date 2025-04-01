@@ -19,7 +19,6 @@ namespace BankingSystem.DAL.Models
 
         public DateTime BirthDate { get; set; }
 
-       
         public bool IsDeleted { get; set; }
     }
 }

@@ -31,6 +31,9 @@ namespace BankingSystem.DAL.Data.Configurations
             builder.Property(l => l.LoanType)
                 .HasConversion<string>();
 
+            builder.Property(l => l.LoanStatus)
+               .HasConversion<string>();
+
             // Default Date to current timestamp
             builder.Property(L => L.Date)
                          .HasColumnType("date");
