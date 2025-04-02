@@ -1,4 +1,3 @@
-﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -19,8 +18,8 @@ namespace BankingSystem.DAL.Models
         public List<Department> Departments { get; set; } = null!;
         public List<Savings> Savings  { get; set; } = null!;
 
-    
+   
+
+
     }
-
-
 }
