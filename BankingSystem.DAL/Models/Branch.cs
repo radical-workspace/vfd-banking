@@ -1,5 +1,3 @@
-﻿using BankingSystem.DAL.User;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -8,18 +6,20 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Models
 {
-    public class Branch : IBaseEntity
+    public class Branch : BaseEntity
     {
-        public int Id { get; set; }
+        public string Location { get; set; } = null!;
         public bool IsDeleted { get; set; }
-        public string Location { get; set; } = string.Empty;
-        public TimeOnly OpenAt { get; set; }
-        public DateTime CloseAt { get; set; }
+        public DateTime Opens { get; set; }
+        public DateTime Closes { get; set; }
+        public List<Loan>? Loans { get; set; }
+        public List<Customer> Customers { get; set; } = [];
+        public List<Teller> Tellers { get; set; } = [];
+        public List<Department> Departments { get; set; } = [];
+        public List<Savings> Savings  { get; set; } = null!;
 
-        public DateTime CreatedAt { get; set; }
-        public Dictionary<string, decimal> TotalSavings { get; set; } = null!;
-
-        public List<CustomerProfile> Customers { get; set; } = [];
-        public List<EmployeeProfile> Employees { get; set; } = [];
+        [ForeignKey(nameof(Manager))]
+        public int? ManagerId { get; set; }
+        public Manager? Manager { get; set; }
     }
 }
