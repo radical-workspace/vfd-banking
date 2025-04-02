@@ -10,14 +10,10 @@ namespace BankingSystem.DAL.Models
     public class Customer :User
     {
 
-        public List<Transactionn>? Transactionns { get; set; }
+        public List<Transaction>? Transactionns { get; set; }
        
         public List<Loan>? Loans { get; set; }
         public List<Account>? Accounts { get; set; }
-
-        [ForeignKey(nameof(Branch))]
-        public int BranchId { get; set; }
-        public Branch Branch { get; set; } = null!;
 
         [ForeignKey(nameof(Card))]
         public int CardId { get; set; }

@@ -12,7 +12,6 @@ namespace BankingSystem.DAL.Models
         public string Location { get; set; } = null!;
         public bool IsDeleted { get; set; }
 
-  
         public DateTime Opens { get; set; }
         public DateTime Closes { get; set; }
         public decimal TotalSavings { get; set; }

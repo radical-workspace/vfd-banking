@@ -7,7 +7,13 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Models
 {
-    public class Transactionn:BaseEntity
+    public enum TransationType
+    {
+        Deposit = 1,
+        Withdraw = 2,
+        Transfer = 3
+    }
+    public class Transaction:BaseEntity
     {
         public double Amount { get; set; }
 
@@ -15,12 +21,9 @@ namespace BankingSystem.DAL.Models
 
         public string Status { get; set; } = null!;
 
-
         public bool IsDeleted{ get; set; }
 
-        [ForeignKey(nameof(Customer))]
-        public int CustomerId { get; set; }
-        public Customer Customer { get; set; } = null!;
+        public TransationType Type { get; set; }
 
         [ForeignKey(nameof(Account))]
 

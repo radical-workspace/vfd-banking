@@ -16,7 +16,5 @@ namespace BankingSystem.DAL.Models
         public string Currency { get; set; }=null!;
         public decimal Balance{ get; set; }
 
-
-
     }
 }
