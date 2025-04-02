@@ -17,10 +17,8 @@ namespace BankingSystem.PL
 
             builder.Services.AddDbContext<BankingSystemContext>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             #endregion
-            // Add Identity with custom user and roles
-          
 
-            // Add authorization policies for each role
+
         
             var app = builder.Build();
 
