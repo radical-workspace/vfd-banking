@@ -1,3 +1,4 @@
+using BankingSystem.DAL.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
