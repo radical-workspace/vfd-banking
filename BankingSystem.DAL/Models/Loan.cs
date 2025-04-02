@@ -33,7 +33,7 @@ namespace BankingSystem.DAL.Models
         public LoanStatus LoanStatus { get; set; }
         public LoanType LoanType { get; set; }
         public DateTime StartDate { get; set; }
-        public List<Payment> Payments { get; set; } = [];
+        public List<Payment> Payments { get; set; } = null!;
 
         #region RelationShips
 

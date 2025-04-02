@@ -18,26 +18,10 @@ namespace BankingSystem.DAL.Configurations
             builder.Property(c => c.IsDeleted)
                    .IsRequired();
 
-            // Relationships
-            builder.HasMany(c => c.Transactionns)
-                   .WithOne(t => t.Customer)
-                   .HasForeignKey(t => t.CustomerId)
-                   .OnDelete(DeleteBehavior.Cascade);
+      
+         
 
-            builder.HasMany(c => c.Loans)
-                   .WithOne(l => l.Customer)
-                   .HasForeignKey(l => l.CustomerId)
-                   .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasMany(c => c.Accounts)
-                   .WithOne(a => a.Customer)
-                   .HasForeignKey(a => a.CustomerId)
-                   .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasOne(c => c.Card)
-                   .WithOne()
-                   .HasForeignKey<Customer>(c => c.CardId)
-                   .OnDelete(DeleteBehavior.Cascade);
+           
         }
     }
 }
