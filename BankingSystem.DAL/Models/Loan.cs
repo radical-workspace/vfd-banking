@@ -26,7 +26,7 @@ namespace BankingSystem.DAL.Models
     public class Loan : BaseEntity
     {
         public double LoanAmount { get; set; }
-        public decimal CurrentDebt { get; set; }
+        public double CurrentDebt { get; set; }
         public double InterestRate { get; set; }
         public bool IsDeleted { get; set; }
         public int DurationInMonth { get; set; }
@@ -53,9 +53,7 @@ namespace BankingSystem.DAL.Models
 
         public Branch Branch { get; set; } = null!;
 
-        [ForeignKey(nameof(Teller))]
-        public int TellerId { get; set; }
-        public Teller Teller { get; set; } = null!;
+    
         #endregion
 
 

@@ -18,8 +18,6 @@ namespace BankingSystem.DAL.Data.Configurations
                     .HasMaxLength(50)
                     .IsRequired();
          
-           
-                   
 
             builder.Property(Br => Br.IsDeleted)
                     .HasDefaultValue(false);

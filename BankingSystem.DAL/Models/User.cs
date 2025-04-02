@@ -10,6 +10,7 @@ namespace BankingSystem.DAL.Models
 {
     public class User : BaseEntity
     {
+      
         public int SSN { get; set; }
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
@@ -18,6 +19,11 @@ namespace BankingSystem.DAL.Models
         public DateTime JoinDate { get; set; }
         public DateTime BirthDate { get; set; }
         public bool IsDeleted { get; set; }
+
+        [ForeignKey(nameof(Branch))]
+        public int? BranchId { get; set; }
+        public Branch Branch { get; set; } = null!;
+
     }
 
 

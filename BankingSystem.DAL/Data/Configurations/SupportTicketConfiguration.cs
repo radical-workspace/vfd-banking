@@ -11,9 +11,6 @@ namespace BankingSystem.DAL.Configurations
          
            
 
-     
-           
-
             // Properties
             builder.Property(st => st.Title)
                    .IsRequired()
