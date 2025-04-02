@@ -9,5 +9,8 @@ namespace BankingSystem.DAL.Models
    public class BaseEntity
     {
         public int Id { get; set; }
+        //sobhe
+        //sobhe 2
+
     }
 }

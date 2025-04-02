@@ -7,20 +7,30 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Models
 {
-    public class Transactionn:BaseEntity
+    public enum TransationType
+    {
+        Deposit = 1,
+        Withdraw = 2,
+        Transfer = 3
+    }
+    public enum TransationStatus
+    {
+        Pending,
+        Denied,
+        Accepted
+    }
+
+    public class MyTransaction:BaseEntity
     {
         public double Amount { get; set; }
 
         public DateTime Date { get; set; }
 
-        public string Status { get; set; } = null!;
-
+        public TransationStatus Status { get; set; }
 
         public bool IsDeleted{ get; set; }
 
-        [ForeignKey(nameof(Customer))]
-        public int CustomerId { get; set; }
-        public Customer Customer { get; set; } = null!;
+        public TransationType Type { get; set; }
 
         [ForeignKey(nameof(Account))]
 

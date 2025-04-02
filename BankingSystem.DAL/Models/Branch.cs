@@ -11,22 +11,18 @@ namespace BankingSystem.DAL.Models
     {
         public string Location { get; set; } = null!;
         public bool IsDeleted { get; set; }
-
-  
         public DateTime Opens { get; set; }
         public DateTime Closes { get; set; }
-        public decimal TotalSavings { get; set; } 
-
-
-
         public List<Loan>? Loans { get; set; }
+        public List<Customer> Customers { get; set; } = [];
+        public List<Teller> Tellers { get; set; } = [];
+        public List<Department> Departments { get; set; } = [];
+        public List<Savings> Savings  { get; set; } = null!;
 
         [ForeignKey(nameof(Manager))]
         public int? ManagerId { get; set; }
         public Manager? Manager { get; set; }
 
 
-        //public List<CustomerProfile> Customers { get; set; } = [];
-        //public List<EmployeeProfile> Employees { get; set; } = [];
     }
 }

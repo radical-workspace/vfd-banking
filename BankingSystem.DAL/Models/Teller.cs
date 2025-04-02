@@ -18,6 +18,5 @@ namespace BankingSystem.DAL.Models
         public int BranchId { get; set; }
         public Branch Branch { get; set; } = null!;
 
-        public List<Loan>? Loans { get; set; }
     }
 }

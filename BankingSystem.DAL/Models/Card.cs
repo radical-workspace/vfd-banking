@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,16 @@ namespace BankingSystem.DAL.Models
         public DateTime CreationDate { get; set; }
 
         public TypeOfCard CardType { get; set; }
+
+        [ForeignKey(nameof(Account))]
+        public int AccountId { get; set; }
+        public Account Account { get; set; } = null!;
+
+        [ForeignKey(nameof(Customer))]
+        public int CustomerId { get; set; }
+        public Customer Customer { get; set; } = null!;
+
+
 
 
     }

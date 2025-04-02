@@ -10,9 +10,9 @@ using System.Transactions;
 
 namespace BankingSystem.DAL.Data.Configurations
 {
-    public class TransactionnnConfiguration : IEntityTypeConfiguration<Transactionn>
+    public class MyTransactionConfiguration : IEntityTypeConfiguration<Models.MyTransaction>
     {
-        public void Configure(EntityTypeBuilder<Transactionn> builder)
+        public void Configure(EntityTypeBuilder<Models.MyTransaction> builder)
         {
             // Ensure Amount is a decimal for financial precision
 
@@ -28,10 +28,14 @@ namespace BankingSystem.DAL.Data.Configurations
                 .HasColumnType("datetime2")
                 .HasDefaultValueSql("GETDATE()");
 
-            
+
             builder.Property(T => T.Status)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasConversion<string>();
+
+            builder.Property(T => T.Type)
+                .IsRequired()
+                .HasConversion<string>();
 
             builder.Property(T => T.IsDeleted)
                     .HasDefaultValue(false);

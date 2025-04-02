@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
@@ -12,13 +13,28 @@ namespace BankingSystem.DAL.Models
         Saving=1,
         Current=2
     }
+
+
     public class Account:BaseEntity
     {
         public double? Balance { get; set; }
 
         public bool IsDeleted { get; set; }
 
+        public DateTime CreatedAt { get; set; }
         public AccountType AccountType { get; set; }
-        public List<Transactionn>? AccountTransactionns{ get; set; }
+        public List<MyTransaction>? AccountTransactionns{ get; set; }
+        public List<Certificate> Certificates { get; set; } = [];
+
+        public List<Loan> Loans { get; set; } = [] ;
+   
+        [ForeignKey(nameof(Customer))]
+        public int CustomerId { get; set; }
+        public Customer Customer { get; set; } = null!;
+
+        [ForeignKey(nameof(Card))]
+        public int CardId { get; set; }
+        public Card Card { get; set; } = null!;
+
     }
 }
