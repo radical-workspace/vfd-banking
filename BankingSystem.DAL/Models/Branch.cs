@@ -13,9 +13,9 @@ namespace BankingSystem.DAL.Models
         public DateTime Opens { get; set; }
         public DateTime Closes { get; set; }
         public List<Loan>? Loans { get; set; }
-        public List<Customer> Customers { get; set; } = [];
-        public List<Teller> Tellers { get; set; } = [];
-        public List<Department> Departments { get; set; } = [];
+        public List<Customer> Customers { get; set; } = null!;
+        public List<Teller> Tellers { get; set; } = null!;
+        public List<Department> Departments { get; set; } = null!;
         public List<Savings> Savings  { get; set; } = null!;
 
         [ForeignKey(nameof(Manager))]

@@ -17,9 +17,9 @@ namespace BankingSystem.DAL.Data.Configurations
             builder.Property(Br => Br.Location)
                     .HasMaxLength(50)
                     .IsRequired();
-            builder.Property(Br => Br.TotalSavings)
-                 .HasColumnType("decimal(18,4)")
-                 .IsRequired();
+         
+           
+                   
 
             builder.Property(Br => Br.IsDeleted)
                     .HasDefaultValue(false);

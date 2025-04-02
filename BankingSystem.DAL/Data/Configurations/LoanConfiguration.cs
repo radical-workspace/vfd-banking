@@ -19,7 +19,7 @@ namespace BankingSystem.DAL.Data.Configurations
                 .IsRequired();
 
             // Configure Profit with decimal precision
-            builder.Property(l => l.Profit)
+            builder.Property(l => l.InterestRate)
                 .HasColumnType("decimal(18,4)")
                 .IsRequired();
 
@@ -35,7 +35,7 @@ namespace BankingSystem.DAL.Data.Configurations
                .HasConversion<string>();
 
             // Default Date to current timestamp
-            builder.Property(L => L.Date)
+            builder.Property(L => L.StartDate)
                          .HasColumnType("date");
         }
     }

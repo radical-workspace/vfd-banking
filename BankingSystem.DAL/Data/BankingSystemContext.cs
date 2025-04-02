@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Data
 {
-    public class BankingSystemContext(DbContextOptions<BankingSystemContext> options) : IdentityDbContext(options)
+    public class BankingSystemContext(DbContextOptions<BankingSystemContext> options) : DbContext(options)
     {
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

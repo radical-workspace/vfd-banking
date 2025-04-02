@@ -20,17 +20,13 @@ namespace BankingSystem.DAL.Configurations
 
             builder.Property(s => s.Currency)
                    .IsRequired()
-                   .HasMaxLength(3); // Assuming currency code length is 3
+                   .HasMaxLength(10); 
 
             builder.Property(s => s.Balance)
                    .IsRequired()
-                   .HasColumnType("decimal(18,2)");
+                   .HasColumnType("decimal(18,4)");
 
-            // Relationships
-            builder.HasOne(s => s.Branch)
-                   .WithMany(b => b.Savings)
-                   .HasForeignKey(s => s.BracketId)
-                   .OnDelete(DeleteBehavior.Cascade);
+          
         }
     }
 }
