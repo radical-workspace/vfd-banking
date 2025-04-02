@@ -10,6 +10,7 @@ namespace BankingSystem.DAL.Models
         public DateTime ExpiryDate { get; set; }
         public double Amount { get; set; }
         public bool IsDeleted { get; set; }
+        public double InterestRate { get; set; }
 
         [ForeignKey(nameof(Account))]
         public int AccountId { get; set; }

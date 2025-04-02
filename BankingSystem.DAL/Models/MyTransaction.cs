@@ -13,13 +13,20 @@ namespace BankingSystem.DAL.Models
         Withdraw = 2,
         Transfer = 3
     }
-    public class Transaction:BaseEntity
+    public enum TransationStatus
+    {
+        Pending,
+        Denied,
+        Accepted
+    }
+
+    public class MyTransaction:BaseEntity
     {
         public double Amount { get; set; }
 
         public DateTime Date { get; set; }
 
-        public string Status { get; set; } = null!;
+        public TransationStatus Status { get; set; }
 
         public bool IsDeleted{ get; set; }
 

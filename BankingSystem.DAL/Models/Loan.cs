@@ -22,16 +22,18 @@ namespace BankingSystem.DAL.Models
         Accepted,
         Paid
     }
+
     public class Loan : BaseEntity
     {
         public double LoanAmount { get; set; }
-
-        public LoanStatus LoanStatus { get; set; }
+        public decimal CurrentDebt { get; set; }
         public double InterestRate { get; set; }
         public bool IsDeleted { get; set; }
         public int DurationInMonth { get; set; }
+        public LoanStatus LoanStatus { get; set; }
         public LoanType LoanType { get; set; }
         public DateTime StartDate { get; set; }
+        public List<Payment> Payments { get; set; } = [];
 
         #region RelationShips
 
