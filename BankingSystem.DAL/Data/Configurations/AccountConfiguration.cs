@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,7 +24,13 @@ namespace BankingSystem.DAL.Data.Configurations
 
             
             builder.Property(a => a.IsDeleted)
-                .HasDefaultValue(false);
+            .HasDefaultValue(false);
+
+         builder.HasOne(a => a.Card)
+            .WithOne(c => c.Account)
+            .HasForeignKey<Card>(c => c.AccountId);
+
+
         }
     }
 }

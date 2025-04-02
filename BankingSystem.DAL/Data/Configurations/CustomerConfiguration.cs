@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using BankingSystem.DAL.Models;
+using System.Reflection.Emit;
 
 namespace BankingSystem.DAL.Configurations
 {
@@ -8,20 +9,12 @@ namespace BankingSystem.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<Customer> builder)
         {
-            // Table name
-            builder.ToTable("Customers");
 
-            // Primary key
-            builder.HasKey(c => c.Id);
-
-            // Properties
-            builder.Property(c => c.IsDeleted)
-                   .IsRequired();
-
-      
-         
-
-           
+        builder
+       .HasOne(c => c.Branch)
+       .WithMany(b => b.Customers) // Assuming Branch has many Customers
+       .HasForeignKey(c => c.BranchId) // Explicit FK
+       .OnDelete(DeleteBehavior.SetNull); // Or Cascade
         }
     }
 }

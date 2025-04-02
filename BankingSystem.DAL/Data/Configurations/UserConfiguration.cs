@@ -61,9 +61,7 @@ namespace BankingSystem.DAL.Data.Configurations
                     .HasValue<Customer>("Customer");
                     
 
-            //builder.HasDiscriminator<string>("UserType")
-            // .HasValue<Frontend>("Frontend")
-            // .HasValue<Kitchen>("Kitchen");
+        
 
 
 

@@ -18,8 +18,8 @@ namespace BankingSystem.DAL.Models
         public List<Department> Departments { get; set; } = null!;
         public List<Savings> Savings  { get; set; } = null!;
 
-        [ForeignKey(nameof(Manager))]
-        public int? ManagerId { get; set; }
-        public Manager? Manager { get; set; }
+   
+
+
     }
 }

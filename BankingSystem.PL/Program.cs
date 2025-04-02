@@ -17,7 +17,7 @@ namespace BankingSystem.PL
 
             builder.Services.AddDbContext<BankingSystemContext>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             #endregion
-       
+
 
         
             var app = builder.Build();

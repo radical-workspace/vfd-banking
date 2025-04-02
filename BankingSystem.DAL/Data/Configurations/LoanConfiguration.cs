@@ -18,6 +18,11 @@ namespace BankingSystem.DAL.Data.Configurations
                 .HasColumnType("decimal(18,4)")
                 .IsRequired();
 
+            builder.Property(L => L.CurrentDebt)
+                .HasColumnType("decimal(18,4)")
+                .IsRequired();
+
+
             // Configure Profit with decimal precision
             builder.Property(l => l.InterestRate)
                 .HasColumnType("decimal(18,4)")
