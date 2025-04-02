@@ -10,7 +10,7 @@ namespace BankingSystem.DAL.Models
     public class Customer :User
     {
 
-        public List<Transaction>? Transactionns { get; set; }
+        public List<Transaction>? Transactions { get; set; }
        
         public List<Loan>? Loans { get; set; }
         public List<Account>? Accounts { get; set; }

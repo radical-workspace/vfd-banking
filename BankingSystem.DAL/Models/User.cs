@@ -13,11 +13,8 @@ namespace BankingSystem.DAL.Models
         public string LastName { get; set; } = null!;     
         public string Address { get; set; } = null!;
         public string Phone { get; set; } = null!;
-
         public DateTime JoinDate { get; set; }
-
         public DateTime BirthDate { get; set; }
-
         public bool IsDeleted { get; set; }
     }
 }

@@ -18,11 +18,11 @@ namespace BankingSystem.DAL.Models
     {
         AccountIssue,
         LoanIssue,
-        TransacionIssue,
+        TransactionIssue,
         Other
     }
 
-    internal class SupportTicket : BaseEntity
+    public class SupportTicket : BaseEntity
     {
         public string Title { get; set; } = null!;
         public string Description { get; set; } = null!;
