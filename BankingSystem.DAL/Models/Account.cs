@@ -1,8 +1,8 @@
-﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Security.Principal;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,8 +13,6 @@ namespace BankingSystem.DAL.Models
         Saving=1,
         Current=2
     }
-
-
     public class Account:BaseEntity
     {
         public double? Balance { get; set; }

@@ -58,7 +58,5 @@ namespace BankingSystem.DAL.Models
         public Teller Teller { get; set; } = null!;
         #endregion
 
-
-
     }
 }

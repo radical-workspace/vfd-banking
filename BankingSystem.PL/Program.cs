@@ -1,5 +1,7 @@
 using BankingSystem.DAL.Data;
 using Microsoft.EntityFrameworkCore;
+using BankingSystem.DAL.User;
+using Microsoft.AspNetCore.Identity;
 
 namespace BankingSystem.PL
 {
@@ -15,7 +17,16 @@ namespace BankingSystem.PL
 
             builder.Services.AddDbContext<BankingSystemContext>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             #endregion
+            // Add Identity with custom user and roles
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<BankingSystemContext>()
+                .AddDefaultTokenProviders();
 
+            // Add authorization policies for each role
+            builder.Services.AddAuthorizationBuilder()
+                            .AddPolicy("CustomerOnly", policy => policy.RequireRole("Customer"))
+                            .AddPolicy("TellerOnly", policy => policy.RequireRole("Teller"))
+                            .AddPolicy("ManagerOnly", policy => policy.RequireRole("Manager"));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -29,6 +40,7 @@ namespace BankingSystem.PL
             app.UseHttpsRedirection();
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapStaticAssets();
