@@ -14,7 +14,7 @@ namespace BankingSystem.DAL.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-            //base.OnModelCreating(modelBuilder);
+           
         }
         public DbSet <Account> Accounts { get; set; }
         public DbSet <Bank> Banks { get; set; }
@@ -27,9 +27,7 @@ namespace BankingSystem.DAL.Data
         public DbSet<Savings> Savings { get; set; }
         public DbSet<SupportTicket> SupportTickets { get; set; }
         public DbSet<MyTransaction> Transactions { get; set; }
-        
-        //public DbSet<Teller> Tellers { get; set; }
-        //public DbSet<Customer> Customers { get; set; }
+   
         public DbSet<User> Users { get; set; }
     }
 }
