@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Models
 {
-    public class User : IdentityUser
+    public class ApplicationUser : IdentityUser
     {
         public int SSN { get; set; }
         public string FirstName { get; set; } = null!;

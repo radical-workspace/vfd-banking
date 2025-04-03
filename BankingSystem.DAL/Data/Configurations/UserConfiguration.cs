@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Data.Configurations
 {
-    public class UserConfiguration : IEntityTypeConfiguration<User>
+    public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
     {
-        public void Configure(EntityTypeBuilder<User> builder)
+        public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
             //Id
-            builder.Property(U => U.Id)
-                   .UseIdentityColumn(1, 1)
-                   .IsRequired();
+            //builder.Property(U => U.Id)
+            //       .UseIdentityColumn(1, 1)
+            //       .IsRequired();
 
             //SSN
             builder.Property(U => U.SSN)

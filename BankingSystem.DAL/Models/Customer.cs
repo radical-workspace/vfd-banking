@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Models
 {
-    public class Customer :User
+    public class Customer :ApplicationUser
     {
         public List<MyTransaction>? Transactions { get; set; }
        

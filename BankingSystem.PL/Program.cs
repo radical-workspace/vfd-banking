@@ -20,7 +20,7 @@ namespace BankingSystem.PL
             builder.Services.AddDbContext<BankingSystemContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<BankingSystemContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
@@ -57,14 +57,14 @@ namespace BankingSystem.PL
             using (var scope = app.Services.CreateScope())
             {
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
                 SeedRoles(roleManager, userManager).Wait();
             }
 
             app.Run();
         }
 
-        private static async Task SeedRoles(RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
+        private static async Task SeedRoles(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
         {
             string[] roleNames = { "Teller", "Customer", "Manager" };
             IdentityResult roleResult;
@@ -79,7 +79,7 @@ namespace BankingSystem.PL
             }
 
             // Create a default admin user
-            var adminUser = new User
+            var adminUser = new ApplicationUser
             {
                 UserName = "admin@admin.com",
                 Email = "admin@admin.com",

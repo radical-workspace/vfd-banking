@@ -27,7 +27,7 @@ namespace BankingSystem.DAL.Models
         public List<Loan> Loans { get; set; } = [] ;
    
         [ForeignKey(nameof(Customer))]
-        public int? CustomerId { get; set; }
+        public string? CustomerId { get; set; }
         public Customer Customer { get; set; } = null!;
 
 

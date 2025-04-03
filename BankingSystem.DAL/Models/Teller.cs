@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Models
 {
-    public class Teller:User
+    public class Teller:ApplicationUser
     {
         [ForeignKey(nameof(Department))]
         public int? DeptId { get; set; }
