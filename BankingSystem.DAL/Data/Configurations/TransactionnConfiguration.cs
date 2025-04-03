@@ -19,15 +19,13 @@ namespace BankingSystem.DAL.Data.Configurations
             builder.Property(T => T.Id)
                     .UseIdentityColumn(1000, 1);
 
-            builder.Property(T => T.Amount)
-                .HasColumnType("decimal(18,4)")
-                .IsRequired();
+            builder.Property(T => T.DoneVia)
+                .IsRequired()
+                .HasMaxLength(50);  
 
-            // Set default value for Date
-            builder.Property(T => T.Date)
-                .HasColumnType("datetime2")
-                .HasDefaultValueSql("GETDATE()");
-
+            builder.Property(T => T.PaymentId)
+                .IsRequired()
+                .HasColumnName("PaymentId"); // FK
 
             builder.Property(T => T.Status)
                 .IsRequired()

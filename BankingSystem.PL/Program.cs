@@ -17,8 +17,11 @@ namespace BankingSystem.PL
             builder.Services.AddControllersWithViews();
 
             // Configure Entity Framework and Identity
+            builder.Configuration.AddEnvironmentVariables();
+            var connectionString = Environment.GetEnvironmentVariable("MVCProjectDB", EnvironmentVariableTarget.User);
+
             builder.Services.AddDbContext<BankingSystemContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(connectionString));
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<BankingSystemContext>()
