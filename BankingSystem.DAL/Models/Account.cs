@@ -13,6 +13,12 @@ namespace BankingSystem.DAL.Models
         Saving = 1,
         Current = 2
     }
+    public enum AccountStatus
+    {
+        Active = 1,
+        Inactive = 2,
+        Closed = 3
+    }
     public class Account : BaseEntity
     {
         public double? Balance { get; set; }
@@ -21,6 +27,7 @@ namespace BankingSystem.DAL.Models
 
         public DateTime CreatedAt { get; set; }
         public AccountType AccountType { get; set; }
+        public AccountStatus AccountStatus { get; set; }
         public List<MyTransaction>? AccountTransactionns { get; set; }
         public List<Certificate> Certificates { get; set; } = [];
 
