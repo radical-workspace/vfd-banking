@@ -15,7 +15,6 @@ namespace BankingSystem.DAL.Models
     public class Card:BaseEntity
     {
         public string Number { get; set; } = null!;
-        public bool IsDeleted { get; set; }
 
         public string CVV { get; set; } = null!;
 
@@ -24,6 +23,7 @@ namespace BankingSystem.DAL.Models
         public DateTime CreationDate { get; set; }
 
         public TypeOfCard CardType { get; set; }
+        public bool IsDeleted { get; set; }
 
         [ForeignKey(nameof(Account))]
         public int AccountId { get; set; }

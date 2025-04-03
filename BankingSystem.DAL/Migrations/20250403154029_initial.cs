@@ -56,7 +56,8 @@ namespace BankingSystem.DAL.Migrations
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AccountType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    BranchId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -279,6 +280,7 @@ namespace BankingSystem.DAL.Migrations
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DoneVia = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AccountId = table.Column<int>(type: "int", nullable: true),
                     CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
@@ -430,6 +432,11 @@ namespace BankingSystem.DAL.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Accounts_BranchId",
+                table: "Accounts",
+                column: "BranchId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Accounts_CustomerId",
                 table: "Accounts",
                 column: "CustomerId");
@@ -564,6 +571,13 @@ namespace BankingSystem.DAL.Migrations
                 table: "Accounts",
                 column: "CustomerId",
                 principalTable: "AspNetUsers",
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Accounts_Branches_BranchId",
+                table: "Accounts",
+                column: "BranchId",
+                principalTable: "Branches",
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(

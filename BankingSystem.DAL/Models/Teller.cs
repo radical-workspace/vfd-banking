@@ -12,8 +12,5 @@ namespace BankingSystem.DAL.Models
         [ForeignKey(nameof(Department))]
         public int? DeptId { get; set; }
         public Department Department { get; set; } = null!;
-
-
-     
     }
 }

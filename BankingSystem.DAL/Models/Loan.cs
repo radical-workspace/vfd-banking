@@ -12,6 +12,7 @@ namespace BankingSystem.DAL.Models
         Car,
         Buisness,
         Real_State,
+        Other
 
     }
 
@@ -41,16 +42,13 @@ namespace BankingSystem.DAL.Models
         public int AccountId { get; set; }
         public Account Account { get; set; } = null!;
 
-        // i think that we should remove this relation 
-        // as you will access it through the account of the user
+        [ForeignKey(nameof(Customer))]
+        public int CustomerId { get; set; }
+        public Customer Customer { get; set; } = null!;
 
-        //[ForeignKey(nameof(Customer))]
-        //public int CustomerId { get; set; }
-        //public Customer Customer { get; set; } = null!;
 
         [ForeignKey(nameof(Branch))]
         public int BranchId { get; set; }
-
         public Branch Branch { get; set; } = null!;
 
     
