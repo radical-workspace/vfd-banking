@@ -37,6 +37,9 @@ namespace BankingSystem.DAL.Data.Configurations
 
             builder.Property(T => T.IsDeleted)
                     .HasDefaultValue(false);
+
+            builder.HasQueryFilter(P => !P.IsDeleted);
+
         }
     }
 }

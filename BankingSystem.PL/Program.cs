@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using BankingSystem.DAL.Models;
 using BankingSystem.BLL.Repositories;
+using BankingSystem.DAL.Data.Configurations;
 
 namespace BankingSystem.PL
 {
@@ -21,7 +22,8 @@ namespace BankingSystem.PL
             var connectionString = Environment.GetEnvironmentVariable("MVCProjectDB", EnvironmentVariableTarget.User);
 
             builder.Services.AddDbContext<BankingSystemContext>(options =>
-                options.UseSqlServer(connectionString));
+                                                                options.UseSqlServer(connectionString)
+                                                                       .AddInterceptors(new SoftDeleteInterceptor()));
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<BankingSystemContext>()

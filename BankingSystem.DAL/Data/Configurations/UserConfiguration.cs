@@ -13,11 +13,6 @@ namespace BankingSystem.DAL.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
-            //Id
-            //builder.Property(U => U.Id)
-            //       .UseIdentityColumn(1, 1)
-            //       .IsRequired();
-
             //SSN
             builder.Property(U => U.SSN)
                    .HasMaxLength(13)
@@ -49,8 +44,7 @@ namespace BankingSystem.DAL.Data.Configurations
            
             //BirthDate
             builder.Property(U => U.BirthDate)
-                  .HasColumnType("date")
-                   ;// Ensures only date is stored (without time)
+                  .HasColumnType("date");
 
             builder.Property(U => U.IsDeleted)
                         .HasDefaultValue(false);
@@ -59,12 +53,8 @@ namespace BankingSystem.DAL.Data.Configurations
                     .HasValue<Manager>("Manager")
                     .HasValue<Teller>("Teller")
                     .HasValue<Customer>("Customer");
-                    
 
-        
-
-
-
+            builder.HasQueryFilter(P => !P.IsDeleted);
 
         }
     }

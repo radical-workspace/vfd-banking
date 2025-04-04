@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Models
 {
-    public class Manager :ApplicationUser
+    public class Manager : ApplicationUser
     {
     }
 }

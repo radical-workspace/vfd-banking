@@ -10,7 +10,6 @@ namespace BankingSystem.DAL.Models
     public class Department:BaseEntity
     {
         public string Name { get; set; } = null!;
-        public bool IsDeleted { get; set; }
 
         [ForeignKey(nameof(Manager))]
         public string? ManagerId{ get; set; }

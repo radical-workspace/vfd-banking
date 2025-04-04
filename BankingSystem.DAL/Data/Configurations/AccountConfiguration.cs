@@ -28,8 +28,7 @@ namespace BankingSystem.DAL.Data.Configurations
 
             builder.HasMany(a => a.Cards)
                .WithOne(c => c.Account);
-                //.HasForeignKey<Card>(c => c.AccountId);
-
+            builder.HasQueryFilter(P => !P.IsDeleted);
 
         }
     }

@@ -23,7 +23,6 @@ namespace BankingSystem.DAL.Models
         public DateTime CreationDate { get; set; }
 
         public TypeOfCard CardType { get; set; }
-        public bool IsDeleted { get; set; }
 
         [ForeignKey(nameof(Account))]
         public int AccountId { get; set; }

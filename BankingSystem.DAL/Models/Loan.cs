@@ -29,7 +29,6 @@ namespace BankingSystem.DAL.Models
         public decimal LoanAmount { get; set; }
         public decimal CurrentDebt { get; set; }
         public int InterestRate { get; set; }
-        public bool IsDeleted { get; set; }
         public int DurationInMonth { get; set; }
         public LoanStatus LoanStatus { get; set; }
         public LoanType LoanType { get; set; }

@@ -41,6 +41,8 @@ namespace BankingSystem.DAL.Data.Configurations
             // Default Date to current timestamp
             builder.Property(L => L.StartDate)
                          .HasColumnType("date");
+            builder.HasQueryFilter(P => !P.IsDeleted);
+
         }
     }
 }

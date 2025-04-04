@@ -37,6 +37,9 @@ namespace BankingSystem.DAL.Configurations
                    .WithMany(a => a.Certificates)
                    .HasForeignKey(c => c.AccountId)
                    .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasQueryFilter(P => !P.IsDeleted);
+
         }
     }
 }

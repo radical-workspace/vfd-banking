@@ -25,6 +25,9 @@ namespace BankingSystem.DAL.Data.Configurations
             builder.Property(s => s.Balance)
                    .IsRequired()
                    .HasPrecision(18, 4);
+
+            builder.HasQueryFilter(P => !P.IsDeleted);
+
         }
     }
 }

@@ -23,7 +23,6 @@ namespace BankingSystem.DAL.Models
     {
         public double? Balance { get; set; }
 
-        public bool IsDeleted { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public AccountType AccountType { get; set; }

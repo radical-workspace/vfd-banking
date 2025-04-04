@@ -23,7 +23,6 @@ namespace BankingSystem.DAL.Models
     public class MyTransaction : BaseEntity
     {
         public TransationStatus Status { get; set; }
-        public bool IsDeleted { get; set; }
         public TransationType Type { get; set; }
         public string DoneVia { get; set; } = string.Empty;
         

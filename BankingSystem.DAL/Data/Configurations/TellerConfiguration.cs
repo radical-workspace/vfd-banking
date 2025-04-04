@@ -8,7 +8,6 @@ namespace BankingSystem.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<Teller> builder)
         {
-
         }
     }
 }

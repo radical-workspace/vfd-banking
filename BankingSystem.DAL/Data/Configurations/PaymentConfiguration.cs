@@ -28,6 +28,9 @@ namespace BankingSystem.DAL.Configurations
                    .WithMany(l => l.Payments)
                    .HasForeignKey(p => p.LoanId)
                    .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasQueryFilter(P => !P.IsDeleted);
+
         }
     }
 }

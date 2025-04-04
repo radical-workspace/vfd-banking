@@ -11,7 +11,6 @@ namespace BankingSystem.DAL.Models
     {
         public string Currency { get; set; } = null!;
         public decimal Balance { get; set; }
-        public bool IsDeleted { get; set; }
 
         [ForeignKey(nameof(Branch))]
         public int BranchId { get; set; }

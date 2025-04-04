@@ -31,7 +31,6 @@ namespace BankingSystem.DAL.Models
         public SupportTicketStatus Status { get; set; }
         public SupportTicketType Type { get; set; }
         public string? Response { get; set; }
-        public bool IsDeleted { get; set; }
 
         [ForeignKey(nameof(Customer))]
         public string? CustomerId { get; set; }

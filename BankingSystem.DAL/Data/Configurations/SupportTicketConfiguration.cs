@@ -33,9 +33,11 @@ namespace BankingSystem.DAL.Configurations
                    .IsRequired();
 
             builder.Property(st => st.Response)
-                   .HasMaxLength(1000); 
+                   .HasMaxLength(1000);
 
-     
+            builder.HasQueryFilter(P => !P.IsDeleted);
+
+
         }
     }
 }
