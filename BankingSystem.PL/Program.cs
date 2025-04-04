@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using BankingSystem.DAL.Models;
 using BankingSystem.BLL.Repositories;
 using BankingSystem.DAL.Data.Configurations;
+using BankingSystem.BLL;
+using BankingSystem.BLL.Interfaces;
 
 namespace BankingSystem.PL
 {
@@ -33,7 +35,7 @@ namespace BankingSystem.PL
 
 
             // Register Unit of Work
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IUniitOfWork ,UnitOfWork>();
 
             #endregion
 
@@ -72,7 +74,7 @@ namespace BankingSystem.PL
 
         private static async Task SeedRoles(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
         {
-            string[] roleNames = { "Teller", "Customer", "Manager" };
+            string[] roleNames = { "Teller", "Customer", "Manager" ,"Admin"};
             IdentityResult roleResult;
 
             foreach (var roleName in roleNames)
