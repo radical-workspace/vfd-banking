@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Models
 {
-    public class User : BaseEntity
+    public class ApplicationUser : IdentityUser, ISoftDeletable
     {
-      
         public int SSN { get; set; }
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;

@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using BankingSystem.DAL.Models;
 
-namespace BankingSystem.DAL.Configurations
+namespace BankingSystem.DAL.Data.Configurations
 {
     public class SavingsConfiguration : IEntityTypeConfiguration<Savings>
     {
@@ -24,9 +24,10 @@ namespace BankingSystem.DAL.Configurations
 
             builder.Property(s => s.Balance)
                    .IsRequired()
-                   .HasColumnType("decimal(18,4)");
+                   .HasPrecision(18, 4);
 
-          
+            builder.HasQueryFilter(P => !P.IsDeleted);
+
         }
     }
 }

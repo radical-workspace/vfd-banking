@@ -21,6 +21,8 @@ namespace BankingSystem.DAL.Data.Configurations
                     .IsRequired();
             builder.Property(D => D.IsDeleted)
                     .HasDefaultValue(false);
+            builder.HasQueryFilter(P => !P.IsDeleted);
+
         }
     }
 }
