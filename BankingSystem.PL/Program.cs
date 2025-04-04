@@ -19,10 +19,11 @@ namespace BankingSystem.PL
 
             // Configure Entity Framework and Identity
             builder.Configuration.AddEnvironmentVariables();
+            var DevelopmentconnectionString = builder.Configuration.GetConnectionString("MVCProjectDB");
             var connectionString = Environment.GetEnvironmentVariable("MVCProjectDB", EnvironmentVariableTarget.User);
 
             builder.Services.AddDbContext<BankingSystemContext>(options =>
-                                                                options.UseSqlServer(connectionString)
+                                                                options.UseSqlServer(DevelopmentconnectionString)
                                                                        .AddInterceptors(new SoftDeleteInterceptor()));
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -92,7 +93,6 @@ namespace BankingSystem.PL
                 LastName = "User",
                 SSN = 123456789,
                 Address = "Admin Address",
-                Phone = "123-456-7890",
                 JoinDate = DateTime.UtcNow,
                 BirthDate = DateTime.UtcNow.AddYears(-30),
                 IsDeleted = false

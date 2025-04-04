@@ -20,20 +20,21 @@ namespace BankingSystem.DAL.Configurations
                    .IsRequired()
                    .HasMaxLength(1000); // Assuming a max length for the description
 
-            builder.Property(st => st.IsDeleted)
-                   .IsRequired();
 
             builder.Property(st => st.Date)
-                   .IsRequired();
+                   .HasDefaultValueSql("GETDATE()");
 
             builder.Property(st => st.Status)
-                   .IsRequired();
+                  .HasConversion<string>();
 
             builder.Property(st => st.Type)
-                   .IsRequired();
+                   .HasConversion<string>();
 
             builder.Property(st => st.Response)
                    .HasMaxLength(1000);
+
+            builder.Property(st => st.IsDeleted)
+                  .HasDefaultValue(false);
 
             builder.HasQueryFilter(P => !P.IsDeleted);
 

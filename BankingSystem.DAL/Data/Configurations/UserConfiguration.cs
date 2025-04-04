@@ -32,9 +32,6 @@ namespace BankingSystem.DAL.Data.Configurations
                    .HasMaxLength(50)
                    .IsRequired();
 
-            //Phone
-            builder.Property(U => U.Phone)
-                   .HasMaxLength(11);
 
 
             //JoinDate

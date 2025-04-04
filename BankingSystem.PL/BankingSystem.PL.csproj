@@ -7,11 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BankingSystem.BLL\BankingSystem.BLL.csproj" />
+    <Compile Remove="ViewModels\**" />
+    <Content Remove="ViewModels\**" />
+    <EmbeddedResource Remove="ViewModels\**" />
+    <None Remove="ViewModels\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModels\" />
+    <ProjectReference Include="..\BankingSystem.BLL\BankingSystem.BLL.csproj" />
   </ItemGroup>
 
   <ItemGroup>

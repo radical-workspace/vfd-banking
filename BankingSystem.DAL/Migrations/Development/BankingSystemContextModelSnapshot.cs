@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BankingSystem.DAL.Migrations
+namespace BankingSystem.DAL.Migrations.Development
 {
     [DbContext(typeof(BankingSystemContext))]
     partial class BankingSystemContextModelSnapshot : ModelSnapshot
@@ -30,8 +30,9 @@ namespace BankingSystem.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AccountStatus")
-                        .HasColumnType("int");
+                    b.Property<string>("AccountStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AccountType")
                         .IsRequired()
@@ -137,11 +138,6 @@ namespace BankingSystem.DAL.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasMaxLength(11)
-                        .HasColumnType("nvarchar(11)");
-
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -193,7 +189,9 @@ namespace BankingSystem.DAL.Migrations
                         .HasColumnType("nvarchar(30)");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("ManagerId")
                         .IsRequired()
@@ -277,7 +275,9 @@ namespace BankingSystem.DAL.Migrations
                         .HasColumnType("date");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Number")
                         .IsRequired()
@@ -305,7 +305,7 @@ namespace BankingSystem.DAL.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,4)");
 
                     b.Property<string>("CertificateNumber")
                         .IsRequired()
@@ -319,16 +319,20 @@ namespace BankingSystem.DAL.Migrations
                         .HasColumnType("float");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<DateTime>("IssueDate")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
 
-                    b.ToTable("Certificates", (string)null);
+                    b.ToTable("Certificates");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Department", b =>
@@ -409,7 +413,9 @@ namespace BankingSystem.DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnType("date");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("date")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.HasKey("Id");
 
@@ -482,19 +488,23 @@ namespace BankingSystem.DAL.Migrations
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<int>("LoanId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("PaymentDate")
-                        .HasColumnType("date");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("date")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.HasKey("Id");
 
                     b.HasIndex("LoanId");
 
-                    b.ToTable("Payments", (string)null);
+                    b.ToTable("Payment");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Savings", b =>
@@ -518,13 +528,15 @@ namespace BankingSystem.DAL.Migrations
                         .HasColumnType("nvarchar(10)");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("Savings", (string)null);
+                    b.ToTable("Savings");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.SupportTicket", b =>
@@ -539,7 +551,9 @@ namespace BankingSystem.DAL.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -547,14 +561,17 @@ namespace BankingSystem.DAL.Migrations
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Response")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TellerId")
                         .HasColumnType("nvarchar(450)");
@@ -564,8 +581,9 @@ namespace BankingSystem.DAL.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

@@ -21,10 +21,10 @@ namespace BankingSystem.DAL.Data
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             // Configure the composite key for IdentityUserLogin<string>
-            modelBuilder.Entity<IdentityUserLogin<string>>(entity =>
-            {
-                entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
-            });
+            //modelBuilder.Entity<IdentityUserLogin<string>>(entity =>
+            //{
+            //    entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
+            //});
 
         }
         public DbSet <Account> Accounts { get; set; }

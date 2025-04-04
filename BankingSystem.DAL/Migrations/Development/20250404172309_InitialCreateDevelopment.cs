@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace BankingSystem.DAL.Migrations
+namespace BankingSystem.DAL.Migrations.Development
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialCreateDevelopment : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -53,12 +53,12 @@ namespace BankingSystem.DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Balance = table.Column<decimal>(type: "decimal(18,4)", nullable: true, defaultValue: 0m),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AccountType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AccountStatus = table.Column<int>(type: "int", nullable: false),
+                    AccountStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    BranchId = table.Column<int>(type: "int", nullable: true)
+                    BranchId = table.Column<int>(type: "int", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -72,12 +72,12 @@ namespace BankingSystem.DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CertificateNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    IssueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IssueDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     InterestRate = table.Column<double>(type: "float", nullable: false),
-                    AccountId = table.Column<int>(type: "int", nullable: false)
+                    AccountId = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -146,7 +146,6 @@ namespace BankingSystem.DAL.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
                     JoinDate = table.Column<DateTime>(type: "date", nullable: false, defaultValueSql: "GETDATE()"),
                     BirthDate = table.Column<DateTime>(type: "date", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
@@ -201,7 +200,8 @@ namespace BankingSystem.DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     CentralAddress = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    ManagerId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    ManagerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -225,9 +225,9 @@ namespace BankingSystem.DAL.Migrations
                     ExpDate = table.Column<DateTime>(type: "date", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "date", nullable: false, defaultValueSql: "GETDATE()"),
                     CardType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     AccountId = table.Column<int>(type: "int", nullable: false),
-                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -253,13 +253,13 @@ namespace BankingSystem.DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Response = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    TellerId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    TellerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -283,10 +283,10 @@ namespace BankingSystem.DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Location = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     Opens = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Closes = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BankId = table.Column<int>(type: "int", nullable: true)
+                    BankId = table.Column<int>(type: "int", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -305,9 +305,9 @@ namespace BankingSystem.DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "200, 1"),
                     Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     ManagerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    BranchId = table.Column<int>(type: "int", nullable: false)
+                    BranchId = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -334,14 +334,14 @@ namespace BankingSystem.DAL.Migrations
                     LoanAmount = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
                     CurrentDebt = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
                     InterestRate = table.Column<int>(type: "int", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     DurationInMonth = table.Column<int>(type: "int", nullable: false),
                     LoanStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LoanType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "date", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "date", nullable: false, defaultValueSql: "GETDATE()"),
                     AccountId = table.Column<int>(type: "int", nullable: false),
                     CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    BranchId = table.Column<int>(type: "int", nullable: false)
+                    BranchId = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -373,8 +373,8 @@ namespace BankingSystem.DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Currency = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Balance = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    BranchId = table.Column<int>(type: "int", nullable: false)
+                    BranchId = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -388,20 +388,21 @@ namespace BankingSystem.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Payments",
+                name: "Payment",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Amount = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
-                    PaymentDate = table.Column<DateTime>(type: "date", nullable: false),
-                    LoanId = table.Column<int>(type: "int", nullable: false)
+                    PaymentDate = table.Column<DateTime>(type: "date", nullable: false, defaultValueSql: "GETDATE()"),
+                    LoanId = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Payments", x => x.Id);
+                    table.PrimaryKey("PK_Payment", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Payments_Loans_LoanId",
+                        name: "FK_Payment_Loans_LoanId",
                         column: x => x.LoanId,
                         principalTable: "Loans",
                         principalColumn: "Id",
@@ -415,12 +416,12 @@ namespace BankingSystem.DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1000, 1"),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DoneVia = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     PaymentId = table.Column<int>(type: "int", nullable: false),
                     AccountId = table.Column<int>(type: "int", nullable: true),
-                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -436,9 +437,9 @@ namespace BankingSystem.DAL.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Transactions_Payments_PaymentId",
+                        name: "FK_Transactions_Payment_PaymentId",
                         column: x => x.PaymentId,
-                        principalTable: "Payments",
+                        principalTable: "Payment",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -553,8 +554,8 @@ namespace BankingSystem.DAL.Migrations
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Payments_LoanId",
-                table: "Payments",
+                name: "IX_Payment_LoanId",
+                table: "Payment",
                 column: "LoanId");
 
             migrationBuilder.CreateIndex(
@@ -700,7 +701,7 @@ namespace BankingSystem.DAL.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Payments");
+                name: "Payment");
 
             migrationBuilder.DropTable(
                 name: "Loans");

@@ -20,6 +20,10 @@ namespace BankingSystem.DAL.Data.Configurations
             builder.Property(B => B.CentralAddress)
                .HasMaxLength(30)
                .IsRequired();
+
+            builder.Property(B => B.IsDeleted)
+                .HasDefaultValue(false);
+
             builder.HasQueryFilter(P => !P.IsDeleted);
 
         }
