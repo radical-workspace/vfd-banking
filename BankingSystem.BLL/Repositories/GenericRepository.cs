@@ -1,4 +1,6 @@
-﻿using BankingSystem.DAL.Data;
+﻿using BankingSystem.BLL.Interfaces;
+using BankingSystem.DAL.Data;
+using BankingSystem.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,49 +11,46 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.BLL.Repositories
 {
-    public interface IRepository<T> where T : class
-    {
-        Task<T> GetByIdAsync(params object[] keyValues);
-        Task<IEnumerable<T>> GetAllAsync();
-        Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
-        Task AddAsync(T entity);
-        void Update(T entity);
-        void Remove(T entity);
-        Task RemoveAsync(params object[] keyValues);
-    }
 
-    public class GenericRepository<T>(BankingSystemContext context) : IRepository<T> where T : class
-    {
-        private readonly BankingSystemContext _context = context;
 
-        public async Task<T> GetByIdAsync(params object[] keyValues) => await _context.Set<T>().FindAsync(keyValues);
-        public async Task<IEnumerable<T>> GetAllAsync()
+    public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
+    {
+        private readonly BankingSystemContext _dbContext;
+
+        public GenericRepository(BankingSystemContext dbContext)
         {
-            return await _context.Set<T>().ToListAsync();
+           _dbContext = dbContext;
         }
-        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+        public void Add(T Entity)
         {
-            return await _context.Set<T>().Where(predicate).ToListAsync();
+          _dbContext.Set<T>().Add(Entity);
         }
-        public async Task AddAsync(T entity)
+
+        public void Delete(T Entity)
         {
-            await _context.Set<T>().AddAsync(entity);
+            _dbContext.Remove(Entity);
         }
-        public void Update(T entity)
+
+        public T? Get(int id)
         {
-            _context.Set<T>().Update(entity);
+            return _dbContext.Find<T>(id); 
         }
-        public void Remove(T entity)
+
+        public IEnumerable<T> GetAll()
         {
-            _context.Set<T>().Remove(entity);
+            //if (typeof(T) == typeof(Empolyee))
+            //{
+            //    return (IEnumerable<T>)_dbContext.Empolyees.Include(E => E.Department).AsNoTracking().ToList();
+            //}
+            
+                return _dbContext.Set<T>().AsNoTracking().ToList();
+            
         }
-        public async Task RemoveAsync(params object[] keyValues)
+
+        public void Update(T Entity)
         {
-            var entity = await GetByIdAsync(keyValues);
-            if (entity != null)
-            {
-                Remove(entity);
-            }
+            _dbContext.Update(Entity);
         }
     }
 }
+
