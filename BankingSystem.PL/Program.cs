@@ -6,6 +6,7 @@ using BankingSystem.BLL.Repositories;
 using BankingSystem.DAL.Data.Configurations;
 using BankingSystem.BLL;
 using BankingSystem.BLL.Interfaces;
+using BankingSystem.PL.Helpers;
 
 namespace BankingSystem.PL
 {
@@ -28,7 +29,13 @@ namespace BankingSystem.PL
                                                                 options.UseSqlServer(DevelopmentconnectionString)
                                                                        .AddInterceptors(new SoftDeleteInterceptor()));
 
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(op =>
+            {
+                op.Password.RequireUppercase = false;
+
+                op.Password.RequiredLength = 4;
+                op.Password.RequireNonAlphanumeric = false;
+            })
                 .AddEntityFrameworkStores<BankingSystemContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
@@ -36,6 +43,8 @@ namespace BankingSystem.PL
 
             // Register Unit of Work
             builder.Services.AddScoped<IUniitOfWork ,UnitOfWork>();
+
+            builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfile()));
 
             #endregion
 

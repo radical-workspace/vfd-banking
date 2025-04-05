@@ -15,7 +15,7 @@ namespace BankingSystem.DAL.Data.Configurations
         {
             //SSN
             builder.Property(U => U.SSN)
-                   .HasMaxLength(13)
+                    
                    .IsRequired();
             //FirstName
             builder.Property(U => U.FirstName)
@@ -49,7 +49,8 @@ namespace BankingSystem.DAL.Data.Configurations
             builder.HasDiscriminator<string>("Discriminator")
                     .HasValue<Manager>("Manager")
                     .HasValue<Teller>("Teller")
-                    .HasValue<Customer>("Customer");
+                    .HasValue<Customer>("Customer")
+                    .HasValue<Admin>("Admin");
 
             builder.HasQueryFilter(P => !P.IsDeleted);
 
