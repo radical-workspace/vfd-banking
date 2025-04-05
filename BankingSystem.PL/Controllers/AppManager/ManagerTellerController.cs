@@ -1,22 +1,28 @@
-﻿using BankingSystem.BLL.Interfaces;
+﻿using Azure.Core;
+using BankingSystem.BLL.Interfaces;
 using BankingSystem.DAL.Models;
 using BankingSystem.PL.ViewModels.Manager;
+using Humanizer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Metadata;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Data;
+using System.Reflection;
+using System;
 
-namespace BankingSystem.PL.Controllers
+namespace BankingSystem.PL.Controllers.Manager
 {
-    public class ManagerController : Controller
+    [Authorize(Roles = "Manager")]
+    public class ManagerTellerController(IUnitOfWork unitOfWork) : Controller
     {
-        readonly private IUniitOfWork _unitOfWork;
-        public ManagerController(IUniitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
-        public ActionResult GetAllEmployees()
+        readonly private IUnitOfWork _unitOfWork = unitOfWork;
+
+        public ActionResult GetAllTellers()
         {
             var employees = _unitOfWork.Repository<Teller>().GetAllIncluding(e => e.Branch);
-            List<TellerDetailsViewModel> tellerDetailsViewModels = new List<TellerDetailsViewModel>();
+            List<TellerDetailsViewModel> tellerDetailsViewModels = new ();
 
             foreach (var employee in employees)
             {
@@ -24,8 +30,8 @@ namespace BankingSystem.PL.Controllers
                 {
                     Id = employee.Id,
                     Name = employee.FirstName,
-                    Email = employee.Email,
-                    PhoneNumber = employee.PhoneNumber,
+                    Email = employee.Email!,
+                    PhoneNumber = employee.PhoneNumber!,
                     BranchName = employee.Branch?.Name ?? "No Branch Info",
                     //Salary = employee.Salary ?? 0
                 };
@@ -33,7 +39,7 @@ namespace BankingSystem.PL.Controllers
             }
             return View(tellerDetailsViewModels);
         }
-        public ActionResult GetEmployeeDetails(string id)
+        public ActionResult GetTellerDetails(string id)
         {
             var employee = _unitOfWork.Repository<Teller>().GetSingleIncluding(e => e.Id == id, e => e.Branch);
             if (employee == null)
@@ -52,17 +58,21 @@ namespace BankingSystem.PL.Controllers
         }
         [HttpGet]
         // still need to update
-        public ActionResult AddEmployee()
+        public ActionResult AddTeller()
         {
-            var viewModel = new TellerDetailsViewModel
+            var viewModel = new
             {
                 Branches = GetBranchSelectList()
             };
+            
+            //ViewData ---> only persists for the current request.When redirecting to another action, ViewData is lost.
+            //TempData ---> persists data across redirects, making it suitable for passing the fixed role.
+            TempData["FixedRole"] = "Teller";
             return RedirectToAction("Register", "Account");
         }
         [HttpPost]
         // still need to update
-        public ActionResult AddEmployee(TellerDetailsViewModel model)
+        public ActionResult AddTeller(TellerDetailsViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -83,7 +93,7 @@ namespace BankingSystem.PL.Controllers
                 _unitOfWork.Repository<Teller>().Add(teller);
                 _unitOfWork.Complete();
                 TempData["SuccessMessage"] = "Employee added successfully";
-                return RedirectToAction("GetAllEmployees");
+                return RedirectToAction("GetAllTellers");
             }
             catch (Exception ex)
             {
@@ -104,7 +114,7 @@ namespace BankingSystem.PL.Controllers
                 .ToList();
         }
         [HttpGet]
-        public ActionResult EditEmployee(string id)
+        public ActionResult EditTeller(string id)
         {
             var employee = _unitOfWork.Repository<Teller>().GetSingleIncluding(e => e.Id == id, e => e.Branch);
             if (employee == null)
@@ -119,10 +129,10 @@ namespace BankingSystem.PL.Controllers
                 PhoneNumber = employee.PhoneNumber,
                 BranchName = employee.Branch?.Name ?? "No Branch Info",
             };
-            return View(tellerDetailsViewModel);
+            return View( tellerDetailsViewModel);
         }
         [HttpPost]
-        public ActionResult EditEmployee(TellerDetailsViewModel model)
+        public ActionResult EditTeller(TellerDetailsViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -142,10 +152,10 @@ namespace BankingSystem.PL.Controllers
             _unitOfWork.Repository<Teller>().Update(teller);
             _unitOfWork.Complete();
 
-            return RedirectToAction("GetAllEmployees");
+            return RedirectToAction("GetAllTellers");
         }
         [HttpGet]
-        public ActionResult DeleteEmployee(string id)
+        public ActionResult DeleteTeller(string id)
         {
             var employee = _unitOfWork.Repository<Teller>().GetSingleIncluding(e => e.Id == id, e => e.Branch);
             if (employee == null)
@@ -160,10 +170,10 @@ namespace BankingSystem.PL.Controllers
                 PhoneNumber = employee.PhoneNumber,
                 BranchName = employee.Branch?.Name ?? "No Branch Info",
             };
-            return View(tellerDetailsViewModel);
+            return View( tellerDetailsViewModel);
         }
         [HttpPost]
-        public ActionResult DeleteEmployee(TellerDetailsViewModel tellerDetails)
+        public ActionResult DeleteTeller(TellerDetailsViewModel tellerDetails)
         {
             var teller = _unitOfWork.Repository<Teller>().GetSingleIncluding(e => e.Id == tellerDetails.Id, e => e.Branch);
             if (teller == null)
@@ -172,7 +182,7 @@ namespace BankingSystem.PL.Controllers
             }
             _unitOfWork.Repository<Teller>().Delete(teller);
             _unitOfWork.Complete();
-            return RedirectToAction("GetAllEmployees");
+            return RedirectToAction("GetAllTellers");
         }
     }
 }

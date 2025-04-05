@@ -9,8 +9,8 @@ namespace BankingSystem.DAL.Models
 {
     public class Admin : ApplicationUser
     {
-        [ForeignKey(nameof(Branch))]
-        public int? BranchId { get; set; }
-        public Branch Branch { get; set; } = null!;
+        [ForeignKey(nameof(Bank))]
+        public int? BankId { get; set; }
+        public Bank Bank { get; set; } = null!;
     }
 }

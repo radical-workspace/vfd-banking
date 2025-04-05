@@ -24,7 +24,7 @@ namespace BankingSystem.DAL.Data
            
         modelBuilder.Entity<Customer>().ToTable("Customers");
             modelBuilder.Entity<Admin>().ToTable("Admins");
-            modelBuilder.Entity<Manager>().ToTable("Managers");
+            modelBuilder.Entity<MyManager>().ToTable("Managers");
             modelBuilder.Entity<Teller>().ToTable("Tellers");
             modelBuilder.Entity<ApplicationUser>().ToTable("AspNetUsers");
 
@@ -38,7 +38,7 @@ namespace BankingSystem.DAL.Data
         public DbSet<Certificate> Certificates { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Loan> Loans { get; set; }
-        public DbSet<Manager> Managers { get; set; }
+        public DbSet<MyManager> Managers { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Teller> Tellers { get; set; }
         public DbSet<Admin> Admins { get; set; }

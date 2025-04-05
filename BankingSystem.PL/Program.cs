@@ -42,7 +42,7 @@ namespace BankingSystem.PL
 
 
             // Register Unit of Work
-            builder.Services.AddScoped<IUniitOfWork ,UnitOfWork>();
+            builder.Services.AddScoped<IUnitOfWork ,UnitOfWork>();
 
             builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfile()));
 

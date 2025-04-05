@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.BLL.Interfaces
 {
-    public interface IUniitOfWork : IDisposable
+    public interface IUnitOfWork : IDisposable
     {
         IGenericRepository<T> Repository<T>() where T : class;
 

@@ -28,7 +28,7 @@ namespace BankingSystem.PL.Helpers
             CreateMap<RegisterViewModel, Admin>()
                 .IncludeBase<RegisterViewModel, ApplicationUser>();  
             
-            CreateMap<RegisterViewModel, Manager>()
+            CreateMap<RegisterViewModel, MyManager>()
                 .IncludeBase<RegisterViewModel, ApplicationUser>();
 
             CreateMap<RegisterViewModel, Teller>()

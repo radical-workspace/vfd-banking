@@ -10,7 +10,8 @@
         <div class="col-md-10 col-lg-8">
             <div class="card shadow rounded-4 border-0">
                 <div class="card-header bg-primary text-white rounded-top-4">
-                    <h3 class="mb-0 py-2 text-center">Bank Account Registration</h3>
+                    <!-- Render the Header Selection Partial View -->
+                    <partial name="_headerForRegisteration"/>
                 </div>
                 <div class="card-body px-5 py-4">
                     <form asp-action="Register" method="post" class="row g-3">
@@ -44,7 +45,7 @@
                             <label asp-for="Address" class="form-label fw-semibold"></label>
                             <input asp-for="Address" class="form-control rounded-pill" />
                             <span asp-validation-for="Address" class="text-danger"></span>
-                        </div> 
+                        </div>
                         <div class="col-md-6">
                             <label asp-for="PhoneNumber" class="form-label fw-semibold"></label>
                             <input asp-for="PhoneNumber" class="form-control rounded-pill" />
@@ -69,13 +70,8 @@
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
-                        <div class="col-md-6">
-                            <label asp-for="Role" class="form-label fw-semibold"></label>
-                            <select asp-for="Role" asp-items="Model.AvailableRoles" class="form-select rounded-pill">
-                                <option value="">-- Select Role --</option>
-                            </select>
-                            <span asp-validation-for="Role" class="text-danger"></span>
-                        </div>
+                        <!-- Render the Role Selection Partial View -->
+                        <partial name="_RoleSelection" model="Model" />
 
                         <div class="col-md-6">
                             <label asp-for="Password" class="form-label fw-semibold"></label>
@@ -90,8 +86,7 @@
                         </div>
 
                         <div class="col-12 text-center mt-4">
-                            <input type="submit" class="btn btn-primary px-5 py-2 rounded-pill shadow-sm fw-bold"/>
-                            
+                            <input type="submit" class="btn btn-primary px-5 py-2 rounded-pill shadow-sm fw-bold" />
                         </div>
                     </form>
                 </div>

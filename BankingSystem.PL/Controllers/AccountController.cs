@@ -17,18 +17,18 @@ namespace BankingSystem.PL.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
-        private readonly IUniitOfWork _uniitOfWork;
+        private readonly IUnitOfWork _uniitOfWork;
 
         public AccountController(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             RoleManager<IdentityRole> roleManager,
-            IMapper mapper,IUniitOfWork uniitOfWork)
-            
+            IMapper mapper, IUnitOfWork uniitOfWork)
+
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
-          _mapper = mapper;
+            _mapper = mapper;
             _uniitOfWork = uniitOfWork;
         }
         [HttpGet]
@@ -41,10 +41,14 @@ namespace BankingSystem.PL.Controllers
             {
                 AvailableRoles = roles
             };
+            // Check if a fixed role is provided via TempData
+            if (TempData["FixedRole"] != null)
+            {
+                ViewData["FixedRole"] = TempData["FixedRole"];
+            }
             return View(Model);
-         
         }
-        [HttpPost]
+        //[HttpPost]
         //public async Task<IActionResult> Register(RegisterViewModel UserToRegister)
         //{
         //    var roles = await _roleManager.Roles
@@ -61,9 +65,7 @@ namespace BankingSystem.PL.Controllers
         //            if(UserToRegister.Role =="Customer")
         //            {
         //                Customer appUser = _mapper.Map<RegisterViewModel, ApplicationUser>(UserToRegister);
-
         //            }
-
         //            //if (appUser.Discriminator == "Customer")
         //            //{
         //            //    var Customer = new Customer()
@@ -72,9 +74,7 @@ namespace BankingSystem.PL.Controllers
         //            //    };
         //            //    _uniitOfWork.Repository<Customer>().Add(Customer);
         //            //}
-
-        //            IdentityResult result = await _userManager.CreateAsync(appUser, UserToRegister.Password);
-
+        //          IdentityResult result = await _userManager.CreateAsync(appUser, UserToRegister.Password);
         //            if (result.Succeeded)
         //            {
         //                //Create Cookie
@@ -82,19 +82,19 @@ namespace BankingSystem.PL.Controllers
         //                //await _signInManager.SignInAsync(appUser, false);
         //                return RedirectToAction("Index", "Home");
         //            }
-
         //            else
         //            {
         //                foreach (var item in result.Errors)
         //                {
         //                    ModelState.AddModelError("", item.Description);
         //                }
-        //            }
-
+        //           }
         //        }
         //        }
         //    return View(UserToRegister);
         //}
+
+        [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel UserToRegister)
         {
             // Load roles again in case of return to the view
@@ -109,30 +109,26 @@ namespace BankingSystem.PL.Controllers
                     ApplicationUser appUser;
 
                     // Create the correct derived class based on role
-                    if (UserToRegister.Role == "Customer")
-                    {
-                        appUser = _mapper.Map<Customer>(UserToRegister);
-                    }
-                    else if (UserToRegister.Role == "Admin")
-                    {
-                        appUser = _mapper.Map<Admin>(UserToRegister);
-                    }  
-                    else if (UserToRegister.Role == "Manager")
-                    {
-                        appUser = _mapper.Map<Manager>(UserToRegister);
-                    } 
-                    else if (UserToRegister.Role == "Teller")
-                    {
-                        appUser = _mapper.Map<Teller>(UserToRegister);
-                    }
+                    if (UserToRegister.Role == "Customer") appUser = _mapper.Map<Customer>(UserToRegister);
 
-                    else
-                    {
-                        appUser = _mapper.Map<ApplicationUser>(UserToRegister);
-                    }
+                    else if (UserToRegister.Role == "Admin") appUser = _mapper.Map<Admin>(UserToRegister);
+                    
+                    else if (UserToRegister.Role == "Manager") appUser = _mapper.Map<MyManager>(UserToRegister);
+                    
+                    else if (UserToRegister.Role == "Teller") appUser = _mapper.Map<Teller>(UserToRegister);
+                    
+                    else appUser = _mapper.Map<ApplicationUser>(UserToRegister);
 
                     IdentityResult result = await _userManager.CreateAsync(appUser, UserToRegister.Password);
 
+                    // Ensure the role is "Teller" when added by a manager
+                    if (User.IsInRole("Manager") && UserToRegister.Role != "Teller")
+                    {
+                        ModelState.AddModelError("Role", "Invalid role for manager-added employees.");
+                        return View(UserToRegister);
+                    }
+
+                    // Check if the user was created successfully
                     if (result.Succeeded)
                     {
                         // Assign role

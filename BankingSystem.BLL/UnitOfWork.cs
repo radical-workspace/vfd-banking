@@ -12,17 +12,12 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.BLL
 {
-    public class UnitOfWork : IUniitOfWork
+    public class UnitOfWork(BankingSystemContext dbContext) : IUnitOfWork
     {
-        private readonly BankingSystemContext _dbContext;
+        private readonly BankingSystemContext _dbContext = dbContext;
 
-        private Hashtable _repostories;
+        private readonly Hashtable _repostories = [];
 
-        public UnitOfWork(BankingSystemContext dbContext )
-        {
-            _dbContext = dbContext;
-            _repostories = new Hashtable();
-        }
         public IGenericRepository<T> Repository<T>() where T : class
         {
             var key = typeof(T).Name;
