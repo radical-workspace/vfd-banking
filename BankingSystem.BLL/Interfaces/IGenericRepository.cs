@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace BankingSystem.BLL.Interfaces
 {
 
-    public interface IGenericRepository <T> where T : BaseEntity
+    public interface IGenericRepository <T> where T : class
     {
         IEnumerable<T> GetAll();
 

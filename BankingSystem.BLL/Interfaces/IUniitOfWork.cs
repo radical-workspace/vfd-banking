@@ -9,7 +9,7 @@ namespace BankingSystem.BLL.Interfaces
 {
     public interface IUniitOfWork : IDisposable
     {
-        IGenericRepository<T> Repository<T>() where T : BaseEntity;
+        IGenericRepository<T> Repository<T>() where T : class;
 
         int Complete();
     }

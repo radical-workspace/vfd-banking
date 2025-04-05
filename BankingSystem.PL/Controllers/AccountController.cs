@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BankingSystem.BLL.Interfaces;
 using BankingSystem.DAL.Models;
 using BankingSystem.PL.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -16,17 +17,19 @@ namespace BankingSystem.PL.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
+        private readonly IUniitOfWork _uniitOfWork;
 
         public AccountController(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             RoleManager<IdentityRole> roleManager,
-            IMapper mapper)
+            IMapper mapper,IUniitOfWork uniitOfWork)
             
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
           _mapper = mapper;
+            _uniitOfWork = uniitOfWork;
         }
         [HttpGet]
         public async Task<IActionResult> Register()
@@ -42,43 +45,120 @@ namespace BankingSystem.PL.Controllers
          
         }
         [HttpPost]
+        //public async Task<IActionResult> Register(RegisterViewModel UserToRegister)
+        //{
+        //    var roles = await _roleManager.Roles
+        // .Select(r => new SelectListItem { Value = r.Name, Text = r.Name }).ToListAsync();
+
+        //    var Model = new RegisterViewModel
+        //    {
+        //        AvailableRoles = roles
+        //    };
+        //    if (UserToRegister is not null)
+        //    {
+        //        if(ModelState.IsValid)
+        //        {
+        //            if(UserToRegister.Role =="Customer")
+        //            {
+        //                Customer appUser = _mapper.Map<RegisterViewModel, ApplicationUser>(UserToRegister);
+
+        //            }
+
+        //            //if (appUser.Discriminator == "Customer")
+        //            //{
+        //            //    var Customer = new Customer()
+        //            //    {
+        //            //        Id = appUser.Id
+        //            //    };
+        //            //    _uniitOfWork.Repository<Customer>().Add(Customer);
+        //            //}
+
+        //            IdentityResult result = await _userManager.CreateAsync(appUser, UserToRegister.Password);
+
+        //            if (result.Succeeded)
+        //            {
+        //                //Create Cookie
+        //                await _userManager.AddToRoleAsync(appUser, UserToRegister.Role);
+        //                //await _signInManager.SignInAsync(appUser, false);
+        //                return RedirectToAction("Index", "Home");
+        //            }
+
+        //            else
+        //            {
+        //                foreach (var item in result.Errors)
+        //                {
+        //                    ModelState.AddModelError("", item.Description);
+        //                }
+        //            }
+
+        //        }
+        //        }
+        //    return View(UserToRegister);
+        //}
         public async Task<IActionResult> Register(RegisterViewModel UserToRegister)
         {
+            // Load roles again in case of return to the view
             var roles = await _roleManager.Roles
-         .Select(r => new SelectListItem { Value = r.Name, Text = r.Name }).ToListAsync();
+                .Select(r => new SelectListItem { Value = r.Name, Text = r.Name })
+                .ToListAsync();
 
-            var Model = new RegisterViewModel
-            {
-                AvailableRoles = roles
-            };
             if (UserToRegister is not null)
             {
-                if(ModelState.IsValid)
+                if (ModelState.IsValid)
                 {
-                    ApplicationUser appUser = _mapper.Map<RegisterViewModel,ApplicationUser>(UserToRegister);
-                   
-                    IdentityResult result = await _userManager.CreateAsync(appUser, UserToRegister.Password);
+                    ApplicationUser appUser;
 
-                    if (result.Succeeded)
+                    // Create the correct derived class based on role
+                    if (UserToRegister.Role == "Customer")
                     {
-                        //Create Cookie
-                        await _userManager.AddToRoleAsync(appUser, UserToRegister.Role);
-                        //await _signInManager.SignInAsync(appUser, false);
-                        return RedirectToAction("Index", "Home");
+                        appUser = _mapper.Map<Customer>(UserToRegister);
+                    }
+                    else if (UserToRegister.Role == "Admin")
+                    {
+                        appUser = _mapper.Map<Admin>(UserToRegister);
+                    }  
+                    else if (UserToRegister.Role == "Manager")
+                    {
+                        appUser = _mapper.Map<Manager>(UserToRegister);
+                    } 
+                    else if (UserToRegister.Role == "Teller")
+                    {
+                        appUser = _mapper.Map<Teller>(UserToRegister);
                     }
 
                     else
                     {
-                        foreach (var item in result.Errors)
-                        {
-                            ModelState.AddModelError("", item.Description);
-                        }
+                        appUser = _mapper.Map<ApplicationUser>(UserToRegister);
                     }
 
+                    IdentityResult result = await _userManager.CreateAsync(appUser, UserToRegister.Password);
+
+                    if (result.Succeeded)
+                    {
+                        // Assign role
+                        await _userManager.AddToRoleAsync(appUser, UserToRegister.Role);
+
+                        // Optional: Sign in
+                        // await _signInManager.SignInAsync(appUser, false);
+
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError("", error.Description);
+                        }
+                    }
                 }
-                }
+            }
+
+            // Return view with roles and model in case of error
+            UserToRegister.AvailableRoles = roles;
             return View(UserToRegister);
         }
+
+
         [HttpGet]
         public IActionResult Login()
         {

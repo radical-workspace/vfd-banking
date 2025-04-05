@@ -22,7 +22,19 @@ namespace BankingSystem.PL.Helpers
                   .ForMember(d => d.PasswordHash, o => o.MapFrom(s => s.Password))
                   .ReverseMap();
 
-     
+            CreateMap<RegisterViewModel, Customer>()
+    .IncludeBase<RegisterViewModel, ApplicationUser>();
+
+            CreateMap<RegisterViewModel, Admin>()
+                .IncludeBase<RegisterViewModel, ApplicationUser>();  
+            
+            CreateMap<RegisterViewModel, Manager>()
+                .IncludeBase<RegisterViewModel, ApplicationUser>();
+
+            CreateMap<RegisterViewModel, Teller>()
+                .IncludeBase<RegisterViewModel, ApplicationUser>();
+
+
 
 
         }

@@ -23,7 +23,7 @@ namespace BankingSystem.BLL
             _dbContext = dbContext;
             _repostories = new Hashtable();
         }
-        public IGenericRepository<T> Repository<T>() where T : BaseEntity
+        public IGenericRepository<T> Repository<T>() where T : class
         {
             var key = typeof(T).Name;
             if (!_repostories.ContainsKey(key))

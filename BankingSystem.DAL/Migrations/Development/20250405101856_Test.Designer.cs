@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankingSystem.DAL.Migrations.Development
 {
     [DbContext(typeof(BankingSystemContext))]
-    [Migration("20250404220142_SecondCreateDevelopment")]
-    partial class SecondCreateDevelopment
+    [Migration("20250405101856_Test")]
+    partial class Test
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -85,15 +85,11 @@ namespace BankingSystem.DAL.Migrations.Development
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("date");
 
-                    b.Property<int?>("BranchId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Discriminator")
-                        .IsRequired()
                         .HasMaxLength(21)
                         .HasColumnType("nvarchar(21)");
 
@@ -147,9 +143,8 @@ namespace BankingSystem.DAL.Migrations.Development
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int>("SSN")
-                        .HasMaxLength(13)
-                        .HasColumnType("int");
+                    b.Property<long>("SSN")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -173,9 +168,7 @@ namespace BankingSystem.DAL.Migrations.Development
 
                     b.ToTable("AspNetUsers", (string)null);
 
-                    b.HasDiscriminator().HasValue("ApplicationUser");
-
-                    b.UseTphMappingStrategy();
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Bank", b =>
@@ -734,32 +727,44 @@ namespace BankingSystem.DAL.Migrations.Development
                 {
                     b.HasBaseType("BankingSystem.DAL.Models.ApplicationUser");
 
+                    b.Property<int?>("BranchId")
+                        .HasColumnType("int");
+
                     b.HasIndex("BranchId");
 
-                    b.HasDiscriminator().HasValue("Admin");
+                    b.ToTable("Admins", (string)null);
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Customer", b =>
                 {
                     b.HasBaseType("BankingSystem.DAL.Models.ApplicationUser");
 
+                    b.Property<int?>("BranchId")
+                        .HasColumnType("int");
+
                     b.HasIndex("BranchId");
 
-                    b.HasDiscriminator().HasValue("Customer");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Manager", b =>
                 {
                     b.HasBaseType("BankingSystem.DAL.Models.ApplicationUser");
 
+                    b.Property<int?>("BranchId")
+                        .HasColumnType("int");
+
                     b.HasIndex("BranchId");
 
-                    b.HasDiscriminator().HasValue("Manager");
+                    b.ToTable("Managers", (string)null);
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Teller", b =>
                 {
                     b.HasBaseType("BankingSystem.DAL.Models.ApplicationUser");
+
+                    b.Property<int?>("BranchId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("DeptId")
                         .HasColumnType("int");
@@ -768,7 +773,7 @@ namespace BankingSystem.DAL.Migrations.Development
 
                     b.HasIndex("DeptId");
 
-                    b.HasDiscriminator().HasValue("Teller");
+                    b.ToTable("Tellers", (string)null);
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Account", b =>
@@ -877,7 +882,7 @@ namespace BankingSystem.DAL.Migrations.Development
             modelBuilder.Entity("BankingSystem.DAL.Models.MyTransaction", b =>
                 {
                     b.HasOne("BankingSystem.DAL.Models.Account", "Account")
-                        .WithMany("AccountTransactionns")
+                        .WithMany("AccountTransactions")
                         .HasForeignKey("AccountId");
 
                     b.HasOne("BankingSystem.DAL.Models.Customer", null)
@@ -989,6 +994,12 @@ namespace BankingSystem.DAL.Migrations.Development
                         .WithMany()
                         .HasForeignKey("BranchId");
 
+                    b.HasOne("BankingSystem.DAL.Models.ApplicationUser", null)
+                        .WithOne()
+                        .HasForeignKey("BankingSystem.DAL.Models.Admin", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Branch");
                 });
 
@@ -997,8 +1008,13 @@ namespace BankingSystem.DAL.Migrations.Development
                     b.HasOne("BankingSystem.DAL.Models.Branch", "Branch")
                         .WithMany("Customers")
                         .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .HasConstraintName("FK_AspNetUsers_Branches_BranchId1");
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("BankingSystem.DAL.Models.ApplicationUser", null)
+                        .WithOne()
+                        .HasForeignKey("BankingSystem.DAL.Models.Customer", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Branch");
                 });
@@ -1008,6 +1024,12 @@ namespace BankingSystem.DAL.Migrations.Development
                     b.HasOne("BankingSystem.DAL.Models.Branch", "Branch")
                         .WithMany()
                         .HasForeignKey("BranchId");
+
+                    b.HasOne("BankingSystem.DAL.Models.ApplicationUser", null)
+                        .WithOne()
+                        .HasForeignKey("BankingSystem.DAL.Models.Manager", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Branch");
                 });
@@ -1022,6 +1044,12 @@ namespace BankingSystem.DAL.Migrations.Development
                         .WithMany()
                         .HasForeignKey("DeptId");
 
+                    b.HasOne("BankingSystem.DAL.Models.ApplicationUser", null)
+                        .WithOne()
+                        .HasForeignKey("BankingSystem.DAL.Models.Teller", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Branch");
 
                     b.Navigation("Department");
@@ -1029,7 +1057,7 @@ namespace BankingSystem.DAL.Migrations.Development
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Account", b =>
                 {
-                    b.Navigation("AccountTransactionns");
+                    b.Navigation("AccountTransactions");
 
                     b.Navigation("Cards");
 
