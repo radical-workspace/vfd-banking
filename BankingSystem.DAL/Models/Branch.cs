@@ -8,6 +8,7 @@ namespace BankingSystem.DAL.Models
 {
     public class Branch : BaseEntity
     {
+        public string Name { get; set; } = null!;
         public string Location { get; set; } = null!;
         public DateTime Opens { get; set; }
         public DateTime Closes { get; set; }

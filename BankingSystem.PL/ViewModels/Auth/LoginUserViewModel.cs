@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace BankingSystem.PL.ViewModels
+namespace BankingSystem.PL.ViewModels.Auth
 {
     [Keyless]
     public class LoginUserViewModel

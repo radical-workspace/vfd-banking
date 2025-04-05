@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using BankingSystem.DAL.Models;
-using BankingSystem.PL.ViewModels;
+using BankingSystem.PL.ViewModels.Auth;
 
 namespace BankingSystem.PL.Helpers
 {

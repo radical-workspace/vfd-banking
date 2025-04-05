@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace BankingSystem.PL.ViewModels
+namespace BankingSystem.PL.ViewModels.Auth
 {
     [Keyless]
     public class ForgotPasswordViewModel

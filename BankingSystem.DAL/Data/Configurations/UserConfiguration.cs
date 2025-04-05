@@ -19,12 +19,12 @@ namespace BankingSystem.DAL.Data.Configurations
                    .IsRequired();
             //FirstName
             builder.Property(U => U.FirstName)
-                   .HasMaxLength(10)
+                   .HasMaxLength(30)
                    .IsRequired();
 
             //LastName
             builder.Property(U => U.LastName)
-                   .HasMaxLength(10)
+                   .HasMaxLength(30)
                    .IsRequired();
 
             //Address

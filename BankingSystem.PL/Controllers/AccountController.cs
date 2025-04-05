@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using BankingSystem.BLL.Interfaces;
 using BankingSystem.DAL.Models;
-using BankingSystem.PL.ViewModels;
+using BankingSystem.PL.ViewModels.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
