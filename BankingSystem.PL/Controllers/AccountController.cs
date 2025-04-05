@@ -41,7 +41,6 @@ namespace BankingSystem.PL.Controllers
             return View(Model);
          
         }
-
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel UserToRegister)
         {
@@ -80,13 +79,11 @@ namespace BankingSystem.PL.Controllers
                 }
             return View(UserToRegister);
         }
-
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
-
         [HttpPost]
         public async Task<IActionResult> Login(LoginUserViewModel UserToLogin)
         {
@@ -109,11 +106,50 @@ namespace BankingSystem.PL.Controllers
                         }
                     }
                 }
-                ModelState.AddModelError("", "Wrong Email Or Password");
+                ModelState.AddModelError(string.Empty, "Wrong Email Or Password");
                 return View(UserToLogin);
             }
 
             return View(UserToLogin);
         }
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Login", "Account");
+        }
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+                {
+                    return RedirectToAction("ForgotPasswordConfirmation");
+                }
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var resetLink = Url.Action("ResetPassword", "Account", new { token, email = user.Email }, Request.Scheme);
+
+                Console.WriteLine(resetLink);
+
+                return RedirectToAction("ForgotPasswordConfirmation");
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
     }
 }
