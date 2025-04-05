@@ -28,19 +28,12 @@ namespace BankingSystem.BLL
             var key = typeof(T).Name;
             if (!_repostories.ContainsKey(key))
             {
-
-
                 var repository = new GenericRepository<T>(_dbContext);
                 _repostories.Add(key, repository);
-
             }
             return _repostories[key] as IGenericRepository<T>;
         }
 
-        
-        
-
-        
         public int Complete()
         {
             return _dbContext.SaveChanges();

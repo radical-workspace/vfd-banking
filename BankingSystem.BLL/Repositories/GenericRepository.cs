@@ -43,7 +43,7 @@ namespace BankingSystem.BLL.Repositories
             //    return (IEnumerable<T>)_dbContext.Empolyees.Include(E => E.Department).AsNoTracking().ToList();
             //}
             
-                return _dbContext.Set<T>().AsNoTracking().ToList();
+             return _dbContext.Set<T>().AsNoTracking().ToList();
             
         }
 
