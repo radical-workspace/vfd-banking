@@ -30,6 +30,12 @@ namespace BankingSystem.DAL.Data.Configurations
 
             builder.Property(c => c.CardType)
                         .HasConversion<string>();
+
+            builder.Property(C => C.IsDeleted)
+                .HasDefaultValue(false);
+
+            builder.HasQueryFilter(P => !P.IsDeleted);
+
         }
     }
 }

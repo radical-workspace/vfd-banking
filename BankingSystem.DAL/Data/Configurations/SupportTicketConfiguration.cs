@@ -8,11 +8,8 @@ namespace BankingSystem.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<SupportTicket> builder)
         {
-            // Table name
-            builder.ToTable("SupportTickets");
-
-            // Primary key
-            builder.HasKey(st => st.Id);
+         
+           
 
             // Properties
             builder.Property(st => st.Title)
@@ -23,26 +20,25 @@ namespace BankingSystem.DAL.Configurations
                    .IsRequired()
                    .HasMaxLength(1000); // Assuming a max length for the description
 
-            builder.Property(st => st.IsDeleted)
-                   .IsRequired();
 
             builder.Property(st => st.Date)
-                   .IsRequired();
+                   .HasDefaultValueSql("GETDATE()");
 
             builder.Property(st => st.Status)
-                   .IsRequired();
+                  .HasConversion<string>();
 
             builder.Property(st => st.Type)
-                   .IsRequired();
+                   .HasConversion<string>();
 
             builder.Property(st => st.Response)
-                   .HasMaxLength(1000); // Assuming a max length for the response
+                   .HasMaxLength(1000);
 
-            // Relationships
-            builder.HasOne(st => st.Customer)
-                   .WithMany(c => c.SupportTickets)
-                   .HasForeignKey(st => st.CustomerId)
-                   .OnDelete(DeleteBehavior.Cascade);
+            builder.Property(st => st.IsDeleted)
+                  .HasDefaultValue(false);
+
+            builder.HasQueryFilter(P => !P.IsDeleted);
+
+
         }
     }
 }

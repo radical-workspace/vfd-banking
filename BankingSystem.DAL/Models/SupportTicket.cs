@@ -27,14 +27,17 @@ namespace BankingSystem.DAL.Models
     {
         public string Title { get; set; } = null!;
         public string Description { get; set; } = null!;
-        public bool IsDeleted { get; set; }
         public DateTime Date { get; set; }
         public SupportTicketStatus Status { get; set; }
         public SupportTicketType Type { get; set; }
         public string? Response { get; set; }
 
         [ForeignKey(nameof(Customer))]
-        public int? CustomerId { get; set; }
+        public string? CustomerId { get; set; }
         public Customer? Customer { get; set; }
+
+        [ForeignKey(nameof(Teller))]
+        public string? TellerId { get; set; }
+        public Teller? Teller { get; set; }
     }
 }

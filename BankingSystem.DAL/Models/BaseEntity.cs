@@ -6,10 +6,14 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Models
 {
-   public class BaseEntity
+    public interface ISoftDeletable
+    {
+        bool IsDeleted { get; set; }
+    }
+    public class BaseEntity : ISoftDeletable
     {
         public int Id { get; set; }
-        //sobhe
-        //sobhe 2
+        public bool IsDeleted { get; set; }
+
     }
 }

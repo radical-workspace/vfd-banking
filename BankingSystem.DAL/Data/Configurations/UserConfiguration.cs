@@ -9,27 +9,22 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Data.Configurations
 {
-    public class UserConfiguration : IEntityTypeConfiguration<User>
+    public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
     {
-        public void Configure(EntityTypeBuilder<User> builder)
+        public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
-            //Id
-            builder.Property(U => U.Id)
-                   .UseIdentityColumn(1, 1)
-                   .IsRequired();
-
             //SSN
             builder.Property(U => U.SSN)
-                   .HasMaxLength(13)
+                    
                    .IsRequired();
             //FirstName
             builder.Property(U => U.FirstName)
-                   .HasMaxLength(10)
+                   .HasMaxLength(30)
                    .IsRequired();
 
             //LastName
             builder.Property(U => U.LastName)
-                   .HasMaxLength(10)
+                   .HasMaxLength(30)
                    .IsRequired();
 
             //Address
@@ -37,9 +32,6 @@ namespace BankingSystem.DAL.Data.Configurations
                    .HasMaxLength(50)
                    .IsRequired();
 
-            //Phone
-            builder.Property(U => U.Phone)
-                   .HasMaxLength(11);
 
 
             //JoinDate
@@ -49,24 +41,18 @@ namespace BankingSystem.DAL.Data.Configurations
            
             //BirthDate
             builder.Property(U => U.BirthDate)
-                  .HasColumnType("date")
-                   ;// Ensures only date is stored (without time)
+                  .HasColumnType("date");
 
             builder.Property(U => U.IsDeleted)
                         .HasDefaultValue(false);
 
             builder.HasDiscriminator<string>("Discriminator")
-                    .HasValue<Manager>("Manager")
+                    .HasValue<MyManager>("Manager")
                     .HasValue<Teller>("Teller")
-                    .HasValue<Customer>("Customer");
-                    
+                    .HasValue<Customer>("Customer")
+                    .HasValue<Admin>("Admin");
 
-            //builder.HasDiscriminator<string>("UserType")
-            // .HasValue<Frontend>("Frontend")
-            // .HasValue<Kitchen>("Kitchen");
-
-
-
+            builder.HasQueryFilter(P => !P.IsDeleted);
 
         }
     }

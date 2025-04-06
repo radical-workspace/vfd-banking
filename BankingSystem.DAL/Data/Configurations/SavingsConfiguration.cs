@@ -2,35 +2,26 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using BankingSystem.DAL.Models;
 
-namespace BankingSystem.DAL.Configurations
+namespace BankingSystem.DAL.Data.Configurations
 {
     public class SavingsConfiguration : IEntityTypeConfiguration<Savings>
     {
         public void Configure(EntityTypeBuilder<Savings> builder)
         {
-            // Table name
-            builder.ToTable("Savings");
-
-            // Primary key
-            builder.HasKey(s => s.Id);
-
-            // Properties
-            builder.Property(s => s.IsDeleted)
-                   .IsRequired();
 
             builder.Property(s => s.Currency)
                    .IsRequired()
-                   .HasMaxLength(3); // Assuming currency code length is 3
+                   .HasMaxLength(10); 
 
             builder.Property(s => s.Balance)
                    .IsRequired()
-                   .HasColumnType("decimal(18,2)");
+                   .HasPrecision(18, 4);
 
-            // Relationships
-            builder.HasOne(s => s.Branch)
-                   .WithMany(b => b.Savings)
-                   .HasForeignKey(s => s.BracketId)
-                   .OnDelete(DeleteBehavior.Cascade);
+            builder.Property(S => S.IsDeleted)
+                .HasDefaultValue(false);
+
+            builder.HasQueryFilter(P => !P.IsDeleted);
+
         }
     }
 }

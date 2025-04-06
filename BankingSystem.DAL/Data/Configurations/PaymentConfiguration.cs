@@ -8,26 +8,25 @@ namespace BankingSystem.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<Payment> builder)
         {
-            // Table name
-            builder.ToTable("Payments");
+          
 
-            // Primary key
-            builder.HasKey(p => p.Id);
+        
 
             // Properties
             builder.Property(p => p.Amount)
                    .IsRequired()
-                   .HasColumnType("decimal(18,4)");
+                   .HasPrecision(18,4);
 
             builder.Property(p => p.PaymentDate)
                    .IsRequired()
+                   .HasDefaultValueSql("GETDATE()")
                    .HasColumnType("date");
 
-            // Relationships
-            builder.HasOne(p => p.Loan)
-                   .WithMany(l => l.Payments)
-                   .HasForeignKey(p => p.LoanId)
-                   .OnDelete(DeleteBehavior.Cascade);
+            builder.Property(P => P.IsDeleted)
+                  .HasDefaultValue(false);
+
+            builder.HasQueryFilter(P => !P.IsDeleted);
+
         }
     }
 }

@@ -8,31 +8,9 @@ namespace BankingSystem.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<Teller> builder)
         {
-            // Table name
-            builder.ToTable("Tellers");
-
-            // Primary key
-            builder.HasKey(t => t.Id);
-
-            // Properties
-            builder.Property(t => t.IsDeleted)
-                   .IsRequired();
-
-            // Relationships
-            builder.HasOne(t => t.Department)
-                   .WithMany(d => d.Tellers)
-                   .HasForeignKey(t => t.DeptId)
-                   .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasOne(t => t.Branch)
-                   .WithMany(b => b.Tellers)
-                   .HasForeignKey(t => t.BranchId)
-                   .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasMany(t => t.Loans)
-                   .WithOne(l => l.Teller)
-                   .HasForeignKey(l => l.TellerId)
-                   .OnDelete(DeleteBehavior.Cascade);
+            //builder.Property(t => t.Salary)
+            //    .IsRequired()
+            //    .HasColumnType("float");
         }
     }
 }

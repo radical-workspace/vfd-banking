@@ -15,17 +15,19 @@ namespace BankingSystem.DAL.Data.Configurations
         {
             // Configure LoanAmount with decimal precision
             builder.Property(l => l.LoanAmount)
-                .HasColumnType("decimal(18,4)")
+                   .HasPrecision(18, 4)
                 .IsRequired();
+
+            builder.Property(L => L.CurrentDebt)
+                   .HasPrecision(18, 4)
+                .IsRequired();
+
 
             // Configure Profit with decimal precision
-            builder.Property(l => l.Profit)
-                .HasColumnType("decimal(18,4)")
+            builder.Property(l => l.InterestRate)
                 .IsRequired();
 
-            // Configure IsDeleted default value
-            builder.Property(l => l.IsDeleted)
-                .HasDefaultValue(false);
+          
 
             // Store LoanType as string instead of integer
             builder.Property(l => l.LoanType)
@@ -35,8 +37,15 @@ namespace BankingSystem.DAL.Data.Configurations
                .HasConversion<string>();
 
             // Default Date to current timestamp
-            builder.Property(L => L.Date)
-                         .HasColumnType("date");
+            builder.Property(L => L.StartDate)
+                         .HasColumnType("date")
+                          .HasDefaultValueSql("GETDATE()");
+
+            // Configure IsDeleted default value
+            builder.Property(l => l.IsDeleted)
+                .HasDefaultValue(false);
+            builder.HasQueryFilter(P => !P.IsDeleted);
+
         }
     }
 }

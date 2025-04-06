@@ -1,7 +1,12 @@
 using BankingSystem.DAL.Data;
 using Microsoft.EntityFrameworkCore;
-using BankingSystem.DAL.User;
 using Microsoft.AspNetCore.Identity;
+using BankingSystem.DAL.Models;
+using BankingSystem.BLL.Repositories;
+using BankingSystem.DAL.Data.Configurations;
+using BankingSystem.BLL;
+using BankingSystem.BLL.Interfaces;
+using BankingSystem.PL.Helpers;
 
 namespace BankingSystem.PL
 {
@@ -15,18 +20,34 @@ namespace BankingSystem.PL
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddDbContext<BankingSystemContext>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-            #endregion
-            // Add Identity with custom user and roles
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+            // Configure Entity Framework and Identity
+            builder.Configuration.AddEnvironmentVariables();
+            var DevelopmentconnectionString = builder.Configuration.GetConnectionString("MVCProjectDB");
+            var connectionString = Environment.GetEnvironmentVariable("MVCProjectDB", EnvironmentVariableTarget.User);
+
+            builder.Services.AddDbContext<BankingSystemContext>(options =>
+                                                                options.UseSqlServer(DevelopmentconnectionString)
+                                                                       .AddInterceptors(new SoftDeleteInterceptor()));
+
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(op =>
+            {
+                op.Password.RequireUppercase = false;
+
+                op.Password.RequiredLength = 4;
+                op.Password.RequireNonAlphanumeric = false;
+            })
                 .AddEntityFrameworkStores<BankingSystemContext>()
+                .AddDefaultUI()
                 .AddDefaultTokenProviders();
 
-            // Add authorization policies for each role
-            builder.Services.AddAuthorizationBuilder()
-                            .AddPolicy("CustomerOnly", policy => policy.RequireRole("Customer"))
-                            .AddPolicy("TellerOnly", policy => policy.RequireRole("Teller"))
-                            .AddPolicy("ManagerOnly", policy => policy.RequireRole("Manager"));
+
+            // Register Unit of Work
+            builder.Services.AddScoped<IUnitOfWork ,UnitOfWork>();
+
+            builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfile()));
+
+            #endregion
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -49,7 +70,56 @@ namespace BankingSystem.PL
                 pattern: "{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();
 
+            // Ensure roles are created
+            using (var scope = app.Services.CreateScope())
+            {
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                SeedRoles(roleManager, userManager).Wait();
+            }
+
             app.Run();
+        }
+
+        private static async Task SeedRoles(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
+        {
+            string[] roleNames = { "Teller", "Customer", "Manager" ,"Admin"};
+            IdentityResult roleResult;
+
+            foreach (var roleName in roleNames)
+            {
+                var roleExist = await roleManager.RoleExistsAsync(roleName);
+                if (!roleExist)
+                {
+                    roleResult = await roleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
+
+            // Create a default admin user
+            var adminUser = new ApplicationUser
+            {
+                UserName = "admin@admin.com",
+                Email = "admin@admin.com",
+                FirstName = "Admin",
+                LastName = "User",
+                SSN = 123456789,
+                Address = "Admin Address",
+                JoinDate = DateTime.UtcNow,
+                BirthDate = DateTime.UtcNow.AddYears(-30),
+                IsDeleted = false
+            };
+
+            string adminPassword = "Admin@123";
+            var user = await userManager.FindByEmailAsync(adminUser.Email);
+
+            if (user == null)
+            {
+                var createAdminUser = await userManager.CreateAsync(adminUser, adminPassword);
+                if (createAdminUser.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(adminUser, "Admin");
+                }
+            }
         }
     }
 }

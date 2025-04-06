@@ -20,22 +20,18 @@ namespace BankingSystem.DAL.Models
         Accepted
     }
 
-    public class MyTransaction:BaseEntity
+    public class MyTransaction : BaseEntity
     {
-        public double Amount { get; set; }
-
-        public DateTime Date { get; set; }
-
         public TransationStatus Status { get; set; }
-
-        public bool IsDeleted{ get; set; }
-
         public TransationType Type { get; set; }
+        public string DoneVia { get; set; } = string.Empty;
+        
+        [ForeignKey(nameof(Payment))]
+        public int PaymentId { get; set; } // FK
+        public required Payment Payment { get; set; }
 
         [ForeignKey(nameof(Account))]
-
         public int? AccountId { get; set; }
-
         public Account? Account { get; set; }
     }
 }

@@ -12,6 +12,7 @@ namespace BankingSystem.DAL.Models
         Car,
         Buisness,
         Real_State,
+        Other
 
     }
 
@@ -25,15 +26,14 @@ namespace BankingSystem.DAL.Models
 
     public class Loan : BaseEntity
     {
-        public double LoanAmount { get; set; }
+        public decimal LoanAmount { get; set; }
         public decimal CurrentDebt { get; set; }
-        public double InterestRate { get; set; }
-        public bool IsDeleted { get; set; }
+        public int InterestRate { get; set; }
         public int DurationInMonth { get; set; }
         public LoanStatus LoanStatus { get; set; }
         public LoanType LoanType { get; set; }
         public DateTime StartDate { get; set; }
-        public List<Payment> Payments { get; set; } = [];
+        public List<Payment> Payments { get; set; } = null!;
 
         #region RelationShips
 
@@ -41,21 +41,16 @@ namespace BankingSystem.DAL.Models
         public int AccountId { get; set; }
         public Account Account { get; set; } = null!;
 
-        // i think that we should remove this relation 
-        // as you will access it through the account of the user
+        [ForeignKey(nameof(Customer))]
+        public string? CustomerId { get; set; }
+        public Customer Customer { get; set; } = null!;
 
-        //[ForeignKey(nameof(Customer))]
-        //public int CustomerId { get; set; }
-        //public Customer Customer { get; set; } = null!;
 
         [ForeignKey(nameof(Branch))]
         public int BranchId { get; set; }
-
         public Branch Branch { get; set; } = null!;
 
-        [ForeignKey(nameof(Teller))]
-        public int TellerId { get; set; }
-        public Teller Teller { get; set; } = null!;
+    
         #endregion
 
     }
