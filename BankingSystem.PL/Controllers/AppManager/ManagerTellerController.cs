@@ -116,38 +116,59 @@ namespace BankingSystem.PL.Controllers.Manager
         [HttpGet]
         public ActionResult EditTeller(string id)
         {
-            var employee = _unitOfWork.Repository<Teller>().GetSingleIncluding(e => e.Id == id, e => e.Branch);
+            var employee = _unitOfWork.Repository<Teller>()
+                              .GetSingleIncluding(e => e.Id == id, e => e.Branch);
+
             if (employee == null)
-            {
                 return NotFound();
-            }
+
+            var allBranches = _unitOfWork.Repository<Branch>()
+                                  .GetAll()
+                                  .Select(b => new SelectListItem
+                                  {
+                                      Value = b.Id.ToString(),
+                                      Text = b.Name
+                                  }).ToList();
+
             var tellerDetailsViewModel = new TellerDetailsViewModel
             {
                 Id = employee.Id,
                 Name = employee.FirstName,
                 Email = employee.Email,
                 PhoneNumber = employee.PhoneNumber,
-                BranchName = employee.Branch?.Name ?? "No Branch Info",
+                BranchID = employee.BranchId ?? 0,
+                Branches = allBranches,
+                BranchName = employee.Branch?.Name ?? "No Branch Info"
             };
-            return View( tellerDetailsViewModel);
+
+            return View(tellerDetailsViewModel);
         }
         [HttpPost]
         public ActionResult EditTeller(TellerDetailsViewModel model)
         {
             if (!ModelState.IsValid)
             {
+                model.Branches = _unitOfWork.Repository<Branch>()
+                                      .GetAll()
+                                      .Select(b => new SelectListItem
+                                      {
+                                          Value = b.Id.ToString(),
+                                          Text = b.Name
+                                      }).ToList();
+
                 return View(model);
             }
 
-            var teller = _unitOfWork.Repository<Teller>().GetSingleIncluding(e => e.Id == model.Id, e => e.Branch);
+            var teller = _unitOfWork.Repository<Teller>()
+                            .GetSingleIncluding(e => e.Id == model.Id, e => e.Branch);
+
             if (teller == null)
-            {
                 return NotFound();
-            }
 
             teller.FirstName = model.Name;
             teller.Email = model.Email;
             teller.PhoneNumber = model.PhoneNumber;
+            teller.BranchId = model.BranchID;
 
             _unitOfWork.Repository<Teller>().Update(teller);
             _unitOfWork.Complete();

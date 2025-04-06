@@ -137,7 +137,7 @@ namespace BankingSystem.PL.Controllers
                         // Optional: Sign in
                         // await _signInManager.SignInAsync(appUser, false);
 
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Login", "Account");
                     }
                     else
                     {

@@ -5,7 +5,7 @@ namespace BankingSystem.PL.ViewModels.Manager
 {
     public class TellerDetailsViewModel
     {
-        public string Id { get; set; } = null!; 
+        public string Id { get; set; } = null!;
 
         [Required(ErrorMessage = "Name is required.")]
         public string Name { get; set; } = null!;
@@ -18,9 +18,9 @@ namespace BankingSystem.PL.ViewModels.Manager
         [Phone(ErrorMessage = "Invalid phone number format.")]
         public string PhoneNumber { get; set; } = null!;
 
-        public string? BranchName { get; set; } = null!;
+        public string? BranchName { get; set; }
 
-        public List<SelectListItem> Branches { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> Branches { get; set; } = new();
 
         [Required(ErrorMessage = "Branch selection is required.")]
         public int BranchID { get; set; }
