@@ -8,6 +8,9 @@ namespace BankingSystem.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<Teller> builder)
         {
+            //builder.Property(t => t.Salary)
+            //    .IsRequired()
+            //    .HasColumnType("float");
         }
     }
 }

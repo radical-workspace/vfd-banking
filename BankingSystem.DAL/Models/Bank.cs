@@ -11,11 +11,7 @@ namespace BankingSystem.DAL.Models
     {
         public string Name { get; set; } = null!;
         public string CentralAddress { get; set; } = null!;
-
-
-        [ForeignKey(nameof(Manager))]
-        public string ManagerId { get; set; } = null!;
-        public Manager Manager { get; set; } = null!;
+        public Admin Admin { get; set; } = null!;
         public List<Branch> Branches { get; set; } = [];
     }
 }

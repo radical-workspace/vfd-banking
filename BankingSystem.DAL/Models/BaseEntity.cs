@@ -14,5 +14,6 @@ namespace BankingSystem.DAL.Models
     {
         public int Id { get; set; }
         public bool IsDeleted { get; set; }
+
     }
 }

@@ -15,6 +15,9 @@ namespace BankingSystem.DAL.Data.Configurations
         public void Configure(EntityTypeBuilder<Account> builder)
         {
             builder.Property(a => a.AccountType)
+                    .HasConversion<string>(); 
+            
+            builder.Property(a => a.AccountStatus)
                     .HasConversion<string>();
 
          
@@ -28,6 +31,7 @@ namespace BankingSystem.DAL.Data.Configurations
 
             builder.HasMany(a => a.Cards)
                .WithOne(c => c.Account);
+
             builder.HasQueryFilter(P => !P.IsDeleted);
 
         }

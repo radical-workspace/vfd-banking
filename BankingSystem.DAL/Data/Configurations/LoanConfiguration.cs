@@ -27,9 +27,7 @@ namespace BankingSystem.DAL.Data.Configurations
             builder.Property(l => l.InterestRate)
                 .IsRequired();
 
-            // Configure IsDeleted default value
-            builder.Property(l => l.IsDeleted)
-                .HasDefaultValue(false);
+          
 
             // Store LoanType as string instead of integer
             builder.Property(l => l.LoanType)
@@ -40,7 +38,12 @@ namespace BankingSystem.DAL.Data.Configurations
 
             // Default Date to current timestamp
             builder.Property(L => L.StartDate)
-                         .HasColumnType("date");
+                         .HasColumnType("date")
+                          .HasDefaultValueSql("GETDATE()");
+
+            // Configure IsDeleted default value
+            builder.Property(l => l.IsDeleted)
+                .HasDefaultValue(false);
             builder.HasQueryFilter(P => !P.IsDeleted);
 
         }

@@ -8,11 +8,8 @@ namespace BankingSystem.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<Certificate> builder)
         {
-            // Table name
-            builder.ToTable("Certificates");
 
-            // Primary key
-            builder.HasKey(c => c.Id);
+        
 
             // Properties
             builder.Property(c => c.CertificateNumber)
@@ -20,6 +17,7 @@ namespace BankingSystem.DAL.Configurations
                    .HasMaxLength(50); // Assuming a max length for certificate number
 
             builder.Property(c => c.IssueDate)
+                .HasDefaultValueSql("GETDATE()")
                    .IsRequired();
 
             builder.Property(c => c.ExpiryDate)
@@ -27,17 +25,12 @@ namespace BankingSystem.DAL.Configurations
 
             builder.Property(c => c.Amount)
                    .IsRequired()
-                   .HasColumnType("decimal(18,2)");
+                   .HasColumnType("decimal(18,4)");
 
             builder.Property(c => c.IsDeleted)
-                   .IsRequired();
+                   .HasDefaultValue(false);
 
-            // Relationships
-            builder.HasOne(c => c.Account)
-                   .WithMany(a => a.Certificates)
-                   .HasForeignKey(c => c.AccountId)
-                   .OnDelete(DeleteBehavior.Cascade);
-
+          
             builder.HasQueryFilter(P => !P.IsDeleted);
 
         }

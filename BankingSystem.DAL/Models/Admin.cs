@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Models
 {
-    public class Manager : ApplicationUser
+    public class Admin : ApplicationUser
     {
+        [ForeignKey(nameof(Bank))]
+        public int? BankId { get; set; }
+        public Bank Bank { get; set; } = null!;
     }
 }

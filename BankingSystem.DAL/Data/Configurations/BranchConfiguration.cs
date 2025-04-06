@@ -14,17 +14,17 @@ namespace BankingSystem.DAL.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Branch> builder)
         {
+            builder.Property(Br => Br.Name)
+                    .HasMaxLength(50)
+                    .IsRequired();
             builder.Property(Br => Br.Location)
                     .HasMaxLength(50)
                     .IsRequired();
-         
-
             builder.Property(Br => Br.IsDeleted)
                     .HasDefaultValue(false);
+            //.OnDelete(DeleteBehavior.Cascade);
+
             builder.HasQueryFilter(P => !P.IsDeleted);
-
-
-
         }
 
 

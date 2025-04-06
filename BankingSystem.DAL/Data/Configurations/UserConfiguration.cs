@@ -15,16 +15,16 @@ namespace BankingSystem.DAL.Data.Configurations
         {
             //SSN
             builder.Property(U => U.SSN)
-                   .HasMaxLength(13)
+                    
                    .IsRequired();
             //FirstName
             builder.Property(U => U.FirstName)
-                   .HasMaxLength(10)
+                   .HasMaxLength(30)
                    .IsRequired();
 
             //LastName
             builder.Property(U => U.LastName)
-                   .HasMaxLength(10)
+                   .HasMaxLength(30)
                    .IsRequired();
 
             //Address
@@ -32,9 +32,6 @@ namespace BankingSystem.DAL.Data.Configurations
                    .HasMaxLength(50)
                    .IsRequired();
 
-            //Phone
-            builder.Property(U => U.Phone)
-                   .HasMaxLength(11);
 
 
             //JoinDate
@@ -50,9 +47,10 @@ namespace BankingSystem.DAL.Data.Configurations
                         .HasDefaultValue(false);
 
             builder.HasDiscriminator<string>("Discriminator")
-                    .HasValue<Manager>("Manager")
+                    .HasValue<MyManager>("Manager")
                     .HasValue<Teller>("Teller")
-                    .HasValue<Customer>("Customer");
+                    .HasValue<Customer>("Customer")
+                    .HasValue<Admin>("Admin");
 
             builder.HasQueryFilter(P => !P.IsDeleted);
 

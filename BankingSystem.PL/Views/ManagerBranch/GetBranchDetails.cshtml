@@ -1,0 +1,154 @@
+﻿@using BankingSystem.PL.ViewModels.Manager
+@model BranchDetailsViewModel
+
+@{
+    ViewData["Title"] = "Branch Details";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow rounded-4 border-0">
+                <div class="card-header bg-primary text-white rounded-top-4">
+                    <h3 class="mb-0 py-2 text-center">Branch Details</h3>
+                </div>
+                <div class="card-body px-5 py-4">
+                    <form asp-action="UpdateBranch" method="post" class="row g-3">
+                        <input type="hidden" asp-for="Id" />
+
+                        <!-- Branch Name -->
+                        <div class="col-md-6">
+                            <label asp-for="Name" class="form-label fw-semibold"></label>
+                            <input asp-for="Name" class="form-control rounded-pill" readonly />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <!-- Location -->
+                        <div class="col-md-6">
+                            <label asp-for="Location" class="form-label fw-semibold"></label>
+                            <input asp-for="Location" class="form-control rounded-pill" readonly />
+                            <span asp-validation-for="Location" class="text-danger"></span>
+                        </div>
+
+                        <!-- Opening Time -->
+                        <div class="col-md-6">
+                            <label asp-for="Opens" class="form-label fw-semibold"></label>
+                            <input asp-for="Opens" type="time" class="form-control rounded-pill" readonly />
+                            <span asp-validation-for="Opens" class="text-danger"></span>
+                        </div>
+
+                        <!-- Closing Time -->
+                        <div class="col-md-6">
+                            <label asp-for="Closes" class="form-label fw-semibold"></label>
+                            <input asp-for="Closes" type="time" class="form-control rounded-pill" readonly />
+                            <span asp-validation-for="Closes" class="text-danger"></span>
+                        </div>
+
+                        <!-- Related Entities -->
+                        <div class="col-12">
+                            <h5 class="fw-bold mb-3">Related Entities</h5>
+
+                            <!-- Loans -->
+                            <div class="mb-3">
+                                <h6 class="fw-semibold">Loans</h6>
+                                @if (Model.Loans != null && Model.Loans.Any())
+                                {
+                                    <ul class="list-group">
+                                        @foreach (var loan in Model.Loans)
+                                        {
+                                            <li class="list-group-item">@loan.LoanAmount</li>
+                                            <li class="list-group-item">@loan.CurrentDebt</li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <p>No loans available.</p>
+                                }
+                            </div>
+
+                            <!-- Customers -->
+                            <div class="mb-3">
+                                <h6 class="fw-semibold">Customers</h6>
+                                @if (Model.Customers != null && Model.Customers.Any())
+                                {
+                                    <ul class="list-group">
+                                        @foreach (var customer in Model.Customers)
+                                        {
+                                            <li class="list-group-item">@customer.FirstName @customer.LastName</li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <p>No customers available.</p>
+                                }
+                            </div>
+
+                            <!-- Tellers -->
+                            <div class="mb-3">
+                                <h6 class="fw-semibold">Tellers</h6>
+                                @if (Model.Tellers != null && Model.Tellers.Any())
+                                {
+                                    <ul class="list-group">
+                                        @foreach (var teller in Model.Tellers)
+                                        {
+                                            <li class="list-group-item">@teller.FirstName @teller.LastName</li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <p>No tellers available.</p>
+                                }
+                            </div>
+
+                            <!-- Departments -->
+                            <div class="mb-3">
+                                <h6 class="fw-semibold">Departments</h6>
+                                @if (Model.Departments != null && Model.Departments.Any())
+                                {
+                                    <ul class="list-group">
+                                        @foreach (var department in Model.Departments)
+                                        {
+                                            <li class="list-group-item">@department.Name</li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <p>No departments available.</p>
+                                }
+                            </div>
+
+                            <!-- Savings -->
+                            <div class="mb-3">
+                                <h6 class="fw-semibold">Savings</h6>
+                                @if (Model.Savings != null && Model.Savings.Any())
+                                {
+                                    <ul class="list-group">
+                                        @foreach (var saving in Model.Savings)
+                                        {
+                                            <li class="list-group-item">@saving.Currency</li>
+                                            <li class="list-group-item">@saving.Balance</li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <p>No savings accounts available.</p>
+                                }
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

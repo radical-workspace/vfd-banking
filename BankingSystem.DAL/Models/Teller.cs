@@ -9,6 +9,10 @@ namespace BankingSystem.DAL.Models
 {
     public class Teller : ApplicationUser
     {
+        //public double Salary { get; set; }
+        [ForeignKey(nameof(Branch))]
+        public int? BranchId { get; set; }
+        public Branch Branch { get; set; } = null!;
         [ForeignKey(nameof(Department))]
         public int? DeptId { get; set; }
         public Department Department { get; set; } = null!;

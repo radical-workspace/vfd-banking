@@ -8,15 +8,6 @@ namespace BankingSystem.DAL.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Savings> builder)
         {
-            // Table name
-            builder.ToTable("Savings");
-
-            // Primary key
-            builder.HasKey(s => s.Id);
-
-            // Properties
-            builder.Property(s => s.IsDeleted)
-                   .IsRequired();
 
             builder.Property(s => s.Currency)
                    .IsRequired()
@@ -25,6 +16,9 @@ namespace BankingSystem.DAL.Data.Configurations
             builder.Property(s => s.Balance)
                    .IsRequired()
                    .HasPrecision(18, 4);
+
+            builder.Property(S => S.IsDeleted)
+                .HasDefaultValue(false);
 
             builder.HasQueryFilter(P => !P.IsDeleted);
 

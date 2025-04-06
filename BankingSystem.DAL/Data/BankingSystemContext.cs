@@ -2,10 +2,12 @@ using BankingSystem.DAL.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,12 +21,14 @@ namespace BankingSystem.DAL.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+           
+        modelBuilder.Entity<Customer>().ToTable("Customers");
+            modelBuilder.Entity<Admin>().ToTable("Admins");
+            modelBuilder.Entity<MyManager>().ToTable("Managers");
+            modelBuilder.Entity<Teller>().ToTable("Tellers");
+            modelBuilder.Entity<ApplicationUser>().ToTable("AspNetUsers");
 
-            // Configure the composite key for IdentityUserLogin<string>
-            modelBuilder.Entity<IdentityUserLogin<string>>(entity =>
-            {
-                entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
-            });
+       
 
         }
         public DbSet <Account> Accounts { get; set; }
@@ -34,11 +38,12 @@ namespace BankingSystem.DAL.Data
         public DbSet<Certificate> Certificates { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Loan> Loans { get; set; }
-        public DbSet<Manager> Managers { get; set; }
+        public DbSet<MyManager> Managers { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Teller> Tellers { get; set; }
+        public DbSet<Admin> Admins { get; set; }
         public DbSet<Savings> Savings { get; set; }
         public DbSet<SupportTicket> SupportTickets { get; set; }
         public DbSet<MyTransaction> Transactions { get; set; }
-
-        //public DbSet<ApplicationUser> Users { get; set; }
     }
 }

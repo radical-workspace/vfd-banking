@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Identity;
 using BankingSystem.DAL.Models;
 using BankingSystem.BLL.Repositories;
 using BankingSystem.DAL.Data.Configurations;
+using BankingSystem.BLL;
+using BankingSystem.BLL.Interfaces;
+using BankingSystem.PL.Helpers;
 
 namespace BankingSystem.PL
 {
@@ -19,20 +22,29 @@ namespace BankingSystem.PL
 
             // Configure Entity Framework and Identity
             builder.Configuration.AddEnvironmentVariables();
+            var DevelopmentconnectionString = builder.Configuration.GetConnectionString("MVCProjectDB");
             var connectionString = Environment.GetEnvironmentVariable("MVCProjectDB", EnvironmentVariableTarget.User);
 
             builder.Services.AddDbContext<BankingSystemContext>(options =>
-                                                                options.UseSqlServer(connectionString)
+                                                                options.UseSqlServer(DevelopmentconnectionString)
                                                                        .AddInterceptors(new SoftDeleteInterceptor()));
 
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(op =>
+            {
+                op.Password.RequireUppercase = false;
+
+                op.Password.RequiredLength = 4;
+                op.Password.RequireNonAlphanumeric = false;
+            })
                 .AddEntityFrameworkStores<BankingSystemContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
 
 
             // Register Unit of Work
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IUnitOfWork ,UnitOfWork>();
+
+            builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfile()));
 
             #endregion
 
@@ -71,7 +83,7 @@ namespace BankingSystem.PL
 
         private static async Task SeedRoles(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
         {
-            string[] roleNames = { "Teller", "Customer", "Manager" };
+            string[] roleNames = { "Teller", "Customer", "Manager" ,"Admin"};
             IdentityResult roleResult;
 
             foreach (var roleName in roleNames)
@@ -92,7 +104,6 @@ namespace BankingSystem.PL
                 LastName = "User",
                 SSN = 123456789,
                 Address = "Admin Address",
-                Phone = "123-456-7890",
                 JoinDate = DateTime.UtcNow,
                 BirthDate = DateTime.UtcNow.AddYears(-30),
                 IsDeleted = false

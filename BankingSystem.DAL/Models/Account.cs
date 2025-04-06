@@ -27,7 +27,7 @@ namespace BankingSystem.DAL.Models
         public DateTime CreatedAt { get; set; }
         public AccountType AccountType { get; set; }
         public AccountStatus AccountStatus { get; set; }
-        public List<MyTransaction>? AccountTransactionns { get; set; }
+        public List<MyTransaction>? AccountTransactions { get; set; }
         public List<Certificate> Certificates { get; set; } = [];
 
         public List<Loan> Loans { get; set; } = [];
