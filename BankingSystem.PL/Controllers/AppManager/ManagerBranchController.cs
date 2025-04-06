@@ -10,8 +10,6 @@ namespace BankingSystem.PL.Controllers.AppManager
     public class ManagerBranchController(IUnitOfWork unitOfWork) : Controller
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-
-        // GET: ManagerBranchController/GetBranchDetails/5
         public ActionResult GetBranchDetails(string id)
         {
 
@@ -44,14 +42,10 @@ namespace BankingSystem.PL.Controllers.AppManager
             };
             return View(BranchDetails);
         }
-
-        // GET: ManagerBranchController/Create
         public ActionResult Create()
         {
             return View();
         }
-
-        // POST: ManagerBranchController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -65,14 +59,10 @@ namespace BankingSystem.PL.Controllers.AppManager
                 return View();
             }
         }
-
-        // GET: ManagerBranchController/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
-
-        // POST: ManagerBranchController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -86,14 +76,10 @@ namespace BankingSystem.PL.Controllers.AppManager
                 return View();
             }
         }
-
-        // GET: ManagerBranchController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
-
-        // POST: ManagerBranchController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

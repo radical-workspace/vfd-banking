@@ -39,6 +39,7 @@ namespace BankingSystem.PL.Controllers.Manager
             }
             return View(tellerDetailsViewModels);
         }
+        [HttpGet]
         public ActionResult GetTellerDetails(string id)
         {
             var employee = _unitOfWork.Repository<Teller>().GetSingleIncluding(e => e.Id == id, e => e.Branch);
