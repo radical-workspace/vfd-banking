@@ -26,8 +26,8 @@ namespace BankingSystem.DAL.Models
 
     public class Loan : BaseEntity
     {
-        public decimal LoanAmount { get; set; }
-        public decimal CurrentDebt { get; set; }
+        public double LoanAmount { get; set; }
+        public double CurrentDebt { get; set; }
         public int InterestRate { get; set; }
         public int DurationInMonth { get; set; }
         public LoanStatus LoanStatus { get; set; }

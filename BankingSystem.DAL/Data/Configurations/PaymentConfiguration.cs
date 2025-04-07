@@ -15,7 +15,7 @@ namespace BankingSystem.DAL.Configurations
             // Properties
             builder.Property(p => p.Amount)
                    .IsRequired()
-                   .HasPrecision(18,4);
+                .HasColumnType("decimal(18,4)");
 
             builder.Property(p => p.PaymentDate)
                    .IsRequired()
