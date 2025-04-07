@@ -1,0 +1,35 @@
+﻿@model List<BankingSystem.PL.ViewModels.Manager.TellerDetailsViewModel>
+
+@{
+    ViewData["Title"] = "Teller Details";
+}
+
+<h2>Teller Details</h2>
+
+<a class="btn btn-success mb-3" asp-action="AddTeller">Add New Teller</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Branch</th>
+            <th>Department</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var teller in Model)
+        {
+            <tr>
+                <td>@teller.FirstName @teller.LastName</td>
+                <td>@teller.BranchName</td>
+                <td>@teller.DepartmentName </td>
+                <td>
+                    <a class="btn btn-info btn-sm" asp-action="GetTellerDetails" asp-route-id="@teller.Id">Details</a>
+                    <a class="btn btn-primary btn-sm" asp-action="EditTeller" asp-route-id="@teller.Id">Update</a>
+                    <a class="btn btn-danger btn-sm" asp-action="DeleteTeller" asp-route-id="@teller.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

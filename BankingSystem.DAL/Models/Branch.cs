@@ -1,0 +1,24 @@
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BankingSystem.DAL.Models
+{
+    public class Branch : BaseEntity
+    {
+        public string Name { get; set; } = null!;
+        public string Location { get; set; } = null!;
+        public DateTime Opens { get; set; }
+        public DateTime Closes { get; set; }
+        public List<Loan>? Loans { get; set; }
+        public List<Customer> Customers { get; set; } = null!;
+        public List<Teller> Tellers { get; set; } = null!;
+        public List<Department> Departments { get; set; } = null!;
+        public List<Savings> Savings  { get; set; } = null!;
+
+        public MyManager? MyManager { get; set; } = null!;
+
+    }
+}
