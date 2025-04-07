@@ -15,7 +15,7 @@ namespace BankingSystem.PL.Helpers
                   .ReverseMap();
 
             CreateMap<RegisterViewModel, Customer>()
-            .IncludeBase<RegisterViewModel, ApplicationUser>();
+                                            .IncludeBase<RegisterViewModel, ApplicationUser>();
 
             CreateMap<RegisterViewModel, Admin>()
                 .IncludeBase<RegisterViewModel, ApplicationUser>();
@@ -26,15 +26,20 @@ namespace BankingSystem.PL.Helpers
             CreateMap<RegisterViewModel, Teller>()
                 .IncludeBase<RegisterViewModel, ApplicationUser>();
 
+            CreateMap<SavingsViewModel, Savings>()
+                   .ForPath(dest => dest.Branch.Name, opt => opt.MapFrom(src => src.BranchName ?? string.Empty))
+                   .ReverseMap()
+                   .ForMember(dest => dest.BranchName, opt => opt.MapFrom(src => src.Branch != null ? src.Branch.Name : string.Empty));
+
+
             CreateMap<Teller, TellerDetailsViewModel>()
-            .ForMember(dest => dest.BranchName, opt => opt.MapFrom(src => src.Branch.Name))
-            .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.Name));
+           .ForMember(dest => dest.BranchName, opt => opt.MapFrom(src => src.Branch.Name))
+           .ForMember(dest => dest.DepartmentName, opt => opt.MapFrom(src => src.Department.Name));
 
 
             CreateMap<TellerDetailsViewModel, Teller>()
-            .ForMember(dest => dest.Branch, opt => opt.Ignore())   
-            .ForMember(dest => dest.Department, opt => opt.Ignore())
-            .ForMember(dest => dest.Id, opt => opt.Ignore());      
+            .ForMember(dest => dest.Branch, opt => opt.Ignore())
+            .ForMember(dest => dest.Department, opt => opt.Ignore());
 
         }
 
