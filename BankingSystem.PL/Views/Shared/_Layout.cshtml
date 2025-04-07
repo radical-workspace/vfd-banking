@@ -16,78 +16,78 @@
     <style>
         /* ====== Global Styles ====== */
         body {
-        background-color: #f8f9fa;
-        font-family: 'Segoe UI', sans-serif;
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', sans-serif;
         }
 
         /* ====== Navbar Styles ====== */
         .navbar {
-        background-color: #003366 !important; /* Dark Blue */
-        padding: 10px 0;
+            background-color: #003366 !important; /* Dark Blue */
+            padding: 10px 0;
         }
 
         .navbar-brand, .nav-link {
-        color: #ffffff !important;
-        font-weight: 500;
+            color: #ffffff !important;
+            font-weight: 500;
         }
 
-        .nav-link:hover {
-        color: #0073e6 !important; /* Light Blue */
-        }
+            .nav-link:hover {
+                color: #0073e6 !important; /* Light Blue */
+            }
 
         .navbar-toggler {
-        border-color: #ffffff;
+            border-color: #ffffff;
         }
 
         /* ====== Footer Styles ====== */
         footer {
-        background-color: #001f3f;
-        color: #ffffff;
-        padding: 20px 0;
-        margin-top: 40px;
-        text-align: center;
+            background-color: #001f3f;
+            color: #ffffff;
+            padding: 20px 0;
+            margin-top: 40px;
+            text-align: center;
         }
 
-        footer a {
-        color: #d4af37; /* Gold */
-        text-decoration: none;
-        }
+            footer a {
+                color: #d4af37; /* Gold */
+                text-decoration: none;
+            }
 
-        footer a:hover {
-        color: #ffffff;
-        }
+                footer a:hover {
+                    color: #ffffff;
+                }
 
         /* ====== Button Styles ====== */
         .btn-primary {
-        background-color: #0073e6; /* Light Blue */
-        border: none;
+            background-color: #0073e6; /* Light Blue */
+            border: none;
         }
 
-        .btn-primary:hover {
-        background-color: #0056b3; /* Darker Blue */
-        }
+            .btn-primary:hover {
+                background-color: #0056b3; /* Darker Blue */
+            }
 
         /* ====== Main Content Styles ====== */
         main {
-        padding-top: 20px;
-        min-height: 60vh;
+            padding-top: 20px;
+            min-height: 60vh;
         }
 
         .navbar-brand {
-        font-size: 1.4rem;
-        font-weight: bold;
+            font-size: 1.4rem;
+            font-weight: bold;
         }
 
         .bank-highlight {
-        color: #28a745; /* Green for positive balances */
-        font-weight: bold;
+            color: #28a745; /* Green for positive balances */
+            font-weight: bold;
         }
 
         .account-summary {
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
@@ -97,7 +97,7 @@
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BankingSystem.PL</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
@@ -109,15 +109,18 @@
 
                         @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Manager"))
                         {
+                            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="ManagerTeller" asp-action="GetAllTellers">Employees</a>
+
+                                <a class="nav-link" asp-area="" asp-controller="ManagerTeller" asp-action="GetAllTellers" asp-route-id="@userId">Employees</a>
                             </li>
                             <li class="nav-item">
-                                @{
-                                    var userId = User.FindFirst(ClaimTypes.NameIdentifier);
-                                }
+                         
                                 <a class="nav-link" asp-area="" asp-controller="ManagerBranch" asp-action="GetBranchDetails" asp-route-id="@userId">Branche</a>
-                            </li>
+                            </li> 
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="ManagerSavings" asp-action="GetAllSavings" asp-route-id="@userId">Savings</a>
+                        </li>
                         }
 
                         @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Admin"))
@@ -182,6 +185,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
