@@ -39,8 +39,8 @@ namespace BankingSystem.PL.Helpers
 
             CreateMap<TellerDetailsViewModel, Teller>()
             .ForMember(dest => dest.Branch, opt => opt.Ignore())
-            .ForMember(dest => dest.Department, opt => opt.Ignore())
-        
+            .ForMember(dest => dest.Department, opt => opt.Ignore());
+
         }
 
 

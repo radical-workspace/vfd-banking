@@ -10,16 +10,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace BankingSystem.PL.Controllers.Manager
 {
     [Authorize(Roles = "Manager")]
-    public class ManagerTellerController : Controller
+    public class ManagerTellerController(IUnitOfWork unitOfWork, IMapper mapper) : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IMapper _mapper = mapper;
 
-        public ManagerTellerController(IUnitOfWork unitOfWork, IMapper mapper)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
         [HttpGet]
         public ActionResult GetAllTellers(string id)
         {
@@ -62,7 +57,7 @@ namespace BankingSystem.PL.Controllers.Manager
             var tellerDetailsViewModel = _mapper.Map<TellerDetailsViewModel>(employee);
 
             tellerDetailsViewModel.BranchName = employee.Branch?.Name;
-            tellerDetailsViewModel.DepartmentName = employee.Department?.Name;
+            tellerDetailsViewModel.DepartmentName = employee.Department?.Name ?? "No Departments";
 
             return View(tellerDetailsViewModel);
         }

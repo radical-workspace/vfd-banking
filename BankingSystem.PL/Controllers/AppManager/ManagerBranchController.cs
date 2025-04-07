@@ -20,7 +20,7 @@ namespace BankingSystem.PL.Controllers.AppManager
                                                                 c => c.Customers,
                                                                 t => t.Tellers,
                                                                 d => d.Departments,
-                                                                s => s.Savings,
+                                                                s => s.Savings
                                                                 );
 
             if (Branches == null) return NotFound();
