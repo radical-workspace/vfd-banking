@@ -9,6 +9,7 @@ namespace BankingSystem.DAL.Models
 {
     public class Admin : ApplicationUser
     {
+        public double Salary { get; set; }
         [ForeignKey(nameof(Bank))]
         public int? BankId { get; set; }
         public Bank Bank { get; set; } = null!;

@@ -11,6 +11,10 @@ namespace BankingSystem.DAL.Configurations
             builder.HasOne(m => m.Branch)
                .WithOne(b => b.MyManager)
                .HasForeignKey<MyManager>(m => m.BranchId);
+
+            builder.Property(m => m.Salary)
+            .IsRequired()
+             .HasColumnType("decimal(18,4)");
         }
     }
 }

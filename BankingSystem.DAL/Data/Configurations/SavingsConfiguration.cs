@@ -15,7 +15,7 @@ namespace BankingSystem.DAL.Data.Configurations
 
             builder.Property(s => s.Balance)
                    .IsRequired()
-                   .HasPrecision(18, 4);
+                .HasColumnType("decimal(18,4)");
 
             builder.Property(S => S.IsDeleted)
                 .HasDefaultValue(false);
