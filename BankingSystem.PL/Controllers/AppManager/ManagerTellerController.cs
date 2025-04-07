@@ -1,210 +1,136 @@
-﻿using Azure.Core;
+﻿using AutoMapper;
+using Azure.Core;
 using BankingSystem.BLL.Interfaces;
 using BankingSystem.DAL.Models;
 using BankingSystem.PL.ViewModels.Manager;
-using Humanizer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore.Metadata;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Data;
-using System.Reflection;
-using System;
+
 
 namespace BankingSystem.PL.Controllers.Manager
 {
     [Authorize(Roles = "Manager")]
-    public class ManagerTellerController(IUnitOfWork unitOfWork) : Controller
+    public class ManagerTellerController : Controller
     {
-        readonly private IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public ActionResult GetAllTellers()
+        public ManagerTellerController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            var employees = _unitOfWork.Repository<Teller>().GetAllIncluding(e => e.Branch);
-            List<TellerDetailsViewModel> tellerDetailsViewModels = new ();
-
-            foreach (var employee in employees)
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+        [HttpGet]
+        public ActionResult GetAllTellers(string id)
+        {
+            var manager = _unitOfWork.Repository<MyManager>().GetSingleIncluding(b => b.Id == id);
+            if (manager == null)
             {
-                var tellerDetailsViewModel = new TellerDetailsViewModel
-                {
-                    Id = employee.Id,
-                    Name = employee.FirstName,
-                    Email = employee.Email!,
-                    PhoneNumber = employee.PhoneNumber!,
-                    BranchName = employee.Branch?.Name ?? "No Branch Info",
-                    //Salary = employee.Salary ?? 0
-                };
-                tellerDetailsViewModels.Add(tellerDetailsViewModel);
+                return NotFound($"Manager with ID {id} not found.");
             }
-            return View(tellerDetailsViewModels);
+
+            var branchId = manager.BranchId;
+            if (branchId == null)
+            {
+                return NotFound($"Branch with ID {branchId} not found.");
+            }
+
+            var employees = _unitOfWork.Repository<Teller>()
+                .GetAllIncluding(e => e.Branch, e => e.Department)
+                .Where(e => e.BranchId == branchId)
+                .ToList();
+
+            if (employees == null || employees.Count == 0)
+            {
+                return NotFound("No employees found.");
+            }
+
+            var tellerViewModels = _mapper.Map<List<TellerDetailsViewModel>>(employees);
+            return View(tellerViewModels);
         }
         [HttpGet]
         public ActionResult GetTellerDetails(string id)
         {
-            var employee = _unitOfWork.Repository<Teller>().GetSingleIncluding(e => e.Id == id, e => e.Branch);
+            var employee = _unitOfWork.Repository<Teller>()
+                .GetSingleIncluding(e => e.Id == id, e => e.Branch, e => e.Department);
+
             if (employee == null)
             {
                 return NotFound();
             }
-            var tellerDetailsViewModel = new TellerDetailsViewModel
-            {
-                Id = employee.Id,
-                Name = employee.FirstName,
-                Email = employee.Email,
-                PhoneNumber = employee.PhoneNumber,
-                BranchName = employee.Branch?.Name ?? "No Branch Info",
-            };
+
+            var tellerDetailsViewModel = _mapper.Map<TellerDetailsViewModel>(employee);
+
+            tellerDetailsViewModel.BranchName = employee.Branch?.Name;
+            tellerDetailsViewModel.DepartmentName = employee.Department?.Name;
+
             return View(tellerDetailsViewModel);
-        }
-        [HttpGet]
-        // still need to update
-        public ActionResult AddTeller()
-        {
-            var viewModel = new
-            {
-                Branches = GetBranchSelectList()
-            };
-            
-            //ViewData ---> only persists for the current request.When redirecting to another action, ViewData is lost.
-            //TempData ---> persists data across redirects, making it suitable for passing the fixed role.
-            TempData["FixedRole"] = "Teller";
-            return RedirectToAction("Register", "Account");
-        }
-        [HttpPost]
-        // still need to update
-        public ActionResult AddTeller(TellerDetailsViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                model.Branches = GetBranchSelectList();
-                return View(model);
-            }
-
-            var teller = new Teller
-            {
-                FirstName = model.Name.Trim(),
-                Email = model.Email.Trim().ToLower(),
-                PhoneNumber = model.PhoneNumber.Trim(),
-                BranchId = model.BranchID
-            };
-
-            try
-            {
-                _unitOfWork.Repository<Teller>().Add(teller);
-                _unitOfWork.Complete();
-                TempData["SuccessMessage"] = "Employee added successfully";
-                return RedirectToAction("GetAllTellers");
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", "Error saving employee: " + ex.Message);
-                model.Branches = GetBranchSelectList();
-                return View(model);
-            }
-        }
-        private List<SelectListItem> GetBranchSelectList()
-        {
-            return _unitOfWork.Repository<Branch>()
-                .GetAll()
-                .Select(b => new SelectListItem
-                {
-                    Value = b.Id.ToString(),
-                    Text = b.Name
-                })
-                .ToList();
         }
         [HttpGet]
         public ActionResult EditTeller(string id)
         {
-            var employee = _unitOfWork.Repository<Teller>()
-                              .GetSingleIncluding(e => e.Id == id, e => e.Branch);
-
-            if (employee == null)
-                return NotFound();
-
-            var allBranches = _unitOfWork.Repository<Branch>()
-                                  .GetAll()
-                                  .Select(b => new SelectListItem
-                                  {
-                                      Value = b.Id.ToString(),
-                                      Text = b.Name
-                                  }).ToList();
-
-            var tellerDetailsViewModel = new TellerDetailsViewModel
+            var teller = _unitOfWork.Repository<Teller>()
+                .GetSingleIncluding(e => e.Id == id, e => e.Branch, e => e.Branch.MyManager, e => e.Department);
+            if (teller == null)
             {
-                Id = employee.Id,
-                Name = employee.FirstName,
-                Email = employee.Email,
-                PhoneNumber = employee.PhoneNumber,
-                BranchID = employee.BranchId ?? 0,
-                Branches = allBranches,
-                BranchName = employee.Branch?.Name ?? "No Branch Info"
-            };
+                return NotFound();
+            }
+
+            var tellerDetailsViewModel = _mapper.Map<TellerDetailsViewModel>(teller);
+            tellerDetailsViewModel.BranchName = teller.Branch?.Name;
+            tellerDetailsViewModel.DepartmentName = teller.Department?.Name;
+
+            if (teller.Branch?.MyManager == null)
+            {
+                return NotFound("The branch does not have a manager assigned.");
+            }
 
             return View(tellerDetailsViewModel);
         }
         [HttpPost]
-        public ActionResult EditTeller(TellerDetailsViewModel model)
+        public ActionResult EditTeller(TellerDetailsViewModel tellerDetailsViewModel)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                model.Branches = _unitOfWork.Repository<Branch>()
-                                      .GetAll()
-                                      .Select(b => new SelectListItem
-                                      {
-                                          Value = b.Id.ToString(),
-                                          Text = b.Name
-                                      }).ToList();
+                var teller = _unitOfWork.Repository<Teller>()
+                    .GetSingleIncluding(e => e.Id == tellerDetailsViewModel.Id, e => e.Branch, e => e.Department, e => e.Branch.MyManager);
+                if (teller == null)
+                {
+                    return NotFound();
+                }
 
-                return View(model);
+                _mapper.Map(tellerDetailsViewModel, teller);
+                _unitOfWork.Complete();
+                return RedirectToAction("GetAllTellers", new { id = teller.Branch.MyManager.Id });
             }
-
-            var teller = _unitOfWork.Repository<Teller>()
-                            .GetSingleIncluding(e => e.Id == model.Id, e => e.Branch);
-
-            if (teller == null)
-                return NotFound();
-
-            teller.FirstName = model.Name;
-            teller.Email = model.Email;
-            teller.PhoneNumber = model.PhoneNumber;
-            teller.BranchId = model.BranchID;
-
-            _unitOfWork.Repository<Teller>().Update(teller);
-            _unitOfWork.Complete();
-
-            return RedirectToAction("GetAllTellers");
+            return View(tellerDetailsViewModel);
         }
         [HttpGet]
         public ActionResult DeleteTeller(string id)
         {
-            var employee = _unitOfWork.Repository<Teller>().GetSingleIncluding(e => e.Id == id, e => e.Branch);
-            if (employee == null)
+            var teller = _unitOfWork.Repository<Teller>()
+                .GetSingleIncluding(e => e.Id == id, e => e.Branch, e => e.Branch.MyManager, e => e.Department);
+            if (teller == null)
             {
                 return NotFound();
             }
-            var tellerDetailsViewModel = new TellerDetailsViewModel
-            {
-                Id = employee.Id,
-                Name = employee.FirstName,
-                Email = employee.Email,
-                PhoneNumber = employee.PhoneNumber,
-                BranchName = employee.Branch?.Name ?? "No Branch Info",
-            };
-            return View( tellerDetailsViewModel);
+            var tellerDetailsViewModel = _mapper.Map<TellerDetailsViewModel>(teller);
+            tellerDetailsViewModel.BranchName = teller.Branch?.Name;
+            tellerDetailsViewModel.DepartmentName = teller.Department?.Name;
+            return View(tellerDetailsViewModel);
         }
         [HttpPost]
         public ActionResult DeleteTeller(TellerDetailsViewModel tellerDetails)
         {
-            var teller = _unitOfWork.Repository<Teller>().GetSingleIncluding(e => e.Id == tellerDetails.Id, e => e.Branch);
+            var teller = _unitOfWork.Repository<Teller>()
+                .GetSingleIncluding(e => e.Id == tellerDetails.Id, e => e.Branch, e => e.Department, e => e.Branch.MyManager);
             if (teller == null)
             {
                 return NotFound();
             }
             _unitOfWork.Repository<Teller>().Delete(teller);
             _unitOfWork.Complete();
-            return RedirectToAction("GetAllTellers");
+            return RedirectToAction("GetAllTellers", new { id = teller.Branch.MyManager.Id});
         }
     }
 }
