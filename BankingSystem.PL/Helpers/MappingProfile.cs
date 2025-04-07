@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BankingSystem.DAL.Models;
 using BankingSystem.PL.ViewModels.Auth;
+using BankingSystem.PL.ViewModels.Manager;
 
 namespace BankingSystem.PL.Helpers
 {
@@ -23,19 +24,24 @@ namespace BankingSystem.PL.Helpers
                   .ReverseMap();
 
             CreateMap<RegisterViewModel, Customer>()
-    .IncludeBase<RegisterViewModel, ApplicationUser>();
+                  .IncludeBase<RegisterViewModel, ApplicationUser>();
 
             CreateMap<RegisterViewModel, Admin>()
-                .IncludeBase<RegisterViewModel, ApplicationUser>();  
-            
+                .IncludeBase<RegisterViewModel, ApplicationUser>();
+
             CreateMap<RegisterViewModel, MyManager>()
                 .IncludeBase<RegisterViewModel, ApplicationUser>();
 
             CreateMap<RegisterViewModel, Teller>()
                 .IncludeBase<RegisterViewModel, ApplicationUser>();
 
-
-
+            //CreateMap<SavingsViewModel, Savings>()
+            //    .ForMember(dest => dest.Branch.Name, opt => opt.MapFrom(src => src.BranchName != null ? src.BranchName : string.Empty))
+            //    .ReverseMap();
+            CreateMap<SavingsViewModel, Savings>()
+                    .ForPath(dest => dest.Branch.Name, opt => opt.MapFrom(src => src.BranchName ?? string.Empty))
+                    .ReverseMap()
+                    .ForMember(dest => dest.BranchName, opt => opt.MapFrom(src => src.Branch != null ? src.Branch.Name : string.Empty));
 
         }
     }

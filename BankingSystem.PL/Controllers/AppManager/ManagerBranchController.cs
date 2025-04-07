@@ -12,9 +12,7 @@ namespace BankingSystem.PL.Controllers.AppManager
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         public ActionResult GetBranchDetails(string id)
         {
-
-            var managerID= id.Trim().Split(' ')[1];
-            var Manager = _unitOfWork.Repository<MyManager>().GetSingleIncluding(b=>b.Id == managerID);
+            var Manager = _unitOfWork.Repository<MyManager>().GetSingleIncluding(b=>b.Id == id);
 
             var Branches = _unitOfWork.Repository<Branch>().GetSingleIncluding(
                                                                 b => b.Id == Manager.BranchId,
