@@ -1,29 +1,66 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using BankingSystem.BLL.Interfaces;
+using BankingSystem.DAL.Models;
+using BankingSystem.PL.ViewModels.Teller;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Operations;
+using System.Security.Claims;
 
 namespace BankingSystem.PL.Controllers.AppTeller
 {
+    [Authorize(Roles = "Teller")]
     public class HandleCustomerController : Controller
     {
-        // GET: HandleCustomerController
-        public ActionResult Index()
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
+
+        public HandleCustomerController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IMapper mapper)
         {
-            return View();
+            _unitOfWork = unitOfWork;
+            _userManager = userManager;
+            _mapper = mapper;
         }
 
-        // GET: HandleCustomerController/Details/5
-        public ActionResult Details(int id)
+
+        public ActionResult GetAllCustomers(string id)
         {
-            return View();
+            var TellerHandleCustomer = _unitOfWork.Repository<Teller>().GetSingleIncluding(T => T.Id == id);
+            //var TellerFromTellerTabe= 
+
+            var branchId = TellerHandleCustomer.BranchId;
+
+
+            var Customers = _unitOfWork.Repository<Customer>()
+                .GetAllIncluding(C => C.Branch)
+                .Where(C => C.BranchId == branchId)
+                .ToList();
+            var cutomerstoView = _mapper.Map<List<Customer>, List<CustomersViewModel>>(Customers);
+            return View(cutomerstoView);
         }
 
-        // GET: HandleCustomerController/Create
+
+        public ActionResult GetCustomerDetails(string id)
+        {
+            var Customer = _unitOfWork.Repository<Customer>()
+                .GetSingleIncluding(C => C.Id == id, C => C.Branch, C => C.Loans, C => C.Transactions, C => C.Cards, C => C.SupportTickets, C => C.Accounts);
+
+            var mappedCustomer = _mapper.Map<Customer, CustomerDetailsViewModel>(Customer);
+
+
+            return View("GetCustomerDetails", mappedCustomer);
+        }
+
+
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: HandleCustomerController/Create
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -38,7 +75,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
             }
         }
 
-        // GET: HandleCustomerController/Edit/5
+
         public ActionResult Edit(int id)
         {
             return View();
@@ -46,7 +83,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
         // POST: HandleCustomerController/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
+
         public ActionResult Edit(int id, IFormCollection collection)
         {
             try
@@ -59,25 +96,40 @@ namespace BankingSystem.PL.Controllers.AppTeller
             }
         }
 
-        // GET: HandleCustomerController/Delete/5
-        public ActionResult Delete(int id)
+
+        public ActionResult DeleteCustomer(string id)
         {
-            return View();
+            var Customer = _unitOfWork.Repository<Customer>()
+                 .GetSingleIncluding(C => C.Id == id, C => C.Branch, C => C.Loans, C => C.Transactions, C => C.Cards, C => C.SupportTickets, C => C.Accounts);
+
+            var mappedCustomerToDeleted = _mapper.Map<Customer, CustomerDetailsViewModel>(Customer);
+
+
+            return View(mappedCustomerToDeleted);
         }
 
-        // POST: HandleCustomerController/Delete/5
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult DeleteCustomer(CustomerDetailsViewModel customerDetailsViewModel)
         {
-            try
+
+            if (customerDetailsViewModel is not null)
             {
-                return RedirectToAction(nameof(Index));
+                var customerToBeDeleted = _unitOfWork.Repository<Customer>()
+                  .GetSingleIncluding(C => C.Id == customerDetailsViewModel.Id,
+                  C => C.Branch, C => C.Loans, C => C.Transactions, C => C.Cards,
+                  C => C.SupportTickets, C => C.Accounts);
+
+                _unitOfWork.Repository<Customer>().Delete(customerToBeDeleted);
+                _unitOfWork.Complete();
+                return RedirectToAction(nameof(GetAllCustomers), new { id = User.FindFirst(ClaimTypes.NameIdentifier).Value });
+
+
             }
-            catch
-            {
-                return View();
-            }
+            return View(customerDetailsViewModel);
+
+
+
         }
     }
 }
