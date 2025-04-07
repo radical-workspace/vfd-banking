@@ -15,11 +15,11 @@ namespace BankingSystem.DAL.Data.Configurations
         {
             // Configure LoanAmount with decimal precision
             builder.Property(l => l.LoanAmount)
-                   .HasPrecision(18, 4)
+                .HasColumnType("decimal(18,4)")
                 .IsRequired();
 
             builder.Property(L => L.CurrentDebt)
-                   .HasPrecision(18, 4)
+                .HasColumnType("decimal(18,4)")
                 .IsRequired();
 
 

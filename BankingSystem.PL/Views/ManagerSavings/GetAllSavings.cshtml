@@ -1,0 +1,50 @@
+﻿@model List<SavingsViewModel>
+@{
+    ViewData["Title"] = "Savings Management";
+    var managerId = ViewBag.ManagerId;
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<table class="table" id="savingsTable">
+    <thead>
+        <tr>
+            <th>Currency</th>
+            <th>Balance</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <!-- Table headers -->
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr data-saving-id="@item.Id">
+                <td class="currency-cell">@item.Currency</td>
+                <td class="balance-cell">@item.Balance.ToString("C2")</td>
+                <td>
+                    <button class="btn btn-primary edit-btn">Edit</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Hidden form for updates -->
+<form id="updateForm" asp-action="UpdateSaving" method="post">
+    <input type="hidden" name="Id" id="savingId" />
+    <input type="hidden" name="Currency" id="savingCurrency" />
+    <input type="hidden" name="Balance" id="savingBalance" />
+    <input type="hidden" name="__RequestVerificationToken"
+           value="@Html.AntiForgeryToken()" />
+</form>
+
+@section Scripts {
+    <script src="~/js/ManagerSaving.js"></script>
+}

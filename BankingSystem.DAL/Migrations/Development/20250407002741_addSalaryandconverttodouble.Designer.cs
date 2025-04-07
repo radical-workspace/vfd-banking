@@ -4,6 +4,7 @@ using BankingSystem.DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankingSystem.DAL.Migrations.Development
 {
     [DbContext(typeof(BankingSystemContext))]
-    partial class BankingSystemContextModelSnapshot : ModelSnapshot
+    [Migration("20250407002741_addSalaryandconverttodouble")]
+    partial class addSalaryandconverttodouble
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -771,17 +774,12 @@ namespace BankingSystem.DAL.Migrations.Development
                     b.Property<int?>("DeptId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ManagerId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<decimal>("Salary")
                         .HasColumnType("decimal(18,4)");
 
                     b.HasIndex("BranchId");
 
                     b.HasIndex("DeptId");
-
-                    b.HasIndex("ManagerId");
 
                     b.ToTable("Tellers", (string)null);
                 });
@@ -1049,15 +1047,9 @@ namespace BankingSystem.DAL.Migrations.Development
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BankingSystem.DAL.Models.MyManager", "Manager")
-                        .WithMany("Tellers")
-                        .HasForeignKey("ManagerId");
-
                     b.Navigation("Branch");
 
                     b.Navigation("Department");
-
-                    b.Navigation("Manager");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Account", b =>
@@ -1110,11 +1102,6 @@ namespace BankingSystem.DAL.Migrations.Development
                     b.Navigation("SupportTickets");
 
                     b.Navigation("Transactions");
-                });
-
-            modelBuilder.Entity("BankingSystem.DAL.Models.MyManager", b =>
-                {
-                    b.Navigation("Tellers");
                 });
 #pragma warning restore 612, 618
         }
