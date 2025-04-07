@@ -13,8 +13,7 @@ namespace BankingSystem.PL.Controllers.AppManager
         public ActionResult GetBranchDetails(string id)
         {
 
-            var managerID= id.Trim().Split(' ')[1];
-            var Manager = _unitOfWork.Repository<MyManager>().GetSingleIncluding(b=>b.Id == managerID);
+            var Manager = _unitOfWork.Repository<MyManager>().GetSingleIncluding(b=>b.Id == id);
 
             var Branches = _unitOfWork.Repository<Branch>().GetSingleIncluding(
                                                                 b => b.Id == Manager.BranchId,
@@ -22,7 +21,8 @@ namespace BankingSystem.PL.Controllers.AppManager
                                                                 c => c.Customers,
                                                                 t => t.Tellers,
                                                                 d => d.Departments,
-                                                                s => s.Savings
+                                                                s => s.Savings,
+                                                                m => m.MyManager
                                                                 );
 
             if (Branches == null) return NotFound();

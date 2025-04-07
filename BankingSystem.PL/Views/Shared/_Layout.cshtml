@@ -109,14 +109,19 @@
 
                         @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Manager"))
                         {
+                            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="ManagerTeller" asp-action="GetAllTellers">Employees</a>
+
+                                <a class="nav-link" asp-area="" asp-controller="ManagerTeller" asp-action="GetAllTellers" asp-route-id="@userId">Employees</a>
                             </li>
                             <li class="nav-item">
-                                @{
-                                    var userId = User.FindFirst(ClaimTypes.NameIdentifier);
-                                }
+
+
                                 <a class="nav-link" asp-area="" asp-controller="ManagerBranch" asp-action="GetBranchDetails" asp-route-id="@userId">Branche</a>
+                            </li>
+                            <li class="nav-item">
+
+                                <a class="nav-link" asp-area="" asp-controller="ManagerSavings" asp-action="GetAllSavings" asp-route-id="@userId">Savings</a>
                             </li>
                         }
 
