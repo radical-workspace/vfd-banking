@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankingSystem.DAL.Migrations.Development
 {
     [DbContext(typeof(BankingSystemContext))]
-    [Migration("20250407165622_AddingAccountNumber")]
+    [Migration("20250407193149_AddingAccountNumber")]
     partial class AddingAccountNumber
     {
         /// <inheritdoc />

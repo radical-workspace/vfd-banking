@@ -11,7 +11,7 @@
             <div class="card shadow rounded-4 border-0">
                 <div class="card-header bg-primary text-white rounded-top-4">
                     <!-- Render the Header Selection Partial View -->
-                    <partial name="_headerForRegisteration"/>
+                    <partial name="_headerForRegisteration_Partial" />
                 </div>
                 <div class="card-body px-5 py-4">
                     <form asp-action="Register" method="post" class="row g-3">
@@ -71,7 +71,7 @@
                         </div>
 
                         <!-- Render the Role Selection Partial View -->
-                        <partial name="_RoleSelection" model="Model" />
+                        <partial name="_RoleSelection_Partial" model="Model" />
 
                         <div class="col-md-6">
                             <label asp-for="Password" class="form-label fw-semibold"></label>
