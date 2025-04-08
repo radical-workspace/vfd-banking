@@ -10,8 +10,8 @@ namespace BankingSystem.DAL.Models
     {
         public string Name { get; set; } = null!;
         public string Location { get; set; } = null!;
-        public DateTime Opens { get; set; }
-        public DateTime Closes { get; set; }
+        public TimeSpan Opens { get; set; }
+        public TimeSpan Closes { get; set; }
         public List<Loan>? Loans { get; set; }
         public List<Customer> Customers { get; set; } = null!;
         public List<Teller> Tellers { get; set; } = null!;

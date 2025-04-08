@@ -5,6 +5,7 @@ using BankingSystem.DAL.Models;
 using BankingSystem.PL.ViewModels.Manager;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 
 namespace BankingSystem.PL.Controllers.Manager
@@ -14,6 +15,44 @@ namespace BankingSystem.PL.Controllers.Manager
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IMapper _mapper = mapper;
+
+        [HttpGet]
+        public ActionResult AddTeller(TellerDetailsViewModel model)
+        {
+            var managerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var branchId = _unitOfWork.Repository<MyManager>().GetSingleIncluding(b => b.Id == managerId)?.BranchId;
+            if (branchId == null) return NotFound("Branch not found");
+            //return View(model);
+            TempData["FixedRole"] = "Manager";
+            return RedirectToAction("Register", "Account", managerId);
+
+        }
+
+
+        //// still need to update
+        //[HttpPost]
+        //public ActionResult AddTeller(TellerDetailsViewModel model)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //    }
+
+        //    var teller = _mapper.Map();
+
+        //    try
+        //    {
+        //        _unitOfWork.Repository<Teller>().Add(teller);
+        //        _unitOfWork.Complete();
+        //        TempData["SuccessMessage"] = "Employee added successfully";
+        //        return RedirectToAction("GetAllTellers", new { id = teller.Branch.MyManager.Id });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ModelState.AddModelError("", "Error saving employee: " + ex.Message);
+        //        model.Branches = GetBranchSelectList();
+        //        return View(model);
+        //    }
+        //}
 
         [HttpGet]
         public ActionResult GetAllTellers(string id)
@@ -34,11 +73,6 @@ namespace BankingSystem.PL.Controllers.Manager
                 .GetAllIncluding(e => e.Branch, e => e.Department)
                 .Where(e => e.BranchId == branchId)
                 .ToList();
-
-            if (employees == null || employees.Count == 0)
-            {
-                return NotFound("No employees found.");
-            }
 
             var tellerViewModels = _mapper.Map<List<TellerDetailsViewModel>>(employees);
             return View(tellerViewModels);
@@ -125,7 +159,7 @@ namespace BankingSystem.PL.Controllers.Manager
             }
             _unitOfWork.Repository<Teller>().Delete(teller);
             _unitOfWork.Complete();
-            return RedirectToAction("GetAllTellers", new { id = teller.Branch.MyManager.Id});
+            return RedirectToAction("GetAllTellers", new { id = teller.Branch.MyManager.Id });
         }
     }
 }
