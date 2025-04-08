@@ -67,6 +67,14 @@ namespace BankingSystem.PL.Helpers
                     .ForMember(dest => dest.TicketSubjects, opt => opt.MapFrom(src => src.SupportTickets.Select(s => s.Description)))
                     .ReverseMap();
 
+            CreateMap<ApplicationUser, Customer>()
+            .ForMember(dest => dest.BranchId, opt => opt.Ignore()) // set manually
+            .ForMember(dest => dest.Branch, opt => opt.Ignore())   // avoid circular reference
+            .ForMember(dest => dest.Transactions, opt => opt.Ignore())
+            .ForMember(dest => dest.Loans, opt => opt.Ignore())
+            .ForMember(dest => dest.Accounts, opt => opt.Ignore())
+            .ForMember(dest => dest.Cards, opt => opt.Ignore())
+            .ForMember(dest => dest.SupportTickets, opt => opt.Ignore());
 
 
 

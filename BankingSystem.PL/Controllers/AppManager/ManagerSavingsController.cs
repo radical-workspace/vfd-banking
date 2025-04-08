@@ -74,37 +74,6 @@ namespace BankingSystem.PL.Controllers.AppManager
             return RedirectToAction("GetAllSavings", new { id = TempData["ManagerId"] });
         }
 
-        //[HttpPost]
-        //// still need to update
-        //public ActionResult AddTeller(TellerDetailsViewModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        model.Branches = GetBranchSelectList();
-        //        return View(model);
-        //    }
-
-        //    var teller = new Teller
-        //    {
-        //        FirstName = model.Name.Trim(),
-        //        Email = model.Email.Trim().ToLower(),
-        //        PhoneNumber = model.PhoneNumber.Trim(),
-        //        BranchId = model.BranchID
-        //    };
-
-        //    try
-        //    {
-        //        _unitOfWork.Repository<Teller>().Add(teller);
-        //        _unitOfWork.Complete();
-        //        TempData["SuccessMessage"] = "Employee added successfully";
-        //        return RedirectToAction("GetAllTellers");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        ModelState.AddModelError("", "Error saving employee: " + ex.Message);
-        //        model.Branches = GetBranchSelectList();
-        //        return View(model);
-        //    }
-        //}
+   
     }
 }
