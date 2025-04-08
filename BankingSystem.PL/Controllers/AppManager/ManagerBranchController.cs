@@ -4,13 +4,14 @@ using BankingSystem.DAL.Models;
 using BankingSystem.PL.ViewModels.Manager;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BankingSystem.PL.Controllers.AppManager
 {
     public class ManagerBranchController(IUnitOfWork unitOfWork) : Controller
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        public ActionResult GetBranchDetails(string id)
+        public ActionResult GetBranchDetails(string id) //managerID
         {
             var Manager = _unitOfWork.Repository<MyManager>().GetSingleIncluding(b => b.Id == id);
 
@@ -40,55 +41,45 @@ namespace BankingSystem.PL.Controllers.AppManager
             };
             return View(BranchDetails);
         }
-        public ActionResult Create()
-        {
-            return View();
-        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult EditBusinessHours(BranchWorkingTimeViewModel Timing)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (!ModelState.IsValid)
+            {
+                // Return validation errors
+                if (Request.Headers.XRequestedWith == "XMLHttpRequest")
+                //if (Request.IsAjaxRequest())
+                    return Json(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage) });
+
+                return RedirectToAction("GetBranchDetails", new { id = userId });
+            }
+
             try
             {
-                return RedirectToAction(nameof(Index));
+                var branchWorkingTime = _unitOfWork.Repository<Branch>().Get(Timing.BranchId);
+                if (branchWorkingTime == null) return NotFound();
+
+                branchWorkingTime.Opens = Timing.Opens;
+                branchWorkingTime.Closes = Timing.Closes;
+                _unitOfWork.Complete();
+                
+                if (Request.Headers.XRequestedWith == "XMLHttpRequest")
+                    //if (Request.IsAjaxRequest())
+                    return Json(new { success = true });
+
+                return RedirectToAction("GetBranchDetails", new { id = userId });
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
-            }
-        }
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
+                ModelState.AddModelError(string.Empty, "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
+                if (Request.Headers.XRequestedWith == "XMLHttpRequest")
+                    return Json(new { success = false, error = ex.Message });
+
+                return RedirectToAction("GetBranchDetails", new { id = userId });
             }
         }
     }
