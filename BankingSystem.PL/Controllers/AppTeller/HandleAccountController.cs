@@ -1,24 +1,34 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BankingSystem.BLL.Interfaces;
+using BankingSystem.DAL.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystem.PL.Controllers.AppTeller
 {
     public class HandleAccountController : Controller
     {
-        // GET: HandleAccountController
-        public ActionResult Index()
+        private readonly IGenericRepository<Account> _genericRepository;
+
+        public HandleAccountController(IGenericRepository<Account> genericRepository)
         {
-            return View();
+            _genericRepository = genericRepository;
+        }
+
+
+        // GET: HandleAccountController
+        public IActionResult Index()
+        {
+            return View(_genericRepository.GetAll());
         }
 
         // GET: HandleAccountController/Details/5
-        public ActionResult Details(int id)
+        public IActionResult Details(int id)
         {
-            return View();
+            return View(_genericRepository.Get(id));
         }
 
         // GET: HandleAccountController/Create
-        public ActionResult Create()
+        public IActionResult Create()
         {
             return View();
         }
@@ -26,7 +36,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
         // POST: HandleAccountController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public IActionResult Create(IFormCollection collection)
         {
             try
             {
@@ -39,7 +49,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
         }
 
         // GET: HandleAccountController/Edit/5
-        public ActionResult Edit(int id)
+        public IActionResult Edit(int id)
         {
             return View();
         }
@@ -47,7 +57,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
         // POST: HandleAccountController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public IActionResult Edit(int id, IFormCollection collection)
         {
             try
             {
@@ -59,25 +69,26 @@ namespace BankingSystem.PL.Controllers.AppTeller
             }
         }
 
-        // GET: HandleAccountController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
 
-        // POST: HandleAccountController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public IActionResult Delete(int id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var account = _genericRepository.Get(id);
+                if (account == null)
+                    return NotFound(); 
+
+                _genericRepository.Delete(account);
             }
             catch
             {
-                return View();
+                return RedirectToAction(nameof(Index));
             }
+
+            return RedirectToAction(nameof(Index));
         }
+
     }
 }

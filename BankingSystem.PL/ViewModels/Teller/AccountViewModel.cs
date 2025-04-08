@@ -1,26 +1,16 @@
-using System.Collections.Generic;
+﻿using BankingSystem.DAL.Models;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Security.Principal;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BankingSystem.DAL.Models
+namespace BankingSystem.PL.ViewModels.Teller
 {
-    public enum AccountType
+    public class AccountViewModel
     {
-        Saving = 1,
-        Current = 2
-    }
-    public enum AccountStatus
-    {
-        Active = 1,
-        Inactive = 2,
-        Closed = 3
-    }
-    public class Account : BaseEntity
-    {
+        public AccountViewModel(Account account)
+        {
+            Number = account.Number;
+        }
+
+
         public long Number { get; set; }
         public double? Balance { get; set; }
         public DateTime CreatedAt { get; set; }

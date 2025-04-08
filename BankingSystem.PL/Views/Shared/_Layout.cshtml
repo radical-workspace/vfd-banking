@@ -89,6 +89,14 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
+        .bogus {
+            font-weight: bold;
+        }
+
+        .bogus:hover {
+                color: rgb(250, 205, 0) !important;
+        }
     </style>
 </head>
 <body>
@@ -106,6 +114,7 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
+
 
                         @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Manager"))
                         {
@@ -132,6 +141,21 @@
                                 <a class="nav-link" asp-area="" asp-controller="Users" asp-action="Manage">Manage Users</a>
                             </li>
                         }
+
+                        @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Teller"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="HandleCustomer" asp-action="Index">Clients</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="HandleAccount" asp-action="Index">Accounts</a>
+                            </li>
+                        }
+
+                        <li class="nav-item">
+                            <a class="nav-link bogus" asp-area="" asp-controller="BogusData" asp-action="CreateBogusData">Create Bogus Data</a>
+                        </li>
                     </ul>
 
                     <!-- Right Side -->

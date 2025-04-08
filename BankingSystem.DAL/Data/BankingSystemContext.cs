@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Data
 {
-    public class BankingSystemContext(DbContextOptions<BankingSystemContext> options) : IdentityDbContext<ApplicationUser>(options)
+    public partial class BankingSystemContext(DbContextOptions<BankingSystemContext> options) : IdentityDbContext<ApplicationUser>(options)
     {
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,15 +22,19 @@ namespace BankingSystem.DAL.Data
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
            
-        modelBuilder.Entity<Customer>().ToTable("Customers");
+            modelBuilder.Entity<Customer>().ToTable("Customers");
             modelBuilder.Entity<Admin>().ToTable("Admins");
             modelBuilder.Entity<MyManager>().ToTable("Managers");
             modelBuilder.Entity<Teller>().ToTable("Tellers");
             modelBuilder.Entity<ApplicationUser>().ToTable("AspNetUsers");
 
-       
-
+            OnModelCreatingPartial(modelBuilder);
         }
+
+
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+
         public DbSet <Account> Accounts { get; set; }
         public DbSet <Bank> Banks { get; set; }
         public DbSet <Branch> Branches { get; set; }

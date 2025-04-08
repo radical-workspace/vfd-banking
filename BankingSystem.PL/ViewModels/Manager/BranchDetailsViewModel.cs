@@ -28,7 +28,7 @@ namespace BankingSystem.PL.ViewModels.Manager
 
         public List<Customer> Customers { get; set; } = null!;
 
-        public List<Teller> Tellers { get; set; } = null!;
+        public List<BankingSystem.DAL.Models.Teller> Tellers { get; set; } = null!;
 
         public List<Department> Departments { get; set; } = null!;
 
