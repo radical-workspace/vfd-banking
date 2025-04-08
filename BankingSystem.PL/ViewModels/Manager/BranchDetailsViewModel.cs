@@ -19,10 +19,10 @@ namespace BankingSystem.PL.ViewModels.Manager
         public string Location { get; set; } = null!;
 
         [Required(ErrorMessage = "Opening time is required.")]
-        public DateTime Opens { get; set; }
+        public TimeSpan Opens { get; set; }
 
         [Required(ErrorMessage = "Closing time is required.")]
-        public DateTime Closes { get; set; }
+        public TimeSpan Closes { get; set; }
 
         public List<Loan>? Loans { get; set; }
 

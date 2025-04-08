@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankingSystem.DAL.Migrations.Development
 {
     [DbContext(typeof(BankingSystemContext))]
-    [Migration("20250407165622_AddingAccountNumber")]
-    partial class AddingAccountNumber
+    [Migration("20250408045405_UpdateWorkingHours")]
+    partial class UpdateWorkingHours
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -213,8 +213,8 @@ namespace BankingSystem.DAL.Migrations.Development
                     b.Property<int?>("BankId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Closes")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeSpan>("Closes")
+                        .HasColumnType("time");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -231,8 +231,8 @@ namespace BankingSystem.DAL.Migrations.Development
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("Opens")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeSpan>("Opens")
+                        .HasColumnType("time");
 
                     b.HasKey("Id");
 
