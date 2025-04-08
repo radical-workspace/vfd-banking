@@ -1,0 +1,139 @@
+﻿@model List<CustomersViewModel>
+
+@{
+    ViewData["Title"] = "Customers";
+    var accentColor = "#004080"; // Navy blue
+    var gold = "#DAA520";
+    var lightGray = "#f8f9fa";
+}
+
+<style>
+    .bank-header {
+        background-color: @accentColor;
+        color: white;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .bank-btn {
+        border: none;
+        padding: 0.5rem 1.25rem;
+        font-weight: 600;
+        transition: 0.3s ease;
+    }
+
+    .btn-add {
+        background-color: @gold;
+        color: black;
+    }
+
+        .btn-add:hover {
+            background-color: #c49b0c;
+            color: white;
+        }
+
+    .btn-flat {
+        border-radius: 0.375rem;
+        font-size: 0.9rem;
+    }
+
+    .btn-details {
+        background-color: @accentColor;
+        color: white;
+    }
+
+        .btn-details:hover {
+            background-color: #003366;
+        }
+
+    .btn-update {
+        background-color: #6c757d;
+        color: white;
+    }
+
+        .btn-update:hover {
+            background-color: #5a6268;
+        }
+
+    .btn-delete {
+        background-color: #b22222;
+        color: white;
+    }
+
+        .btn-delete:hover {
+            background-color: #8b0000;
+        }
+
+    .table-bank {
+        background-color: white;
+        border: none;
+    }
+
+        .table-bank th {
+            background-color: @accentColor;
+            color: white;
+        }
+
+        .table-bank td, .table-bank th {
+            vertical-align: middle;
+            padding: 1rem;
+        }
+
+        .table-bank tbody tr:hover {
+            background-color: #eef3f8;
+        }
+</style>
+
+<div class="container mt-5">
+    <div class="text-center bank-header mb-4">
+        <h2 class="mb-0">Customer Directory</h2>
+        <p class="mb-0 fst-italic">View, update or manage your customers with confidence.</p>
+    </div>
+
+    <div class="d-flex justify-content-end mb-3">
+        <a class="btn bank-btn btn-add btn-lg shadow-sm btn-flat" asp-action="AddCustomer">
+            <i class="fas fa-user-plus"></i> Add New Customer
+        </a>
+    </div>
+
+    <table class="table table-hover table-bank shadow-sm rounded">
+        <thead class="text-center">
+            <tr>
+                <th>SSN</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Branch</th>
+                <th>Address</th>
+                <th>Join Date</th>
+                <th>Birth Date</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in Model)
+            {
+                <tr class="text-center">
+                    <td class="fw-bold">@customer.SSN</td>
+                    <td>@customer.FirstName</td>
+                    <td>@customer.LastName</td>
+                    <td>@customer.Branch</td>
+                    <td>@customer.Address</td>
+                    <td>@customer.JoinDate.ToString("MM-dd-yyyy")</td>
+                    <td>@customer.BirthDate.ToString("MM-dd-yyyy")</td>
+                    <td>
+                        <a class="btn btn-details btn-sm me-1 bank-btn btn-flat" asp-action="GetCustomerDetails" asp-route-id="@customer.Id">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a class="btn btn-update btn-sm me-1 bank-btn btn-flat" asp-action="EditCustomer" asp-route-id="@customer.Id">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a class="btn btn-delete btn-sm bank-btn btn-flat" asp-action="DeleteCustomer" asp-route-id="@customer.Id">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
