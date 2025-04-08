@@ -20,6 +20,7 @@ namespace BankingSystem.BLL.Interfaces
         void Update(T Entity);
 
         void Delete(T Entity);
+    
 
         IEnumerable<T> GetAllIncluding(params Expression<Func<T, object>>[] includes);
         T? GetSingleIncluding(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
