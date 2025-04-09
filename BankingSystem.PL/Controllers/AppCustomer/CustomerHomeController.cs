@@ -17,11 +17,11 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         [HttpGet]
         public IActionResult HomePage(string id)
         {
-            var customer = _UnitOfWork.Repository<Customer>()
+            var customer = _UnitOfWork.Repository<MyCustomer>()
                            .GetSingleIncluding(c => c.Id == id, c => c.Accounts, c => c.Cards, c => c.Loans);
             if (customer != null)
             {
-                var customerDetailsVM = new CustomerDetailsViewModel()
+                var customerDetailsVM = new CustomerDetailsVM()
                 {
                     Id = customer.Id,
                     FirstName = customer.FirstName,

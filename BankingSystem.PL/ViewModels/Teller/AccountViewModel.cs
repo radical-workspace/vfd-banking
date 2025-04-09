@@ -1,6 +1,5 @@
 ﻿using BankingSystem.DAL.Models;
 using System.ComponentModel.DataAnnotations.Schema;
-
 namespace BankingSystem.PL.ViewModels.Teller
 {
     public class AccountViewModel
@@ -24,7 +23,7 @@ namespace BankingSystem.PL.ViewModels.Teller
 
         [ForeignKey(nameof(Customer))]
         public string? CustomerId { get; set; }
-        public Customer Customer { get; set; } = null!;
+        public MyCustomer Customer { get; set; } = null!;
 
         [ForeignKey(nameof(Branch))]
         public int? BranchId { get; set; }

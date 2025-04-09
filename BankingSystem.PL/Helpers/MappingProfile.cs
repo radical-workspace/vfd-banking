@@ -15,7 +15,7 @@ namespace BankingSystem.PL.Helpers
                   .ForMember(d => d.PasswordHash, o => o.MapFrom(s => s.Password))
                   .ReverseMap();
 
-            CreateMap<RegisterViewModel, Customer>()
+            CreateMap<RegisterViewModel, MyCustomer>()
                                             .IncludeBase<RegisterViewModel, ApplicationUser>();
 
             CreateMap<RegisterViewModel, Admin>()
@@ -42,7 +42,7 @@ namespace BankingSystem.PL.Helpers
             .ForMember(dest => dest.Branch, opt => opt.Ignore())
             .ForMember(dest => dest.Department, opt => opt.Ignore());
 
-            CreateMap<Customer, CustomersViewModel>()
+            CreateMap<MyCustomer, CustomersViewModel>()
                     .ForMember(dest => dest.Id, s => s.MapFrom(s => s.Id))
                     .ForMember(dest => dest.FirstName, s => s.MapFrom(s => s.FirstName))
                     .ForMember(dest => dest.LastName, s => s.MapFrom(s => s.LastName))
@@ -51,7 +51,7 @@ namespace BankingSystem.PL.Helpers
                     .ForMember(dest => dest.BirthDate, s => s.MapFrom(s => s.BirthDate))
                     .ForMember(dest => dest.Branch, s => s.MapFrom(s => s.Branch.Name));
 
-            CreateMap<Customer, CustomerDetailsViewModel>()
+            CreateMap<MyCustomer, CustomerDetailsViewModel>()
                     .ForMember(dest => dest.Id, s => s.MapFrom(s => s.Id))
                     .ForMember(dest => dest.FirstName, s => s.MapFrom(s => s.FirstName))
                     .ForMember(dest => dest.LastName, s => s.MapFrom(s => s.LastName))
@@ -67,14 +67,6 @@ namespace BankingSystem.PL.Helpers
                     .ForMember(dest => dest.TicketSubjects, opt => opt.MapFrom(src => src.SupportTickets.Select(s => s.Description)))
                     .ReverseMap();
 
-            CreateMap<ApplicationUser, Customer>()
-            .ForMember(dest => dest.BranchId, opt => opt.Ignore()) // set manually
-            .ForMember(dest => dest.Branch, opt => opt.Ignore())   // avoid circular reference
-            .ForMember(dest => dest.Transactions, opt => opt.Ignore())
-            .ForMember(dest => dest.Loans, opt => opt.Ignore())
-            .ForMember(dest => dest.Accounts, opt => opt.Ignore())
-            .ForMember(dest => dest.Cards, opt => opt.Ignore())
-            .ForMember(dest => dest.SupportTickets, opt => opt.Ignore());
 
 
 

@@ -26,7 +26,7 @@ namespace BankingSystem.PL.ViewModels.Manager
 
         public List<Loan>? Loans { get; set; }
 
-        public List<BankingSystem.DAL.Models.Customer> Customers { get; set; } = null!;
+        public List<MyCustomer> Customers { get; set; } = null!;
 
         public List<BankingSystem.DAL.Models.Teller> Tellers { get; set; } = null!;
 
