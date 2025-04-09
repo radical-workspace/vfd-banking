@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BankingSystem.PL.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
 
     <style>
         /* ====== Global Styles ====== */
@@ -111,9 +113,13 @@
                 <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                     <!-- Left Side -->
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
+                        @if (!User.IsInRole("Customer"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                        }
+                        
 
 
                         @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Manager"))
@@ -158,6 +164,24 @@
                         <li class="nav-item">
                             <a class="nav-link bogus" asp-area="" asp-controller="BogusData" asp-action="CreateBogusData">Create Bogus Data</a>
                         </li>
+
+                        @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Customer"))
+                        {
+                            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="CustomerHome" asp-action="HomePage" asp-route-id="@userId">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="CustomerHome" asp-action="Cards" asp-route-id="@userId">Cards</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="CustomerHome" asp-action="Loans" asp-route-id="@userId">Loans</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="CustomerHome" asp-action="Certificates" asp-route-id="@userId">Certificates</a>
+                            </li>
+                        }
                     </ul>
 
                     <!-- Right Side -->
@@ -174,7 +198,11 @@
                                     {
                                         <strong>Manager</strong>
                                     }
-                                    @User.Identity.Name
+                                    else if (User.IsInRole("Customer"))
+                                    {
+                                        <strong>Hello </strong>
+                                    }
+                                    <u> @User.Identity.Name</u>
                                 </span>
                             </li>
                             <li class="nav-item">
