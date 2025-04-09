@@ -21,9 +21,8 @@ namespace BankingSystem.DAL.Models
     }
     public class Account : BaseEntity
     {
+        public long Number { get; set; }
         public double? Balance { get; set; }
-
-
         public DateTime CreatedAt { get; set; }
         public AccountType AccountType { get; set; }
         public AccountStatus AccountStatus { get; set; }

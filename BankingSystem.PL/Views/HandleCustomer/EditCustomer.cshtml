@@ -1,0 +1,62 @@
+﻿@using System.Security.Claims
+@model EditCustomerViewModel
+@{
+    ViewData["Title"] = "Edit Teller";
+    var EditTellerId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+}
+
+<h2>Edit Customer</h2>
+
+<form asp-action="EditCustomer" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group mb-3">
+        <label asp-for="FirstName" class="form-label">First Name</label>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="LastName" class="form-label">Last Name</label>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Email" class="form-label">Email</label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="SSN" class="form-label">SSN</label>
+        <input asp-for="SSN" class="form-control" />
+        <span asp-validation-for="SSN" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Address" class="form-label">Address</label>
+        <input asp-for="Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="JoinDate" class="form-label">Join Date</label>
+        <input asp-for="JoinDate" class="form-control" type="date" />
+        <span asp-validation-for="JoinDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="BirthDate" class="form-label">Birth Date</label>
+        <input asp-for="BirthDate" class="form-control" type="date" />
+        <span asp-validation-for="BirthDate" class="text-danger"></span>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a asp-action="GetAllCustomers" asp-route-id="@EditTellerId" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

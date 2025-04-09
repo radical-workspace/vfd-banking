@@ -1,4 +1,6 @@
 using BankingSystem.DAL.Data;
+using BankingSystem.BLL.Services;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using BankingSystem.DAL.Models;
@@ -29,6 +31,7 @@ namespace BankingSystem.PL
                                                                 options.UseSqlServer(DevelopmentconnectionString)
                                                                        .AddInterceptors(new SoftDeleteInterceptor()));
 
+
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(op =>
             {
                 op.Password.RequireUppercase = false;
@@ -43,6 +46,7 @@ namespace BankingSystem.PL
 
             // Register Unit of Work
             builder.Services.AddScoped<IUnitOfWork ,UnitOfWork>();
+            builder.Services.AddScoped<IGenericRepository<Account>, AccountBL>();
 
             builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfile()));
 

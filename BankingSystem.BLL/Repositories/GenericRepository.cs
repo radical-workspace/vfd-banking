@@ -72,6 +72,7 @@ namespace BankingSystem.BLL.Repositories
             return query.FirstOrDefault(predicate);
         }
 
+     
     }
 }
 

@@ -57,6 +57,9 @@ namespace BankingSystem.DAL.Migrations.Development
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
+                    b.Property<long>("Number")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
                     b.HasIndex("BranchId");
@@ -207,8 +210,8 @@ namespace BankingSystem.DAL.Migrations.Development
                     b.Property<int?>("BankId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Closes")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeSpan>("Closes")
+                        .HasColumnType("time");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -225,8 +228,8 @@ namespace BankingSystem.DAL.Migrations.Development
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("Opens")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeSpan>("Opens")
+                        .HasColumnType("time");
 
                     b.HasKey("Id");
 

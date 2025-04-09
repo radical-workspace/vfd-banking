@@ -42,6 +42,8 @@ namespace BankingSystem.PL.ViewModels.Manager
         public double Salary { get; set; }
 
         public string? BranchName { get; set; }
+        public string? BranchId { get; set; }
+
 
         public string? DepartmentName { get; set; }
     }
