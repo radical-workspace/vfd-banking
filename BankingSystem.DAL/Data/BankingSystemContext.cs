@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Data
 {
-    public partial class BankingSystemContext(DbContextOptions<BankingSystemContext> options) : IdentityDbContext<ApplicationUser>(options)
+    public class BankingSystemContext(DbContextOptions<BankingSystemContext> options) : IdentityDbContext<ApplicationUser>(options)
     {
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,19 +22,15 @@ namespace BankingSystem.DAL.Data
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
            
-            modelBuilder.Entity<Customer>().ToTable("Customers");
+        modelBuilder.Entity<MyCustomer>().ToTable("Customers");
             modelBuilder.Entity<Admin>().ToTable("Admins");
             modelBuilder.Entity<MyManager>().ToTable("Managers");
             modelBuilder.Entity<Teller>().ToTable("Tellers");
             modelBuilder.Entity<ApplicationUser>().ToTable("AspNetUsers");
 
-            OnModelCreatingPartial(modelBuilder);
+       
+
         }
-
-
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
-
         public DbSet <Account> Accounts { get; set; }
         public DbSet <Bank> Banks { get; set; }
         public DbSet <Branch> Branches { get; set; }
@@ -43,7 +39,7 @@ namespace BankingSystem.DAL.Data
         public DbSet<Department> Departments { get; set; }
         public DbSet<Loan> Loans { get; set; }
         public DbSet<MyManager> Managers { get; set; }
-        public DbSet<Customer> Customers { get; set; }
+        public DbSet<MyCustomer> Customers { get; set; }
         public DbSet<Teller> Tellers { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Savings> Savings { get; set; }

@@ -98,9 +98,9 @@ namespace BankingSystem.BogusFakers
         }
 
 
-        public static List<Customer> GenerateFakeClients(int count = 10)
+        public static List<MyCustomer> GenerateFakeClients(int count = 10)
         {
-            var faker = new Faker<Customer>("en")
+            var faker = new Faker<MyCustomer>("en")
                 .RuleFor(c => c.Id, f => Guid.NewGuid().ToString())
                 .RuleFor(c => c.UserName, f => f.Internet.UserName())
                 .RuleFor(c => c.NormalizedUserName, (f, c) => c.UserName.ToUpper())
@@ -132,7 +132,7 @@ namespace BankingSystem.BogusFakers
         }
 
 
-        public static List<Account> GenerateFakeAccounts(List<Customer> customers, int accountsPerCustomer = 2)
+        public static List<Account> GenerateFakeAccounts(List<MyCustomer> customers, int accountsPerCustomer = 2)
         {
             var accounts = new List<Account>();
             var random = new Random();
