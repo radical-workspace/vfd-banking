@@ -40,7 +40,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                     CreditCardsCount = customer.Cards?.Count(c => c.CardType == TypeOfCard.Credit) ??0,
                     Loans = customer.Loans,
                     LoansCount = customer.Loans?.Count() ?? 0,
-                    CertificatCount = customer.Accounts.Sum(acc => acc.Certificates.Count())
+                    //CertificatCount = customer.Accounts.Sum(acc => acc.Certificates.Count())
                 };
                 return View(customerDetailsVM);
             }
