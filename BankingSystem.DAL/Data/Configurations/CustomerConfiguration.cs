@@ -5,9 +5,9 @@ using System.Reflection.Emit;
 
 namespace BankingSystem.DAL.Configurations
 {
-    public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
+    public class CustomerConfiguration : IEntityTypeConfiguration<MyCustomer>
     {
-        public void Configure(EntityTypeBuilder<Customer> builder)
+        public void Configure(EntityTypeBuilder<MyCustomer> builder)
         {
 
             builder

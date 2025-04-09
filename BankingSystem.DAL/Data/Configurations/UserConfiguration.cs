@@ -49,7 +49,7 @@ namespace BankingSystem.DAL.Data.Configurations
             builder.HasDiscriminator<string>("Discriminator")
                     .HasValue<MyManager>("Manager")
                     .HasValue<Teller>("Teller")
-                    .HasValue<Customer>("Customer")
+                    .HasValue<MyCustomer>("Customer")
                     .HasValue<Admin>("Admin");
 
             builder.HasQueryFilter(P => !P.IsDeleted);
