@@ -74,6 +74,6 @@ namespace BankingSystem.PL.Controllers.AppManager
             return RedirectToAction("GetAllSavings", new { id = TempData["ManagerId"] });
         }
 
-       
+        
     }
 }

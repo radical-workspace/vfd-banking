@@ -2,8 +2,10 @@
 using Azure.Core;
 using BankingSystem.BLL.Interfaces;
 using BankingSystem.DAL.Models;
+using BankingSystem.PL.ViewModels.Auth;
 using BankingSystem.PL.ViewModels.Manager;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -15,6 +17,90 @@ namespace BankingSystem.PL.Controllers.Manager
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IMapper _mapper = mapper;
+
+
+        // Modify Teller To Be Inserted By Manager Instead Of Customer
+
+        //public ActionResult CreateTeller()
+        //{
+        //    ViewData["FixedRole"] = "Customer";
+        //    return View("~/Views/Account/Register.cshtml");
+        //}
+
+
+        //[HttpPost]
+
+        //public async Task<ActionResult> CreateTeller(RegisterViewModel UserToRegister)
+        //{
+        //    ViewData["FixedRole"] = "Customer";
+        //    var TellerHandleCustomer = _unitOfWork.Repository<Teller>().GetSingleIncluding(T => T.Id == User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+        //    // Load roles again in case of return to the view
+
+        //    if (UserToRegister is not null)
+        //    {
+        //        if (ModelState.IsValid)
+        //        {
+        //            ApplicationUser appUser;
+        //            Customer customer = new Customer();
+
+        //            // Create the correct derived class based on role
+        //            if (UserToRegister.Role == "Customer")
+        //            {
+        //                appUser = _mapper.Map<Customer>(UserToRegister);
+
+
+        //                customer.FirstName = appUser.FirstName;
+        //                customer.LastName = appUser.LastName;
+        //                customer.UserName = appUser.UserName;
+        //                customer.Email = appUser.Email;
+        //                customer.SSN = appUser.SSN;
+        //                customer.Address = appUser.Address;
+        //                customer.BirthDate = appUser.BirthDate;
+        //                customer.JoinDate = appUser.JoinDate;
+        //                customer.IsDeleted = appUser.IsDeleted;
+        //                customer.BranchId = TellerHandleCustomer.BranchId;
+
+
+
+
+
+
+
+        //            }
+
+        //            // How Cast From Applicaton User To Customer To Add BranchId
+
+        //            else appUser = _mapper.Map<ApplicationUser>(UserToRegister);
+
+        //            IdentityResult result = await _userManager.CreateAsync(customer, UserToRegister.Password);
+
+
+
+        //            // Check if the user was created successfully
+        //            if (result.Succeeded)
+        //            {
+        //                // Assign role
+        //                await _userManager.AddToRoleAsync(appUser, UserToRegister.Role);
+
+        //                // Optional: Sign in
+        //                // await _signInManager.SignInAsync(appUser, false);
+
+        //                return RedirectToAction("GetAllCustomers", new { id = User.FindFirst(ClaimTypes.NameIdentifier).Value });
+        //            }
+        //            else
+        //            {
+        //                foreach (var error in result.Errors)
+        //                {
+        //                    ModelState.AddModelError("", error.Description);
+        //                }
+        //            }
+        //        }
+        //    }
+        //    return View("Register", UserToRegister);
+        //}
+
+
 
         [HttpGet]
         public ActionResult AddTeller(TellerDetailsViewModel model)

@@ -178,6 +178,12 @@ namespace BankingSystem.PL.Controllers
                         if (found)
                         {
                             await _signInManager.SignInAsync(user, UserToLogin.RememberMe);
+
+                            // if the role is Customer 
+                            if (await _userManager.IsInRoleAsync(user, "Customer"))
+                            {
+                                return RedirectToAction("HomePage", "CustomerHome" , new { id = user.Id }); 
+                            }
                             return RedirectToAction("Index", "Home");
                         }
                     }
