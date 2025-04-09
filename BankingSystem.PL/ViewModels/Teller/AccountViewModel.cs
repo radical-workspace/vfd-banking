@@ -24,7 +24,7 @@ namespace BankingSystem.PL.ViewModels.Teller
 
         [ForeignKey(nameof(Customer))]
         public string? CustomerId { get; set; }
-        public Customer Customer { get; set; } = null!;
+        public BankingSystem.DAL.Models.Customer Customer { get; set; } = null!;
 
         [ForeignKey(nameof(Branch))]
         public int? BranchId { get; set; }
