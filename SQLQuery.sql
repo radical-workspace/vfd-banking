@@ -21,3 +21,11 @@ select * from Accounts
 select * from Branches
 select * from Banks
 
+
+select u.UserName [Teller Name], t.Id [Teller ID], u.Email, c.Id [CID], b.Name [Branch], a.*
+from AspNetUsers u inner join Tellers t
+	on u.Id = t.Id inner join Branches b
+	on t.BranchId = b.Id inner join Customers c
+	on b.Id = c.BranchId inner join Accounts a
+	on a.CustomerId = c.Id
+	where t.Id like '571b33ca-09fd-4a41-99ee-d0d7aa882716'

@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace BankingSystem.BLL.Services
 {
@@ -20,13 +22,22 @@ namespace BankingSystem.BLL.Services
         }
 
 
-        public IEnumerable<Account> GetAll()
+        public IEnumerable<Account> GetAll(string? ID, int flag = 1)
         {
-            return _context.Accounts
-                //.IgnoreQueryFilters()
-                .Include(a => a.Customer)
-                .Include(a => a.Branch)
-                .ToList();
+            if (flag == 1) 
+                return _context.Accounts
+                    .Include(a => a.Customer)
+                        .ThenInclude(c => c.Branch)
+                    .Include(a => a.Branch)
+                    .Where(a => a.Customer!.Branch.Tellers.Any(teller => teller.Id == ID))
+                    .ToList();
+            else
+                return _context.Accounts
+                    .Include(a => a.Customer)
+                        .ThenInclude(c => c.Branch)
+                    .Include(a => a.Branch)
+                    .Where(a => a.Customer!.Id == ID)
+                    .ToList();
         }
 
 
@@ -42,13 +53,30 @@ namespace BankingSystem.BLL.Services
 
         public void Add(Account Entity)
         {
-            throw new NotImplementedException();
+            if (Entity != null)
+            {
+                int custAccountCount = _context.Accounts
+                   .Where(a => a.CustomerId == Entity.CustomerId)
+                   .Count();
+
+                if (custAccountCount < 2)
+                {
+                    _context.Accounts.Add(Entity);
+                    _context.SaveChanges();
+                }
+                else
+                    throw new InvalidOperationException("This customer already have 2 accounts, cannot add more than 2.");
+            }
         }
 
 
         public void Update(Account Entity)
         {
-            throw new NotImplementedException();
+            if (Entity != null)
+            {
+                _context.Accounts.Update(Entity);
+                _context.SaveChanges();
+            }
         }
 
 

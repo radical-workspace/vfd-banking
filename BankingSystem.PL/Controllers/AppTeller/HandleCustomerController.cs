@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BankingSystem.BLL.Interfaces;
+using BankingSystem.BLL.Repositories;
 using BankingSystem.DAL.Models;
 using BankingSystem.PL.ViewModels.Teller;
 using Microsoft.AspNetCore.Authorization;
@@ -18,11 +19,17 @@ namespace BankingSystem.PL.Controllers.AppTeller
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
 
-        public HandleCustomerController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IMapper mapper)
+        //
+        private readonly IGenericRepository<Account> _genericRepository;
+
+        public HandleCustomerController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IMapper mapper, IGenericRepository<Account> genericRepository)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _mapper = mapper;
+
+            //
+            _genericRepository = genericRepository;
         }
 
 
@@ -127,9 +134,12 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
             }
             return View(customerDetailsViewModel);
+        }
 
 
-
+        public IActionResult ShowAccounts(string id)
+        {
+            return View(_genericRepository.GetAll(id, flag: 2));
         }
     }
 }

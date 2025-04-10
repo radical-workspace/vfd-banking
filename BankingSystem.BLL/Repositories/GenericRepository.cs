@@ -36,7 +36,7 @@ namespace BankingSystem.BLL.Repositories
             return _dbContext.Find<T>(id); 
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<T> GetAll(string? userID = "", int flag = 1)
         {
             //if (typeof(T) == typeof(Empolyee))
             //{
