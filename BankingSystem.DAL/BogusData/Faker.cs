@@ -163,7 +163,13 @@ namespace BankingSystem.BogusFakers
         {
             var branchFaker = new Faker<Branch>()
                 .RuleFor(b => b.Name, f => $"Branch {f.Address.City()}")
-                .RuleFor(b => b.Location, f => f.Address.FullAddress())
+                //.RuleFor(b => b.Location, f => f.Address.FullAddress())
+
+                .RuleFor(b => b.Location, f =>
+                    f.Address.FullAddress().Length > 20
+                    ? f.Address.FullAddress().Substring(0, 20)
+                    : f.Address.FullAddress())
+
                 .RuleFor(b => b.Opens, f => TimeSpan.FromHours(f.Random.Double(8, 9)))     // Opens between 8:00 and 9:00
                 .RuleFor(b => b.Closes, f => TimeSpan.FromHours(f.Random.Double(17, 18)))  // Closes between 17:00 and 18:00
                 .RuleFor(b => b.IsDeleted, f => false);

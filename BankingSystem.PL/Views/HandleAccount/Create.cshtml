@@ -1,55 +1,51 @@
-﻿@model BankingSystem.DAL.Models.Account
+﻿@using BankingSystem.DAL.Models
+@model Account
 
 @{
     ViewData["Title"] = "Create";
+    Customer Customer = ViewBag.Customer;
 }
 
-<h1>Create</h1>
 
-<h4>Account</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="d-flex justify-content-between pt-2">
+    <h1 class="h2 text-primary text-center w-100">
+        <i class="fas fa-pen me-2"></i> Add Account
+    </h1>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-10">
         <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Number" class="control-label"></label>
-                <input asp-for="Number" class="form-control" />
-                <span asp-validation-for="Number" class="text-danger"></span>
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="text-center">
+                <span class="fw-medium">Client Name : @Customer?.FirstName @Customer?.LastName →</span>
+                <small class="text-muted">CID: @Customer?.Id</small>
             </div>
-            <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
+            <div class="text-center mb-1">
+                <span class="fw-medium">Branch →</span>
+                <small class="text-muted">@Customer?.Branch?.Name</small>
             </div>
-            <div class="form-group">
-                <label asp-for="AccountType" class="control-label"></label>
-                <select asp-for="AccountType" class="form-control"></select>
-                <span asp-validation-for="AccountType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AccountStatus" class="control-label"></label>
-                <select asp-for="AccountStatus" class="form-control"></select>
-                <span asp-validation-for="AccountStatus" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CustomerId" class="control-label"></label>
-                <select asp-for="CustomerId" class ="form-control" asp-items="ViewBag.CustomerId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="BranchId" class="control-label"></label>
-                <select asp-for="BranchId" class ="form-control" asp-items="ViewBag.BranchId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary mt-3" />
-            </div>
+
+            <partial name="_CreateEditPartial" model="@Model" />
+
+
+            <input type="hidden" asp-for="CustomerId" value="@Customer?.Id" />
+            <input type="hidden" asp-for="BranchId" value="@Customer?.BranchId" />
+
+
+             <div class="mt-5 d-flex justify-content-center gap-3"> 
+                 <button type="submit" class="btn btn-primary px-5 py-2 fs-5"> 
+                     <i class="fas fa-edit me-2"></i>Add Account 
+                 </button>
+                <a href="javascript:history.back()" class="btn btn-outline-secondary px-5 py-2 fs-5">
+                    <i class="fas fa-arrow-left me-2"></i>Cancel
+                </a>
+             </div> 
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
