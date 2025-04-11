@@ -1,7 +1,6 @@
 ﻿@model List<SavingsViewModel>
 @{
     ViewData["Title"] = "Savings Management";
-    var managerId = ViewBag.ManagerId;
 }
 
 @if (TempData["Success"] != null)
@@ -13,6 +12,8 @@
     <div class="alert alert-danger">@TempData["Error"]</div>
 }
 
+<button class="btn btn-primary Add-btn">Add Currency</button>
+
 <table class="table" id="savingsTable">
     <thead>
         <tr>
@@ -21,18 +22,30 @@
             <th>Actions</th>
         </tr>
     </thead>
-    <!-- Table headers -->
     <tbody>
         @foreach (var item in Model)
         {
             <tr data-saving-id="@item.Id">
                 <td class="currency-cell">@item.Currency</td>
-                <td class="balance-cell">@item.Balance.ToString("C2")</td>
-                <td>
-                    <button class="btn btn-primary edit-btn">Edit</button>
-                </td>
+                <td class="balance-cell">@item.Balance</td>
+                <td><button class="btn btn-primary edit-btn">Edit</button></td>
             </tr>
         }
+
+        <!-- Form Row with ID for targeting -->
+        <tr id="addFormRow" class="d-none">
+            <form id="addForm" asp-action="AddSaving" method="post">
+            <td class="currency-cell">
+                <input type="text" name="Currency" class="form-control" placeholder="Enter Currency" required />
+            </td>
+            <td class="balance-cell">
+                <input type="number" name="Balance" class="form-control" placeholder="Enter Balance" required />
+            </td>
+            <td>
+                <button type="submit" class="btn btn-primary">Add</button>
+            </td>
+            </form>
+        </tr>
     </tbody>
 </table>
 
@@ -41,8 +54,7 @@
     <input type="hidden" name="Id" id="savingId" />
     <input type="hidden" name="Currency" id="savingCurrency" />
     <input type="hidden" name="Balance" id="savingBalance" />
-    <input type="hidden" name="__RequestVerificationToken"
-           value="@Html.AntiForgeryToken()" />
+    @Html.AntiForgeryToken()
 </form>
 
 @section Scripts {

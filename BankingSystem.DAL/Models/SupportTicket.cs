@@ -11,7 +11,7 @@ namespace BankingSystem.DAL.Models
     {
         Pending,
         Denied,
-        Accepted,
+        InProgress,
         Resolved
     }
 
@@ -39,5 +39,9 @@ namespace BankingSystem.DAL.Models
         [ForeignKey(nameof(Teller))]
         public string? TellerId { get; set; }
         public Teller? Teller { get; set; }
+
+        [ForeignKey(nameof(Account))]
+        public int? AccountId { get; set; }
+        public Account? Account { get; set; }
     }
 }

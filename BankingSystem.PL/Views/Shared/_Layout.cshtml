@@ -121,20 +121,23 @@
                         }
                         
 
-
                         @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Manager"))
                         {
                             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                             <li class="nav-item">
-
                                 <a class="nav-link" asp-area="" asp-controller="ManagerTeller" asp-action="GetAllTellers" asp-route-id="@userId">Employees</a>
                             </li>
                             <li class="nav-item">
-
                                 <a class="nav-link" asp-area="" asp-controller="ManagerBranch" asp-action="GetBranchDetails" asp-route-id="@userId">Branch</a>
                             </li> 
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="ManagerSavings" asp-action="GetAllSavings" asp-route-id="@userId">Savings</a>
+                                <a class="nav-link" asp-area="" asp-controller="ManagerSavings" asp-action="GetAllSavings">Savings</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="ManagerLoan" asp-action="GetAllLoans">Loans</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="ManagerTicket" asp-action="GetAllTickets">Tickets</a>
                             </li>
                         }
 

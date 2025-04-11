@@ -1,0 +1,149 @@
+﻿@using BankingSystem.DAL.Models
+@model TicketDetailsView
+
+@{
+    ViewData["Title"] = "Ticket Details";
+}
+
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Ticket Details</h1>
+        <a asp-action="GetAllTickets" class="d-none d-sm-inline-block btn btn-sm btn-outline-primary shadow-sm">
+            <i class="fas fa-chevron-left fa-sm"></i> Back to List
+        </a>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header bg-primary text-white py-3">
+            <h6 class="m-0 font-weight-bold">Ticket Information</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <!-- Left Column -->
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">Title:</dt>
+                        <dd class="col-sm-8">@Model.Ticket.Title</dd>
+
+                        <dt class="col-sm-4">Status:</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge @GetStatusBadgeClass(Model.Ticket.Status)">
+                                @Model.Ticket.Status
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-4">Date Created:</dt>
+                        <dd class="col-sm-8">@Model.Ticket.Date.ToString("dd MMM yyyy")</dd>
+                    </dl>
+                </div>
+
+                <!-- Right Column -->
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">Customer:</dt>
+                        <dd class="col-sm-8">@Model.Ticket.CustomerName</dd>
+
+                        <dt class="col-sm-4">Teller:</dt>
+                        <dd class="col-sm-8">@Model.Ticket.TellerName</dd>
+
+                        <dt class="col-sm-4">Account Number:</dt>
+                        <dd class="col-sm-8">@Model.Ticket.CustomerAccountNumber</dd>
+
+                        <dt class="col-sm-4">Ticket Type:</dt>
+                        <dd class="col-sm-8">@Model.Ticket.Type</dd>
+
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Description Section -->
+    <div class="card shadow mb-4">
+        <div class="card-header bg-info text-white py-3">
+            <h6 class="m-0 font-weight-bold">Description</h6>
+        </div>
+        <div class="card-body">
+            <p class="card-text">@Model.Description</p>
+        </div>
+    </div>
+
+    <!-- Response Section -->
+    @if (!string.IsNullOrEmpty(Model.Response))
+    {
+        <div class="card shadow mb-4">
+            <div class="card-header bg-success text-white py-3">
+                <h6 class="m-0 font-weight-bold">Official Response</h6>
+            </div>
+            <div class="card-body">
+                <p class="card-text">@Model.Response</p>
+            </div>
+        </div>
+    }
+
+    <!-- Actions Section -->
+    @if (Model.Ticket.Status == SupportTicketStatus.Pending || Model.Ticket.Status == SupportTicketStatus.InProgress)
+    {
+        <div class="card shadow mb-4">
+            <div class="card-header bg-warning text-dark py-3">
+                <h6 class="m-0 font-weight-bold">Ticket Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="btn-group">
+                    @if (Model.Ticket.Status == SupportTicketStatus.Pending)
+                    {
+                        <a asp-action="StartProgress" asp-route-ticketId="@Model.Id"
+                           class="btn btn-primary">
+                            <i class="fas fa-play-circle"></i> Start Progress
+                        </a>
+                    }
+                    @if (Model.Ticket.Status == SupportTicketStatus.InProgress)
+                    {
+                        <a asp-action="ResolveTicket" asp-route-ticketId="@Model.Id"
+                           class="btn btn-success">
+                            <i class="fas fa-check-circle"></i> Mark Resolved
+                        </a>
+                    }
+                    <a asp-action="AddResponse" asp-route-ticketId="@Model.Id"
+                       class="btn btn-info">
+                        <i class="fas fa-comment-medical"></i> Add Response
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@functions {
+    string GetStatusBadgeClass(SupportTicketStatus status)
+    {
+        return status switch
+        {
+            SupportTicketStatus.Pending => "bg-warning text-dark",
+            SupportTicketStatus.InProgress => "bg-info",
+            SupportTicketStatus.Resolved => "bg-success",
+            SupportTicketStatus.Denied => "bg-secondary",
+            _ => "bg-secondary"
+        };
+    }
+}
+
+<style>
+    dt {
+        font-weight: 500;
+        color: #6c757d;
+    }
+
+    .card {
+        border-radius: 0.35rem;
+    }
+
+    .badge {
+        font-size: 0.85em;
+        padding: 0.5em 0.75em;
+    }
+
+    .card-text {
+        white-space: pre-wrap;
+    }
+</style>

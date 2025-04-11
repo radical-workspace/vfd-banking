@@ -14,6 +14,6 @@ namespace BankingSystem.DAL.Models
 
         [ForeignKey(nameof(Loan))]
         public int LoanId { get; set; }  // FK
-        public Loan Loan { get; set; } = null!;
+        public Loan ?Loan { get; set; }
     }
 }

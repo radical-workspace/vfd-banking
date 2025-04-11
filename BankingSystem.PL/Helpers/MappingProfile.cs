@@ -43,21 +43,9 @@ namespace BankingSystem.PL.Helpers
             .ForMember(dest => dest.Department, opt => opt.Ignore());
 
             CreateMap<MyCustomer, CustomersViewModel>()
-                    .ForMember(dest => dest.Id, s => s.MapFrom(s => s.Id))
-                    .ForMember(dest => dest.FirstName, s => s.MapFrom(s => s.FirstName))
-                    .ForMember(dest => dest.LastName, s => s.MapFrom(s => s.LastName))
-                    .ForMember(dest => dest.Address, s => s.MapFrom(s => s.Address))
-                    .ForMember(dest => dest.JoinDate, s => s.MapFrom(s => s.JoinDate))
-                    .ForMember(dest => dest.BirthDate, s => s.MapFrom(s => s.BirthDate))
                     .ForMember(dest => dest.Branch, s => s.MapFrom(s => s.Branch.Name));
 
             CreateMap<MyCustomer, CustomerDetailsViewModel>()
-                    .ForMember(dest => dest.Id, s => s.MapFrom(s => s.Id))
-                    .ForMember(dest => dest.FirstName, s => s.MapFrom(s => s.FirstName))
-                    .ForMember(dest => dest.LastName, s => s.MapFrom(s => s.LastName))
-                    .ForMember(dest => dest.Address, s => s.MapFrom(s => s.Address))
-                    .ForMember(dest => dest.JoinDate, s => s.MapFrom(s => s.JoinDate))
-                    .ForMember(dest => dest.BirthDate, s => s.MapFrom(s => s.BirthDate))
                     .ForMember(dest => dest.Branch, s => s.MapFrom(s => s.Branch.Name))
                     .ForMember(dest => dest.Branch, opt => opt.MapFrom(src => src.Branch.Name))
                     .ForMember(dest => dest.AccountNumbers, opt => opt.MapFrom(src => src.Accounts.Select(a => a.Number)))
@@ -67,9 +55,27 @@ namespace BankingSystem.PL.Helpers
                     .ForMember(dest => dest.TicketSubjects, opt => opt.MapFrom(src => src.SupportTickets.Select(s => s.Description)))
                     .ReverseMap();
 
+            CreateMap<Loan, LoansViewModel>()
+                    .ForMember(dest => dest.CustomerName, s => s.MapFrom(s => s.Customer.UserName))
+                    .ForMember(dest => dest.AccountNumber, s => s.MapFrom(s => s.Account.Number))
+                    .ForMember(dest=>dest.SSN,opt=>opt.MapFrom(src=>src.Customer.SSN))
+                    .ReverseMap();
+
+            CreateMap<Loan, LoanDetailsViewModel>()
+                    .ForMember(dest => dest.Loan, opt => opt.MapFrom(src => src))
+                    .ForMember(dest => dest.FinancialDocument, opt => opt.MapFrom(src => src.Customer.FinancialDocument));
+
+            CreateMap<SupportTicket, TicketsViewModel>()
+                    .ForMember(dest => dest.CustomerName, s => s.MapFrom(s => s.Customer.UserName))
+                    .ForMember(dest => dest.CustomerAccountNumber, s => s.MapFrom(s => s.Account.Number))
+                    .ForMember(dest => dest.TellerName, s => s.MapFrom(s => s.Teller.UserName))
+                    .ReverseMap();
 
 
-
+            CreateMap<SupportTicket, TicketDetailsView>()
+                    .ForMember(dest => dest.Ticket, opt => opt.MapFrom(src => src))
+                    .ForMember(dest => dest.Document, opt => opt.MapFrom(src => src.Customer.FinancialDocument))
+                    .ReverseMap();
         }
 
 
