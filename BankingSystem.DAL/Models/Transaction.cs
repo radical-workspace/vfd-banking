@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Models
 {
-    public enum TransationType
+    public enum TransactionType
     {
         Deposit = 1,
         Withdraw = 2,
         Transfer = 3
     }
-    public enum TransationStatus
+    public enum TransactionStatus
     {
         Pending,
         Denied,
@@ -22,8 +22,8 @@ namespace BankingSystem.DAL.Models
 
     public class Transaction : BaseEntity
     {
-        public TransationStatus Status { get; set; }
-        public TransationType Type { get; set; }
+        public TransactionStatus Status { get; set; }
+        public TransactionType Type { get; set; }
         public string DoneVia { get; set; } = string.Empty;
 
         //public required long AccountDestinationNumber { get; set; }
