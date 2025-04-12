@@ -19,7 +19,7 @@ namespace BankingSystem.PL.ViewModels.Teller
         public List<Certificate> Certificates { get; set; } = [];
 
         public List<Loan> Loans { get; set; } = [];
-        public List<Card> Cards { get; set; } = [];
+        public List<VisaCard> Cards { get; set; } = [];
 
         [ForeignKey(nameof(Customer))]
         public string? CustomerId { get; set; }

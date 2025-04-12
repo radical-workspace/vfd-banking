@@ -97,7 +97,7 @@ namespace BankingSystem.PL.Controllers.AppManager
         [HttpGet]
         public ActionResult GetCustomerCard(string id)
         {
-            var customerCards = _unitOfWork.Repository<Card>().GetAllIncluding(c => c.Account).Where(l => l.CustomerId == id).ToList();
+            var customerCards = _unitOfWork.Repository<VisaCard>().GetAllIncluding(c => c.Account).Where(l => l.CustomerId == id).ToList();
             if (customerCards == null || customerCards.Count == 0)
                 return NotFound("No cards found for this customer.");
 

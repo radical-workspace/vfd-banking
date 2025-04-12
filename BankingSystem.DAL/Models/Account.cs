@@ -30,7 +30,7 @@ namespace BankingSystem.DAL.Models
         public List<Certificate> Certificates { get; set; } = [];
 
         public List<Loan> Loans { get; set; } = [];
-        public List<Card> Cards { get; set; } = [];
+        public List<VisaCard> Cards { get; set; } = [];
         public List<SupportTicket> SupportTickets { get; set; } = [];
 
         [ForeignKey(nameof(Customer))]

@@ -122,7 +122,7 @@ namespace BankingSystem.BogusFakers
                 .RuleFor(c => c.IsDeleted, f => false)
 
                 .RuleFor(c => c.BranchId, f => null /* f.Random.Int(1, 3) */ ) // Adjust to match actual Branch IDs
-                .RuleFor(c => c.Cards, f => new List<Card>()) // Optional: you can populate them later
+                .RuleFor(c => c.Cards, f => new List<VisaCard>()) // Optional: you can populate them later
                 .RuleFor(c => c.Loans, f => new List<Loan>())
                 .RuleFor(c => c.Transactions, f => new List<Transaction>())
                 .RuleFor(c => c.Accounts, f => new List<Account>())
@@ -149,7 +149,7 @@ namespace BankingSystem.BogusFakers
                     .RuleFor(a => a.BranchId, f => customer.BranchId)
                     .RuleFor(a => a.Certificates, f => new List<Certificate>())
                     .RuleFor(a => a.Loans, f => new List<Loan>())
-                    .RuleFor(a => a.Cards, f => new List<Card>())
+                    .RuleFor(a => a.Cards, f => new List<VisaCard>())
                     .RuleFor(a => a.AccountTransactions, f => new List<Transaction>());
 
                 accounts.AddRange(faker.Generate(accountsPerCustomer));

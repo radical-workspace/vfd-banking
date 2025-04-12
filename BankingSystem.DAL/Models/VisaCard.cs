@@ -12,7 +12,7 @@ namespace BankingSystem.DAL.Models
         Debit=1,
         Credit=2,
     }
-    public class Card:BaseEntity
+    public class VisaCard:BaseEntity
     {
         public string Number { get; set; } = null!;
 

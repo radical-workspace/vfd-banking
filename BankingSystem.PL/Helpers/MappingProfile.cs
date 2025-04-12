@@ -126,7 +126,7 @@ namespace BankingSystem.PL.Helpers
                 .ForMember(dest => dest.AccountType, opt => opt.MapFrom(src => src.AccountType != null ? src.AccountType.ToString() : "No data"))
                 .ForMember(dest => dest.AccountStatus, opt => opt.MapFrom(src => src.AccountStatus != null ? src.AccountStatus.ToString() : "No data"));
 
-            CreateMap<Card, CustomerCardViewModel>()
+            CreateMap<VisaCard, CustomerCardViewModel>()
                 .ForMember(dest => dest.CardType, opt => opt.MapFrom(src => src.CardType != null ? src.CardType.ToString(): "No Card Data"))
                 .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.Account.Number));
 

@@ -34,7 +34,7 @@ namespace BankingSystem.DAL.Data
         public DbSet <Account> Accounts { get; set; }
         public DbSet <Bank> Banks { get; set; }
         public DbSet <Branch> Branches { get; set; }
-        public DbSet <Card> Cards { get; set; }
+        public DbSet <VisaCard> Cards { get; set; }
         public DbSet<Certificate> Certificates { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Loan> Loans { get; set; }

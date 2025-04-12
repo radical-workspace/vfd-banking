@@ -15,7 +15,7 @@ namespace BankingSystem.PL.ViewModels.Customer
         public double? TotalBalance { get; set; }
         public List<Account>? Accounts { get; set; }
         public int AccountsCount { get; set; }
-        public IEnumerable<Card> Cards { get; set; } = null!;
+        public IEnumerable<VisaCard> Cards { get; set; } = null!;
         public int CardsCount { get; set; }
         public int DebitCardsCount { get; set; }
         public int CreditCardsCount { get; set; }
