@@ -31,12 +31,14 @@ namespace BankingSystem.DAL.Models
         [ForeignKey(nameof(Payment))]
         public int PaymentId { get; set; }
         public required Payment Payment { get; set; }
+
         [ForeignKey(nameof(Customer))]
         public string CustomerID { get; set; }
         public MyCustomer Customer { get; set; }
+        public required long AccountDistenationNumber { get; set; }
 
         [ForeignKey(nameof(Account))]
-        public int? AccountId { get; set; }
-        public Account? Account { get; set; }
+        public int AccountId { get; set; }
+        public Account Account { get; set; } = null!;
     }
 }
