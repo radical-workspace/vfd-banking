@@ -3,54 +3,175 @@
 @{
     ViewData["Title"] = "Create";
 }
+<style>
+    :root {
+        --primary-dark: #0a2d2e;
+        --primary-medium: #1c4e4f;
+        --primary-light: #436e6f;
+        --secondary-dark: #6a8e8f;
+        --secondary-light: #879693;
+        --neutral-1: #a49e97;
+        --accent-1: #deae9f;
+        --accent-2: #efd7cf;
+        --accent-3: #f7ebe7;
+        --white: #ffffff;
+    }
 
-<h1>Create</h1>
+    .create-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: var(--accent-3);
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 0.5s ease-in;
+    }
 
-<h4>Account</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Number" class="control-label"></label>
-                <input asp-for="Number" class="form-control" />
-                <span asp-validation-for="Number" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AccountType" class="control-label"></label>
-                <select asp-for="AccountType" class="form-control"></select>
-                <span asp-validation-for="AccountType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AccountStatus" class="control-label"></label>
-                <select asp-for="AccountStatus" class="form-control"></select>
-                <span asp-validation-for="AccountStatus" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CustomerId" class="control-label"></label>
-                <select asp-for="CustomerId" class ="form-control" asp-items="ViewBag.CustomerId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="BranchId" class="control-label"></label>
-                <select asp-for="BranchId" class ="form-control" asp-items="ViewBag.BranchId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary mt-3" />
-            </div>
-        </form>
+    h1, h4 {
+        color: var(--primary-dark);
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    label {
+        color: var(--primary-medium);
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .form-control {
+        border: 2px solid var(--secondary-light);
+        border-radius: 8px;
+        padding: 0.75rem;
+        transition: all 0.3s ease;
+        background-color: var(--white);
+    }
+
+        .form-control:focus {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 0 3px var(--accent-2);
+            outline: none;
+        }
+
+    .btn-primary {
+        background-color: var(--primary-dark);
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        color: var(--white);
+    }
+
+        .btn-primary:hover {
+            background-color: var(--primary-medium);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+    .validation-message {
+        color: var(--accent-1);
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+        display: block;
+        animation: shake 0.3s ease-in-out;
+    }
+
+    a {
+        color: var(--primary-medium);
+        text-decoration: none;
+        transition: color 0.3s ease;
+        display: inline-block;
+        margin-top: 1.5rem;
+    }
+
+        a:hover {
+            color: var(--accent-1);
+            text-decoration: underline;
+        }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes shake {
+        0%, 100% {
+            transform: translateX(0);
+        }
+
+        25% {
+            transform: translateX(-5px);
+        }
+
+        75% {
+            transform: translateX(5px);
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .create-container {
+            margin: 1rem;
+            padding: 1.5rem;
+        }
+    }
+</style>
+
+<div class="create-container">
+    <h1>Create New Account</h1>
+
+    <div class="row">
+        <div class="col-md-12">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="validation-message"></div>
+
+                <div class="form-group">
+                    <label asp-for="Number">Account Number</label>
+                    <input asp-for="Number" class="form-control" placeholder="Enter account number" />
+                    <span asp-validation-for="Number" class="validation-message"></span>
+                </div>
+
+                <!-- Repeat similar structure for other form groups -->
+
+                <div class="form-group">
+                    <label asp-for="CustomerId">Customer</label>
+                    <select asp-for="CustomerId" class="form-control" asp-items="ViewBag.CustomerId">
+                        <option value="">Select Customer</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Create Account" class="btn btn-primary mt-3 w-100" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <a asp-action="Index" class="back-link">
+            ← Return to Accounts List
+        </a>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

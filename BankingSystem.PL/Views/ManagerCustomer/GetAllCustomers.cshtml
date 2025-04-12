@@ -1,60 +1,141 @@
 ﻿@model IEnumerable<BankingSystem.PL.ViewModels.Teller.CustomerDetailsViewModel>
 
 @{
-    ViewData["Title"] = "GetAllCustomers";
+    ViewData["Title"] = "Customer Management";
 }
 
-<h1>GetAllCustomers</h1>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Full Name
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SSN)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Branch)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.JoinDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BirthDate)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @item.FirstName @item.LastName
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SSN)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Branch)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Address)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.JoinDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BirthDate)
-                </td>
-                <td>
-                    @Html.ActionLink("Details", "GetCustomerDetails", new { id = item.Id })
-                </td>
-            </tr>
+<style>
+    :root {
+        --primary-dark: #0a2d2e;
+        --primary-medium: #1c4e4f;
+        --primary-light: #436e6f;
+        --secondary-dark: #6a8e8f;
+        --secondary-light: #879693;
+        --neutral-1: #a49e97;
+        --accent-1: #deae9f;
+        --accent-2: #efd7cf;
+        --accent-3: #f7ebe7;
+        --white: #ffffff;
+    }
+
+    .customers-container {
+        background: var(--accent-3);
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+    }
+
+    .customers-header {
+        color: var(--primary-dark);
+        border-bottom: 2px solid var(--accent-1);
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .customers-table {
+        background: var(--white);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+        .customers-table thead {
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-medium));
+            color: var(--accent-3);
         }
-    </tbody>
-</table>
+
+        .customers-table th {
+            font-weight: 500;
+            padding: 1rem;
+        }
+
+        .customers-table td {
+            vertical-align: middle;
+            padding: 0.75rem 1rem;
+        }
+
+        .customers-table tr:hover {
+            background-color: var(--accent-2);
+        }
+
+    .action-link {
+        color: var(--primary-medium);
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        background-color: var(--accent-2);
+    }
+
+        .action-link:hover {
+            color: var(--white);
+            background-color: var(--primary-medium);
+            text-decoration: none;
+        }
+
+    .empty-message {
+        background: var(--accent-2);
+        border-left: 4px solid var(--accent-1);
+        color: var(--primary-dark);
+        padding: 1rem;
+        border-radius: 5px;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-xxl-10 col-12">
+            <div class="customers-container">
+                <h1 class="customers-header">
+                    <i class="fas fa-users me-2"></i>Customer Management
+                </h1>
+
+                @if (!Model.Any())
+                {
+                    <div class="empty-message">
+                        <i class="fas fa-info-circle me-2"></i> No customers found in the system.
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table customers-table">
+                            <thead>
+                                <tr>
+                                    <th>Full Name</th>
+                                    <th>SSN</th>
+                                    <th>Branch</th>
+                                    <th>Address</th>
+                                    <th>Join Date</th>
+                                    <th>Birth Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <strong>@item.FirstName @item.LastName</strong>
+                                        </td>
+                                        <td>@item.SSN</td>
+                                        <td>@item.Branch</td>
+                                        <td>@item.Address</td>
+                                        <td>@item.JoinDate.ToString("dd MMM yyyy")</td>
+                                        <td>@item.BirthDate.ToString("dd MMM yyyy")</td>
+                                        <td>
+                                            <a href="@Url.Action("GetCustomerDetails", new { id = item.Id })"
+                                               class="action-link">
+                                                <i class="fas fa-eye me-1"></i> Details
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

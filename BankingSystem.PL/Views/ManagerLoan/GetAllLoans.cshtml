@@ -3,131 +3,258 @@
 @{
     ViewData["Title"] = "Loans List";
 }
-
-<div class="container mt-4">
-    <h2 class="mb-4">Loans in Your Branch</h2>
-    <div class="mb-3">
-        <input type="number" id="searchInput" placeholder="Search by Account Number Or by SSN" class="form-control" />
-        <label >Search</label>
-    </div>
-    @if (!Model.Any())
-    {
-        <div class="alert alert-info" role="alert">
-            No loans found in this branch.
-        </div>
+<style>
+    :root {
+        --primary-dark: #0a2d2e;
+        --primary-medium: #1c4e4f;
+        --primary-light: #436e6f;
+        --secondary-dark: #6a8e8f;
+        --secondary-light: #879693;
+        --neutral-1: #a49e97;
+        --accent-1: #deae9f;
+        --accent-2: #efd7cf;
+        --accent-3: #f7ebe7;
+        --white: #ffffff;
     }
-    else
-    {
-        <div class="mb-3">
-            <div class="row justify-content-center">
-                <div class="col-md-10 col-lg-8">
-                    <div class="row justify-content-center">
-                        <h3 class="text-center mb-3 col-3">Loan Type</h3>
-                        <div class="d-flex flex-wrap justify-content-center gap-2 mb-4 col-9">
-                            <button class="btn btn-outline-primary btn-sm filter-btn px-3 rounded-pill"
-                                    data-filter-type="loan-type" data-filter-value="Car">
-                                <i class="fas fa-car me-2"></i>Car
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm filter-btn px-3 rounded-pill"
-                                    data-filter-type="loan-type" data-filter-value="Business">
-                                <i class="fas fa-briefcase me-2"></i>Business
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm filter-btn px-3 rounded-pill"
-                                    data-filter-type="loan-type" data-filter-value="RealEstate">
-                                <i class="fas fa-house me-2"></i>Real Estate
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm filter-btn px-3 rounded-pill"
-                                    data-filter-type="loan-type" data-filter-value="Other">
-                                <i class="fas fa-ellipsis-h me-2"></i>Other
-                            </button>
-                            <button class="btn btn-outline-secondary btn-sm filter-btn px-3 rounded-pill"
-                                    data-filter-type="loan-type" data-filter-value="all">
-                                <i class="fas fa-filter me-2"></i>All Types
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row justify-content-center">
 
-                        <h3 class="text-center mb-3 col-3">Loan Status</h3>
-                        <div class="d-flex flex-wrap justify-content-center gap-2 mb-4 col-9">
-                            <button class="btn btn-outline-warning btn-sm filter-btn px-3 rounded-pill"
-                                    data-filter-type="loan-status" data-filter-value="Pending">
-                                <i class="fas fa-clock me-2"></i>Pending
-                            </button>
-                            <button class="btn btn-outline-success btn-sm filter-btn px-3 rounded-pill"
-                                    data-filter-type="loan-status" data-filter-value="Accepted">
-                                <i class="fas fa-check-circle me-2"></i>Accepted
-                            </button>
-                            <button class="btn btn-outline-danger btn-sm filter-btn px-3 rounded-pill"
-                                    data-filter-type="loan-status" data-filter-value="Denied">
-                                <i class="fas fa-times-circle me-2"></i>Denied
-                            </button>
-                            <button class="btn btn-outline-secondary btn-sm filter-btn px-3 rounded-pill"
-                                    data-filter-type="loan-status" data-filter-value="Paid">
-                                <i class="fas fa-coins me-2"></i>Paid
-                            </button>
-                            <button class="btn btn-outline-secondary btn-sm filter-btn px-3 rounded-pill"
-                                    data-filter-type="loan-status" data-filter-value="all">
-                                <i class="fas fa-filter me-2"></i>All Statuses
-                            </button>
+    .loan-container {
+        background: var(--accent-3);
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .loan-header {
+        color: var(--primary-dark);
+        border-bottom: 2px solid var(--accent-1);
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .search-container {
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+        .search-container input {
+            padding-left: 2.5rem;
+            border: 2px solid var(--secondary-light);
+            border-radius: 8px;
+        }
+
+        .search-container label {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-light);
+        }
+
+    .filter-section {
+        background: var(--white);
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .filter-title {
+        color: var(--primary-medium);
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .filter-btn {
+        transition: all 0.3s ease;
+        border-width: 2px;
+    }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary-medium);
+            color: white !important;
+            border-color: var(--primary-medium);
+        }
+
+    .loan-table {
+        background: var(--white);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+        .loan-table thead {
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-medium));
+            color: var(--accent-3);
+        }
+
+        .loan-table th {
+            font-weight: 500;
+            padding: 1rem;
+        }
+
+        .loan-table td {
+            vertical-align: middle;
+            padding: 0.75rem 1rem;
+        }
+
+        .loan-table tr:hover {
+            background-color: var(--accent-2);
+        }
+
+    .badge {
+        padding: 0.5em 0.75em;
+        font-weight: 500;
+        border-radius: 8px;
+    }
+
+    .btn-preview {
+        background-color: var(--primary-light);
+        border: none;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+        .btn-preview:hover {
+            background-color: var(--primary-medium);
+            transform: translateY(-2px);
+        }
+
+    .no-loans {
+        background: var(--accent-2);
+        border-left: 4px solid var(--accent-1);
+        color: var(--primary-dark);
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-xxl-10 col-12">
+            <div class="loan-container">
+                <h2 class="loan-header">
+                    <i class="fas fa-hand-holding-usd me-2"></i>Loans in Your Branch
+                </h2>
+
+                <div class="search-container">
+                    @* <i class="fas fa-search"></i> *@
+                    <input type="text" id="searchInput" placeholder="Search by Account Number or SSN" class="form-control" />
+                    <label><i class="fas fa-search"></i></label>
+                </div>
+
+                @if (!Model.Any())
+                {
+                    <div class="alert no-loans" role="alert">
+                        <i class="fas fa-info-circle me-2"></i> No loans found in this branch.
+                    </div>
+                }
+                else
+                {
+                    <div class="filter-section">
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <h4 class="filter-title"><i class="fas fa-tags me-2"></i>Loan Type</h4>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <button class="btn btn-outline-primary filter-btn active" data-filter-type="loan-type" data-filter-value="all">
+                                        All Types
+                                    </button>
+                                    <button class="btn btn-outline-primary filter-btn" data-filter-type="loan-type" data-filter-value="Car">
+                                        <i class="fas fa-car me-2"></i>Car
+                                    </button>
+                                    <button class="btn btn-outline-primary filter-btn" data-filter-type="loan-type" data-filter-value="Business">
+                                        <i class="fas fa-briefcase me-2"></i>Business
+                                    </button>
+                                    <button class="btn btn-outline-primary filter-btn" data-filter-type="loan-type" data-filter-value="RealEstate">
+                                        <i class="fas fa-home me-2"></i>Real Estate
+                                    </button>
+                                    <button class="btn btn-outline-primary filter-btn" data-filter-type="loan-type" data-filter-value="Other">
+                                        <i class="fas fa-ellipsis-h me-2"></i>Other
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <h4 class="filter-title"><i class="fas fa-info-circle me-2"></i>Loan Status</h4>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <button class="btn btn-outline-primary filter-btn active" data-filter-type="loan-status" data-filter-value="all">
+                                        All Statuses
+                                    </button>
+                                    <button class="btn btn-outline-warning filter-btn" data-filter-type="loan-status" data-filter-value="Pending">
+                                        <i class="fas fa-clock me-2"></i>Pending
+                                    </button>
+                                    <button class="btn btn-outline-success filter-btn" data-filter-type="loan-status" data-filter-value="Accepted">
+                                        <i class="fas fa-check-circle me-2"></i>Accepted
+                                    </button>
+                                    <button class="btn btn-outline-danger filter-btn" data-filter-type="loan-status" data-filter-value="Denied">
+                                        <i class="fas fa-times-circle me-2"></i>Denied
+                                    </button>
+                                    <button class="btn btn-outline-secondary filter-btn" data-filter-type="loan-status" data-filter-value="Paid">
+                                        <i class="fas fa-coins me-2"></i>Paid
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+
+                    <div class="table-responsive">
+                        <table class="table loan-table">
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th>Account</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                    <th>Debt</th>
+                                    <th>Rate</th>
+                                    <th>Duration</th>
+                                    <th>Status</th>
+                                    <th>Start Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var loan in Model)
+                                {
+                                    <tr data-loan-type="@loan.LoanType" data-loan-status="@loan.LoanStatus" data-search="@($"{loan.AccountNumber} {loan.SSN}")">
+                                        <td>@loan.CustomerName</td>
+                                        <td>@loan.AccountNumber</td>
+                                        <td>@loan.LoanType</td>
+                                        <td>@loan.LoanAmount.ToString("C")</td>
+                                        <td>@loan.CurrentDebt.ToString("C")</td>
+                                        <td>@loan.InterestRate%</td>
+                                        <td>@loan.DurationInMonth mo</td>
+                                        <td>
+                                            @{
+                                                var statusClass = loan.LoanStatus switch
+                                                {
+                                                    LoanStatus.Pending => "bg-warning text-dark",
+                                                    LoanStatus.Denied => "bg-danger",
+                                                    LoanStatus.Accepted => "bg-success",
+                                                    LoanStatus.Paid => "bg-secondary",
+                                                    _ => "bg-secondary"
+                                                };
+                                            }
+                                            <span class="badge @statusClass">@loan.LoanStatus</span>
+                                        </td>
+                                        <td>@loan.StartDate.ToString("MMM d, yyyy")</td>
+                                        <td>
+                                            <a asp-controller="ManagerLoan" asp-action="PreviewLoan" asp-route-LoanId="@loan.Id"
+                                               class="btn btn-preview text-white">
+                                                <i class="fas fa-eye me-1"></i> View
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
             </div>
         </div>
-
-
-
-        <table class="table table-striped table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th>Customer Name</th>
-                    <th>Account</th>
-                    <th>Loan Type</th>
-                    <th>Amount</th>
-                    <th>Current Debt</th>
-                    <th>Interest Rate</th>
-                    <th>Duration (Months)</th>
-                    <th>Status</th>
-                    <th>Start Date</th>
-                    <th>Actions</th>
-                    <th class="d-none">SSN</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var loan in Model)
-                {
-                    <tr data-loan-type="@loan.LoanType" data-loan-status="@loan.LoanStatus">
-                        <td>@loan.CustomerName</td>
-                        <td>@loan.AccountNumber</td>
-                        <td>@loan.LoanType</td>
-                        <td>@loan.LoanAmount.ToString("C")</td>
-                        <td>@loan.CurrentDebt.ToString("C")</td>
-                        <td>@loan.InterestRate%</td>
-                        <td>@loan.DurationInMonth</td>
-                        <td>
-                            @{
-                                var statusClass = loan.LoanStatus switch
-                                {
-                                    LoanStatus.Pending => "bg-warning text-dark",
-                                    LoanStatus.Denied => "bg-danger",
-                                    LoanStatus.Accepted => "bg-success",
-                                    LoanStatus.Paid => "bg-secondary",
-                                    _ => "bg-secondary"
-                                };
-                            }
-                            <span class="badge @statusClass">@loan.LoanStatus</span>
-                        </td>
-                        <td>@loan.StartDate.ToShortDateString()</td>
-                        <td class="d-none">@loan.SSN</td>
-                        <td>
-                            <a asp-controller="ManagerLoan" asp-action="PreviewLoan" asp-route-LoanId="@loan.Id" class="btn btn-primary btn-sm">Preview</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
+    </div>
 </div>
 
 @section Scripts {

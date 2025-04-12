@@ -5,75 +5,211 @@
     var customerId = ViewBag.CustomerId as string;
 }
 
-<h1>Customer Cards</h1>
+<style>
+    :root {
+        --primary-dark: #0a2d2e;
+        --primary-medium: #1c4e4f;
+        --primary-light: #436e6f;
+        --secondary-dark: #6a8e8f;
+        --secondary-light: #879693;
+        --neutral-1: #a49e97;
+        --accent-1: #deae9f;
+        --accent-2: #efd7cf;
+        --accent-3: #f7ebe7;
+        --white: #ffffff;
+    }
 
-@if (Model != null && Model.Any())
-{
-    <div class="row">
-        @foreach (var card in Model)
-        {
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title">Card #@card.Number</h5>
+    .cards-container {
+        background: var(--accent-3);
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+    }
+
+    .cards-header {
+        color: var(--primary-dark);
+        border-bottom: 2px solid var(--accent-1);
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .card-item {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        height: 100%;
+        overflow: hidden;
+    }
+
+        .card-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+    .card-item-header {
+        background: linear-gradient(90deg, var(--primary-dark), var(--primary-medium));
+        color: var(--white);
+        padding: 1rem 1.5rem;
+        position: relative;
+    }
+
+        .card-item-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 60px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            transform: skewX(-20deg);
+        }
+
+    .card-item-title {
+        font-weight: 600;
+        margin-bottom: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .card-item-body {
+        padding: 1.5rem;
+        background: var(--white);
+    }
+
+    .card-label {
+        color: var(--primary-medium);
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+
+    .card-value {
+        color: var(--primary-dark);
+        font-weight: 500;
+        word-break: break-word;
+    }
+
+    .card-number {
+        font-family: 'Courier New', monospace;
+        letter-spacing: 1px;
+    }
+
+    .no-cards {
+        background: var(--accent-2);
+        border-left: 4px solid var(--accent-1);
+        color: var(--primary-dark);
+        padding: 1.5rem;
+        border-radius: 8px;
+    }
+
+    .back-btn {
+        background-color: var(--primary-light);
+        color: var(--white);
+        border: none;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s ease;
+        margin-top: 2rem;
+    }
+
+        .back-btn:hover {
+            background-color: var(--primary-medium);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+    .card-type-badge {
+        padding: 0.35rem 0.75rem;
+        border-radius: 50px;
+        font-weight: 500;
+        font-size: 0.85rem;
+        background-color: var(--accent-1);
+        color: var(--primary-dark);
+        display: inline-block;
+        margin-left: 0.5rem;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-xxl-10 col-12">
+            <div class="cards-container">
+                <h1 class="cards-header">
+                    <i class="fas fa-credit-card me-2"></i>Customer Cards
+                </h1>
+
+                @if (Model != null && Model.Any())
+                {
+                    <div class="row">
+                        @foreach (var card in Model)
+                        {
+                            <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
+                                <div class="card card-item">
+                                    <div class="card-header card-item-header">
+                                        <h5 class="card-item-title">
+                                            <i class="fas fa-@(card.CardType.ToLower().Contains("credit") ? "credit-card" : "debit-card") me-2"></i>
+                                            Card
+                                            <span class="card-type-badge">@card.CardType</span>
+                                        </h5>
+                                    </div>
+                                    <div class="card-body card-item-body">
+                                        <dl class="row">
+                                            <dt class="col-sm-4 card-label">
+                                                Account
+                                            </dt>
+                                            <dd class="col-sm-8 card-value">
+                                                @card.AccountNumber
+                                            </dd>
+
+                                            <dt class="col-sm-4 card-label">
+                                                Card Number
+                                            </dt>
+                                            <dd class="col-sm-8 card-value card-number">
+                                                @card.Number
+                                            </dd>
+
+                                            <dt class="col-sm-4 card-label">
+                                                CVV
+                                            </dt>
+                                            <dd class="col-sm-8 card-value">
+                                                @card.CVV
+                                            </dd>
+
+                                            <dt class="col-sm-4 card-label">
+                                                Expires
+                                            </dt>
+                                            <dd class="col-sm-8 card-value">
+                                                @card.ExpDate.ToString("MM/yy")
+                                            </dd>
+
+                                            <dt class="col-sm-4 card-label">
+                                                Issued On
+                                            </dt>
+                                            <dd class="col-sm-8 card-value">
+                                                @card.CreationDate.ToString("dd MMM yyyy")
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        }
                     </div>
-                    <div class="card-body">
-                        <dl class="row">
-                            <dt class="col-sm-4">
-                                @Html.DisplayNameFor(model => card.AccountNumber)
-                            </dt>
-                            <dd class="col-sm-8">
-                                @Html.DisplayFor(model => card.AccountNumber)
-                            </dd>
-                            <dt class="col-sm-4">
-                                @Html.DisplayNameFor(model => card.Number)
-                            </dt>
-                            <dd class="col-sm-8">
-                                @Html.DisplayFor(model => card.Number)
-                            </dd>
-
-                            <dt class="col-sm-4">
-                                @Html.DisplayNameFor(model => card.CVV)
-                            </dt>
-                            <dd class="col-sm-8">
-                                @Html.DisplayFor(model => card.CVV)
-                            </dd>
-
-                            <dt class="col-sm-4">
-                                @Html.DisplayNameFor(model => card.ExpDate)
-                            </dt>
-                            <dd class="col-sm-8">
-                                @Html.DisplayFor(model => card.ExpDate)
-                            </dd>
-
-                            <dt class="col-sm-4">
-                                @Html.DisplayNameFor(model => card.CreationDate)
-                            </dt>
-                            <dd class="col-sm-8">
-                                @Html.DisplayFor(model => card.CreationDate)
-                            </dd>
-
-                            <dt class="col-sm-4">
-                                @Html.DisplayNameFor(model => card.CardType)
-                            </dt>
-                            <dd class="col-sm-8">
-                                @Html.DisplayFor(model => card.CardType)
-                            </dd>
-                        </dl>
+                }
+                else
+                {
+                    <div class="no-cards">
+                        <i class="fas fa-info-circle me-2"></i> No cards found for this customer.
                     </div>
+                }
+
+                <div class="text-center">
+                    <a asp-controller="ManagerCustomer"
+                       asp-action="GetCustomerDetails"
+                       asp-route-id="@customerId"
+                       class="btn back-btn">
+                        <i class="fas fa-arrow-left me-2"></i> Back to Customer Details
+                    </a>
                 </div>
             </div>
-            <br /> <!-- Adding line break between each card -->
-        }
+        </div>
     </div>
-}
-else
-{
-    <p>No cards found for this customer.</p>
-}
-
-<div>
-    <a asp-controller="ManagerCustomer" asp-action="GetCustomerDetails" asp-route-id="@customerId" class="btn btn-secondary mt-3">
-        Back
-    </a>
 </div>

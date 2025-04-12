@@ -1,46 +1,94 @@
 ﻿@using BankingSystem.PL.ViewModels.Auth
 @model RegisterViewModel
+<style>
+    :root {
+        --primary-dark: #0a2d2e;
+        --primary-medium: #1c4e4f;
+        --primary-light: #436e6f;
+        --secondary-dark: #6a8e8f;
+        --secondary-light: #879693;
+        --neutral-1: #a49e97;
+        --accent-1: #deae9f;
+        --accent-2: #efd7cf;
+        --accent-3: #f7ebe7;
+        --white: #ffffff;
+    }
 
-@{
-    ViewData["Title"] = "Create Account";
-}
+    .registration-wrapper {
+        background: var(--accent-3);
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
 
-<div class="container mt-5">
+    .card-body {
+        padding: 2.5rem;
+    }
+
+    .form-header {
+        background: linear-gradient(90deg, var(--primary-dark), var(--primary-medium));
+        color: var(--white);
+        padding: 2rem;
+        text-align: center;
+    }
+
+        .form-header h2 {
+            margin-bottom: 0;
+        }
+
+        .form-header i {
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+        }
+
+    .role-badge {
+        background-color: var(--accent-1);
+        color: var(--primary-dark);
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        display: inline-block;
+        margin-top: 1rem;
+    }
+</style>
+
+<div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-8">
-            <div class="card shadow rounded-4 border-0">
-                <div class="card-header bg-primary text-white rounded-top-4">
-                    <!-- Render the Header Selection Partial View -->
-                    <partial name="_headerForRegisteration_Partial" />
+        <div class="col-lg-8">
+            <div class="registration-wrapper">
+                <!-- Header Section -->
+                <div class="form-header">
+                    <h2 class="text-white">
+                        <i class="fas fa-user-plus text-white"></i>
+                        @(ViewData["FixedRole"] != null ? $"New Registration" : "Create New Account")
+                    </h2>
+                    @if (ViewData["FixedRole"] != null)
+                    {
+                        <span class="role-badge">
+                            <i class="fas fa-user-tag"></i> @ViewData["FixedRole"] Role
+                        </span>
+                    }
                 </div>
+
+                <!-- Form Section -->
                 <div class="card-body px-5 py-4">
                     @if (ViewData["FixedRole"] == "Customer")
                     {
-                        <form asp-action="CreateCustomer" asp-controller="HandleCustomer" method="post" class="row g-3">
-
+                        <form asp-action="CreateCustomer" asp-controller="HandleCustomer" method="post" class="row g-3 needs-validation" novalidate>
                             <partial name="_RegisterationPartial" />
-
-
                         </form>
                     }
                     else if (ViewData["FixedRole"] == "Teller")
                     {
-                        <form asp-action="CreateTeller" asp-controller="ManagerTeller" method="post" class="row g-3">
-
+                        <form asp-action="CreateTeller" asp-controller="ManagerTeller" method="post" class="row g-3 needs-validation" novalidate>
                             <partial name="_RegisterationPartial" />
-
-
                         </form>
                     }
-
                     else
                     {
-                        <form asp-controller="Account" asp-action="Register" method="post" class="row g-3">
-
+                        <form asp-controller="Account" asp-action="Register" method="post" class="row g-3 needs-validation" novalidate>
                             <partial name="_RegisterationPartial" />
-
                         </form>
-
                     }
                 </div>
             </div>
