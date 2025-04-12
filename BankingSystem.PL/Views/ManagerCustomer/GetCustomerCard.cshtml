@@ -1,0 +1,79 @@
+﻿@model List<BankingSystem.PL.ViewModels.Manager.CustomerCardViewModel>
+
+@{
+    ViewData["Title"] = "Customer Cards";
+    var customerId = ViewBag.CustomerId as string;
+}
+
+<h1>Customer Cards</h1>
+
+@if (Model != null && Model.Any())
+{
+    <div class="row">
+        @foreach (var card in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Card #@card.Number</h5>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row">
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => card.AccountNumber)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => card.AccountNumber)
+                            </dd>
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => card.Number)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => card.Number)
+                            </dd>
+
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => card.CVV)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => card.CVV)
+                            </dd>
+
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => card.ExpDate)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => card.ExpDate)
+                            </dd>
+
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => card.CreationDate)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => card.CreationDate)
+                            </dd>
+
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => card.CardType)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => card.CardType)
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <br /> <!-- Adding line break between each card -->
+        }
+    </div>
+}
+else
+{
+    <p>No cards found for this customer.</p>
+}
+
+<div>
+    <a asp-controller="ManagerCustomer" asp-action="GetCustomerDetails" asp-route-id="@customerId" class="btn btn-secondary mt-3">
+        Back
+    </a>
+</div>

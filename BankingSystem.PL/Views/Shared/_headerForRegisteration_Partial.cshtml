@@ -1,5 +1,5 @@
 ﻿@* @model BankingSystem.PL.Views.Shared._headerForRegisterationModel *@
-@if (TempData["FixedRole"] != null && TempData["FixedRole"]!.ToString() == "Manager")
+@if (ViewData["FixedRole"] != null && ViewData["FixedRole"]!.ToString() == "Teller")
 {
     <h3 class="mb-0 py-2 text-center">Add New Teller</h3>
 }

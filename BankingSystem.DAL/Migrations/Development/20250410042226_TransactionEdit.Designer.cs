@@ -4,6 +4,7 @@ using BankingSystem.DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankingSystem.DAL.Migrations.Development
 {
     [DbContext(typeof(BankingSystemContext))]
-    partial class BankingSystemContextModelSnapshot : ModelSnapshot
+    [Migration("20250410042226_TransactionEdit")]
+    partial class TransactionEdit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,7 +69,7 @@ namespace BankingSystem.DAL.Migrations.Development
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Accounts", (string)null);
+                    b.ToTable("Accounts");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.ApplicationUser", b =>
@@ -196,7 +199,7 @@ namespace BankingSystem.DAL.Migrations.Development
 
                     b.HasKey("Id");
 
-                    b.ToTable("Banks", (string)null);
+                    b.ToTable("Banks");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Branch", b =>
@@ -235,7 +238,7 @@ namespace BankingSystem.DAL.Migrations.Development
 
                     b.HasIndex("BankId");
 
-                    b.ToTable("Branches", (string)null);
+                    b.ToTable("Branches");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Card", b =>
@@ -285,7 +288,7 @@ namespace BankingSystem.DAL.Migrations.Development
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Cards", (string)null);
+                    b.ToTable("Cards");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Certificate", b =>
@@ -327,7 +330,7 @@ namespace BankingSystem.DAL.Migrations.Development
 
                     b.HasIndex("AccountId");
 
-                    b.ToTable("Certificates", (string)null);
+                    b.ToTable("Certificates");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Department", b =>
@@ -360,7 +363,7 @@ namespace BankingSystem.DAL.Migrations.Development
 
                     b.HasIndex("ManagerId");
 
-                    b.ToTable("Departments", (string)null);
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Loan", b =>
@@ -418,7 +421,7 @@ namespace BankingSystem.DAL.Migrations.Development
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Loans", (string)null);
+                    b.ToTable("Loans");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.MyTransaction", b =>
@@ -466,7 +469,7 @@ namespace BankingSystem.DAL.Migrations.Development
 
                     b.HasIndex("PaymentId");
 
-                    b.ToTable("Transactions", (string)null);
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Payment", b =>
@@ -500,7 +503,7 @@ namespace BankingSystem.DAL.Migrations.Development
 
                     b.HasIndex("LoanId");
 
-                    b.ToTable("Payment", (string)null);
+                    b.ToTable("Payment");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Savings", b =>
@@ -531,7 +534,7 @@ namespace BankingSystem.DAL.Migrations.Development
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("Savings", (string)null);
+                    b.ToTable("Savings");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.SupportTicket", b =>
@@ -586,7 +589,7 @@ namespace BankingSystem.DAL.Migrations.Development
 
                     b.HasIndex("TellerId");
 
-                    b.ToTable("SupportTickets", (string)null);
+                    b.ToTable("SupportTickets");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

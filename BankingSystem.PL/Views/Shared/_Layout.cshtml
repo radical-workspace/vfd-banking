@@ -136,6 +136,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="ManagerSavings" asp-action="GetAllSavings" asp-route-id="@userId">Savings</a>
                             </li>
+							<li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="ManagerCustomer" asp-action="GetAllCustomers" asp-route-id="@userId">Customer</a>
+							</li>
                         }
 
                         @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Admin"))

@@ -1,0 +1,55 @@
+﻿@model List<BankingSystem.PL.ViewModels.Manager.LoanViewModel>
+
+@{
+    ViewData["Title"] = "GetCustomerLoan";
+    var customerId = ViewBag.CustomerId as string;
+}
+
+<h1>Customer Loans</h1>
+
+<div class="row">
+    @foreach (var loan in Model)
+    {
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card" style="border: 1px solid #ddd; border-radius: 8px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <div class="card-header" style="background-color: #f8f9fa; border-bottom: 1px solid #ddd;">
+                    <h4>Loan Type: @loan.LoanType</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>Account Number:</strong> @loan.AccountNumber</p>
+                    <p><strong>Amount:</strong> @loan.LoanAmount</p>
+                    <p><strong>Status:</strong> @loan.LoanStatus</p>
+                    <p><strong>Start Date:</strong> @loan.StartDate.ToShortDateString()</p>
+                    <p><strong>Current Debt:</strong> @loan.CurrentDebt</p>
+                    <p><strong>Interest Rate:</strong> @loan.InterestRate</p>
+                    <p><strong>Duration (Months):</strong> @loan.DurationInMonth</p>
+
+                    <h5>Payments:</h5>
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                            <tr>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Payment Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var payment in loan.Payments)
+                            {
+                                <tr>
+                                    <td>@payment.Amount</td>
+                                    <td>@payment.Status</td>
+                                    <td>@payment.PaymentDate.ToShortDateString()</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<a asp-controller="ManagerCustomer" asp-action="GetCustomerDetails" asp-route-id="@customerId" class="btn btn-secondary mt-3">
+    Back
+</a>

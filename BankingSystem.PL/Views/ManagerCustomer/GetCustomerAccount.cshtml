@@ -1,0 +1,62 @@
+﻿@model List<BankingSystem.PL.ViewModels.Manager.CustomerAccountViewModel>
+
+@{
+    ViewData["Title"] = "Customer Accounts";
+    var customerId = ViewBag.CustomerId as string;
+}
+
+<h1>Customer Accounts</h1>
+
+@if (Model != null && Model.Any())
+{
+    <div class="row">
+        @foreach (var account in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Account #@account.Number</h5>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row">
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => account.Balance)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => account.Balance)
+                            </dd>
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => account.CreatedAt)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => account.CreatedAt)
+                            </dd>
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => account.AccountType)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => account.AccountType)
+                            </dd>
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => account.AccountStatus)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => account.AccountStatus)
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>No accounts found for this customer.</p>
+}
+
+<div>
+    <a asp-controller="ManagerCustomer" asp-action="GetCustomerDetails" asp-route-id="@customerId" class="btn btn-secondary mt-3">
+        Back
+    </a>
+</div>

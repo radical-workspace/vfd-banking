@@ -1,0 +1,60 @@
+﻿@model IEnumerable<BankingSystem.PL.ViewModels.Teller.CustomerDetailsViewModel>
+
+@{
+    ViewData["Title"] = "GetAllCustomers";
+}
+
+<h1>GetAllCustomers</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Full Name
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SSN)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Branch)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.JoinDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BirthDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.FirstName @item.LastName
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SSN)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Branch)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.JoinDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BirthDate)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "GetCustomerDetails", new { id = item.Id })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

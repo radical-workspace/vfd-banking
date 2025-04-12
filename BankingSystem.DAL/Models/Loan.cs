@@ -10,7 +10,7 @@ namespace BankingSystem.DAL.Models
     public enum LoanType
     {
         Car,
-        Buisness,
+        Business,
         Real_State,
         Other
 

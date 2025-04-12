@@ -22,7 +22,7 @@ namespace BankingSystem.DAL.Data
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
            
-        modelBuilder.Entity<MyCustomer>().ToTable("Customers");
+            modelBuilder.Entity<MyCustomer>().ToTable("Customers");
             modelBuilder.Entity<Admin>().ToTable("Admins");
             modelBuilder.Entity<MyManager>().ToTable("Managers");
             modelBuilder.Entity<Teller>().ToTable("Tellers");
