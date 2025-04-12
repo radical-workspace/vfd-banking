@@ -1,66 +1,59 @@
 ﻿@model BankingSystem.DAL.Models.Account
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Account Details";
 }
 
-<h1>Details</h1>
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 text-primary">
+            <i class="fas fa-wallet me-2"></i> Account Details
+        </h1>
 
-<div>
-    <h4>Account</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Number)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Number)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Balance)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Balance)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AccountType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AccountType)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AccountStatus)
-        </dt>
-        <dd class = "col-sm-10">
+        <span class="fs-5 badge rounded-pill
+                   @(Model.AccountStatus.ToString() == "Active" ? "bg-success" :
+                     Model.AccountStatus.ToString() == "Inactive" ? "bg-warning text-dark" : "bg-danger")">
             @Html.DisplayFor(model => model.AccountStatus)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Customer)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Customer.FirstName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Branch)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Branch.Name)
-        </dd>
-        @* <dt class = "col-sm-2"> *@
-        @*     @Html.DisplayNameFor(model => model.IsDeleted) *@
-        @* </dt> *@
-        @* <dd class = "col-sm-10"> *@
-        @*     @Html.DisplayFor(model => model.IsDeleted) *@
-        @* </dd> *@
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+        </span>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="fw-bold fs-5">@Html.DisplayFor(model => model.AccountType)</span>
+                    <span class="text-muted ms-2">•••• @Model.Number.ToString().Substring(Math.Max(0, Model.Number.ToString().Length - 4))</span>
+                </div>
+                <div class="text-end">
+                    <div class="fs-3 fw-bold">@Html.DisplayFor(model => model.Balance)</div>
+                    <div class="text-muted small">Current Balance</div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="text-muted small text-uppercase fw-bold">Account Holder</div>
+                    <div class="fs-5">@(Model.Customer.FirstName + " " + Model.Customer.LastName)</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="text-muted small text-uppercase fw-bold">Branch</div>
+                    <div class="fs-5">@Html.DisplayFor(model => model.Branch.Name)</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="text-muted small text-uppercase fw-bold">Opened On</div>
+                    <div class="fs-5">@Model.CreatedAt.ToString("MMMM dd, yyyy")</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2">
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary px-4">
+            <i class="fas fa-edit me-2"></i>Edit Account
+        </a>
+        <a href="javascript:history.back()" class="btn btn-outline-secondary px-4">
+            <i class="fas fa-arrow-left me-2"></i>Back
+        </a>
+    </div>
 </div>

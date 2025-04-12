@@ -4,65 +4,55 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
 
-<h4>Account</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="d-flex justify-content-between pt-4">
+    <h1 class="h2 text-primary text-center w-100">
+        <i class="fas fa-pen me-2"></i> Edit Account
+    </h1>
+</div>
+
+
+<div class="text-center">
+    <span class="fw-medium">@Model?.Customer?.FirstName @Model?.Customer?.LastName →</span>
+    <small class="text-muted">CID: @Model?.CustomerId</small>
+</div>
+
+
+<div class="row justify-content-center">
+    <div class="col-md-10">
         <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Number" class="control-label"></label>
-                <input asp-for="Number" class="form-control" />
-                <span asp-validation-for="Number" class="text-danger"></span>
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <partial name="_CreateEditPartial" model="@Model" />
+
+
+            <div hidden class="form-group">
+                <label>Customer</label>
+                <input class="form-control" value="@($"{Model.Customer?.FirstName} {Model.Customer?.LastName}")" />
+                <input type="hidden" asp-for="CustomerId" value="@Model.CustomerId" />
             </div>
-            <div class="form-group">
-                <label asp-for="Balance" class="control-label"></label>
-                <input asp-for="Balance" class="form-control" />
-                <span asp-validation-for="Balance" class="text-danger"></span>
+
+            <div hidden class="form-group">
+                <label>Branch</label>
+                <input class="form-control" value="@Model.Branch?.Name" />
+                <input type="hidden" asp-for="BranchId" value="@Model.BranchId" />
             </div>
-            <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AccountType" class="control-label"></label>
-                <select asp-for="AccountType" class="form-control"></select>
-                <span asp-validation-for="AccountType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AccountStatus" class="control-label"></label>
-                <select asp-for="AccountStatus" class="form-control"></select>
-                <span asp-validation-for="AccountStatus" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CustomerId" class="control-label"></label>
-                <select asp-for="CustomerId" class="form-control" asp-items="ViewBag.CustomerId"></select>
-                <span asp-validation-for="CustomerId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BranchId" class="control-label"></label>
-                <select asp-for="BranchId" class="form-control" asp-items="ViewBag.BranchId"></select>
-                <span asp-validation-for="BranchId" class="text-danger"></span>
-            </div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary mt-3" />
+
+
+            <div class="mt-4 d-flex justify-content-center gap-3">
+                <input type="hidden" name="returnUrl" value="@Url.Action("ShowAccounts", "HandleCustomer", new { id = Model.CustomerId })" />
+
+                <button type="submit" class="btn btn-success px-5 py-2 fs-5">
+                    <i class="fas fa-edit me-2"></i>Save
+                </button>
+
+                <a href="javascript:history.back()" class="btn btn-outline-secondary px-5 py-2 fs-5">
+                     <i class="fas fa-arrow-left me-2"></i>Cancel
+                 </a> 
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

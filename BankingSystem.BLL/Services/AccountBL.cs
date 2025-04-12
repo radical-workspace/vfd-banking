@@ -2,15 +2,18 @@
 using BankingSystem.DAL.Data;
 using BankingSystem.DAL.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace BankingSystem.BLL.Services
 {
-    public class AccountBL : IGenericRepository<Account>
+    public class AccountBL : IGenericRepository<Account>, ISearchPaginationRepo<Account>
     {
         private readonly BankingSystemContext _context;
 
@@ -20,14 +23,70 @@ namespace BankingSystem.BLL.Services
         }
 
 
-        public IEnumerable<Account> GetAll()
+        public IEnumerable<Account> GetAllByPagination(string? ID, string? filter, out int totalRecords, out int totalPages, int pageNumber = 1)
         {
-            return _context.Accounts
-                //.IgnoreQueryFilters()
+            int pageSize = 5;
+
+            var query = _context.Accounts
                 .Include(a => a.Customer)
+                    .ThenInclude(c => c.Branch)
                 .Include(a => a.Branch)
+                .Where(a => a.Customer!.Branch.Tellers.Any(t => t.Id == ID));
+
+
+            if (filter != null)
+                query = query.Where(a => a.AccountStatus.ToString() == filter);
+
+
+            totalRecords = query.Count();
+            totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+
+            if (pageNumber < 1) pageNumber = 1;
+            if (totalPages > 0 && pageNumber > totalPages) pageNumber = totalPages;
+
+
+            return query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .ToList();
         }
+
+
+        public IEnumerable<Account> GetAll(string? ID, int flag = 1)
+        {
+            if (flag == 1)
+                return _context.Accounts
+                    .Include(a => a.Customer)
+                        .ThenInclude(c => c.Branch)
+                    .Include(a => a.Branch)
+                    .Where(a => a.Customer!.Branch.Tellers.Any(teller => teller.Id == ID))
+                    .ToList();
+
+            else
+                return _context.Accounts
+                    .Include(a => a.Customer)
+                        .ThenInclude(c => c.Branch)
+                    .Include(a => a.Branch)
+                    .Where(a => a.Customer!.Id == ID)
+                    .ToList();
+        }
+
+
+        public IEnumerable<Account> Search(string search, string? tellerID)
+        {
+            if (search == null)
+                return [];
+
+            var query = GetAll(tellerID)
+                .Where(a => a.Number.ToString() == search.Trim());
+
+            if (!query.Any())
+                query = GetAll(tellerID)
+                        .Where(a => (a.Customer?.FirstName + " " + a.Customer?.LastName).ToLower().Trim().Contains(search.ToLower().Trim()));
+
+            return query;
+        }
+
 
 
         public Account? Get(int id)
@@ -42,13 +101,30 @@ namespace BankingSystem.BLL.Services
 
         public void Add(Account Entity)
         {
-            throw new NotImplementedException();
+            if (Entity != null)
+            {
+                int custAccountCount = _context.Accounts
+                   .Where(a => a.CustomerId == Entity.CustomerId)
+                   .Count();
+
+                if (custAccountCount < 2)
+                {
+                    _context.Accounts.Add(Entity);
+                    _context.SaveChanges();
+                }
+                else
+                    throw new InvalidOperationException("This customer already have 2 accounts, cannot add more than 2.");
+            }
         }
 
 
         public void Update(Account Entity)
         {
-            throw new NotImplementedException();
+            if (Entity != null)
+            {
+                _context.Accounts.Update(Entity);
+                _context.SaveChanges();
+            }
         }
 
 
@@ -64,6 +140,7 @@ namespace BankingSystem.BLL.Services
                 }
             }
         }
+
 
 
 

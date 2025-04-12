@@ -1,0 +1,49 @@
+﻿@using BankingSystem.DAL.Models
+@model BankingSystem.DAL.Models.Account
+
+@{
+    ViewData["Title"] = "Manage Account";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+
+            <div class="card shadow-lg">
+                <div class="card-body p-5 pb-3">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="Number" class="form-label fw-semibold fs-5"></label>
+                            <input asp-for="Number" class="form-control form-control-lg" />
+                            <span asp-validation-for="Number" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="Balance" class="form-label fw-semibold fs-5"></label>
+                            <input asp-for="Balance" class="form-control form-control-lg" />
+                            <span asp-validation-for="Balance" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="CreatedAt" class="form-label fw-semibold fs-5"></label>
+                            <input asp-for="CreatedAt" class="form-control form-control-lg" type="date" />
+                            <span asp-validation-for="CreatedAt" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="AccountType" class="form-label fw-semibold fs-5"></label>
+                            <select asp-for="AccountType" class="form-select form-select-lg" asp-items="@Html.GetEnumSelectList<AccountType>()"></select>
+                            <span asp-validation-for="AccountType" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="AccountStatus" class="form-label fw-semibold fs-5"></label>
+                            <select asp-for="AccountStatus" class="form-select form-select-lg" asp-items="@Html.GetEnumSelectList<AccountStatus>()"></select>
+                            <span asp-validation-for="AccountStatus" class="text-danger small"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

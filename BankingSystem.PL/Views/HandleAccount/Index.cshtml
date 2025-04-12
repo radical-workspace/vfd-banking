@@ -1,96 +1,206 @@
-﻿@model IEnumerable<BankingSystem.DAL.Models.Account>
+﻿@using BankingSystem.DAL.Models
+@model IEnumerable<Account>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Accounts Management";
+
+    int CurrentPage = ViewBag.CurrentPage ?? 1;
+    int TotalPages = ViewBag.TotalPages ?? 1;
+    int TotalRecords = ViewBag.TotalRecords;
+    var filter = ViewBag.Filter;
+    var search = ViewBag.Search;
 }
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary px-5 my-2">Create Account</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Number)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Balance)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AccountType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AccountStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Customer)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Branch)
-            </th>
-            @* <th> *@
-            @*     @Html.DisplayNameFor(model => model.IsDeleted) *@
-            @* </th> *@
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                @Html.DisplayFor(modelItem => item.Number)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Balance)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AccountType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AccountStatus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Customer.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Branch.Name)
-            </td>
-            @* <td> *@
-            @*     @Html.DisplayFor(modelItem => item.IsDeleted) *@
-            @* </td> *@
-            <td>
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                @* <a asp-action="Delete" asp-route-id="@item.Id" class="dlt">Delete</a> *@
+<div class="container my-3 mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 pb-2 border-bottom">
+        <div>
+            <h1 class="h3 text-primary">
+                <i class="fas fa-building-columns me-2"></i> Accounts Management
+            </h1>
+            <p class="text-muted mb-0">View, update, and manage customer accounts</p>
+            <p class="text-muted mb-0">Total Records → <strong>@TotalRecords</strong></p>
+        </div>
 
-                <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
+        @* <a asp-action="Create" class="btn btn-primary mt-3 mt-md-0"> *@
+        @*     <i class="fas fa-plus-circle me-1"></i> Create New Account *@
+        @* </a> *@
+    </div>
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+        <!-- Search Form -->
+        <form asp-action="Search" method="get" class="w-100 w-md-auto">
+            <div class="input-group shadow-sm">
+                <span class="input-group-text bg-white"><i class="fas fa-search text-muted"></i></span>
+                
+                <input type="text" name="search" value="@search" class="form-control" placeholder="Search by account number or customer name...">
+                
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+
+        <!-- Filter Dropdown -->
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-filter me-1"></i> Filter by Status
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a asp-action="Index" asp-route-filter="Active" asp-route-pageNumber="@CurrentPage" class="dropdown-item">Active Accounts</a></li>
+                <li><a asp-action="Index" asp-route-filter="Inactive" asp-route-pageNumber="@CurrentPage" class="dropdown-item">Inactive Accounts</a></li>
+                <li><a asp-action="Index" asp-route-filter="Closed" asp-route-pageNumber="@CurrentPage" class="dropdown-item">Closed Accounts</a></li>
+                
+                <li><hr class="dropdown-divider"></li>
+                <li><a asp-action="Index" class="dropdown-item text-danger">Clear Filter</a></li>
+            </ul>
+
+        </div>
+    </div>
 
 
-<script>
-    for(let i = 0; i < document.forms.length; i++)
+    <div class="table-responsive shadow-sm rounded bg-white">
+        <table class="table table-hover table-striped align-middle mb-0">
+            <thead class="table-dark text-white text-center">
+                <tr>
+                    <th>Account Number</th>
+                    <th>Balance</th>
+                    <th>Opened On</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Customer</th>
+                    <th>Branch</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="fw-semibold text-primary">
+                            <i class="@GetAccountIcon(item.AccountType) me-2"></i>
+                            @Html.DisplayFor(modelItem => item.Number)
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.Balance)</td>
+                        <td class="text-muted">@item.CreatedAt.ToString("dd MMM yyyy")</td>
+                        <td>@Html.DisplayFor(modelItem => item.AccountType)</td>
+                        <td>
+                            <div class="text-center">
+                                <span class="badge w-100 text-bg-@GetStatusColor(item.AccountStatus)">
+                                    @Html.DisplayFor(modelItem => item.AccountStatus)
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex flex-column">
+                                <span class="fw-medium">@item.Customer?.FirstName @item.Customer?.LastName</span>
+                                <small class="text-muted">CID: @item.CustomerId</small>
+                            </div>
+                        </td>
+                        <td>@item.Branch?.Name</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm" title="View">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-warning btn-sm @(item.AccountStatus == AccountStatus.Closed ? "disabled" : "")" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirmDelete()" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<!-- Pagination -->
+<div class="mt-2 text-center">
+    @if (TotalPages >= 1)
     {
-        document.forms[i].addEventListener("submit", (event) => {
-            var msg = confirm("Are you sure you want to delete this Order?");
+        <nav>
+            <ul class="pagination justify-content-center mb-1">
+                @if (CurrentPage > 3)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="1" asp-route-filter="@filter">1</a>
+                    </li>
 
-            if(msg == false)
-                event.preventDefault();
-        });
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                }
+
+                @for (int i = Math.Max(1, CurrentPage - 4); i <= Math.Min(TotalPages, CurrentPage + 4); i++)
+                {
+                    <li class="page-item @(CurrentPage == i ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-filter="@filter">@i</a>
+                    </li>
+                }
+
+                @if (CurrentPage < TotalPages - 2)
+                {
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@TotalPages" asp-route-filter="@filter">@TotalPages</a>
+                    </li>
+                }
+            </ul>
+        </nav>
     }
-</script>
+</div>
 
+
+
+<div class="d-flex justify-content-center align-items-center">
+    <div class="mt-2 text-center w-25">
+        <form>
+            <div class="input-group shadow-sm">
+                <span class="input-group-text bg-white"><i class="fas fa-search text-muted"></i></span>
+
+                <input type="number" name="pageNumber" value="@search" min="1" max="@TotalPages" class="form-control" placeholder="Search by page number...">
+
+                <button type="submit" class="btn btn-primary">GO</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    <script>
+        function confirmDelete() {
+            return confirm('Are you sure you want to delete this account? This action cannot be undone.');
+        }
+    </script>
+}
+
+@functions {
+    public string GetAccountIcon(AccountType type)
+    {
+        return type switch
+        {
+            AccountType.Saving => "fas fa-building-columns", // Changed from piggy-bank
+            AccountType.Current => "fas fa-money-bill-wave",
+            _ => "fas fa-wallet"
+        };
+    }
+
+    public string GetStatusColor(AccountStatus status)
+    {
+        return status switch
+        {
+            AccountStatus.Active => "success",
+            AccountStatus.Inactive => "warning",
+            AccountStatus.Closed => "danger",
+            _ => "secondary"
+        };
+    }
+}
