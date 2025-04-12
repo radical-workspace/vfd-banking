@@ -30,8 +30,8 @@ namespace BankingSystem.DAL.Data.Configurations
             builder.Property(a => a.IsDeleted)
             .HasDefaultValue(false);
 
-            builder.HasMany(a => a.Card)
-               .WithOne(c => c.Account);
+            //builder.HasMany(a => a.Card)
+            //   .WithOne(c => c.Account);
 
             builder.HasQueryFilter(P => !P.IsDeleted);
 
