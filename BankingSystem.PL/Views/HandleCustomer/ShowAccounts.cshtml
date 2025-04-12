@@ -100,18 +100,28 @@
                             <a asp-controller="HandleAccount" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-warning btn-sm @(item.AccountStatus == AccountStatus.Closed ? "disabled" : "")" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <form asp-controller="HandleAccount" asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirmDelete()" class="d-inline">
+
+                            <form asp-controller="HandleAccount" asp-action="Delete" asp-route-id="@item.Id" onsubmit="return confirmDelete()" class="d-inline">
+                                <input type="hidden" name="returnUrl" value="@Url.Action("ShowAccounts", "HandleCustomer", new { id = @Context.Request.RouteValues["id"] })" />
+
                                 <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </form>
+
                         </div>
                     </div>
                 </div>
             </div>
         }
     </div>
+
+    <a href="javascript:history.back()" class="btn btn-outline-secondary px-5 mt-4">
+        <i class="fas fa-arrow-left me-2"></i>Back
+    </a>
 </div>
+
+
 
 @section Scripts {
     <script>
