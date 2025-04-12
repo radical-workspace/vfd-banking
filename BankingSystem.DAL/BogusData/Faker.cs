@@ -149,7 +149,7 @@ namespace BankingSystem.BogusFakers
                     .RuleFor(a => a.BranchId, f => customer.BranchId)
                     .RuleFor(a => a.Certificates, f => new List<Certificate>())
                     .RuleFor(a => a.Loans, f => new List<Loan>())
-                    .RuleFor(a => a.Cards, f => new List<VisaCard>())
+                    .RuleFor(a => a.Card, f => new VisaCard())
                     .RuleFor(a => a.AccountTransactions, f => new List<Transaction>());
 
                 accounts.AddRange(faker.Generate(accountsPerCustomer));

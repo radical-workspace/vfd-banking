@@ -15,7 +15,7 @@ namespace BankingSystem.DAL.Models
         public List<Transaction>? Transactions { get; set; }
         public List<Loan>? Loans { get; set; }
         public List<Account>? Accounts { get; set; }
-        public IEnumerable<VisaCard> Cards { get; set; } = null!;
+        //public IEnumerable<VisaCard> Cards { get; set; } = null!;
         public List<SupportTicket>? SupportTickets { get; set; } = null!;
 
         // Additional properties for financial assessment needed Whenever the customer applies for a loan

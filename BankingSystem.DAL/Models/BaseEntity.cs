@@ -8,12 +8,12 @@ namespace BankingSystem.DAL.Models
 {
     public interface ISoftDeletable
     {
-        bool IsDeleted { get; set; }
+        bool IsDeleted { get; set; } 
     }
+
     public class BaseEntity : ISoftDeletable
     {
         public int Id { get; set; }
         public bool IsDeleted { get; set; }
-
     }
 }

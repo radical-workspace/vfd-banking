@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BankingSystem.DAL.Models;
+using BankingSystem.PL.Controllers;
 using BankingSystem.PL.ViewModels.Auth;
 using BankingSystem.PL.ViewModels.Manager;
 using BankingSystem.PL.ViewModels.Teller;
@@ -96,20 +97,20 @@ namespace BankingSystem.PL.Helpers
                     }).ToList()
                     : new List<TransactionDetail> { new TransactionDetail { TransactionType = "No transactions available" } }))
 
-                .ForMember(dest => dest.CertificateDetails, opt => opt.MapFrom(src =>
-                    src.Accounts != null && src.Accounts.SelectMany(a => a.Certificates).Any()
-                        ? src.Accounts.SelectMany(a => a.Certificates).Select(c => new CertificateDetail
-                        {
-                            CertificateNumber = c.CertificateNumber,
-                            IssueDate = c.IssueDate,
-                            ExpiryDate = c.ExpiryDate,
-                            Amount = c.Amount,
-                            InterestRate = c.InterestRate
-                        }).ToList()
-                        : new List<CertificateDetail>
-                        {
-                            new CertificateDetail { CertificateNumber = "No Certificate available" }
-                        }));
+                    //.ForMember(dest => dest.CertificateDetails, opt => opt.MapFrom(src =>
+                    //    src.Accounts != null && src.Accounts.SelectMany(a => a.Certificates).Any()
+                    //        ? src.Accounts.SelectMany(a => a.Certificates).Select(c => new CertificateDetail
+                    //        {
+                    //            CertificateNumber = c.CertificateNumber,
+                    //            IssueDate = c.IssueDate,
+                    //            ExpiryDate = c.ExpiryDate,
+                    //            Amount = c.Amount,
+                    //            InterestRate = c.InterestRate
+                    //        }).ToList()
+                    //        : new List<CertificateDetail>
+                    //        {
+                    //            new CertificateDetail { CertificateNumber = "No Certificate available" }
+                    //        }));
 
 
             CreateMap<Loan, LoanViewModel>()
@@ -170,6 +171,13 @@ namespace BankingSystem.PL.Helpers
                     .ForMember(dest => dest.Ticket, opt => opt.MapFrom(src => src))
                     .ForMember(dest => dest.Document, opt => opt.MapFrom(src => src.Customer.FinancialDocument))
                     .ReverseMap();
+
+            CreateMap<Account, AccountsViewModel>()
+            .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.Number))
+            .ForMember(dest => dest.VisaNumber, opt => opt.MapFrom(src => src.Card.Number))
+            .ForMember(dest => dest.VisaCVV, opt => opt.MapFrom(src => src.Card.CVV))
+            .ForMember(dest => dest.VisaExpDate, opt => opt.MapFrom(src => src.Card.ExpDate))
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
         }
 
 

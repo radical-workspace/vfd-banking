@@ -27,11 +27,11 @@ namespace BankingSystem.DAL.Models
         public AccountType AccountType { get; set; }
         public AccountStatus AccountStatus { get; set; }
         public List<Transaction>? AccountTransactions { get; set; }
-        public List<Certificate> Certificates { get; set; } = [];
+        public List<Certificate>? Certificates { get; set; } = [];
 
-        public List<Loan> Loans { get; set; } = [];
-        public List<VisaCard> Cards { get; set; } = [];
-        public List<SupportTicket> SupportTickets { get; set; } = [];
+        public List<Loan>? Loans { get; set; } = [];
+        public VisaCard Card { get; set; } = null!;
+        public List<SupportTicket>? SupportTickets { get; set; } = [];
 
         [ForeignKey(nameof(Customer))]
         public string? CustomerId { get; set; }
