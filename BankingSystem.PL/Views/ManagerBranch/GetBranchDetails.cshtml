@@ -5,23 +5,148 @@
 @{
     ViewData["Title"] = "Branch Details";
 }
+<style>
+    :root {
+        --primary-dark: #0a2d2e;
+        --primary-medium: #1c4e4f;
+        --primary-light: #436e6f;
+        --secondary-dark: #6a8e8f;
+        --secondary-light: #879693;
+        --neutral-1: #a49e97;
+        --accent-1: #deae9f;
+        --accent-2: #efd7cf;
+        --accent-3: #f7ebe7;
+        --white: #ffffff;
+    }
 
-<div class="container mt-4">
+    .branch-card {
+        border: 2px solid var(--accent-2);
+        border-radius: 1rem;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+        background: var(--accent-3);
+    }
+
+        .branch-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .card-header {
+        background: var(--primary-dark) !important;
+        color: var(--accent-3) !important;
+        padding: 1.5rem;
+        border-bottom: 3px solid var(--accent-1);
+    }
+
+    .section-heading {
+        color: var(--primary-medium);
+        border-bottom: 2px solid var(--accent-1);
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        color: var(--primary-medium);
+        font-weight: 600;
+    }
+
+    .input-group-text {
+        background: var(--accent-2) !important;
+        border: none;
+        color: var(--primary-dark);
+    }
+
+    .form-control:read-only {
+        background: var(--neutral-1);
+        border: 2px solid var(--accent-2);
+   
+    }
+
+    .edit-btn {
+        background: var(--accent-1);
+        color: var(--primary-dark);
+        border: 2px solid var(--accent-1);
+        transition: all 0.3s ease;
+    }
+
+        .edit-btn:hover {
+            background: var(--accent-2);
+            transform: scale(1.05);
+        }
+
+    .entity-card {
+        background: var(--white);
+        border: 2px solid var(--accent-2);
+        border-radius: 0.8rem;
+        transition: all 0.3s ease;
+    }
+
+        .entity-card:hover {
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .entity-card .card-header {
+            background: var(--primary-medium) !important;
+            color: var(--white) !important;
+            border-radius: 0.8rem 0.8rem 0 0 !important;
+        }
+
+    .list-group-item {
+        background: var(--accent-3);
+        border: 1px solid var(--accent-2);
+    }
+
+    .badge {
+        background: var(--primary-light) !important;
+    }
+
+    .btn-outline-primary {
+        border-color: var(--primary-medium);
+        color: var(--primary-medium);
+    }
+
+    .btn-outline-primary:hover {
+        background: var(--primary-medium);
+        color: var(--white);
+    }
+
+    .table-hover tbody tr:hover {
+        background: var(--accent-2);
+    }
+
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .entity-card {
+        animation: slideIn 0.5s ease-out;
+    }
+</style>
+
+
+
+<div class="container-fluid mt-4 px-5">  
     <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-8">
-            <div class="card shadow-sm rounded-3 border-0">
-                <div class="card-header bg-primary text-white rounded-top-3 py-3">
-                    <h3 class="mb-0 text-center fw-bold">
+        <div class="col-12">
+            <div class="branch-card w-100">
+                <div class="card-header">
+                    <h3 class="mb-0 text-center">
                         <i class="bi bi-bank me-2"></i>Branch Details
                     </h3>
                 </div>
                 <div class="card-body px-4 py-4">
-                    @* <form asp-action="UpdateBranch" method="post" class="row g-3"> *@
-                    @*     <input type="hidden" asp-for="Id" /> *@
 
                     <!-- Basic Information Section -->
                     <div class="col-12">
-                        <h5 class="fw-bold text-primary mb-3 pb-2 border-bottom">
+                        <h5 class="section-heading">
                             <i class="bi bi-info-circle me-2"></i>Basic Information
                         </h5>
                     </div>
@@ -34,7 +159,7 @@
                             <label asp-for="Name" class="form-label fw-semibold">Branch Name</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light"><i class="bi bi-building"></i></span>
-                                <input asp-for="Name" class="form-control rounded-end" readonly />
+                                <input asp-for="Name" class="form-control rounded-end " readonly />
                             </div>
                             <span asp-validation-for="Name" class="text-danger small"></span>
                         </div>
@@ -44,7 +169,7 @@
                             <label asp-for="Location" class="form-label fw-semibold">Location</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light"><i class="bi bi-geo-alt"></i></span>
-                                <input asp-for="Location" class="form-control rounded-end" readonly />
+                                <input asp-for="Location" class="form-control rounded-end " readonly />
                             </div>
                             <span asp-validation-for="Location" class="text-danger small"></span>
                         </div>
@@ -52,7 +177,7 @@
 
                     <!-- Operating Hours Section -->
                     <div class="col-12 mt-4">
-                        <h5 class="fw-bold text-primary mb-3 pb-2 border-bottom">
+                        <h5 class="section-heading">
                             <i class="bi bi-clock me-2"></i>Operating Hours
                         </h5>
                     </div>
@@ -96,7 +221,7 @@
 
                     <!-- Related Entities Section -->
                     <div class="col-12 mt-4">
-                        <h5 class="fw-bold text-primary mb-3 pb-2 border-bottom">
+                        <h5 class="section-heading">
                             <i class="bi bi-diagram-3 me-2"></i>Related Entities
                         </h5>
                     </div>
@@ -124,7 +249,7 @@
                                             }
                                         </ul>
                                         <div class="text-end mt-2">
-                                            <button class="btn btn-sm btn-outline-primary">View All (@Model.Loans.Count)</button>
+                                            <a asp-controller="ManagerLoan" asp-action="GetAllLoans" class="btn btn-sm btn-outline-primary">View All (@Model.Loans.Count)</a>
                                         </div>
 
                                     }
@@ -156,7 +281,7 @@
                                             }
                                         </ul>
                                         <div class="text-end mt-2">
-                                            <button class="btn btn-sm btn-outline-primary">View All (@Model.Customers.Count)</button>
+                                            <a asp-controller="ManagerCustomer" asp-action="GetAllCustomers" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value" class="btn btn-sm btn-outline-primary">View All (@Model.Customers.Count)</a>
                                         </div>
 
                                     }
@@ -189,45 +314,12 @@
                                         </ul>
 
                                         <div class="text-end mt-2">
-                                            <button class="btn btn-sm btn-outline-primary">View All (@Model.Tellers.Count)</button>
+                                            <a class="btn btn-sm btn-outline-primary" asp-controller="ManagerTeller" asp-action="GetAllTellers" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value">View All (@Model.Tellers.Count)</a>
                                         </div>
                                     }
                                     else
                                     {
                                         <p class="text-muted small mb-0">No tellers available</p>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Departments Card -->
-                        <div class="col-md-6">
-                            <div class="card h-100 border-0 shadow-sm">
-                                <div class="card-header bg-light">
-                                    <h6 class="mb-0 fw-semibold">
-                                        <i class="bi bi-building-gear me-2"></i>Departments
-                                    </h6>
-                                </div>
-                                <div class="card-body">
-                                    @if (Model.Departments != null && Model.Departments.Any())
-                                    {
-                                        <ul class="list-group list-group-flush small">
-                                            @foreach (var department in Model.Departments.Take(3))
-                                            {
-                                                <li class="list-group-item">
-                                                    <i class="bi bi-collection me-2"></i>@department.Name
-                                                </li>
-                                            }
-                                        </ul>
-
-                                        <div class="text-end mt-2">
-                                            <button class="btn btn-sm btn-outline-primary">View All (@Model.Departments.Count)</button>
-                                        </div>
-
-                                    }
-                                    else
-                                    {
-                                        <p class="text-muted small mb-0">No departments available</p>
                                     }
                                 </div>
                             </div>

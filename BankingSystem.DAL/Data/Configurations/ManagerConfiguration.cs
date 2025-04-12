@@ -4,13 +4,13 @@ using BankingSystem.DAL.Models;
 
 namespace BankingSystem.DAL.Configurations
 {
-    public class ManagerConfiguration : IEntityTypeConfiguration<MyManager>
+    public class ManagerConfiguration : IEntityTypeConfiguration<Manager>
     {
-        public void Configure(EntityTypeBuilder<MyManager> builder)
+        public void Configure(EntityTypeBuilder<Manager> builder)
         {
             builder.HasOne(m => m.Branch)
                .WithOne(b => b.MyManager)
-               .HasForeignKey<MyManager>(m => m.BranchId);
+               .HasForeignKey<Manager>(m => m.BranchId);
 
             builder.Property(m => m.Salary)
             .IsRequired()

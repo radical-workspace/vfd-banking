@@ -10,7 +10,7 @@ namespace BankingSystem.DAL.Models
     public enum LoanType
     {
         Car,
-        Buisness,
+        Business,
         Real_State,
         Other
 
@@ -40,6 +40,7 @@ namespace BankingSystem.DAL.Models
         [ForeignKey(nameof(Account))]
         public int AccountId { get; set; }
         public Account Account { get; set; } = null!;
+
 
         [ForeignKey(nameof(Customer))]
         public string? CustomerId { get; set; }

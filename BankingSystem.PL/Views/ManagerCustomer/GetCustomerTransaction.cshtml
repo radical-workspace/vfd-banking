@@ -1,0 +1,73 @@
+﻿@model List<BankingSystem.PL.ViewModels.Manager.CustomerTransactionViewModel>
+
+@{
+    ViewData["Title"] = "Customer Transactions";
+    var customerId = ViewBag.CustomerId as string;
+}
+
+<h1>Customer Transactions</h1>
+
+@if (Model != null && Model.Any())
+{
+    <div class="row">
+        @foreach (var transaction in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Transaction #@transaction.Type</h5>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row">
+                            <dt class="col-sm-4">
+                                Type
+                            </dt>
+                            <dd class="col-sm-8">
+                                @transaction.Type
+                            </dd>
+
+                            <dt class="col-sm-4">
+                                Status
+                            </dt>
+                            <dd class="col-sm-8">
+                                @transaction.Status
+                            </dd>
+
+                            <dt class="col-sm-4">
+                                Done Via
+                            </dt>
+                            <dd class="col-sm-8">
+                                @transaction.DoneVia
+                            </dd>
+
+                            <dt class="col-sm-4">
+                                Account Number
+                            </dt>
+                            <dd class="col-sm-8">
+                                @transaction.AccountNumber
+                            </dd>
+
+                            <dt class="col-sm-4">
+                                Destination Account Number
+                            </dt>
+                            <dd class="col-sm-8">
+                                @transaction.AccountDestinatoin
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <br />
+        }
+    </div>
+}
+else
+{
+    <p>No transactions found for this customer.</p>
+}
+
+<div>
+    <a asp-controller="ManagerCustomer" asp-action="GetCustomerDetails" asp-route-id="@customerId" class="btn btn-secondary mt-3">
+        Back
+    </a>
+</div>

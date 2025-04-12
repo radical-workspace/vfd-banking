@@ -47,7 +47,7 @@ namespace BankingSystem.DAL.Data.Configurations
                         .HasDefaultValue(false);
 
             builder.HasDiscriminator<string>("Discriminator")
-                    .HasValue<MyManager>("Manager")
+                    .HasValue<Manager>("Manager")
                     .HasValue<Teller>("Teller")
                     .HasValue<Customer>("Customer")
                     .HasValue<Admin>("Admin");

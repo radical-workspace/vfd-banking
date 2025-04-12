@@ -18,7 +18,7 @@ namespace BankingSystem.DAL.Models
         public List<Department> Departments { get; set; } = null!;
         public List<Savings> Savings  { get; set; } = null!;
 
-        public MyManager? MyManager { get; set; } = null!;
+        public Manager? MyManager { get; set; } = null!;
 
     }
 }

@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Data.Configurations
 {
-    public class CardConfigurations : IEntityTypeConfiguration<Card>
+    public class CardConfigurations : IEntityTypeConfiguration<VisaCard>
     {
-        public void Configure(EntityTypeBuilder<Card> builder)
+        public void Configure(EntityTypeBuilder<VisaCard> builder)
         {
             builder.Property(C => C.Number)
                  .HasMaxLength(16)

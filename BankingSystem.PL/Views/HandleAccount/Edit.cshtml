@@ -39,6 +39,8 @@
 
 
             <div class="mt-4 d-flex justify-content-center gap-3">
+                <input type="hidden" name="returnUrl" value="@Url.Action("ShowAccounts", "HandleCustomer", new { id = Model.CustomerId })" />
+
                 <button type="submit" class="btn btn-success px-5 py-2 fs-5">
                     <i class="fas fa-edit me-2"></i>Save
                 </button>

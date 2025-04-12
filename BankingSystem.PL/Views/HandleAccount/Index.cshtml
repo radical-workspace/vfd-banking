@@ -3,17 +3,25 @@
 
 @{
     ViewData["Title"] = "Accounts Management";
+
+    int CurrentPage = ViewBag.CurrentPage ?? 1;
+    int TotalPages = ViewBag.TotalPages ?? 1;
+    int TotalRecords = ViewBag.TotalRecords;
+    var filter = ViewBag.Filter;
+    var search = ViewBag.Search;
 }
 
 
-<div class="container my-5">
+<div class="container my-3 mb-4">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 pb-2 border-bottom">
         <div>
             <h1 class="h3 text-primary">
                 <i class="fas fa-building-columns me-2"></i> Accounts Management
             </h1>
             <p class="text-muted mb-0">View, update, and manage customer accounts</p>
+            <p class="text-muted mb-0">Total Records → <strong>@TotalRecords</strong></p>
         </div>
+
         @* <a asp-action="Create" class="btn btn-primary mt-3 mt-md-0"> *@
         @*     <i class="fas fa-plus-circle me-1"></i> Create New Account *@
         @* </a> *@
@@ -24,11 +32,10 @@
         <form asp-action="Search" method="get" class="w-100 w-md-auto">
             <div class="input-group shadow-sm">
                 <span class="input-group-text bg-white"><i class="fas fa-search text-muted"></i></span>
-                <input type="text" name="name" value="@ViewBag?.name"
-                       class="form-control" placeholder="Search by account number or customer name...">
-                <button type="submit" class="btn btn-primary">
-                    Search
-                </button>
+                
+                <input type="text" name="search" value="@search" class="form-control" placeholder="Search by account number or customer name...">
+                
+                <button type="submit" class="btn btn-primary">Search</button>
             </div>
         </form>
 
@@ -38,12 +45,14 @@
                 <i class="fas fa-filter me-1"></i> Filter by Status
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="dropdown-item" href="?status=Active">Active Accounts</a></li>
-                <li><a class="dropdown-item" href="?status=Inactive">Inactive Accounts</a></li>
-                <li><a class="dropdown-item" href="?status=Closed">Closed Accounts</a></li>
+                <li><a asp-action="Index" asp-route-filter="Active" asp-route-pageNumber="@CurrentPage" class="dropdown-item">Active Accounts</a></li>
+                <li><a asp-action="Index" asp-route-filter="Inactive" asp-route-pageNumber="@CurrentPage" class="dropdown-item">Inactive Accounts</a></li>
+                <li><a asp-action="Index" asp-route-filter="Closed" asp-route-pageNumber="@CurrentPage" class="dropdown-item">Closed Accounts</a></li>
+                
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item text-danger" href="/Accounts">Clear Filter</a></li>
+                <li><a asp-action="Index" class="dropdown-item text-danger">Clear Filter</a></li>
             </ul>
+
         </div>
     </div>
 
@@ -82,11 +91,11 @@
                         </td>
                         <td>
                             <div class="d-flex flex-column">
-                                <span class="fw-medium">@item.Customer.FirstName</span>
+                                <span class="fw-medium">@item.Customer?.FirstName @item.Customer?.LastName</span>
                                 <small class="text-muted">CID: @item.CustomerId</small>
                             </div>
                         </td>
-                        <td>@item.Branch.Name</td>
+                        <td>@item.Branch?.Name</td>
                         <td>
                             <div class="d-flex gap-2">
                                 <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm" title="View">
@@ -108,6 +117,62 @@
         </table>
     </div>
 </div>
+
+
+
+<!-- Pagination -->
+<div class="mt-2 text-center">
+    @if (TotalPages >= 1)
+    {
+        <nav>
+            <ul class="pagination justify-content-center mb-1">
+                @if (CurrentPage > 3)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="1" asp-route-filter="@filter">1</a>
+                    </li>
+
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                }
+
+                @for (int i = Math.Max(1, CurrentPage - 4); i <= Math.Min(TotalPages, CurrentPage + 4); i++)
+                {
+                    <li class="page-item @(CurrentPage == i ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-filter="@filter">@i</a>
+                    </li>
+                }
+
+                @if (CurrentPage < TotalPages - 2)
+                {
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@TotalPages" asp-route-filter="@filter">@TotalPages</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+</div>
+
+
+
+<div class="d-flex justify-content-center align-items-center">
+    <div class="mt-2 text-center w-25">
+        <form>
+            <div class="input-group shadow-sm">
+                <span class="input-group-text bg-white"><i class="fas fa-search text-muted"></i></span>
+
+                <input type="number" name="pageNumber" value="@search" min="1" max="@TotalPages" class="form-control" placeholder="Search by page number...">
+
+                <button type="submit" class="btn btn-primary">GO</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
 
 @section Scripts {
     <script>

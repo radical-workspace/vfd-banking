@@ -1,7 +1,6 @@
 ﻿@model List<SavingsViewModel>
 @{
     ViewData["Title"] = "Savings Management";
-    var managerId = ViewBag.ManagerId;
 }
 
 @if (TempData["Success"] != null)
@@ -13,37 +12,81 @@
     <div class="alert alert-danger">@TempData["Error"]</div>
 }
 
-<table class="table" id="savingsTable">
-    <thead>
-        <tr>
-            <th>Currency</th>
-            <th>Balance</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <!-- Table headers -->
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr data-saving-id="@item.Id">
-                <td class="currency-cell">@item.Currency</td>
-                <td class="balance-cell">@item.Balance.ToString("C2")</td>
-                <td>
-                    <button class="btn btn-primary edit-btn">Edit</button>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="container-fluid mt-4 px-4">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card branch-card d-flex flex-row" style="min-height: 80vh;">
+                <!-- Left Section (30%) -->
+                <div class="card-header d-flex flex-column align-items-center justify-content-center p-4" style="width: 30%; min-width: 300px; background: linear-gradient(180deg, #0a2d2e 0%, #1c4e4f 100%);">
+                    <h3 class="text-white mb-4">
+                        <i class="bi bi-piggy-bank-fill me-2"></i>Savings Accounts
+                    </h3>
+                    <button class="btn btn-primary Add-btn w-75 py-2 mb-3" style="background-color: #deae9f; border: none;">
+                        <i class="bi bi-plus-circle me-2"></i>Add Currency
+                    </button>
+                    <div class="text-white mt-auto">
+                        <p class="mb-1">Total Accounts: @Model.Count()</p>
+                        <p>Total Balance: @Model.Sum(x => x.Balance).ToString("C")</p>
+                    </div>
+                </div>
 
-<!-- Hidden form for updates -->
-<form id="updateForm" asp-action="UpdateSaving" method="post">
-    <input type="hidden" name="Id" id="savingId" />
-    <input type="hidden" name="Currency" id="savingCurrency" />
-    <input type="hidden" name="Balance" id="savingBalance" />
-    <input type="hidden" name="__RequestVerificationToken"
-           value="@Html.AntiForgeryToken()" />
-</form>
+                <!-- Right Section (70%) -->
+                <div class="card-body p-4" style="width: 70%; overflow-y: auto;">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle" id="savingsTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 40%;">Currency</th>
+                                    <th style="width: 40%;">Balance</th>
+                                    <th style="width: 20%;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr data-saving-id="@item.Id">
+                                        <td class="currency-cell fw-bold">@item.Currency</td>
+                                        <td class="balance-cell">@item.Balance.ToString("C")</td>
+                                        <td>
+                                            <button class="btn btn-sm edit-btn" style="background-color: #6a8e8f; color: white;">
+                                                <i class="bi bi-pencil-square"></i> Edit
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+
+                                <!-- Add Form Row -->
+                                <tr id="addFormRow" class="d-none">
+                                    <form id="addForm" asp-action="AddSaving" method="post">
+                                    <td>
+                                        <input type="text" name="Currency" class="form-control form-control-sm" placeholder="Currency" required />
+                                    </td>
+                                    <td>
+                                        <input type="number" name="Balance" class="form-control form-control-sm" placeholder="0.00" step="0.01" required />
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-sm btn-success">
+                                            <i class="bi bi-check-circle"></i> Save
+                                        </button>
+                                    </td>
+                                    </form>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Hidden Update Form -->
+                    <form id="updateForm" asp-action="UpdateSaving" method="post" class="d-none">
+                        <input type="hidden" name="Id" id="savingId" />
+                        <input type="hidden" name="Currency" id="savingCurrency" />
+                        <input type="hidden" name="Balance" id="savingBalance" />
+                        @Html.AntiForgeryToken()
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script src="~/js/ManagerSaving.js"></script>

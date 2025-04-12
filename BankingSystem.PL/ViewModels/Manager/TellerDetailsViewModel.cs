@@ -40,11 +40,9 @@ namespace BankingSystem.PL.ViewModels.Manager
         [Required(ErrorMessage = "Salary is required.")]
         [Range(0.1, double.MaxValue, ErrorMessage = "Salary must be a positive number greater than 0.")]
         public double Salary { get; set; }
-
         public string? BranchName { get; set; }
-        public string? BranchId { get; set; }
 
-
+        //public string BranchID { get; set; }
         public string? DepartmentName { get; set; }
     }
 }

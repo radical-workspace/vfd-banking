@@ -1,0 +1,14 @@
+﻿@* @model BankingSystem.PL.Views.Shared._headerForRegisterationModel *@
+@if (ViewData["FixedRole"] != null && ViewData["FixedRole"]!.ToString() == "Teller")
+{
+    <h3 class="mb-0 py-2 text-center fas fa-user-plus me-2">Add New Teller</h3>
+}
+else if (ViewData["FixedRole"] != null && ViewData["FixedRole"]!.ToString() == "Customer")
+{
+    <h3 class="mb-0 py-2 text-center fas fa-user-plus me-2">Add New Customer</h3>
+}
+else
+{
+    <h3 class="mb-0 py-2 text-center fas fa-user-plus me-2">Bank Account Registration</h3>
+
+}

@@ -12,6 +12,7 @@ namespace BankingSystem.DAL.Data.Configurations
 {
     public class AccountConfiguration : IEntityTypeConfiguration<Account>
     {
+
         public void Configure(EntityTypeBuilder<Account> builder)
         {
             builder.Property(a => a.AccountType)
@@ -29,7 +30,7 @@ namespace BankingSystem.DAL.Data.Configurations
             builder.Property(a => a.IsDeleted)
             .HasDefaultValue(false);
 
-            builder.HasMany(a => a.Cards)
+            builder.HasMany(a => a.Card)
                .WithOne(c => c.Account);
 
             builder.HasQueryFilter(P => !P.IsDeleted);

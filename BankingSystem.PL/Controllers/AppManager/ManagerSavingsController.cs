@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
 
 namespace BankingSystem.PL.Controllers.AppManager
 {
@@ -16,11 +17,11 @@ namespace BankingSystem.PL.Controllers.AppManager
         readonly private IUnitOfWork _unitOfWork = unitOfWork;
         readonly private IMapper _mapper = mapper;
 
-        public ActionResult GetAllSavings(string id) // managerId
+        [HttpGet]
+        public ActionResult GetAllSavings()
         {
-            if (string.IsNullOrEmpty(id)) return RedirectToAction("Index");
-
-            var manager = _unitOfWork.Repository<MyManager>().GetSingleIncluding(b => b.Id == id);
+            var managerId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var manager = _unitOfWork.Repository<DAL.Models.Manager>().GetSingleIncluding(b => b.Id == User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
             if (manager?.BranchId == null) return NotFound("Manager or branch not found");
 
@@ -31,10 +32,6 @@ namespace BankingSystem.PL.Controllers.AppManager
                 .ToList();
 
             var viewModel = _mapper.Map<List<SavingsViewModel>>(savings);
-
-            // Store manager ID for form posts
-            ViewBag.ManagerId = id;
-            TempData["ManagerId"] = id; // For post-redirect-get pattern
 
             return View(viewModel);
         }
@@ -47,7 +44,7 @@ namespace BankingSystem.PL.Controllers.AppManager
             {
                 // Return to view with errors
                 TempData["Error"] = "Invalid data";
-                return RedirectToAction("GetAllSavings", new { id = TempData["ManagerId"] });
+                return RedirectToAction(nameof(GetAllSavings), new { id = TempData["ManagerId"] });
             }
 
             var saving = _unitOfWork.Repository<Savings>().Get(model.Id);
@@ -71,9 +68,41 @@ namespace BankingSystem.PL.Controllers.AppManager
             }
 
             // Preserve manager ID across redirect
-            return RedirectToAction("GetAllSavings", new { id = TempData["ManagerId"] });
+            return RedirectToAction(nameof(GetAllSavings), new { id = User.FindFirst(ClaimTypes.NameIdentifier)!.Value });
         }
 
-        
+        public IActionResult AddSaving(SavingsViewModel model)
+        {
+            var managerId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var manager = _unitOfWork.Repository<DAL.Models.Manager>().GetSingleIncluding(b => b.Id == managerId);
+            if (!ModelState.IsValid)
+            {
+                // Return to view with errors
+                TempData["Error"] = "Invalid data";
+                return RedirectToAction(nameof(GetAllSavings), new { id = User.FindFirst(ClaimTypes.NameIdentifier)!.Value });
+            }
+
+            var savings = _unitOfWork.Repository<Savings>().GetAllIncluding(b => b.Branch);
+
+            Savings newSaving = new()
+            {
+                Currency = model.Currency,
+                Balance = model.Balance,
+                BranchId = (int)manager!.BranchId!
+            };
+
+            try
+            {
+                _unitOfWork.Repository<Savings>().Add(newSaving);
+                _unitOfWork.Complete();
+                TempData["Success"] = "Saving added successfully";
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Failed to add saving";
+            }
+
+            return RedirectToAction(nameof(GetAllSavings), new { id = managerId });
+        }
     }
 }

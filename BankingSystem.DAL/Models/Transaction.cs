@@ -1,0 +1,44 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BankingSystem.DAL.Models
+{
+    public enum TransactionType
+    {
+        Deposit = 1,
+        Withdraw = 2,
+        Transfer = 3
+    }
+    public enum TransactionStatus
+    {
+        Pending,
+        Denied,
+        Accepted
+    }
+
+    public class Transaction : BaseEntity
+    {
+        public TransactionStatus Status { get; set; }
+        public TransactionType Type { get; set; }
+        public string DoneVia { get; set; } = string.Empty;
+
+        //public required long AccountDestinationNumber { get; set; }
+
+        [ForeignKey(nameof(Payment))]
+        public int PaymentId { get; set; }
+        public required Payment Payment { get; set; }
+
+        [ForeignKey(nameof(Customer))]
+        public string CustomerID { get; set; }
+        public Customer Customer { get; set; }
+        public required long AccountDistenationNumber { get; set; }
+
+        [ForeignKey(nameof(Account))]
+        public int AccountId { get; set; }
+        public Account Account { get; set; } = null!;
+    }
+}
