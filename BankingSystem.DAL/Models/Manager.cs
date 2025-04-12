@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Models
 {
-    public class MyManager : ApplicationUser
+    public class Manager : ApplicationUser
     {
         public double Salary { get; set; }
 

@@ -13,12 +13,12 @@ namespace BankingSystem.DAL.Models
         public TimeSpan Opens { get; set; }
         public TimeSpan Closes { get; set; }
         public List<Loan>? Loans { get; set; }
-        public List<MyCustomer> Customers { get; set; } = null!;
+        public List<Customer> Customers { get; set; } = null!;
         public List<Teller> Tellers { get; set; } = null!;
         public List<Department> Departments { get; set; } = null!;
         public List<Savings> Savings  { get; set; } = null!;
 
-        public MyManager? MyManager { get; set; } = null!;
+        public Manager? MyManager { get; set; } = null!;
 
     }
 }

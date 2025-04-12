@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Models
 {
-    public class MyCustomer : ApplicationUser
+    public class Customer : ApplicationUser
     {
         [ForeignKey(nameof(Branch))]
         public int? BranchId { get; set; }
         public Branch Branch { get; set; } = null!;
-        public List<MyTransaction>? Transactions { get; set; }
+        public List<Transaction>? Transactions { get; set; }
         public List<Loan>? Loans { get; set; }
         public List<Account>? Accounts { get; set; }
         public IEnumerable<Card> Cards { get; set; } = null!;
@@ -51,7 +51,7 @@ namespace BankingSystem.DAL.Models
 
         [ForeignKey(nameof(Customer))]
         public string CustomerId { get; set; } = string.Empty;
-        public MyCustomer Customer { get; set; } = null!;
+        public Customer Customer { get; set; } = null!;
     }
 
 }

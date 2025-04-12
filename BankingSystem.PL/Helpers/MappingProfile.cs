@@ -15,13 +15,13 @@ namespace BankingSystem.PL.Helpers
                   .ForMember(d => d.PasswordHash, o => o.MapFrom(s => s.Password))
                   .ReverseMap();
 
-            CreateMap<RegisterViewModel, MyCustomer>()
+            CreateMap<RegisterViewModel, Customer>()
                                             .IncludeBase<RegisterViewModel, ApplicationUser>();
 
             CreateMap<RegisterViewModel, Admin>()
                 .IncludeBase<RegisterViewModel, ApplicationUser>();
 
-            CreateMap<RegisterViewModel, MyManager>()
+            CreateMap<RegisterViewModel, Manager>()
                 .IncludeBase<RegisterViewModel, ApplicationUser>();
 
             CreateMap<RegisterViewModel, Teller>()
@@ -42,10 +42,10 @@ namespace BankingSystem.PL.Helpers
             .ForMember(dest => dest.Branch, opt => opt.Ignore())
             .ForMember(dest => dest.Department, opt => opt.Ignore());
 
-            CreateMap<MyCustomer, CustomersViewModel>()
+            CreateMap<Customer, CustomersViewModel>()
                     .ForMember(dest => dest.Branch, s => s.MapFrom(s => s.Branch.Name));
 
-            CreateMap<MyCustomer, CustomerDetailsViewModel>()
+            CreateMap<Customer, CustomerDetailsViewModel>()
                     .ForMember(dest => dest.Branch, s => s.MapFrom(s => s.Branch.Name))
                     .ForMember(dest => dest.Branch, opt => opt.MapFrom(src => src.Branch.Name))
                     .ForMember(dest => dest.AccountNumbers, opt => opt.MapFrom(src => src.Accounts.Select(a => a.Number)))
@@ -55,7 +55,7 @@ namespace BankingSystem.PL.Helpers
                     .ForMember(dest => dest.TicketSubjects, opt => opt.MapFrom(src => src.SupportTickets.Select(s => s.Description)))
                     .ReverseMap();
 
-            CreateMap<MyCustomer, ManagerCustomerDetailsViewModel>()
+            CreateMap<Customer, ManagerCustomerDetailsViewModel>()
                 .ForMember(dest => dest.LoanDetails, opt => opt.MapFrom(src => src.Loans != null && src.Loans.Any()
                     ? src.Loans.Select(l => new LoanDetail
                     {
@@ -141,7 +141,7 @@ namespace BankingSystem.PL.Helpers
 
 
 
-            CreateMap<MyTransaction, CustomerTransactionViewModel>()
+            CreateMap<Transaction, CustomerTransactionViewModel>()
                 .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.Account.Number))
                 .ForMember(dest => dest.AccountDestinatoin, opt => opt.MapFrom(src => src.AccountDistenationNumber))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))

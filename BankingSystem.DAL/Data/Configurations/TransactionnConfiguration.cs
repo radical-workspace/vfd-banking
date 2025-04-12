@@ -10,9 +10,9 @@ using System.Transactions;
 
 namespace BankingSystem.DAL.Data.Configurations
 {
-    public class MyTransactionConfiguration : IEntityTypeConfiguration<Models.MyTransaction>
+    public class MyTransactionConfiguration : IEntityTypeConfiguration<Models.Transaction>
     {
-        public void Configure(EntityTypeBuilder<Models.MyTransaction> builder)
+        public void Configure(EntityTypeBuilder<Models.Transaction> builder)
         {
             // Ensure Amount is a decimal for financial precision
 

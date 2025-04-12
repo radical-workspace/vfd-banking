@@ -21,7 +21,7 @@ namespace BankingSystem.PL.Controllers.Manager
         [HttpGet]
         public ActionResult GetAllTellers(string id)
         {
-            var manager = _unitOfWork.Repository<MyManager>().GetSingleIncluding(b => b.Id == id);
+            var manager = _unitOfWork.Repository<DAL.Models.Manager>().GetSingleIncluding(b => b.Id == id);
             if (manager == null)
             {
                 return NotFound($"Manager with ID {id} not found.");
@@ -63,7 +63,7 @@ namespace BankingSystem.PL.Controllers.Manager
         public ActionResult CreateTeller()
         {
             var managerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var manager = _unitOfWork.Repository<MyManager>().GetSingleIncluding(m => m.Id == managerId);
+            var manager = _unitOfWork.Repository<DAL.Models.Manager>().GetSingleIncluding(m => m.Id == managerId);
 
             if (manager == null)
                 return NotFound("Manager not found");
@@ -76,7 +76,7 @@ namespace BankingSystem.PL.Controllers.Manager
         {
             ViewData["FixedRole"] = "Teller";
             var managerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var manager = _unitOfWork.Repository<MyManager>().GetSingleIncluding(m => m.Id == managerId);
+            var manager = _unitOfWork.Repository<DAL.Models.Manager>().GetSingleIncluding(m => m.Id == managerId);
 
             if (manager == null || manager.BranchId == null)
                 return NotFound("Manager or Branch not found");

@@ -26,7 +26,7 @@ namespace BankingSystem.DAL.Models
         public DateTime CreatedAt { get; set; }
         public AccountType AccountType { get; set; }
         public AccountStatus AccountStatus { get; set; }
-        public List<MyTransaction>? AccountTransactions { get; set; }
+        public List<Transaction>? AccountTransactions { get; set; }
         public List<Certificate> Certificates { get; set; } = [];
 
         public List<Loan> Loans { get; set; } = [];
@@ -35,7 +35,7 @@ namespace BankingSystem.DAL.Models
 
         [ForeignKey(nameof(Customer))]
         public string? CustomerId { get; set; }
-        public MyCustomer Customer { get; set; } = null!;
+        public Customer? Customer { get; set; } = null!;
 
         [ForeignKey(nameof(Branch))]
         public int? BranchId { get; set; }

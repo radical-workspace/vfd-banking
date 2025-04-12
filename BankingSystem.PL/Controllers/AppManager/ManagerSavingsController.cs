@@ -21,7 +21,7 @@ namespace BankingSystem.PL.Controllers.AppManager
         public ActionResult GetAllSavings()
         {
             var managerId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            var manager = _unitOfWork.Repository<MyManager>().GetSingleIncluding(b => b.Id == User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var manager = _unitOfWork.Repository<DAL.Models.Manager>().GetSingleIncluding(b => b.Id == User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
             if (manager?.BranchId == null) return NotFound("Manager or branch not found");
 
@@ -74,7 +74,7 @@ namespace BankingSystem.PL.Controllers.AppManager
         public IActionResult AddSaving(SavingsViewModel model)
         {
             var managerId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            var manager = _unitOfWork.Repository<MyManager>().GetSingleIncluding(b => b.Id == managerId);
+            var manager = _unitOfWork.Repository<DAL.Models.Manager>().GetSingleIncluding(b => b.Id == managerId);
             if (!ModelState.IsValid)
             {
                 // Return to view with errors

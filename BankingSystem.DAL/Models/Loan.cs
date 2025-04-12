@@ -44,7 +44,7 @@ namespace BankingSystem.DAL.Models
 
         [ForeignKey(nameof(Customer))]
         public string? CustomerId { get; set; }
-        public MyCustomer Customer { get; set; } = null!;
+        public Customer Customer { get; set; } = null!;
 
 
         [ForeignKey(nameof(Branch))]

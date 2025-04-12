@@ -20,7 +20,7 @@ namespace BankingSystem.DAL.Models
         Accepted
     }
 
-    public class MyTransaction : BaseEntity
+    public class Transaction : BaseEntity
     {
         public TransationStatus Status { get; set; }
         public TransationType Type { get; set; }
@@ -34,7 +34,7 @@ namespace BankingSystem.DAL.Models
 
         [ForeignKey(nameof(Customer))]
         public string CustomerID { get; set; }
-        public MyCustomer Customer { get; set; }
+        public Customer Customer { get; set; }
         public required long AccountDistenationNumber { get; set; }
 
         [ForeignKey(nameof(Account))]

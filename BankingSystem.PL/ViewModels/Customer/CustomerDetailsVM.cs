@@ -22,7 +22,7 @@ namespace BankingSystem.PL.ViewModels.Customer
         public List<Loan>? Loans { get; set; }
         public int LoansCount { get; set; } 
         public int CertificatCount { get; set; }
-        public List<MyTransaction>? Transactions { get; set; } 
+        public List<Transaction>? Transactions { get; set; } 
 
     }
 }

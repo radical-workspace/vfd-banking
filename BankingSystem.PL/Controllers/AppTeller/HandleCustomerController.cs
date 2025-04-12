@@ -26,10 +26,10 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
         //
         private readonly IGenericRepository<Account> _genericRepository;
-        private readonly ISearchPaginationRepo<MyCustomer> _searchPaginationRepo;
+        private readonly ISearchPaginationRepo<Customer> _searchPaginationRepo;
 
         public HandleCustomerController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IMapper mapper, 
-            IGenericRepository<Account> genericRepository, ISearchPaginationRepo<MyCustomer> searchPaginationRepo)
+            IGenericRepository<Account> genericRepository, ISearchPaginationRepo<Customer> searchPaginationRepo)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
@@ -49,7 +49,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
             var branchId = TellerHandleCustomer?.BranchId;
 
 
-            var Customers = _unitOfWork.Repository<MyCustomer>()
+            var Customers = _unitOfWork.Repository<Customer>()
                 .GetAllIncluding(C => C.Branch)
                 .Where(C => C.BranchId == branchId)
                 .ToList();
@@ -61,7 +61,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
                 Customers = Customers.Where(c => c.JoinDate.Month == monthNumber).ToList();
             }
 
-            var cutomerstoView = _mapper.Map<List<MyCustomer>, List<CustomersViewModel>>(Customers);
+            var cutomerstoView = _mapper.Map<List<Customer>, List<CustomersViewModel>>(Customers);
             ViewBag.TotalRecords = Customers.Count();
 
             return View(cutomerstoView);
@@ -70,10 +70,10 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
         public ActionResult GetCustomerDetails(string id)
         {
-            var Customer = _unitOfWork.Repository<MyCustomer>()
+            var Customer = _unitOfWork.Repository<Customer>()
                 .GetSingleIncluding(C => C.Id == id, C => C.Branch, C => C.Loans, C => C.Transactions, C => C.Cards, C => C.SupportTickets, C => C.Accounts);
 
-            var mappedCustomer = _mapper.Map<MyCustomer, CustomerDetailsViewModel>(Customer);
+            var mappedCustomer = _mapper.Map<Customer, CustomerDetailsViewModel>(Customer);
 
 
             return View("GetCustomerDetails", mappedCustomer);
@@ -171,7 +171,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
                     if (UserToRegister.Role == "Customer")
                     {
                         // Map directly to Customer
-                        var customer = _mapper.Map<MyCustomer>(UserToRegister);
+                        var customer = _mapper.Map<Customer>(UserToRegister);
 
                         // Manually assign the branch from teller
                         customer.BranchId = TellerHandleCustomer.BranchId;
@@ -211,7 +211,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
         {
             if (string.IsNullOrEmpty(id)) return NotFound();
 
-            var customer = _userManager.Users.OfType<MyCustomer>().FirstOrDefault(c => c.Id == id);
+            var customer = _userManager.Users.OfType<Customer>().FirstOrDefault(c => c.Id == id);
             if (customer == null) return NotFound();
 
             var model = new EditCustomerViewModel
@@ -241,7 +241,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
             if (ModelState.IsValid)
             {
-                var customer = _userManager.Users.OfType<MyCustomer>().FirstOrDefault(c => c.Id == id);
+                var customer = _userManager.Users.OfType<Customer>().FirstOrDefault(c => c.Id == id);
                 if (customer == null) return NotFound();
 
               
@@ -273,10 +273,10 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
         public ActionResult DeleteCustomer(string id)
         {
-            var Customer = _unitOfWork.Repository<MyCustomer>()
+            var Customer = _unitOfWork.Repository<Customer>()
                  .GetSingleIncluding(C => C.Id == id, C => C.Branch, C => C.Loans, C => C.Transactions, C => C.Cards, C => C.SupportTickets, C => C.Accounts);
 
-            var mappedCustomerToDeleted = _mapper.Map<MyCustomer, CustomerDetailsViewModel>(Customer);
+            var mappedCustomerToDeleted = _mapper.Map<Customer, CustomerDetailsViewModel>(Customer);
 
 
             return View(mappedCustomerToDeleted);
@@ -289,12 +289,12 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
             if (customerDetailsViewModel is not null)
             {
-                var customerToBeDeleted = _unitOfWork.Repository<MyCustomer>()
+                var customerToBeDeleted = _unitOfWork.Repository<Customer>()
                   .GetSingleIncluding(C => C.Id == customerDetailsViewModel.Id,
                   C => C.Branch, C => C.Loans, C => C.Transactions, C => C.Cards,
                   C => C.SupportTickets, C => C.Accounts);
 
-                _unitOfWork.Repository<MyCustomer>().Delete(customerToBeDeleted);
+                _unitOfWork.Repository<Customer>().Delete(customerToBeDeleted);
                 _unitOfWork.Complete();
                 return RedirectToAction(nameof(GetAllCustomers), new { id = User.FindFirst(ClaimTypes.NameIdentifier).Value });
 
@@ -321,7 +321,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
             ViewBag.search = search;
             ViewBag.TotalRecords = results.Count();
 
-            var cutomerstoView = _mapper.Map<List<MyCustomer>, List<CustomersViewModel>>(results.ToList());
+            var cutomerstoView = _mapper.Map<List<Customer>, List<CustomersViewModel>>(results.ToList());
 
             return View("GetAllCustomers", cutomerstoView);
         }

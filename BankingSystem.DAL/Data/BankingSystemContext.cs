@@ -22,9 +22,9 @@ namespace BankingSystem.DAL.Data
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
            
-            modelBuilder.Entity<MyCustomer>().ToTable("Customers");
+            modelBuilder.Entity<Customer>().ToTable("Customers");
             modelBuilder.Entity<Admin>().ToTable("Admins");
-            modelBuilder.Entity<MyManager>().ToTable("Managers");
+            modelBuilder.Entity<Manager>().ToTable("Managers");
             modelBuilder.Entity<Teller>().ToTable("Tellers");
             modelBuilder.Entity<ApplicationUser>().ToTable("AspNetUsers");
 
@@ -38,13 +38,13 @@ namespace BankingSystem.DAL.Data
         public DbSet<Certificate> Certificates { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Loan> Loans { get; set; }
-        public DbSet<MyManager> Managers { get; set; }
-        public DbSet<MyCustomer> Customers { get; set; }
+        public DbSet<Manager> Managers { get; set; }
+        public DbSet<Customer> Customers { get; set; }
         public DbSet<Teller> Tellers { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Savings> Savings { get; set; }
         public DbSet<SupportTicket> SupportTickets { get; set; }
-        public DbSet<MyTransaction> Transactions { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
 
     }
 }

@@ -23,13 +23,13 @@ namespace BankingSystem.PL.Controllers.AppManager
         [HttpGet]
         public ActionResult GetAllCustomers(string id)
         {
-            var manager = _unitOfWork.Repository<MyManager>().GetSingleIncluding(x => x.Id == id);
+            var manager = _unitOfWork.Repository<DAL.Models.Manager>().GetSingleIncluding(x => x.Id == id);
             var branchID = manager?.BranchId;
 
             if (branchID == null)
                 return NotFound("Manager or Branch not found");
 
-            var customers = _unitOfWork.Repository<MyCustomer>()
+            var customers = _unitOfWork.Repository<Customer>()
                 .GetAllIncluding(c => c.Branch)
                 .Where(c => c.BranchId == branchID)
                 .ToList();
@@ -37,13 +37,13 @@ namespace BankingSystem.PL.Controllers.AppManager
             if (customers.Count == 0)
                 return NotFound("No customers found for this branch");
 
-            var customerView = _mapper.Map<List<MyCustomer>, List<CustomerDetailsViewModel>>(customers);
+            var customerView = _mapper.Map<List<Customer>, List<CustomerDetailsViewModel>>(customers);
             return View(customerView);
         }
         [HttpGet]
         public ActionResult GetCustomerDetails(string id)
         {
-            var customer = _unitOfWork.Repository<MyCustomer>()
+            var customer = _unitOfWork.Repository<Customer>()
                 .GetAllIncluding(
                     c => c.Transactions,
                     c => c.Loans,
@@ -119,7 +119,7 @@ namespace BankingSystem.PL.Controllers.AppManager
         [HttpGet]
         public ActionResult GetCustomerTransaction(string id)
         {
-            var transactions = _unitOfWork.Repository<MyTransaction>().GetAllIncluding(s => s.Customer.Accounts).Where(t => t.CustomerID == id).ToList();
+            var transactions = _unitOfWork.Repository<Transaction>().GetAllIncluding(s => s.Customer.Accounts).Where(t => t.CustomerID == id).ToList();
             if (transactions == null || transactions.Count == 0)
                 return NotFound("No transactions found for this customer.");
 
