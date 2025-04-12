@@ -11,13 +11,23 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.BLL.Services
 {
-    public class CustomerBL : IGenericRepository<Customer>
+    public class CustomerBL : IGenericRepository<Customer>, ISearchPaginationRepo<Customer>
     {
         private readonly BankingSystemContext _context;
 
         public CustomerBL(BankingSystemContext context)
         {
             _context = context;
+        }
+
+
+        public IEnumerable<Customer> GetAllByPagination(string? ID, string? filter, out int totalRecords, out int totalPages, int pageNumber = 1)
+        {
+            throw new NotImplementedException();
+        }
+        public Customer? Get(int id)
+        {
+            throw new NotImplementedException();
         }
 
 
@@ -28,12 +38,30 @@ namespace BankingSystem.BLL.Services
                 .Where(c => c.Id == userID);
         }
 
-        public Customer? Get(int id)
+
+        public IEnumerable<Customer> Search(string search, string? tellerID)
         {
-            throw new NotImplementedException();
+            if (search == null)
+                return [];
+
+
+            var query = _context.Customers
+                .Include(c => c.Branch)
+                    .ThenInclude(b => b.Tellers)
+                .Where(c => c.Branch.Tellers.FirstOrDefault()!.Id == tellerID && c.SSN.ToString() == search.Trim());
+
+            if (!query.Any())
+                query = _context.Customers
+                .Include(c => c.Branch)
+                    .ThenInclude(b => b.Tellers)
+                .Where(c => c.Branch.Tellers.FirstOrDefault()!.Id == tellerID && (c.FirstName + " " + c.LastName).ToLower().Trim().Contains(search.ToLower().Trim()));
+
+
+            return query;
         }
-        
-        
+
+
+
         public void Add(Customer Entity)
         {
             throw new NotImplementedException();
@@ -59,5 +87,6 @@ namespace BankingSystem.BLL.Services
         {
             throw new NotImplementedException();
         }
+
     }
 }

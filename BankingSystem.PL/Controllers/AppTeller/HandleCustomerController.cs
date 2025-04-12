@@ -1,15 +1,18 @@
 ﻿using AutoMapper;
 using BankingSystem.BLL.Interfaces;
 using BankingSystem.BLL.Repositories;
+using BankingSystem.BLL.Services;
 using BankingSystem.DAL.Models;
 using BankingSystem.PL.ViewModels.Auth;
 using BankingSystem.PL.ViewModels.Teller;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.Operations;
+using System.Globalization;
 using System.Security.Claims;
 
 namespace BankingSystem.PL.Controllers.AppTeller
@@ -23,8 +26,10 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
         //
         private readonly IGenericRepository<Account> _genericRepository;
+        private readonly ISearchPaginationRepo<Customer> _searchPaginationRepo;
 
-        public HandleCustomerController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IMapper mapper, IGenericRepository<Account> genericRepository)
+        public HandleCustomerController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IMapper mapper, 
+            IGenericRepository<Account> genericRepository, ISearchPaginationRepo<Customer> searchPaginationRepo)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
@@ -32,22 +37,33 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
             //
             _genericRepository = genericRepository;
+            _searchPaginationRepo = searchPaginationRepo;
         }
 
 
-        public ActionResult GetAllCustomers(string id)
+        public ActionResult GetAllCustomers(string id, string? filter)
         {
             var TellerHandleCustomer = _unitOfWork.Repository<Teller>().GetSingleIncluding(T => T.Id == id);
             //var TellerFromTellerTabe= 
 
-            var branchId = TellerHandleCustomer.BranchId;
+            var branchId = TellerHandleCustomer?.BranchId;
 
 
             var Customers = _unitOfWork.Repository<Customer>()
                 .GetAllIncluding(C => C.Branch)
                 .Where(C => C.BranchId == branchId)
                 .ToList();
+
+
+            if (filter != null)
+            {
+                var monthNumber = DateTime.ParseExact(filter, "MMMM", CultureInfo.InvariantCulture).Month;
+                Customers = Customers.Where(c => c.JoinDate.Month == monthNumber).ToList();
+            }
+
             var cutomerstoView = _mapper.Map<List<Customer>, List<CustomersViewModel>>(Customers);
+            ViewBag.TotalRecords = Customers.Count();
+
             return View(cutomerstoView);
         }
 
@@ -288,9 +304,27 @@ namespace BankingSystem.PL.Controllers.AppTeller
         }
 
 
+
+
         public IActionResult ShowAccounts(string id)
         {
             return View(_genericRepository.GetAll(id, flag: 2));
         }
+
+
+        [HttpGet]
+        public IActionResult Search(string search)
+        {
+            var tellerID = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var results = _searchPaginationRepo.Search(search, tellerID);
+
+            ViewBag.search = search;
+            ViewBag.TotalRecords = results.Count();
+
+            var cutomerstoView = _mapper.Map<List<Customer>, List<CustomersViewModel>>(results.ToList());
+
+            return View("GetAllCustomers", cutomerstoView);
+        }
+
     }
 }
