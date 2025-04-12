@@ -136,10 +136,17 @@ namespace BankingSystem.PL.Helpers
                     !string.IsNullOrEmpty(src.Response) ? src.Response :
                     (src.Status == SupportTicketStatus.Pending ? "Still Working on it" :
                     (src.Status == SupportTicketStatus.Denied ? "Your ticket has been denied." : null))))
-                .ForMember(dest => dest.AccountNumber,opt => opt.MapFrom(src => src.Customer.Accounts.FirstOrDefault().Number));
+                .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src =>
+                    src.Account != null ? src.Account.Number : 0));
 
 
-            CreateMap<MyTransaction, CustomerTransactionViewModel>();
+
+            CreateMap<MyTransaction, CustomerTransactionViewModel>()
+                .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.Account.Number))
+                .ForMember(dest => dest.AccountDestinatoin, opt => opt.MapFrom(src => src.AccountDistenationNumber))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type))
+                .ForMember(dest => dest.DoneVia, opt => opt.MapFrom(src => src.DoneVia));
 
             CreateMap<Certificate, CertificateDetail>()
                 .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.Account.Number));

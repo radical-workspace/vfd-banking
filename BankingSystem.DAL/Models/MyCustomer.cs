@@ -22,6 +22,8 @@ namespace BankingSystem.DAL.Models
         //public List<IncomeSource>? AdditionalIncomeSources { get; set; }
         //public List<Asset>? Assets { get; set; } 
 
+        //[ForeignKey(nameof(FinancialDocument))]
+        //public int FinancialDocumentID { get; set; }
         public FinancialDocument? FinancialDocument { get; set; } // This will be used to store the financial documents of the customer
     }
 

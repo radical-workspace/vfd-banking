@@ -20,7 +20,7 @@ namespace BankingSystem.DAL.Models
         public DateTime PaymentDate { get; set; }
         public PaymentStatus Status { get; set; }
         [ForeignKey(nameof(Loan))]
-        public int LoanId { get; set; }  // FK
-        public Loan ?Loan { get; set; }
+        public int? LoanId { get; set; }  // FK
+        public Loan? Loan { get; set; }
     }
 }

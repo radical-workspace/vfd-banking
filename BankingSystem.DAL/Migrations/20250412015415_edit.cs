@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace BankingSystem.DAL.Migrations.Development
+namespace BankingSystem.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class test4 : Migration
+    public partial class edit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

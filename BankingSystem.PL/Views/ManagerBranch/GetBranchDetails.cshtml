@@ -124,7 +124,7 @@
                                             }
                                         </ul>
                                         <div class="text-end mt-2">
-                                            <button class="btn btn-sm btn-outline-primary">View All (@Model.Loans.Count)</button>
+                                            <a asp-controller="ManagerLoan" asp-action="GetAllLoans" class="btn btn-sm btn-outline-primary">View All (@Model.Loans.Count)</a>
                                         </div>
 
                                     }
@@ -156,7 +156,7 @@
                                             }
                                         </ul>
                                         <div class="text-end mt-2">
-                                            <button class="btn btn-sm btn-outline-primary">View All (@Model.Customers.Count)</button>
+                                            <a asp-controller="ManagerCustomer" asp-action="GetAllCustomers" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value" class="btn btn-sm btn-outline-primary">View All (@Model.Customers.Count)</a>
                                         </div>
 
                                     }
@@ -189,7 +189,7 @@
                                         </ul>
 
                                         <div class="text-end mt-2">
-                                            <button class="btn btn-sm btn-outline-primary">View All (@Model.Tellers.Count)</button>
+                                            <a class="btn btn-sm btn-outline-primary" asp-controller="ManagerTeller" asp-action="GetAllTellers" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value">View All (@Model.Tellers.Count)</a>
                                         </div>
                                     }
                                     else
@@ -201,37 +201,37 @@
                         </div>
 
                         <!-- Departments Card -->
-                        <div class="col-md-6">
-                            <div class="card h-100 border-0 shadow-sm">
-                                <div class="card-header bg-light">
-                                    <h6 class="mb-0 fw-semibold">
-                                        <i class="bi bi-building-gear me-2"></i>Departments
-                                    </h6>
-                                </div>
-                                <div class="card-body">
-                                    @if (Model.Departments != null && Model.Departments.Any())
-                                    {
-                                        <ul class="list-group list-group-flush small">
-                                            @foreach (var department in Model.Departments.Take(3))
-                                            {
-                                                <li class="list-group-item">
-                                                    <i class="bi bi-collection me-2"></i>@department.Name
-                                                </li>
-                                            }
-                                        </ul>
+                        @* <div class="col-md-6"> *@
+                        @*     <div class="card h-100 border-0 shadow-sm"> *@
+                        @*         <div class="card-header bg-light"> *@
+                        @*             <h6 class="mb-0 fw-semibold"> *@
+                        @*                 <i class="bi bi-building-gear me-2"></i>Departments *@
+                        @*             </h6> *@
+                        @*         </div> *@
+                        @*         <div class="card-body"> *@
+                        @*             @if (Model.Departments != null && Model.Departments.Any()) *@
+                        @*             { *@
+                        @*                 <ul class="list-group list-group-flush small"> *@
+                        @*                     @foreach (var department in Model.Departments.Take(3)) *@
+                        @*                     { *@
+                        @*                         <li class="list-group-item"> *@
+                        @*                             <i class="bi bi-collection me-2"></i>@department.Name *@
+                        @*                         </li> *@
+                        @*                     } *@
+                        @*                 </ul> *@
 
-                                        <div class="text-end mt-2">
-                                            <button class="btn btn-sm btn-outline-primary">View All (@Model.Departments.Count)</button>
-                                        </div>
+                        @*                 <div class="text-end mt-2"> *@
+                        @*                     <button class="btn btn-sm btn-outline-primary">View All (@Model.Departments.Count)</button> *@
+                        @*                 </div> *@
 
-                                    }
-                                    else
-                                    {
-                                        <p class="text-muted small mb-0">No departments available</p>
-                                    }
-                                </div>
-                            </div>
-                        </div>
+                        @*             } *@
+                        @*             else *@
+                        @*             { *@
+                        @*                 <p class="text-muted small mb-0">No departments available</p> *@
+                        @*             } *@
+                        @*         </div> *@
+                        @*     </div> *@
+                        @* </div> *@
 
                         <!-- Savings Card (Full Width) -->
                         <div class="col-12">

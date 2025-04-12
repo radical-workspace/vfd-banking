@@ -119,7 +119,7 @@ namespace BankingSystem.PL.Controllers.AppManager
         [HttpGet]
         public ActionResult GetCustomerTransaction(string id)
         {
-            var transactions = _unitOfWork.Repository<MyTransaction>().GetAll().Where(t => t.CustomerID == id).ToList();
+            var transactions = _unitOfWork.Repository<MyTransaction>().GetAllIncluding(s => s.Customer.Accounts).Where(t => t.CustomerID == id).ToList();
             if (transactions == null || transactions.Count == 0)
                 return NotFound("No transactions found for this customer.");
 

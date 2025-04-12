@@ -38,6 +38,10 @@ namespace BankingSystem.DAL.Data.Configurations
             builder.Property(T => T.IsDeleted)
                     .HasDefaultValue(false);
 
+            builder.Property(T => T.AccountDistenationNumber)
+                     .HasMaxLength(16)
+                     .IsRequired();
+
             builder.HasQueryFilter(P => !P.IsDeleted);
 
         }
