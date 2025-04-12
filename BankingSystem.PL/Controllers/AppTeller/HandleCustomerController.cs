@@ -26,10 +26,10 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
         //
         private readonly IGenericRepository<Account> _genericRepository;
-        private readonly ISearchPaginationRepo<Customer> _searchPaginationRepo;
+        private readonly ISearchPaginationRepo<MyCustomer> _searchPaginationRepo;
 
         public HandleCustomerController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IMapper mapper, 
-            IGenericRepository<Account> genericRepository, ISearchPaginationRepo<Customer> searchPaginationRepo)
+            IGenericRepository<Account> genericRepository, ISearchPaginationRepo<MyCustomer> searchPaginationRepo)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
@@ -61,7 +61,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
                 Customers = Customers.Where(c => c.JoinDate.Month == monthNumber).ToList();
             }
 
-            var cutomerstoView = _mapper.Map<List<Customer>, List<CustomersViewModel>>(Customers);
+            var cutomerstoView = _mapper.Map<List<MyCustomer>, List<CustomersViewModel>>(Customers);
             ViewBag.TotalRecords = Customers.Count();
 
             return View(cutomerstoView);
@@ -321,7 +321,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
             ViewBag.search = search;
             ViewBag.TotalRecords = results.Count();
 
-            var cutomerstoView = _mapper.Map<List<Customer>, List<CustomersViewModel>>(results.ToList());
+            var cutomerstoView = _mapper.Map<List<MyCustomer>, List<CustomersViewModel>>(results.ToList());
 
             return View("GetAllCustomers", cutomerstoView);
         }

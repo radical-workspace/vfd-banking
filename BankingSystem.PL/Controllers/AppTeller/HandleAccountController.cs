@@ -12,10 +12,10 @@ namespace BankingSystem.PL.Controllers.AppTeller
     public class HandleAccountController : Controller
     {
         private readonly IGenericRepository<Account> _genericRepositoryAcc;
-        private readonly IGenericRepository<Customer> _genericRepositoryCust;
+        private readonly IGenericRepository<MyCustomer> _genericRepositoryCust;
         private readonly ISearchPaginationRepo<Account> _searchPaginationRepo;
 
-        public HandleAccountController(IGenericRepository<Account> genericRepository, IGenericRepository<Customer> genericRepository2,
+        public HandleAccountController(IGenericRepository<Account> genericRepository, IGenericRepository<MyCustomer> genericRepository2,
             ISearchPaginationRepo<Account> searchPaginationRepo)
         {
             _genericRepositoryAcc = genericRepository;

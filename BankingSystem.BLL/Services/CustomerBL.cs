@@ -11,27 +11,27 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.BLL.Services
 {
-    public class CustomerBL : IGenericRepository<Customer>, ISearchPaginationRepo<Customer>
+    public class MyCustomerBL : IGenericRepository<MyCustomer>, ISearchPaginationRepo<MyCustomer>
     {
         private readonly BankingSystemContext _context;
 
-        public CustomerBL(BankingSystemContext context)
+        public MyCustomerBL(BankingSystemContext context)
         {
             _context = context;
         }
 
 
-        public IEnumerable<Customer> GetAllByPagination(string? ID, string? filter, out int totalRecords, out int totalPages, int pageNumber = 1)
+        public IEnumerable<MyCustomer> GetAllByPagination(string? ID, string? filter, out int totalRecords, out int totalPages, int pageNumber = 1)
         {
             throw new NotImplementedException();
         }
-        public Customer? Get(int id)
+        public MyCustomer? Get(int id)
         {
             throw new NotImplementedException();
         }
 
 
-        public IEnumerable<Customer> GetAll(string? userID = "", int flag = 1)
+        public IEnumerable<MyCustomer> GetAll(string? userID = "", int flag = 1)
         {
             return _context.Customers
                 .Include(c => c.Branch)
@@ -39,7 +39,7 @@ namespace BankingSystem.BLL.Services
         }
 
 
-        public IEnumerable<Customer> Search(string search, string? tellerID)
+        public IEnumerable<MyCustomer> Search(string search, string? tellerID)
         {
             if (search == null)
                 return [];
@@ -62,28 +62,28 @@ namespace BankingSystem.BLL.Services
 
 
 
-        public void Add(Customer Entity)
+        public void Add(MyCustomer Entity)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(Customer Entity)
+        public void Delete(MyCustomer Entity)
         {
             throw new NotImplementedException();
         }
 
 
-        public IEnumerable<Customer> GetAllIncluding(params Expression<Func<Customer, object>>[] includes)
+        public IEnumerable<MyCustomer> GetAllIncluding(params Expression<Func<MyCustomer, object>>[] includes)
         {
             throw new NotImplementedException();
         }
 
-        public Customer? GetSingleIncluding(Expression<Func<Customer, bool>> predicate, params Expression<Func<Customer, object>>[] includes)
+        public MyCustomer? GetSingleIncluding(Expression<Func<MyCustomer, bool>> predicate, params Expression<Func<MyCustomer, object>>[] includes)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(Customer Entity)
+        public void Update(MyCustomer Entity)
         {
             throw new NotImplementedException();
         }
