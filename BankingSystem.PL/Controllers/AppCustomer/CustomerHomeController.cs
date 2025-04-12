@@ -18,7 +18,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         public IActionResult HomePage(string id)
         {
             var customer = _UnitOfWork.Repository<Customer>()
-                           .GetSingleIncluding(c => c.Id == id, c => c.Accounts, c => c.Cards, c => c.Loans);
+                           .GetSingleIncluding(c => c.Id == id, c => c.Accounts, /*c => c.Card,*/ c => c.Loans);
             if (customer != null)
             {
                 var customerDetailsVM = new CustomerDetailsVM()
@@ -34,10 +34,10 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                     TotalBalance = customer.Accounts?.Sum(a => a.Balance),
                     Accounts = customer.Accounts,
                     AccountsCount = customer.Accounts?.Count() ?? 0,
-                    Cards = customer.Cards,
-                    CardsCount = customer.Cards?.Count() ?? 0,
-                    DebitCardsCount = customer.Cards?.Count(c => c.CardType == TypeOfCard.Debit) ?? 0,
-                    CreditCardsCount = customer.Cards?.Count(c => c.CardType == TypeOfCard.Credit) ??0,
+                    //Cards = customer.Cards,
+                    //CardsCount = customer.Cards?.Count() ?? 0,
+                    //DebitCardsCount = customer.Cards?.Count(c => c.CardType == TypeOfCard.Debit) ?? 0,
+                    //CreditCardsCount = customer.Cards?.Count(c => c.CardType == TypeOfCard.Credit) ??0,
                     Loans = customer.Loans,
                     LoansCount = customer.Loans?.Count() ?? 0,
                     CertificatCount = customer.Accounts.Sum(acc => acc.Certificates.Count())

@@ -49,7 +49,7 @@ namespace BankingSystem.PL.Controllers.AppManager
                     c => c.Loans,
                     c => c.SupportTickets,
                     c => c.Accounts,
-                    c => c.Cards,
+                    //c => c.Cards,
                     c => c.Branch
                 )
                 .FirstOrDefault(c => c.Id == id);
@@ -97,13 +97,15 @@ namespace BankingSystem.PL.Controllers.AppManager
         [HttpGet]
         public ActionResult GetCustomerCard(string id)
         {
-            var customerCards = _unitOfWork.Repository<VisaCard>().GetAllIncluding(c => c.Account).Where(l => l.CustomerId == id).ToList();
-            if (customerCards == null || customerCards.Count == 0)
-                return NotFound("No cards found for this customer.");
+            //var customerCards = _unitOfWork.Repository<VisaCard>().GetAllIncluding(c => c.Account).Where(l => l.CustomerId == id).ToList();
+            //if (customerCards == null || customerCards.Count == 0)
+            //    return NotFound("No cards found for this customer.");
 
-            var cards = _mapper.Map<List<CustomerCardViewModel>>(customerCards);
-            ViewBag.CustomerId = id;
-            return View(cards);
+            //var cards = _mapper.Map<List<CustomerCardViewModel>>(customerCards);
+            //ViewBag.CustomerId = id;
+            //return View(cards);
+            return View();
+
         }
         [HttpGet]
         public ActionResult GetCustomerSupportTicket(string id)

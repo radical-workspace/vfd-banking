@@ -21,29 +21,35 @@ namespace BankingSystem.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult TransferMoney(TransferMoneyViewModel transferMoneyVM)
+        public IActionResult TransferMoney(AccountsViewModel transferMoneyVM)
         {
             if (!ModelState.IsValid)
             {
                 return View(transferMoneyVM);
             }
-            var senderAccount = _unitOfWork.Repository<Account>().GetById(transferMoneyVM.SenderAccountId);
-            var receiverAccount = _unitOfWork.Repository<Account>().GetById(transferMoneyVM.ReceiverAccountId);
-            if (senderAccount == null || receiverAccount == null)
-            {
-                ModelState.AddModelError("", "Invalid account details.");
-                return View(transferMoneyVM);
-            }
-            if (senderAccount.Balance < transferMoneyVM.Amount)
-            {
-                ModelState.AddModelError("", "Insufficient balance.");
-                return View(transferMoneyVM);
-            }
-            senderAccount.Balance -= transferMoneyVM.Amount;
-            receiverAccount.Balance += transferMoneyVM.Amount;
-            _unitOfWork.Repository<Account>().Update(senderAccount);
-            _unitOfWork.Repository<Account>().Update(receiverAccount);
-            _unitOfWork.SaveChanges();
+            //var senderAccount = _unitOfWork.Repository<Account>().GetSingleIncluding();
+
+
+
+
+
+            //var senderAccount = _unitOfWork.Repository<Account>().GetById(transferMoneyVM.SenderAccountId);
+            //var receiverAccount = _unitOfWork.Repository<Account>().GetById(transferMoneyVM.ReceiverAccountId);
+            //if (senderAccount == null || receiverAccount == null)
+            //{
+            //    ModelState.AddModelError("", "Invalid account details.");
+            //    return View(transferMoneyVM);
+            //}
+            //if (senderAccount.Balance < transferMoneyVM.Amount)
+            //{
+            //    ModelState.AddModelError("", "Insufficient balance.");
+            //    return View(transferMoneyVM);
+            //}
+            //senderAccount.Balance -= transferMoneyVM.Amount;
+            //receiverAccount.Balance += transferMoneyVM.Amount;
+            //_unitOfWork.Repository<Account>().Update(senderAccount);
+            //_unitOfWork.Repository<Account>().Update(receiverAccount);
+            //_unitOfWork.SaveChanges();
             return RedirectToAction("Index", "Home");
         }
     }

@@ -122,7 +122,7 @@ namespace BankingSystem.BogusFakers
                 .RuleFor(c => c.IsDeleted, f => false)
 
                 .RuleFor(c => c.BranchId, f => null /* f.Random.Int(1, 3) */ ) // Adjust to match actual Branch IDs
-                .RuleFor(c => c.Cards, f => new List<VisaCard>()) // Optional: you can populate them later
+                //.RuleFor(c => c.Cards, f => new List<VisaCard>()) // Optional: you can populate them later
                 .RuleFor(c => c.Loans, f => new List<Loan>())
                 .RuleFor(c => c.Transactions, f => new List<Transaction>())
                 .RuleFor(c => c.Accounts, f => new List<Account>())
