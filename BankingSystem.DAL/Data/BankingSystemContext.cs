@@ -45,6 +45,7 @@ namespace BankingSystem.DAL.Data
         public DbSet<Savings> Savings { get; set; }
         public DbSet<SupportTicket> SupportTickets { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
 
     }
 }
