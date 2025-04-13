@@ -163,7 +163,7 @@
         <label asp-for="BirthDate" class="form-label"></label>
         <div class="input-group">
             <input asp-for="BirthDate" type="date" class="form-control" />
-            <i class="fas fa-birthday-cake input-icon"></i>
+            @* <i class="fas fa-birthday-cake input-icon"></i> *@
         </div>
         <span asp-validation-for="BirthDate" class="text-danger"></span>
     </div>
@@ -173,7 +173,7 @@
         <label asp-for="JoinDate" class="form-label"></label>
         <div class="input-group">
             <input asp-for="JoinDate" type="date" class="form-control" />
-            <i class="fas fa-calendar-alt input-icon"></i>
+            @* <i class="fas fa-calendar-alt input-icon"></i> *@
         </div>
         <span asp-validation-for="JoinDate" class="text-danger"></span>
     </div>
@@ -211,14 +211,31 @@
     <!-- Role Selection -->
     @if (ViewData["FixedRole"] != null)
     {
+
         <div class="col-md-6 mb-4">
-            <label asp-for="Role" class="form-label"></label>
+            <label asp-for="Salary" class="form-label"></label>
             <div class="input-group">
-                <input type="text" class="form-control" value="@ViewData["FixedRole"]" readonly />
-                <input type="hidden" asp-for="Role" value="@ViewData["FixedRole"]" />
-                <i class="fas fa-user-tag input-icon"></i>
+                <input asp-for="Salary" type="number" class="form-control" placeholder="Add Salary" />
+                <i class="fas fa-lock input-icon"></i>
             </div>
+            <span asp-validation-for="Salary" class="text-danger"></span>
         </div>
+
+        @* <div class="row justify-content-center"> *@
+        @*     <!-- Added row with centering --> *@
+        @*     <div class="col-md-6 mb-4 mx-auto"> *@
+        @*         <!-- Added mx-auto for horizontal centering --> *@
+        @*         <label asp-for="Role" class="form-label text-center d-block"> *@
+        @*             <!-- Centered label --> *@
+        @*             <i class="fas fa-user-tag me-2"></i>Role  *@
+        @*         </label> *@
+        @*         <div class="input-group justify-content-center"> *@
+        @*             <!-- Centered input group --> *@
+        @*             <input type="text" class="form-control text-center" value="@ViewData["FixedRole"]" readonly style="max-width: 200px;" /> *@
+        @*             <input type="hidden" asp-for="Role" value="@ViewData["FixedRole"]" /> *@
+        @*         </div> *@
+        @*     </div> *@
+        @* </div> *@
     }
     else
     {

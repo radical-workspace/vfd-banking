@@ -17,7 +17,7 @@ namespace BankingSystem.PL.Helpers
                   .ReverseMap();
 
             CreateMap<RegisterViewModel, Customer>()
-                                            .IncludeBase<RegisterViewModel, ApplicationUser>();
+                   .IncludeBase<RegisterViewModel, ApplicationUser>();
 
             CreateMap<RegisterViewModel, Admin>()
                 .IncludeBase<RegisterViewModel, ApplicationUser>();
