@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Data
 {
-    public partial class BankingSystemContext
-    {
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder)
-        {
-            //modelBuilder.Entity<Account>().HasQueryFilter(A => !A.IsDeleted);
-        }
-    }
+    //public partial class BankingSystemContext
+    //{
+    //    partial void OnModelCreatingPartial(ModelBuilder modelBuilder)
+    //    {
+    //        //modelBuilder.Entity<Account>().HasQueryFilter(A => !A.IsDeleted);
+    //    }
+    //}
 }

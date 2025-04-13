@@ -68,9 +68,9 @@ namespace BankingSystem.BogusFakers
         }
 
 
-        public static List<MyManager> GenerateFakeManagers(int count = 10)
+        public static List<Manager> GenerateFakeManagers(int count = 10)
         {
-            var faker = new Faker<MyManager>("en")
+            var faker = new Faker<Manager>("en")
                 .RuleFor(m => m.Id, f => Guid.NewGuid().ToString())
                 .RuleFor(m => m.UserName, f => f.Internet.UserName())
                 .RuleFor(m => m.NormalizedUserName, (f, m) => m.UserName.ToUpper())
@@ -122,9 +122,9 @@ namespace BankingSystem.BogusFakers
                 .RuleFor(c => c.IsDeleted, f => false)
 
                 .RuleFor(c => c.BranchId, f => null /* f.Random.Int(1, 3) */ ) // Adjust to match actual Branch IDs
-                .RuleFor(c => c.Cards, f => new List<Card>()) // Optional: you can populate them later
+                //.RuleFor(c => c.Cards, f => new List<VisaCard>()) // Optional: you can populate them later
                 .RuleFor(c => c.Loans, f => new List<Loan>())
-                .RuleFor(c => c.Transactions, f => new List<MyTransaction>())
+                .RuleFor(c => c.Transactions, f => new List<Transaction>())
                 .RuleFor(c => c.Accounts, f => new List<Account>())
                 .RuleFor(c => c.SupportTickets, f => new List<SupportTicket>());
 
@@ -149,8 +149,8 @@ namespace BankingSystem.BogusFakers
                     .RuleFor(a => a.BranchId, f => customer.BranchId)
                     .RuleFor(a => a.Certificates, f => new List<Certificate>())
                     .RuleFor(a => a.Loans, f => new List<Loan>())
-                    .RuleFor(a => a.Cards, f => new List<Card>())
-                    .RuleFor(a => a.AccountTransactions, f => new List<MyTransaction>());
+                    .RuleFor(a => a.Card, f => new VisaCard())
+                    .RuleFor(a => a.AccountTransactions, f => new List<Transaction>());
 
                 accounts.AddRange(faker.Generate(accountsPerCustomer));
             }
@@ -163,13 +163,7 @@ namespace BankingSystem.BogusFakers
         {
             var branchFaker = new Faker<Branch>()
                 .RuleFor(b => b.Name, f => $"Branch {f.Address.City()}")
-                //.RuleFor(b => b.Location, f => f.Address.FullAddress())
-
-                .RuleFor(b => b.Location, f =>
-                    f.Address.FullAddress().Length > 20
-                    ? f.Address.FullAddress().Substring(0, 20)
-                    : f.Address.FullAddress())
-
+                .RuleFor(b => b.Location, f => f.Address.FullAddress())
                 .RuleFor(b => b.Opens, f => TimeSpan.FromHours(f.Random.Double(8, 9)))     // Opens between 8:00 and 9:00
                 .RuleFor(b => b.Closes, f => TimeSpan.FromHours(f.Random.Double(17, 18)))  // Closes between 17:00 and 18:00
                 .RuleFor(b => b.IsDeleted, f => false);

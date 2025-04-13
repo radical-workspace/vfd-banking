@@ -1,93 +1,259 @@
 ﻿@using BankingSystem.PL.ViewModels.Auth
 @model RegisterViewModel
 
-<div asp-validation-summary="All" class="alert alert-danger"></div>
+<style>
+    :root {
+        --primary-dark: #0a2d2e;
+        --primary-medium: #1c4e4f;
+        --primary-light: #436e6f;
+        --secondary-dark: #6a8e8f;
+        --secondary-light: #879693;
+        --neutral-1: #a49e97;
+        --accent-1: #deae9f;
+        --accent-2: #efd7cf;
+        --accent-3: #f7ebe7;
+        --white: #ffffff;
+    }
 
-<div class="col-md-6">
-    <label asp-for="FirstName" class="form-label fw-semibold"></label>
-    <input asp-for="FirstName" class="form-control rounded-pill" />
-    <span asp-validation-for="FirstName" class="text-danger"></span>
-</div>
+    .register-container {
+        background: var(--accent-3);
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 2.5rem;
+    }
 
-<div class="col-md-6">
-    <label asp-for="LastName" class="form-label fw-semibold"></label>
-    <input asp-for="LastName" class="form-control rounded-pill" />
-    <span asp-validation-for="LastName" class="text-danger"></span>
-</div>
+    .form-header {
+        color: var(--primary-dark);
+        margin-bottom: 2rem;
+        text-align: center;
+        border-bottom: 2px solid var(--accent-1);
+        padding-bottom: 1rem;
+    }
 
-<div class="col-md-6">
-    <label asp-for="UserName" class="form-label fw-semibold"></label>
-    <input asp-for="UserName" class="form-control rounded-pill" />
-    <span asp-validation-for="UserName" class="text-danger"></span>
-</div>
+    .form-label {
+        color: var(--primary-medium);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
 
-<div class="col-md-6">
-    <label asp-for="SSN" class="form-label fw-semibold"></label>
-    <input asp-for="SSN" class="form-control rounded-pill" />
-    <span asp-validation-for="SSN" class="text-danger"></span>
-</div>
+    .form-control, .form-select {
+        border: 2px solid var(--secondary-light);
+        border-radius: 50px !important;
+        padding: 0.75rem 1.25rem;
+        transition: all 0.3s ease;
+        background-color: var(--white);
+    }
 
-<div class="col-md-6">
-    <label asp-for="Address" class="form-label fw-semibold"></label>
-    <input asp-for="Address" class="form-control rounded-pill" />
-    <span asp-validation-for="Address" class="text-danger"></span>
-</div>
-<div class="col-md-6">
-    <label asp-for="PhoneNumber" class="form-label fw-semibold"></label>
-    <input asp-for="PhoneNumber" class="form-control rounded-pill" />
-    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-</div>
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 0 0.25rem rgba(222, 174, 159, 0.25);
+        }
 
-<div class="col-md-6">
-    <label asp-for="BirthDate" class="form-label fw-semibold"></label>
-    <input asp-for="BirthDate" type="date" class="form-control rounded-pill" />
-    <span asp-validation-for="BirthDate" class="text-danger"></span>
-</div>
+        .form-control[readonly] {
+            background-color: var(--accent-2);
+        }
 
-<div class="col-md-6">
-    <label asp-for="JoinDate" class="form-label fw-semibold"></label>
-    <input asp-for="JoinDate" type="date" class="form-control rounded-pill" />
-    <span asp-validation-for="JoinDate" class="text-danger"></span>
-</div>
+    .validation-summary {
+        border-left: 4px solid var(--accent-1);
+        background-color: var(--accent-2);
+        border-radius: 8px;
+    }
 
-<div class="col-md-6">
-    <label asp-for="Email" class="form-label fw-semibold"></label>
-    <input asp-for="Email" class="form-control rounded-pill" />
-    <span asp-validation-for="Email" class="text-danger"></span>
-</div>
-<div class="col-md-6">
-    <label asp-for="Password" class="form-label fw-semibold"></label>
-    <input asp-for="Password" type="password" class="form-control rounded-pill" />
-    <span asp-validation-for="Password" class="text-danger"></span>
-</div>
+    .text-danger {
+        color: var(--accent-1) !important;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: block;
+    }
 
+    .submit-btn {
+        background-color: var(--primary-medium);
+        border: none;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        margin-top: 1.5rem;
+    }
 
-<div class="col-md-6">
-    <label asp-for="ConfirmPassword" class="form-label fw-semibold"></label>
-    <input asp-for="ConfirmPassword" type="password" class="form-control rounded-pill" />
-    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-</div>
-@if (ViewData["FixedRole"] != null)
-{
-    <!-- If a fixed role is provided, display it as plain text -->
-    <div class="col-md-6">
-        <label asp-for="Role" class="form-label fw-semibold"></label>
-        <input type="text" class="form-control rounded-pill" value="@ViewData["FixedRole"]" readonly />
-        <input type="hidden" asp-for="Role" value="@ViewData["FixedRole"]" />
+        .submit-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(10, 45, 46, 0.2);
+        }
+
+    .input-group {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .input-icon {
+        position: absolute;
+        right: 1.25rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--primary-light);
+    }
+</style>
+
+<div asp-validation-summary="All" class="alert alert-danger validation-summary"></div>
+
+<div class="row">
+    <!-- First Name -->
+    <div class="col-md-6 mb-4">
+        <label asp-for="FirstName" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="FirstName" class="form-control" placeholder="Enter first name" />
+            <i class="fas fa-user input-icon"></i>
+        </div>
+        <span asp-validation-for="FirstName" class="text-danger"></span>
     </div>
-}
-else
-{
-    <!-- Otherwise, render the dropdown for role selection -->
-    <div class="col-md-6">
-        <label asp-for="Role" class="form-label fw-semibold"></label>
-        <select asp-for="Role" asp-items="Model.AvailableRoles" class="form-select rounded-pill">
-            <option value="">-- Select Role --</option>
-        </select>
-        <span asp-validation-for="Role" class="text-danger"></span>
-    </div>
-}
 
-<div class="col-12 text-center mt-4">
-    <input type="submit" class="btn btn-primary px-5 py-2 rounded-pill shadow-sm fw-bold" />
+    <!-- Last Name -->
+    <div class="col-md-6 mb-4">
+        <label asp-for="LastName" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="LastName" class="form-control" placeholder="Enter last name" />
+            <i class="fas fa-user input-icon"></i>
+        </div>
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+
+    <!-- Username -->
+    <div class="col-md-6 mb-4">
+        <label asp-for="UserName" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="UserName" class="form-control" placeholder="Choose username" />
+            <i class="fas fa-at input-icon"></i>
+        </div>
+        <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>
+
+    <!-- SSN -->
+    <div class="col-md-6 mb-4">
+        <label asp-for="SSN" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="SSN" class="form-control" placeholder="Enter SSN" />
+            <i class="fas fa-id-card input-icon"></i>
+        </div>
+        <span asp-validation-for="SSN" class="text-danger"></span>
+    </div>
+
+    <!-- Address -->
+    <div class="col-md-6 mb-4">
+        <label asp-for="Address" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="Address" class="form-control" placeholder="Enter address" />
+            <i class="fas fa-map-marker-alt input-icon"></i>
+        </div>
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+
+    <!-- Phone Number -->
+    <div class="col-md-6 mb-4">
+        <label asp-for="PhoneNumber" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="PhoneNumber" class="form-control" placeholder="Enter phone number" />
+            <i class="fas fa-phone input-icon"></i>
+        </div>
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    </div>
+
+    <!-- Birth Date -->
+    <div class="col-md-6 mb-4">
+        <label asp-for="BirthDate" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="BirthDate" type="date" class="form-control" />
+            @* <i class="fas fa-birthday-cake input-icon"></i> *@
+        </div>
+        <span asp-validation-for="BirthDate" class="text-danger"></span>
+    </div>
+
+    <!-- Join Date -->
+    <div class="col-md-6 mb-4">
+        <label asp-for="JoinDate" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="JoinDate" type="date" class="form-control" />
+            @* <i class="fas fa-calendar-alt input-icon"></i> *@
+        </div>
+        <span asp-validation-for="JoinDate" class="text-danger"></span>
+    </div>
+
+    <!-- Email -->
+    <div class="col-md-6 mb-4">
+        <label asp-for="Email" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="Email" class="form-control" placeholder="Enter email" />
+            <i class="fas fa-envelope input-icon"></i>
+        </div>
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <!-- Password -->
+    <div class="col-md-6 mb-4">
+        <label asp-for="Password" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="Password" type="password" class="form-control" placeholder="Create password" />
+            <i class="fas fa-lock input-icon"></i>
+        </div>
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <!-- Confirm Password -->
+    <div class="col-md-6 mb-4">
+        <label asp-for="ConfirmPassword" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm password" />
+            <i class="fas fa-lock input-icon"></i>
+        </div>
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+
+    <!-- Role Selection -->
+    @if (ViewData["FixedRole"] != null)
+    {
+
+        <div class="col-md-6 mb-4">
+            <label asp-for="Salary" class="form-label"></label>
+            <div class="input-group">
+                <input asp-for="Salary" type="number" class="form-control" placeholder="Add Salary" />
+                <i class="fas fa-lock input-icon"></i>
+            </div>
+            <span asp-validation-for="Salary" class="text-danger"></span>
+        </div>
+
+        @* <div class="row justify-content-center"> *@
+        @*     <!-- Added row with centering --> *@
+        @*     <div class="col-md-6 mb-4 mx-auto"> *@
+        @*         <!-- Added mx-auto for horizontal centering --> *@
+        @*         <label asp-for="Role" class="form-label text-center d-block"> *@
+        @*             <!-- Centered label --> *@
+        @*             <i class="fas fa-user-tag me-2"></i>Role  *@
+        @*         </label> *@
+        @*         <div class="input-group justify-content-center"> *@
+        @*             <!-- Centered input group --> *@
+        @*             <input type="text" class="form-control text-center" value="@ViewData["FixedRole"]" readonly style="max-width: 200px;" /> *@
+        @*             <input type="hidden" asp-for="Role" value="@ViewData["FixedRole"]" /> *@
+        @*         </div> *@
+        @*     </div> *@
+        @* </div> *@
+    }
+    else
+    {
+        <div class="col-md-6 mb-4">
+            <label asp-for="Role" class="form-label"></label>
+            <div class="input-group">
+                <select asp-for="Role" asp-items="Model.AvailableRoles" class="form-select">
+                    <option value="">-- Select Role --</option>
+                </select>
+                <i class="fas fa-user-tag input-icon"></i>
+            </div>
+            <span asp-validation-for="Role" class="text-danger"></span>
+        </div>
+    }
+</div>
+
+<div class="text-center">
+    <button type="submit" class="btn submit-btn text-white">
+        <i class="fas fa-user-plus me-2"></i>Register
+    </button>
 </div>

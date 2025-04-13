@@ -9,8 +9,6 @@ namespace BankingSystem.DAL.Configurations
         public void Configure(EntityTypeBuilder<Certificate> builder)
         {
 
-        
-
             // Properties
             builder.Property(c => c.CertificateNumber)
                    .IsRequired()
@@ -23,9 +21,9 @@ namespace BankingSystem.DAL.Configurations
             builder.Property(c => c.ExpiryDate)
                    .IsRequired();
 
-            builder.Property(c => c.Amount)
-                   .IsRequired()
-                   .HasColumnType("decimal(18,4)");
+            //builder.Property(c => c.Amount)
+            //       .IsRequired()
+            //       .HasColumnType("decimal(18,4)");
 
             builder.Property(c => c.IsDeleted)
                    .HasDefaultValue(false);

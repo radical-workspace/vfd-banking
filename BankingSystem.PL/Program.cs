@@ -1,6 +1,5 @@
 using BankingSystem.DAL.Data;
 using BankingSystem.BLL.Services;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using BankingSystem.DAL.Models;
@@ -47,10 +46,10 @@ namespace BankingSystem.PL
             // Register Unit of Work
             builder.Services.AddScoped<IUnitOfWork ,UnitOfWork>();
             builder.Services.AddScoped<IGenericRepository<Account>, AccountBL>();
-            builder.Services.AddScoped<IGenericRepository<Customer>, CustomerBL>();
-
+            builder.Services.AddScoped<IGenericRepository<Customer>, MyCustomerBL>();
+            builder.Services.AddScoped<TransferFromAccountToAnother>();
             builder.Services.AddScoped<ISearchPaginationRepo<Account>, AccountBL>();
-            builder.Services.AddScoped<ISearchPaginationRepo<Customer>, CustomerBL>();
+            builder.Services.AddScoped<ISearchPaginationRepo<Customer>, MyCustomerBL>();
 
 
             builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfile()));

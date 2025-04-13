@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.BLL.Services
 {
-    public class CustomerBL : IGenericRepository<Customer>, ISearchPaginationRepo<Customer>
+    public class MyCustomerBL : IGenericRepository<Customer>, ISearchPaginationRepo<Customer>
     {
         private readonly BankingSystemContext _context;
 
-        public CustomerBL(BankingSystemContext context)
+        public MyCustomerBL(BankingSystemContext context)
         {
             _context = context;
         }

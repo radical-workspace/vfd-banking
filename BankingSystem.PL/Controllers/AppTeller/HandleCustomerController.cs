@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.Operations;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using System.Globalization;
 using System.Security.Claims;
 
@@ -67,11 +68,10 @@ namespace BankingSystem.PL.Controllers.AppTeller
             return View(cutomerstoView);
         }
 
-
         public ActionResult GetCustomerDetails(string id)
         {
             var Customer = _unitOfWork.Repository<Customer>()
-                .GetSingleIncluding(C => C.Id == id, C => C.Branch, C => C.Loans, C => C.Transactions, C => C.Cards, C => C.SupportTickets, C => C.Accounts);
+                .GetSingleIncluding(C => C.Id == id, C => C.Branch, C => C.Loans, C => C.Transactions, /*C => C.Cards,*/ C => C.SupportTickets, C => C.Accounts);
 
             var mappedCustomer = _mapper.Map<Customer, CustomerDetailsViewModel>(Customer);
 
@@ -202,7 +202,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
                 }
             }
 
-            return View("Register", UserToRegister);
+            return View(nameof(Register), UserToRegister);
         }
 
 
@@ -274,7 +274,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
         public ActionResult DeleteCustomer(string id)
         {
             var Customer = _unitOfWork.Repository<Customer>()
-                 .GetSingleIncluding(C => C.Id == id, C => C.Branch, C => C.Loans, C => C.Transactions, C => C.Cards, C => C.SupportTickets, C => C.Accounts);
+                 .GetSingleIncluding(C => C.Id == id, C => C.Branch, C => C.Loans, C => C.Transactions, /*C => C.Cards,*/ C => C.SupportTickets, C => C.Accounts);
 
             var mappedCustomerToDeleted = _mapper.Map<Customer, CustomerDetailsViewModel>(Customer);
 
@@ -291,7 +291,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
             {
                 var customerToBeDeleted = _unitOfWork.Repository<Customer>()
                   .GetSingleIncluding(C => C.Id == customerDetailsViewModel.Id,
-                  C => C.Branch, C => C.Loans, C => C.Transactions, C => C.Cards,
+                  C => C.Branch, C => C.Loans, C => C.Transactions, /*C => C.Cards,*/
                   C => C.SupportTickets, C => C.Accounts);
 
                 _unitOfWork.Repository<Customer>().Delete(customerToBeDeleted);

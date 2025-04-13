@@ -113,7 +113,7 @@ namespace BankingSystem.PL.Controllers
 
                     else if (UserToRegister.Role == "Admin") appUser = _mapper.Map<Admin>(UserToRegister);
                     
-                    else if (UserToRegister.Role == "Manager") appUser = _mapper.Map<MyManager>(UserToRegister);
+                    else if (UserToRegister.Role == "Manager") appUser = _mapper.Map<DAL.Models.Manager>(UserToRegister);
                     
                     else if (UserToRegister.Role == "Teller") appUser = _mapper.Map<Teller>(UserToRegister);
                     
@@ -178,6 +178,12 @@ namespace BankingSystem.PL.Controllers
                         if (found)
                         {
                             await _signInManager.SignInAsync(user, UserToLogin.RememberMe);
+
+                            // if the role is Customer 
+                            if (await _userManager.IsInRoleAsync(user, "Customer"))
+                            {
+                                return RedirectToAction("HomePage", "CustomerHome" , new { id = user.Id }); 
+                            }
                             return RedirectToAction("Index", "Home");
                         }
                     }

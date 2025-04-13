@@ -36,6 +36,8 @@ namespace BankingSystem.DAL.Configurations
             builder.Property(st => st.IsDeleted)
                   .HasDefaultValue(false);
 
+            builder.HasOne(st => st.Account).WithMany(st => st.SupportTickets);
+
             builder.HasQueryFilter(P => !P.IsDeleted);
 
 
