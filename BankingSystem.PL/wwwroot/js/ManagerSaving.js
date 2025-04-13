@@ -41,7 +41,10 @@
                 $(this).html('<i class="bi bi-plus-circle me-2"></i>Add Currency');
             } else {
                 $(this).html('<i class="bi bi-x-circle me-2"></i>Cancel');
-                // Scroll to form if it's long table
+                // Clear previous inputs
+                $('#addCurrency').val('');
+                $('#addBalance').val('');
+                // Scroll to form
                 $('html, body').animate({
                     scrollTop: addFormRow.offset().top - 100
                 }, 200);
@@ -49,10 +52,21 @@
         });
     }
 
-    // Form submission handling
-    $('#addForm').submit(function (e) {
-        e.preventDefault();
-        // Add your form submission logic here
-        // You might want to use AJAX for better UX
+    // Save new item
+    $('#saveNewBtn').click(function () {
+        const currency = $('#addCurrency').val();
+        const balance = $('#addBalance').val();
+
+        if (!currency || !balance) {
+            alert('Please fill in all fields');
+            return;
+        }
+
+        // Set values in the hidden form
+        $('#formCurrency').val(currency);
+        $('#formBalance').val(balance);
+
+        // Submit the form
+        $('#addForm').submit();
     });
 });

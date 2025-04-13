@@ -25,8 +25,7 @@ namespace BankingSystem.DAL.Models
         public TransactionStatus Status { get; set; }
         public TransactionType Type { get; set; }
         public string DoneVia { get; set; } = string.Empty;
-
-        //public required long AccountDestinationNumber { get; set; }
+        public long AccountDistenationNumber { get; set; }
 
         [ForeignKey(nameof(Payment))]
         public int PaymentId { get; set; }
@@ -35,7 +34,6 @@ namespace BankingSystem.DAL.Models
         [ForeignKey(nameof(Customer))]
         public string CustomerID { get; set; }
         public Customer Customer { get; set; }
-        public required long AccountDistenationNumber { get; set; }
 
         [ForeignKey(nameof(Account))]
         public int AccountId { get; set; }

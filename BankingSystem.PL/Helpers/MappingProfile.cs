@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using BankingSystem.DAL.Models;
-using BankingSystem.PL.Controllers;
 using BankingSystem.PL.ViewModels.Auth;
+using BankingSystem.PL.ViewModels.Customer;
 using BankingSystem.PL.ViewModels.Manager;
 using BankingSystem.PL.ViewModels.Teller;
 
@@ -17,7 +17,7 @@ namespace BankingSystem.PL.Helpers
                   .ReverseMap();
 
             CreateMap<RegisterViewModel, Customer>()
-                                            .IncludeBase<RegisterViewModel, ApplicationUser>();
+                   .IncludeBase<RegisterViewModel, ApplicationUser>();
 
             CreateMap<RegisterViewModel, Admin>()
                 .IncludeBase<RegisterViewModel, ApplicationUser>();

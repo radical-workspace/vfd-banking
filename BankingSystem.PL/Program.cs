@@ -47,7 +47,7 @@ namespace BankingSystem.PL
             builder.Services.AddScoped<IUnitOfWork ,UnitOfWork>();
             builder.Services.AddScoped<IGenericRepository<Account>, AccountBL>();
             builder.Services.AddScoped<IGenericRepository<Customer>, MyCustomerBL>();
-
+            builder.Services.AddScoped<TransferFromAccountToAnother>();
             builder.Services.AddScoped<ISearchPaginationRepo<Account>, AccountBL>();
             builder.Services.AddScoped<ISearchPaginationRepo<Customer>, MyCustomerBL>();
 

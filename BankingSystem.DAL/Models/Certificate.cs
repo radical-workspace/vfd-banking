@@ -5,7 +5,7 @@ using System.Runtime.ConstrainedExecution;
 
 namespace BankingSystem.DAL.Models
 {
-    public class GeneralCertificate :BaseEntity
+    public class GeneralCertificate : BaseEntity
     {
         public string? Name { get; set; }
         public int Duration { get; set; }
