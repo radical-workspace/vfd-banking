@@ -3,6 +3,12 @@
 
 @{
     ViewData["Title"] = "Manage Account";
+    var isEdit = ViewData["IsEditMode"] as bool? ?? false;
+
+    var accountStatusEnumList = Enum.GetValues(typeof(AccountStatus)).Cast<AccountStatus>()
+                                 .Where(status => status != Enum.GetValues(typeof(AccountStatus)).Cast<AccountStatus>().Last()).ToList();
+
+    var accountStatusSelectList = new SelectList(accountStatusEnumList);
 }
 
 <div class="container">
@@ -12,38 +18,82 @@
             <div class="card shadow-lg">
                 <div class="card-body p-5 pb-3">
                     <div class="row">
-                        <div class="col-md-6 mb-4">
-                            <label asp-for="Number" class="form-label fw-semibold fs-5"></label>
-                            <input asp-for="Number" class="form-control form-control-lg" />
-                            <span asp-validation-for="Number" class="text-danger small"></span>
-                        </div>
+
+
+                        @if (isEdit)
+                        {
+                            <div class="col-md-6 mb-4">
+                                <label asp-for="Number" class="form-label fw-semibold fs-5"></label>
+                                <input name="Number" value="@Model.Number" class="form-control form-control-lg" disabled />
+                                <span asp-validation-for="Number" class="text-danger small"></span>
+                            </div>
+                        }
+
 
                         <div class="col-md-6 mb-4">
                             <label asp-for="Balance" class="form-label fw-semibold fs-5"></label>
-                            <input asp-for="Balance" class="form-control form-control-lg" />
+                            @if (isEdit)
+                            {
+                                <input name="Balance" value="@Model.Balance" class="form-control form-control-lg" disabled />
+                            }
+                            else
+                            {
+                                <input asp-for="Balance" class="form-control form-control-lg" />
+                            }
                             <span asp-validation-for="Balance" class="text-danger small"></span>
                         </div>
 
+
                         <div class="col-md-6 mb-4">
                             <label asp-for="CreatedAt" class="form-label fw-semibold fs-5"></label>
-                            <input asp-for="CreatedAt" class="form-control form-control-lg" type="date" />
+                            @if (isEdit)
+                            {
+                                <input name="CreatedAt" value="@Model.CreatedAt.ToString("yyyy-MM-dd")" class="form-control form-control-lg" type="date" disabled />
+                            }
+                            else
+                            {
+                                <input asp-for="CreatedAt" class="form-control form-control-lg" type="date" />
+                            }
                             <span asp-validation-for="CreatedAt" class="text-danger small"></span>
                         </div>
 
+
                         <div class="col-md-6 mb-4">
                             <label asp-for="AccountType" class="form-label fw-semibold fs-5"></label>
-                            <select asp-for="AccountType" class="form-select form-select-lg" asp-items="@Html.GetEnumSelectList<AccountType>()"></select>
+                            @if (isEdit)
+                            {
+                                <select class="form-select form-select-lg" disabled>
+                                    @foreach (var item in Html.GetEnumSelectList<AccountType>())
+                                    {
+                                        <option value="@item.Value" selected="@(item.Value == ((int)Model.AccountType).ToString())">@item.Text</option>
+                                    }
+                                </select>
+                                <input type="hidden" asp-for="AccountType" />
+                            }
+                            else
+                            {
+                                <select asp-for="AccountType" class="form-select form-select-lg" asp-items="@Html.GetEnumSelectList<AccountType>()"></select>
+                            }
                             <span asp-validation-for="AccountType" class="text-danger small"></span>
                         </div>
 
+
                         <div class="col-md-6 mb-4">
                             <label asp-for="AccountStatus" class="form-label fw-semibold fs-5"></label>
-                            <select asp-for="AccountStatus" class="form-select form-select-lg" asp-items="@Html.GetEnumSelectList<AccountStatus>()"></select>
+                            @if (isEdit)
+                            {
+                                <select asp-for="AccountStatus" class="form-select form-select-lg" asp-items="@Html.GetEnumSelectList<AccountStatus>()"></select>
+                            }
+                            else
+                            {
+                                <select asp-for="AccountStatus" class="form-select form-select-lg" asp-items="@accountStatusSelectList"></select>
+                            }
                             <span asp-validation-for="AccountStatus" class="text-danger small"></span>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>

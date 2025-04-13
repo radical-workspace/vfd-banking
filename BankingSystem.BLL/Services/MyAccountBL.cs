@@ -17,6 +17,7 @@ namespace BankingSystem.BLL.Services
     public partial class MyAccountBL : IGenericRepository<Account>, ISearchPaginationRepo<Account>
     {
         private readonly BankingSystemContext _context;
+        private static Random _random = new Random();
 
         public MyAccountBL(BankingSystemContext context)
         {
@@ -85,7 +86,7 @@ namespace BankingSystem.BLL.Services
             if (!query.Any())
                 query = GetAll(tellerID)
                         .Where(a => (a.Customer?.FirstName + " " + a.Customer?.LastName).ToLower().Trim()
-                            .Contains(ISearchPaginationRepo<Account>.MyRegex().Replace(search.Trim(), " ")));
+                            .Contains(ISearchPaginationRepo<Account>.MyRegex().Replace(search.ToLower().Trim(), " ")));
 
             return query;
         }
@@ -112,12 +113,24 @@ namespace BankingSystem.BLL.Services
 
                 if (custAccountCount < 2)
                 {
+                    Entity.Number = Generate();
+
                     _context.Accounts.Add(Entity);
                     _context.SaveChanges();
                 }
                 else
                     throw new InvalidOperationException("This customer already have 2 accounts, cannot add more than 2.");
             }
+        }
+
+
+        private long Generate()
+        {    
+            var number = "4"; 
+            for (int i = 1; i < 14; i++)
+                number += _random.Next(0, 10).ToString();
+
+            return long.Parse(number);
         }
 
 

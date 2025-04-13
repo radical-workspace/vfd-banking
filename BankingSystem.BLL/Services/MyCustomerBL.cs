@@ -56,7 +56,7 @@ namespace BankingSystem.BLL.Services
                 .Include(c => c.Branch)
                     .ThenInclude(b => b.Tellers)
                 .Where(c => c.Branch.Tellers.FirstOrDefault()!.Id == tellerID && (c.FirstName + " " + c.LastName).ToLower().Trim()
-                    .Contains(ISearchPaginationRepo<Customer>.MyRegex().Replace(search.Trim(), " ")));
+                    .Contains(ISearchPaginationRepo<Customer>.MyRegex().Replace(search.ToLower().Trim(), " ")));
 
 
             return query;

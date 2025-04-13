@@ -43,18 +43,20 @@ namespace BankingSystem.PL
                 .AddDefaultTokenProviders();
 
 
+
             // Register Unit of Work
             builder.Services.AddScoped<IUnitOfWork ,UnitOfWork>();
-            builder.Services.AddScoped<IGenericRepository<Account>, AccountBL>();
+            builder.Services.AddScoped<IGenericRepository<Account>, MyAccountBL>();
             builder.Services.AddScoped<IGenericRepository<Customer>, MyCustomerBL>();
+            builder.Services.AddScoped<IGenericRepository<VisaCard>, MyCardBL>();
             builder.Services.AddScoped<TransferFromAccountToAnother>();
-            builder.Services.AddScoped<ISearchPaginationRepo<Account>, AccountBL>();
+            builder.Services.AddScoped<ISearchPaginationRepo<Account>, MyAccountBL>();
             builder.Services.AddScoped<ISearchPaginationRepo<Customer>, MyCustomerBL>();
 
 
             builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfile()));
-
             #endregion
+
 
             var app = builder.Build();
 
