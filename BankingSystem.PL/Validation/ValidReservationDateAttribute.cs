@@ -26,17 +26,6 @@ namespace BankingSystem.PL.Validation
                 return new ValidationResult("Reservation cannot be on Friday or Saturday.");
             }
 
-            var existingReservation = context.Reservations
-                .AsNoTracking()
-                .FirstOrDefault(r =>
-                    r.BranchId == reservationVM.BranchId &&
-                    r.ReservationDate == reservationVM.ReservationDate);
-
-            if (existingReservation != null)
-            {
-                return new ValidationResult("There's already a reservation for this branch at this exact time.");
-            }
-
             var branch = context.Branches.FirstOrDefault(b => b.Id == reservationVM.BranchId);
 
             if (branch == null || branch.Opens == null || branch.Closes == null)
@@ -48,7 +37,33 @@ namespace BankingSystem.PL.Validation
 
             if (reservationTime < branch.Opens || reservationTime > branch.Closes)
             {
-                return new ValidationResult("Reservation time is outside the allowed working hours.");
+                var opens = branch.Opens.ToString(@"hh\:mm");
+                var closes = branch.Closes.ToString(@"hh\:mm");
+
+                return new ValidationResult($"Reservation time is outside the allowed working hours. Working hours are from {opens} to {closes}.");
+            }
+
+            var existingReservation = context.Reservations
+                .AsNoTracking()
+                .Where(r =>
+                    r.BranchId == reservationVM.BranchId &&
+                    r.ReservationDate.Date == reservationVM.ReservationDate.Date)
+                .OrderBy(r => r.ReservationDate)
+                .ToList();
+
+            foreach (var res in existingReservation)
+            {
+                var differenceInMinutes = Math.Abs((reservationVM.ReservationDate - res.ReservationDate).TotalMinutes);
+
+                if (differenceInMinutes < 30)
+                {
+                    var nextAvailableTime = res.ReservationDate.AddMinutes(30);
+                    var remainingTime = nextAvailableTime - reservationVM.ReservationDate;
+
+                    var remainingMinutes = (int)remainingTime.TotalMinutes;
+                    return new ValidationResult($"You need to wait 30 minutes after the previous reservation. " +
+                        $"You can book at {nextAvailableTime:HH:mm}. Time left: {remainingMinutes} minutes.");
+                }
             }
 
             return ValidationResult.Success;
