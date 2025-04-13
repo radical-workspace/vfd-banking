@@ -113,36 +113,7 @@
                 <dt class="col-sm-3">Birth Date</dt>
                 <dd class="col-sm-9">@Model.BirthDate.ToString("MM-dd-yyyy")</dd>
 
-                <dt class="col-sm-3">Accounts</dt>
-                <dd class="col-sm-9">
-                    @(Model.AccountNumbers != null && Model.AccountNumbers.Any()
-                        ? string.Join(", ", Model.AccountNumbers)
-                        : "No Accounts for this Customer")
-                </dd>
-
-                @if (Model.LoanTypes?.Any() == true)
-                {
-                    <dt class="col-sm-3">Loans</dt>
-                    <dd class="col-sm-9">@string.Join(", ", Model.LoanTypes)</dd>
-                }
-
-                @if (Model.CardTypes?.Any() == true)
-                {
-                    <dt class="col-sm-3">Cards</dt>
-                    <dd class="col-sm-9">@string.Join(", ", Model.CardTypes)</dd>
-                }
-
-                @if (Model.TransactionDescriptions?.Any() == true)
-                {
-                    <dt class="col-sm-3">Transactions</dt>
-                    <dd class="col-sm-9">@string.Join(", ", Model.TransactionDescriptions)</dd>
-                }
-
-                @if (Model.TicketSubjects?.Any() == true)
-                {
-                    <dt class="col-sm-3">Support Tickets</dt>
-                    <dd class="col-sm-9">@string.Join(", ", Model.TicketSubjects)</dd>
-                }
+               
             </dl>
         </div>
     </div>

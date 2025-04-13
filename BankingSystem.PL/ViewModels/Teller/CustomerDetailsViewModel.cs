@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BankingSystem.DAL.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace BankingSystem.PL.ViewModels.Teller
 {
@@ -25,10 +26,11 @@ namespace BankingSystem.PL.ViewModels.Teller
         [DisplayFormat(DataFormatString = "{0:MM-dd-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime BirthDate { get; set; }
 
-        public List<string>? AccountNumbers { get; set; }
-        public List<string>? LoanTypes { get; set; }
-        public List<string>? CardTypes { get; set; }
-        public List<string>? TransactionDescriptions { get; set; }
-        public List<string>? TicketSubjects { get; set; }
+        // Direct navigation entities
+        public List<Account>? Accounts { get; set; }
+        public List<Loan>? Loans { get; set; }
+  
+        public List<Transaction>? Transactions { get; set; }
+        public List<SupportTicket>? Tickets { get; set; }
     }
 }
