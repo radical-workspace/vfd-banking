@@ -42,8 +42,10 @@ namespace BankingSystem.BLL.Services
         public IEnumerable<Customer> Search(string search, string? tellerID)
         {
             if (search == null)
-                return [];
-
+                return _context.Customers
+                        .Include(c => c.Branch)
+                            .ThenInclude(c => c.Tellers)
+                        .Where(c => c.Branch.Tellers.FirstOrDefault()!.Id == tellerID);
 
             var query = _context.Customers
                 .Include(c => c.Branch)

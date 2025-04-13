@@ -77,7 +77,8 @@ namespace BankingSystem.BLL.Services
         public IEnumerable<Account> Search(string search, string? tellerID)
         {
             if (search == null)
-                return [];
+                return _context.Accounts
+                    .Include(c => c.Customer).ToList();
 
             var query = GetAll(tellerID)
                 .Where(a => a.Number.ToString()
@@ -125,8 +126,8 @@ namespace BankingSystem.BLL.Services
 
 
         private long Generate()
-        {    
-            var number = "4"; 
+        {
+            var number = "4";
             for (int i = 1; i < 14; i++)
                 number += _random.Next(0, 10).ToString();
 
