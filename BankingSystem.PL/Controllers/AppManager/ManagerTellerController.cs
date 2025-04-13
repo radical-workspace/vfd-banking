@@ -6,6 +6,7 @@ using BankingSystem.PL.ViewModels.Manager;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using System.Security.Claims;
 
 
@@ -92,7 +93,7 @@ namespace BankingSystem.PL.Controllers.Manager
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(teller, UserToRegister.Role);
-                    return RedirectToAction("GetAllTellers", new { id = managerId });
+                    return RedirectToAction(nameof(GetAllTellers), new { id = managerId });
                 }
                 else
                 {
@@ -103,7 +104,7 @@ namespace BankingSystem.PL.Controllers.Manager
                 }
             }
 
-            return View("Register", UserToRegister);
+            return View(nameof(Register), UserToRegister);
         }
         [HttpGet]
         public ActionResult EditTeller(string id)

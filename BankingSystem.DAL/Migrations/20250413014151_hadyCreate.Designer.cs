@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankingSystem.DAL.Migrations
 {
     [DbContext(typeof(BankingSystemContext))]
-    [Migration("20250412192005_YoussefInitialCreate")]
-    partial class YoussefInitialCreate
+    [Migration("20250413014151_hadyCreate")]
+    partial class hadyCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -512,6 +512,9 @@ namespace BankingSystem.DAL.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,4)");
 
+                    b.Property<string>("FailureReason")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -686,8 +689,11 @@ namespace BankingSystem.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AccountId")
+                    b.Property<int?>("AccountId")
                         .HasColumnType("int");
+
+                    b.Property<long>("AccountNumber")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("CVV")
                         .IsRequired()
@@ -719,7 +725,8 @@ namespace BankingSystem.DAL.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[AccountId] IS NOT NULL");
 
                     b.ToTable("Cards");
                 });
@@ -1090,9 +1097,7 @@ namespace BankingSystem.DAL.Migrations
                 {
                     b.HasOne("BankingSystem.DAL.Models.Account", "Account")
                         .WithOne("Card")
-                        .HasForeignKey("BankingSystem.DAL.Models.VisaCard", "AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BankingSystem.DAL.Models.VisaCard", "AccountId");
 
                     b.Navigation("Account");
                 });
@@ -1225,8 +1230,7 @@ namespace BankingSystem.DAL.Migrations
                 {
                     b.Navigation("AccountTransactions");
 
-                    b.Navigation("Card")
-                        .IsRequired();
+                    b.Navigation("Card");
 
                     b.Navigation("Certificates");
 

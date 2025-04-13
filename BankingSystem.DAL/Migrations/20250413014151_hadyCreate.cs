@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BankingSystem.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class initialCreate : Migration
+    public partial class hadyCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -438,7 +438,8 @@ namespace BankingSystem.DAL.Migrations
                     ExpDate = table.Column<DateTime>(type: "date", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "date", nullable: false, defaultValueSql: "GETDATE()"),
                     CardType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AccountId = table.Column<int>(type: "int", nullable: false),
+                    AccountId = table.Column<int>(type: "int", nullable: true),
+                    AccountNumber = table.Column<long>(type: "bigint", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
@@ -448,8 +449,7 @@ namespace BankingSystem.DAL.Migrations
                         name: "FK_Cards_Accounts_AccountId",
                         column: x => x.AccountId,
                         principalTable: "Accounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -719,7 +719,8 @@ namespace BankingSystem.DAL.Migrations
                 name: "IX_Cards_AccountId",
                 table: "Cards",
                 column: "AccountId",
-                unique: true);
+                unique: true,
+                filter: "[AccountId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Certificates_AccountId",

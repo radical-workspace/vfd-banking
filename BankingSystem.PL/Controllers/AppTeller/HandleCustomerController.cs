@@ -68,7 +68,6 @@ namespace BankingSystem.PL.Controllers.AppTeller
             return View(cutomerstoView);
         }
 
-
         public ActionResult GetCustomerDetails(string id)
         {
             var Customer = _unitOfWork.Repository<Customer>()
