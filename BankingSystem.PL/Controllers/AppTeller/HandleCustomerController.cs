@@ -54,8 +54,8 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
             var Customers = _unitOfWork.Repository<Customer>()
                 .GetAllIncluding(C => C.Branch)
-                .Where(C => C.BranchId == branchId)
                 .ToList();
+                
 
 
             if (filter != null)
