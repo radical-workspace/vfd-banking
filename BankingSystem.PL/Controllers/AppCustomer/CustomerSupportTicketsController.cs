@@ -20,7 +20,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         [HttpPost , HttpGet]
         public IActionResult Details(string id , SupportTicketStatus SelectedStatus = SupportTicketStatus.Pending)
         {
-            var customer = _UnitOfWork.Repository<Customer>()
+            var customer = _UnitOfWork.Repository<MyCustomer>()
                                   .GetSingleIncluding(c => c.Id == id, c => c.SupportTickets);
             if (customer == null)
             {

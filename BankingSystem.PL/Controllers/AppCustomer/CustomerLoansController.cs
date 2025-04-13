@@ -19,7 +19,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
 
         public IActionResult Details(string id)
         {
-            var customer = _UnitOfWork.Repository<Customer>()
+            var customer = _UnitOfWork.Repository<MyCustomer>()
                                   .GetSingleIncluding(c => c.Id == id, c => c.Loans);
 
             if (customer != null)

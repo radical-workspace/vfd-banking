@@ -22,7 +22,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         [HttpGet]
         public IActionResult Details(string id)
         {
-            var customer = _UnitOfWork.Repository<Customer>()
+            var customer = _UnitOfWork.Repository<MyCustomer>()
               .GetSingleDeepIncluding(
                   c => c.Id == id,
                   q => q.Include(c => c.Accounts).ThenInclude(a => a.Certificates),
@@ -55,7 +55,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         [HttpGet]
         public IActionResult Edit(string id)
         {
-            var customer = _UnitOfWork.Repository<Customer>().GetSingleIncluding(c => c.Id == id);
+            var customer = _UnitOfWork.Repository<MyCustomer>().GetSingleIncluding(c => c.Id == id);
             if (customer != null)
             {
                 var customerViewModel = mapper.Map<CustomerViewModel>(customer);
@@ -73,7 +73,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
            
             if( CustomerVM != null && ModelState.IsValid)
             {
-                var CustomerToUpdate = _UnitOfWork.Repository<Customer>().GetSingleIncluding( c=> c.Id == CustomerVM.Id);
+                var CustomerToUpdate = _UnitOfWork.Repository<MyCustomer>().GetSingleIncluding( c=> c.Id == CustomerVM.Id);
                 if (CustomerToUpdate == null)
                 {
                     return NotFound($"No Customer Exist for id : {CustomerVM.Id}");
@@ -82,7 +82,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                 {
                     // (preserves navigation properties &EF Core tracking)
                     CustomerToUpdate = mapper.Map(CustomerVM, CustomerToUpdate);
-                    _UnitOfWork.Repository<Customer>().Update(CustomerToUpdate);
+                    _UnitOfWork.Repository<MyCustomer>().Update(CustomerToUpdate);
                     _UnitOfWork.Complete();
                     return RedirectToAction("Details", new { id = CustomerToUpdate.Id });
                 }
