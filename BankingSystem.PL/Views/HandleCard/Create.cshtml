@@ -1,0 +1,186 @@
+﻿@using BankingSystem.DAL.Models
+@model CreateCardViewModel
+
+@{
+    ViewData["Title"] = "Create New Visa Card";
+    var accounts = ViewBag.Accounts as List<SelectListItem>;
+    bool hasAccounts = accounts != null && accounts.Any();
+}
+
+<style>
+    :root {
+        --primary: #1c4e4f;
+        --light-bg: #f8f9fa;
+        --border: #ced4da;
+        --text: #212529;
+        --danger: #dc3545;
+    }
+
+    .form-container {
+        background: var(--light-bg);
+        padding: 2rem;
+        border-radius: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        max-width: 600px;
+        margin: auto;
+    }
+
+    .form-header {
+        font-size: 1.6rem;
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+        color: var(--primary);
+        text-align: center;
+    }
+
+    .form-group {
+        position: relative;
+        margin-bottom: 1.8rem;
+    }
+
+    .form-control {
+        height: 45px;
+        padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+        font-size: 0.95rem;
+        background-color: white;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(28, 78, 79, 0.1);
+        }
+
+    .floating-label {
+        position: absolute;
+        top: 50%;
+        left: 2.5rem;
+        transform: translateY(-50%);
+        font-size: 0.9rem;
+        color: #6c757d;
+        transition: 0.2s;
+        pointer-events: none;
+        background: white;
+        padding: 0 4px;
+    }
+
+    .form-control:focus + .floating-label,
+    .form-control:not(:placeholder-shown) + .floating-label {
+        top: -10px;
+        font-size: 0.75rem;
+        color: var(--primary);
+    }
+
+    .input-icon {
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        transform: translateY(-50%);
+        font-size: 1rem;
+        color: var(--primary);
+    }
+
+    .form-select {
+        padding-left: 2.5rem !important;
+        height: 45px;
+    }
+
+    .text-danger {
+        font-size: 0.8rem;
+        margin-top: 0.2rem;
+        display: block;
+    }
+
+    .btn {
+        padding: 0.5rem 1.2rem;
+        border-radius: 10px;
+        font-size: 0.95rem;
+    }
+
+    .btn-success {
+        background-color: var(--primary);
+        border: none;
+    }
+
+    .btn-secondary {
+        background-color: #ced4da;
+        border: none;
+        color: var(--text);
+    }
+
+    .no-accounts-msg {
+        text-align: center;
+        font-size: 1.1rem;
+        padding: 2rem;
+        border-radius: 15px;
+        background: #ececec;
+        color: var(--primary);
+    }
+</style>
+
+@if (!hasAccounts)
+{
+    <div class="no-accounts-msg">
+        <i class="fas fa-info-circle fa-2x mb-2"></i><br />
+        There are no accounts available to create a card.
+    </div>
+}
+else
+{
+    <div class="form-container">
+        <div class="form-header">
+            <i class="fas fa-credit-card me-1"></i> Create New Visa Card
+        </div>
+
+        <form asp-action="Create" method="post">
+            <div class="form-group">
+                <i class="fas fa-user input-icon"></i>
+                <select asp-for="AccountId" class="form-control form-select" asp-items="accounts">
+                    <option value="" disabled selected hidden></option>
+                </select>
+                <label class="floating-label">Select Account</label>
+                <span asp-validation-for="AccountId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <i class="fas fa-layer-group input-icon"></i>
+                <select asp-for="CardType" class="form-control form-select" asp-items="Html.GetEnumSelectList<TypeOfCard>()">
+                    <option value="" disabled selected hidden></option>
+                </select>
+                <label class="floating-label">Card Type</label>
+                <span asp-validation-for="CardType" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <i class="fas fa-lock input-icon"></i>
+                <input asp-for="CVV" class="form-control" placeholder=" " />
+                <label class="floating-label">CVV</label>
+                <span asp-validation-for="CVV" class="text-danger"></span>
+            </div>
+
+            <div class="alert alert-warning d-flex align-items-center gap-2" role="alert">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>$70 will be deducted from your account balance upon card creation.</span>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-plus-circle me-1"></i> Create
+                </button>
+                <a asp-action="GetAllCards" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i> Back
+                </a>
+            </div>
+        </form>
+    </div>
+}
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

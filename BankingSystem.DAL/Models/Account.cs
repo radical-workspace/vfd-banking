@@ -34,7 +34,7 @@ namespace BankingSystem.DAL.Models
         
         
         //public long CardId { get; set; }
-        public VisaCard Card { get; set; } = null!;
+        public VisaCard? Card { get; set; } = null!;
 
 
         [ForeignKey(nameof(Customer))]
