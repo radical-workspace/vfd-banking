@@ -2,10 +2,12 @@
 using BankingSystem.DAL.Models;
 using BankingSystem.PL.ViewModels.Customer;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol.Plugins;
+using System.Security.Claims;
 
 namespace BankingSystem.PL.Helpers
 {
-    public class TransferFromAccountToAnother(IUnitOfWork unitOfWork) :Controller
+    public class HandleAccountTransferes(IUnitOfWork unitOfWork) : Controller
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
@@ -36,6 +38,28 @@ namespace BankingSystem.PL.Helpers
             return (senderAccount, receiverAccount, null)!;
         }
 
+
+        public (Account myAccount, IActionResult result) GetAndValidateCurrentAccount(AccountsViewModel model, Transaction transaction)
+        {
+            var accounts = _unitOfWork.Repository<Account>()
+                            .GetAllIncluding(c => c.Customer!, a => a.Card)
+                            .Where(c => c.CustomerId == User.FindFirst(ClaimTypes.NameIdentifier)?.Value!)
+                            .ToList();
+
+            if (!accounts.Any())
+                return (null, FailTransfer(transaction, "No accounts found", "No accounts found."))!;
+            var selectedAccount = accounts.FirstOrDefault(a => a.Number == model.SelectedAccountNumber);
+
+            if (selectedAccount == null)
+                return (null, FailTransfer(transaction, "Selected account not found", "Selected account not found."))!;
+
+            transaction.AccountId = selectedAccount.Id;
+            transaction.CustomerID = selectedAccount.CustomerId!;
+            transaction.AccountDistenationNumber = selectedAccount.Number;
+
+            return (selectedAccount, null)!;
+        }
+
         public ViewResult ValidateTransferRules(
             AccountsViewModel model, Account sender, Account receiver, Transaction transaction)
         {
@@ -51,6 +75,28 @@ namespace BankingSystem.PL.Helpers
 
             if (sender.Balance == 0 || model.Amount == 0)
                 return FailTransfer(transaction, "Invalid amount", "Invalid transfer amount.");
+
+            return null;
+        }
+
+
+        public ViewResult ValidateWithdrawlRules(
+            AccountsViewModel model, Account myAccount, Transaction transaction)
+        {
+            if ((myAccount.Balance <= 0) || (model.Amount <= 0))
+                return FailTransfer(transaction, "Insufficient balance",
+                                                 "Insufficient balance");
+
+            else if ((model.Amount % 50) != 0)
+                return FailTransfer(transaction, "Can only withdraw 50 EGP Or it's multipliers.",
+                                                 "Can only withdraw 50 EGP Or it's multipliers.");
+
+            else if (myAccount.Balance < (model.Amount + 5)) // 5 is for the bank fees
+                return FailTransfer(transaction, "Insufficient balance", "Insufficient balance.");
+
+            else if (model.Amount > 25_000)
+                return FailTransfer(transaction, "AWithdraw amount exceeds the limit. Please visit a branch.",
+                                                 "Withdraw amount exceeds the limit. Please visit a branch.");
 
             return null;
         }
@@ -76,6 +122,29 @@ namespace BankingSystem.PL.Helpers
             catch
             {
                 return FailTransfer(transaction, "Transfer failed", "An error occurred during transfer.");
+            }
+        }
+        public IActionResult ExecuteWithdraw(
+            AccountsViewModel model, Account MyAccount, Transaction transaction
+            )
+        {
+            try
+            {
+                MyAccount.Balance -= model.Amount + 5; // 5 is for the bank fees
+                transaction.Status = TransactionStatus.Accepted;
+                transaction.Payment.Status = PaymentStatus.Paid;
+                transaction.Type = TransactionType.Withdraw;
+                transaction.DoneVia = "Withdraw By Customer";
+
+                _unitOfWork.Repository<Account>().Update(MyAccount);
+                _unitOfWork.Repository<Transaction>().Add(transaction);
+                _unitOfWork.Complete();
+
+                return RedirectToAction("Index", "Home");
+            }
+            catch
+            {
+                return FailTransfer(transaction, "Withdraw failed", "An error occurred during withdraw.");
             }
         }
 

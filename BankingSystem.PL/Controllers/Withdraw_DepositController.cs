@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using BankingSystem.BLL.Interfaces;
+﻿using BankingSystem.BLL.Interfaces;
 using BankingSystem.DAL.Models;
 using BankingSystem.PL.Helpers;
 using BankingSystem.PL.ViewModels.Customer;
@@ -9,13 +8,12 @@ using System.Security.Claims;
 
 namespace BankingSystem.PL.Controllers
 {
-    public class CustomerTransferController(IUnitOfWork unitOfWork, IMapper mapper, HandleAccountTransferes transfereHelper) : Controller
+    public class Withdraw_DepositController(IUnitOfWork unitOfWork, HandleAccountTransferes transference) : Controller
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        private readonly IMapper _mapper = mapper;
-        private readonly HandleAccountTransferes _transfereHelper = transfereHelper;
+        private readonly HandleAccountTransferes _transference = transference;
 
-        public IActionResult TransferMoney()
+        public IActionResult Withdraw()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null) return NotFound("User not found.");
@@ -39,34 +37,30 @@ namespace BankingSystem.PL.Controllers
                     Value = c.Card!.Number.ToString(),
                     Text = $"Card : {c.Card.Number} - Balance: {c.Balance:C}"
                 })],
-                ShowAccounts = true 
+                ShowAccounts = true
             };
-
             return View(viewModel);
         }
 
         [HttpPost]
-        public IActionResult TransferMoney(AccountsViewModel transferMoneyVM)
+        public IActionResult Withdraw(AccountsViewModel model)
         {
-            //private TransferFromAccountToAnother TransfereHelper = new TransferFromAccountToAnother(_unitOfWork);
-            if (!ModelState.IsValid) return View(transferMoneyVM);
 
-            // Initialize transaction
-            var transaction = _transfereHelper.CreatePendingTransaction(transferMoneyVM, User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+            if (!ModelState.IsValid) return View(model);
+            var transaction = _transference.CreatePendingTransaction(model, User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
 
-            // Get accounts
-            var (senderAccount, receiverAccount, validationResult) = _transfereHelper.GetAndValidateAccounts(transferMoneyVM, transaction);
-            if (validationResult != null) return validationResult;
+            // Get the selected account
+            var (MyAccount, ValidationResult) = _transference.GetAndValidateCurrentAccount(model, transaction);
+            if (ValidationResult != null) return ValidationResult;
 
-            // Validate transfer rules
-            validationResult = _transfereHelper.ValidateTransferRules(transferMoneyVM, senderAccount, receiverAccount, transaction);
-            if (validationResult != null) return validationResult;
+            // Validate the withdrawal rules
+            var verifyWithdrawl = _transference.ValidateWithdrawlRules(model, MyAccount, transaction);
+            if (verifyWithdrawl != null) return verifyWithdrawl;
 
-            // Execute transfer
-            return _transfereHelper.ExecuteTransfer(transferMoneyVM, senderAccount, receiverAccount, transaction);
+            // Execute the withdrawal
+            return _transference.ExecuteWithdraw(model, MyAccount, transaction);
         }
-
-
 
     }
 }
+

@@ -47,10 +47,10 @@
         transition: all 0.3s ease;
     }
 
-    .form-control:focus {
-        border-color: var(--accent-1);
-        box-shadow: 0 0 0 0.25rem rgba(222, 174, 159, 0.25);
-    }
+        .form-control:focus {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 0 0.25rem rgba(222, 174, 159, 0.25);
+        }
 
     .validation-message {
         color: var(--accent-1);
@@ -66,10 +66,10 @@
         width: 100%;
     }
 
-    .submit-btn:hover {
-        background-color: var(--primary-dark);
-        transform: translateY(-2px);
-    }
+        .submit-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
 
     .iban-hint {
         font-size: 0.85rem;
@@ -98,14 +98,36 @@
 
     <form asp-action="TransferMoney" method="post">
         @Html.AntiForgeryToken()
-        
+
         <div asp-validation-summary="ModelOnly" class="alert alert-danger validation-message"></div>
 
-        <!-- Source Account -->
-        <div class="mb-4">
-            <label asp-for="AccountNumber" class="form-label">From Account</label>
-            <input asp-for="AccountNumber" class="form-control" placeholder="Enter your account number" />
-            <span asp-validation-for="AccountNumber" class="validation-message"></span>
+        <div class="transfer-options mb-4 text-center">
+            <button type="button" id="showAccounts" class="btn @(Model.ShowAccounts ? "btn-primary" : "btn-outline-dark")">
+                Transfer from Account
+            </button>
+            <button type="button" id="showCards" class="btn @(!Model.ShowAccounts ? "btn-primary" : "btn-outline-dark")">
+                Transfer from Card
+            </button>
+        </div>
+
+        <div id="accountSection" style="@(Model.ShowAccounts ? "display:block" : "display:none")">
+            <div class="mb-3">
+                <label asp-for="SelectedAccountNumber" class="form-label">From Account</label>
+                <select asp-for="SelectedAccountNumber" asp-items="Model.UserAccounts" class="form-control">
+                    <option value="">-- Select Account --</option>
+                </select>
+                <span asp-validation-for="SelectedAccountNumber" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div id="cardSection" style="@(!Model.ShowAccounts ? "display:block" : "display:none")">
+            <div class="mb-3">
+                <label asp-for="SelectedCardNumber" class="form-label">From Card</label>
+                <select asp-for="SelectedCardNumber" asp-items="Model.UserVisaCards" class="form-control">
+                    <option value="">-- Select Card --</option>
+                </select>
+                <span asp-validation-for="SelectedCardNumber" class="text-danger"></span>
+            </div>
         </div>
 
         <!-- Destination IBAN -->
@@ -129,7 +151,7 @@
 
         <!-- Submit Button -->
         <div class="mt-4">
-            <button type="submit" class="btn submit-btn text-white">
+            <button type="submit" class="btn submit-btn text-white ">
                 <i class="fas fa-paper-plane me-2"></i>Transfer Funds
             </button>
         </div>
@@ -137,19 +159,10 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    
-    <script>
-        // Format IBAN as user types
-        document.getElementById('DestinationIban').addEventListener('input', function(e) {
-            // Remove all non-alphanumeric characters
-            let value = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
-            
-            // Add space every 4 characters
-            value = value.replace(/(.{4})/g, '$1 ').trim();
-            
-            // Update the input value
-            e.target.value = value;
-        });
-    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="~/js/TransferMoney.js"></script>
+
 }

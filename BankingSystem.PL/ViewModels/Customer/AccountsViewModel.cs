@@ -1,12 +1,13 @@
 ﻿using BankingSystem.DAL.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BankingSystem.PL.ViewModels.Customer
 {
     public class AccountsViewModel
     {
         public int Id { get; set; }
-        public double? Amount { get; set; }
-        public long AccountNumber { get; set; }
+        public double Amount { get; set; }
+        public long? AccountNumber { get; set; }
 
         /*
           Structure of an IBAN:
@@ -35,11 +36,23 @@ namespace BankingSystem.PL.ViewModels.Customer
 
         public string DestinationIban { get; set; } = null!;
 
-        public string? VisaNumber { get; set; } 
+        public string? VisaNumber { get; set; }
 
-        public string? VisaCVV { get; set; } 
+        public string? VisaCVV { get; set; }
 
         public DateTime VisaExpDate { get; set; }
+
+        // For account selection
+        public long SelectedAccountNumber { get; set; }
+        public List<SelectListItem> UserAccounts { get; set; } = new();
+
+        // For card selection
+        public string SelectedCardNumber { get; set; } = string.Empty;
+        public List<SelectListItem> UserVisaCards { get; set; } = new();
+
+        // To track which option is selected
+        public bool ShowAccounts { get; set; } = true;
+
 
     }
 }
