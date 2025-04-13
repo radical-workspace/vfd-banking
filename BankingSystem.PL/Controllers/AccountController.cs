@@ -109,7 +109,7 @@ namespace BankingSystem.PL.Controllers
                     ApplicationUser appUser;
 
                     // Create the correct derived class based on role
-                    if (UserToRegister.Role == "Customer") appUser = _mapper.Map<Customer>(UserToRegister);
+                    if (UserToRegister.Role == "Customer") appUser = _mapper.Map<MyCustomer>(UserToRegister);
 
                     else if (UserToRegister.Role == "Admin") appUser = _mapper.Map<Admin>(UserToRegister);
                     
