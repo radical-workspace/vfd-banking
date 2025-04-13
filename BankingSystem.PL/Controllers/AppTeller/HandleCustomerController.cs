@@ -72,30 +72,30 @@ namespace BankingSystem.PL.Controllers.AppTeller
         {
 
             //Different Logic By Me
-            var Customerr = _unitOfWork.Repository<Customer>()
-               .GetSingleIncluding(C => C.Id == id, C => C.Branch, C => C.Loans, C => C.Transactions, C => C.SupportTickets, C => C.Accounts);
+            //var Customerr = _unitOfWork.Repository<Customer>()
+            //   .GetSingleIncluding(C => C.Id == id, C => C.Branch, C => C.Loans, C => C.Transactions, C => C.SupportTickets, C => C.Accounts);
 
             //Different Logic By Hady
 
-            //var Customerr = _unitOfWork.Repository<Customer>()
-            //.GetAllIncluding(
-            //    c => c.Transactions,
-            //    c => c.Loans,
-            //    c => c.SupportTickets,
-            //    c => c.Accounts,
-            //    c => c.Branch
-            //)
-            //.FirstOrDefault(c => c.Id == id);
+            var Customerr = _unitOfWork.Repository<Customer>()
+            .GetAllIncluding(
+                c => c.Transactions,
+                c => c.Loans,
+                c => c.SupportTickets,
+                c => c.Accounts,
+                c => c.Branch
+            )
+            .FirstOrDefault(c => c.Id == id);
 
-            //if (Customerr == null)
-            //{
-            //    return NotFound("Customer not found");
-            //}
+            if (Customerr == null)
+            {
+                return NotFound("Customer not found");
+            }
 
-            //Customerr.Accounts = _unitOfWork.Repository<Account>()
-            //    .GetAllIncluding(a => a.Card)
-            //    .Where(a => a.CustomerId == id)
-            //    .ToList();
+            Customerr.Accounts = _unitOfWork.Repository<Account>()
+                .GetAllIncluding(a => a.Card)
+                .Where(a => a.CustomerId == id)
+                .ToList();
 
             var mappedCustomer = _mapper.Map<Customer, CustomerDetailsViewModel>(Customerr);
 

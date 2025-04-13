@@ -69,13 +69,14 @@ namespace BankingSystem.BLL.Repositories
             {
                 query = query.Include(include);
             }
-            if (typeof(T) == typeof(Customer))
-            {
-                query = (query as IQueryable<Customer>)!
-                    .Include(c => c.Accounts)
-                        .ThenInclude(a => a.Card)
-                    as IQueryable<T>;
-            }
+            //if (typeof(T) == typeof(Customer))
+            //{
+            //    query = (query as IQueryable<Customer>)!
+            //        .Include(c => c.Accounts)
+            //            .ThenInclude(a => a.Card)
+            //        as IQueryable<T>;
+
+            //}
             return query.FirstOrDefault(predicate);
         }
 
