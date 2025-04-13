@@ -182,7 +182,7 @@ namespace BankingSystem.PL.Controllers
                             // if the role is Customer 
                             if (await _userManager.IsInRoleAsync(user, "Customer"))
                             {
-                                return RedirectToAction("HomePage", "CustomerHome" , new { id = user.Id }); 
+                                return RedirectToAction("Details", "CustomerProfile", new { id = user.Id }); 
                             }
                             return RedirectToAction("Index", "Home");
                         }

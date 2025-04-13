@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystem.PL.Controllers.AppCustomer
 {
-    public class CustomerLoansController : Controller
+    public class CustomerAccountsController : Controller
     {
         private readonly IUnitOfWork _UnitOfWork;
         private readonly IMapper _mapper;
 
-        public CustomerLoansController(IUnitOfWork UnitOfWork, IMapper mapper)
+        public CustomerAccountsController(IUnitOfWork UnitOfWork, IMapper mapper)
         {
             _UnitOfWork = UnitOfWork;
             _mapper = mapper;
@@ -20,14 +20,14 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         public IActionResult Details(string id)
         {
             var customer = _UnitOfWork.Repository<Customer>()
-                                  .GetSingleIncluding(c => c.Id == id, c => c.Loans);
+                                  .GetSingleIncluding(c => c.Id == id, c => c.Accounts);
 
             if (customer != null)
             {
-                if (customer.Loans?.Any() ?? false)
+                if (customer.Accounts.Any())
                 {
-                    var LoanModel = _mapper.Map<List<CustomerLoansViewModel>>(customer.Loans);
-                    return View(LoanModel);
+                    var AccountsModel = _mapper.Map<List<CustomerAccountsViewModel>>(customer.Accounts);
+                    return View(AccountsModel);
                 }
                 else
                 {
@@ -40,6 +40,5 @@ namespace BankingSystem.PL.Controllers.AppCustomer
             }
 
         }
-
     }
 }

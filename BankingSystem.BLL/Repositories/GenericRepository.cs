@@ -2,6 +2,7 @@
 using BankingSystem.DAL.Data;
 using BankingSystem.DAL.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,7 +73,17 @@ namespace BankingSystem.BLL.Repositories
             return query.FirstOrDefault(predicate);
         }
 
-     
+        public T? GetSingleDeepIncluding(Expression<Func<T, bool>> predicate,params Func<IQueryable<T>, IIncludableQueryable<T, object>>[] includes)
+        {
+            IQueryable<T> query = _dbContext.Set<T>();
+            foreach (var include in includes)
+            {
+                query = include(query);
+            }
+            return query.FirstOrDefault(predicate);
+        }
+
+
     }
 }
 

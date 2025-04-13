@@ -170,16 +170,22 @@
                             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="CustomerHome" asp-action="HomePage" asp-route-id="@userId">Home</a>
+                                <a class="nav-link" asp-area="" asp-controller="CustomerProfile" asp-action="Details" asp-route-id="@userId">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="CustomerHome" asp-action="Cards" asp-route-id="@userId">Cards</a>
+                                <a class="nav-link" asp-area="" asp-controller="CustomerAccounts" asp-action="Details" asp-route-id="@userId">Accounts</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="CustomerHome" asp-action="Loans" asp-route-id="@userId">Loans</a>
+                                <a class="nav-link" asp-area="" asp-controller="CustomerCards" asp-action="Details" asp-route-id="@userId">Cards</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="CustomerHome" asp-action="Certificates" asp-route-id="@userId">Certificates</a>
+                                <a class="nav-link" asp-area="" asp-controller="CustomerLoans" asp-action="Details" asp-route-id="@userId">Loans</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="CustomerCertificates" asp-action="Details" asp-route-id="@userId">Certificates</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="CustomerSupportTickets" asp-action="Details" asp-route-id="@userId">Support Tickets</a>
                             </li>
                         }
                     </ul>

@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace BankingSystem.DAL.Migrations.Development
+namespace BankingSystem.DAL.Migrations
 {
-    /// <inheritdoc />
-    public partial class Test : Migration
+    /// <inheritdoc /> 
+    public partial class final : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,8 +31,8 @@ namespace BankingSystem.DAL.Migrations.Development
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     SSN = table.Column<long>(type: "bigint", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     Address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     JoinDate = table.Column<DateTime>(type: "date", nullable: false, defaultValueSql: "GETDATE()"),
                     BirthDate = table.Column<DateTime>(type: "date", nullable: false),
@@ -56,6 +56,21 @@ namespace BankingSystem.DAL.Migrations.Development
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Banks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    CentralAddress = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Banks", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -165,55 +180,12 @@ namespace BankingSystem.DAL.Migrations.Development
                 });
 
             migrationBuilder.CreateTable(
-                name: "Accounts",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Balance = table.Column<decimal>(type: "decimal(18,4)", nullable: true, defaultValue: 0m),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AccountType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AccountStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    BranchId = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Accounts", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Certificates",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CertificateNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    IssueDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
-                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
-                    InterestRate = table.Column<double>(type: "float", nullable: false),
-                    AccountId = table.Column<int>(type: "int", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Certificates", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Certificates_Accounts_AccountId",
-                        column: x => x.AccountId,
-                        principalTable: "Accounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Admins",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    BranchId = table.Column<int>(type: "int", nullable: true)
+                    Salary = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    BankId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -224,22 +196,11 @@ namespace BankingSystem.DAL.Migrations.Development
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Banks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    CentralAddress = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    ManagerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Banks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Admins_Banks_BankId",
+                        column: x => x.BankId,
+                        principalTable: "Banks",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -248,9 +209,10 @@ namespace BankingSystem.DAL.Migrations.Development
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Location = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Opens = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Closes = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Opens = table.Column<TimeSpan>(type: "time", nullable: false),
+                    Closes = table.Column<TimeSpan>(type: "time", nullable: false),
                     BankId = table.Column<int>(type: "int", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
@@ -293,6 +255,7 @@ namespace BankingSystem.DAL.Migrations.Development
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Salary = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     BranchId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -318,7 +281,7 @@ namespace BankingSystem.DAL.Migrations.Development
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Currency = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Balance = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
+                    Balance = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     BranchId = table.Column<int>(type: "int", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
@@ -331,6 +294,63 @@ namespace BankingSystem.DAL.Migrations.Development
                         principalTable: "Branches",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Accounts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Number = table.Column<long>(type: "bigint", nullable: false),
+                    Balance = table.Column<decimal>(type: "decimal(18,4)", nullable: true, defaultValue: 0m),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AccountType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AccountStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    BranchId = table.Column<int>(type: "int", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Accounts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Accounts_Branches_BranchId",
+                        column: x => x.BranchId,
+                        principalTable: "Branches",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Accounts_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Departments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "200, 1"),
+                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    ManagerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    BranchId = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Departments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Departments_Branches_BranchId",
+                        column: x => x.BranchId,
+                        principalTable: "Branches",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Departments_Managers_ManagerId",
+                        column: x => x.ManagerId,
+                        principalTable: "Managers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -365,13 +385,38 @@ namespace BankingSystem.DAL.Migrations.Development
                 });
 
             migrationBuilder.CreateTable(
+                name: "Certificates",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CertificateNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    IssueDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    InterestRate = table.Column<double>(type: "float", nullable: false),
+                    AccountId = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Certificates", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Certificates_Accounts_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Accounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Loans",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    LoanAmount = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
-                    CurrentDebt = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
+                    LoanAmount = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    CurrentDebt = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     InterestRate = table.Column<int>(type: "int", nullable: false),
                     DurationInMonth = table.Column<int>(type: "int", nullable: false),
                     LoanStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -405,61 +450,14 @@ namespace BankingSystem.DAL.Migrations.Development
                 });
 
             migrationBuilder.CreateTable(
-                name: "Departments",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "200, 1"),
-                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    ManagerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    BranchId = table.Column<int>(type: "int", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Departments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Departments_Branches_BranchId",
-                        column: x => x.BranchId,
-                        principalTable: "Branches",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Departments_Managers_ManagerId",
-                        column: x => x.ManagerId,
-                        principalTable: "Managers",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Payment",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Amount = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
-                    PaymentDate = table.Column<DateTime>(type: "date", nullable: false, defaultValueSql: "GETDATE()"),
-                    LoanId = table.Column<int>(type: "int", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Payment", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Payment_Loans_LoanId",
-                        column: x => x.LoanId,
-                        principalTable: "Loans",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Tellers",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Salary = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     BranchId = table.Column<int>(type: "int", nullable: true),
-                    DeptId = table.Column<int>(type: "int", nullable: true)
+                    DeptId = table.Column<int>(type: "int", nullable: true),
+                    ManagerId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -479,6 +477,64 @@ namespace BankingSystem.DAL.Migrations.Development
                         name: "FK_Tellers_Departments_DeptId",
                         column: x => x.DeptId,
                         principalTable: "Departments",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Tellers_Managers_ManagerId",
+                        column: x => x.ManagerId,
+                        principalTable: "Managers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Payment",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Amount = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    PaymentDate = table.Column<DateTime>(type: "date", nullable: false, defaultValueSql: "GETDATE()"),
+                    LoanId = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Payment", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Payment_Loans_LoanId",
+                        column: x => x.LoanId,
+                        principalTable: "Loans",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SupportTickets",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Response = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    TellerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SupportTickets", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SupportTickets_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_SupportTickets_Tellers_TellerId",
+                        column: x => x.TellerId,
+                        principalTable: "Tellers",
                         principalColumn: "Id");
                 });
 
@@ -517,37 +573,6 @@ namespace BankingSystem.DAL.Migrations.Development
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "SupportTickets",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Response = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    TellerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SupportTickets", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_SupportTickets_Customers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_SupportTickets_Tellers_TellerId",
-                        column: x => x.TellerId,
-                        principalTable: "Tellers",
-                        principalColumn: "Id");
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Accounts_BranchId",
                 table: "Accounts",
@@ -559,9 +584,11 @@ namespace BankingSystem.DAL.Migrations.Development
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Admins_BranchId",
+                name: "IX_Admins_BankId",
                 table: "Admins",
-                column: "BranchId");
+                column: "BankId",
+                unique: true,
+                filter: "[BankId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -601,11 +628,6 @@ namespace BankingSystem.DAL.Migrations.Development
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Banks_ManagerId",
-                table: "Banks",
-                column: "ManagerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Branches_BankId",
@@ -660,7 +682,9 @@ namespace BankingSystem.DAL.Migrations.Development
             migrationBuilder.CreateIndex(
                 name: "IX_Managers_BranchId",
                 table: "Managers",
-                column: "BranchId");
+                column: "BranchId",
+                unique: true,
+                filter: "[BranchId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Payment_LoanId",
@@ -693,6 +717,11 @@ namespace BankingSystem.DAL.Migrations.Development
                 column: "DeptId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Tellers_ManagerId",
+                table: "Tellers",
+                column: "ManagerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Transactions_AccountId",
                 table: "Transactions",
                 column: "AccountId");
@@ -706,44 +735,11 @@ namespace BankingSystem.DAL.Migrations.Development
                 name: "IX_Transactions_PaymentId",
                 table: "Transactions",
                 column: "PaymentId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Accounts_Branches_BranchId",
-                table: "Accounts",
-                column: "BranchId",
-                principalTable: "Branches",
-                principalColumn: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Accounts_Customers_CustomerId",
-                table: "Accounts",
-                column: "CustomerId",
-                principalTable: "Customers",
-                principalColumn: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Admins_Branches_BranchId",
-                table: "Admins",
-                column: "BranchId",
-                principalTable: "Branches",
-                principalColumn: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Banks_Managers_ManagerId",
-                table: "Banks",
-                column: "ManagerId",
-                principalTable: "Managers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Managers_Branches_BranchId",
-                table: "Managers");
-
             migrationBuilder.DropTable(
                 name: "Admins");
 
@@ -793,22 +789,22 @@ namespace BankingSystem.DAL.Migrations.Development
                 name: "Loans");
 
             migrationBuilder.DropTable(
+                name: "Managers");
+
+            migrationBuilder.DropTable(
                 name: "Accounts");
 
             migrationBuilder.DropTable(
                 name: "Customers");
 
             migrationBuilder.DropTable(
+                name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
                 name: "Branches");
 
             migrationBuilder.DropTable(
                 name: "Banks");
-
-            migrationBuilder.DropTable(
-                name: "Managers");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUsers");
         }
     }
 }

@@ -2,9 +2,11 @@
 using BankingSystem.DAL.Data;
 using BankingSystem.DAL.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -78,5 +80,15 @@ namespace BankingSystem.BLL.Services
             throw new NotImplementedException();
         }
 
+        // added this method in generic repository
+        public Account? GetSingleDeepIncluding(Expression<Func<Account, bool>> predicate, params Func<IQueryable<Account>, IIncludableQueryable<Account, object>>[] includes)
+        {
+            IQueryable<Account> query = _context.Set<Account>();
+            foreach (var include in includes)
+            {
+                query = include(query);
+            }
+            return query.FirstOrDefault(predicate);
+        }
     }
 }

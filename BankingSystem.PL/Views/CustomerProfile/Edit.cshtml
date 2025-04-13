@@ -1,0 +1,127 @@
+﻿@using BankingSystem.PL.ViewModels.Customer
+@model CustomerViewModel
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<link rel="stylesheet" href="/css/CustomerEdit.css" />
+
+<div class="profile-container">
+    <!-- Edit Header -->
+    <div class="edit-header">
+        <h3><i class="bi bi-pencil-square me-2"></i>Edit Your Profile</h3>
+        <p>Update your personal information below</p>
+    </div>
+
+    <!-- Edit Form Card -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4>Personal Information</h4>
+            <span class="badge bg-primary">Customer Profile</span>
+        </div>
+        <div class="card-body">
+            <form id="editProfileForm" asp-action="Edit" method="post">
+                <div class="row">
+
+                    <input type="hidden" asp-for="Id" />
+
+                    <!-- First Name -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="FirstName"></label>
+                            <i class="bi bi-person-fill input-icon"></i>
+                            <input asp-for="FirstName" class="form-control">
+                            <span asp-validation-for="FirstName" class="text-bg-danger" ></span>
+                            <div class="field-highlight"></div>
+                        </div>
+                    </div>
+
+                    <!-- Last Name -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="LastName"></label>
+                            <i class="bi bi-person-fill input-icon"></i>
+                            <input asp-for="LastName" class="form-control">
+                            <span asp-validation-for="LastName" class="text-bg-danger"></span>
+                            <div class="field-highlight"></div>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Email"></label>
+                            <i class="bi bi-envelope-fill input-icon"></i>
+                            <input asp-for="Email" class="form-control">
+                            <span asp-validation-for="Email" class="text-bg-danger"></span>
+                            <div class="field-highlight"></div>
+                        </div>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="PhoneNumber"></label>
+                            <i class="bi bi-telephone-fill input-icon"></i>
+                            <input asp-for="PhoneNumber" class="form-control">
+                            <span asp-validation-for="PhoneNumber" class="text-bg-danger"></span>
+                            <div class="field-highlight"></div>
+                        </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label asp-for="Address"></label>
+                            <i class="bi bi-geo-alt-fill input-icon"></i>
+                            <input asp-for="Address" class="form-control">
+                            <span asp-validation-for="Address" class="text-bg-danger"></span>
+                            <div class="field-highlight"></div>
+                        </div>
+                    </div>
+
+                    <!-- Birth Date -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="BirthDate"></label>
+                            <i class="bi bi-calendar-date-fill input-icon"></i>
+                            <input asp-for="BirthDate" class="form-control">
+                            <span asp-validation-for="BirthDate" class="text-bg-danger"></span>
+                            <div class="field-highlight"></div>
+                        </div>
+                    </div>
+
+                    <!-- Join Date (Read Only) -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="JoinDate"></label>
+                            <i class="bi bi-calendar-check-fill input-icon"></i>
+                            <input asp-for="JoinDate" class="form-control readonly" readonly>
+                            <span asp-validation-for="JoinDate" class="text-bg-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <a asp-action="Details" asp-route-id = "@Model.Id" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle me-2"></i>Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle me-2"></i>Save changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <small>&copy; 2025 SecureBank. All rights reserved.</small>
+    </div>
+</div>
+
+@section Scripts 
+{
+    <partial name="_ValidationScriptsPartial" />
+}
