@@ -86,14 +86,17 @@ namespace BankingSystem.PL.Controllers.AppTeller
             string generatedCardNumber = string.Concat(Enumerable.Range(0, 16)
                 .Select(_ => random.Next(0, 10).ToString()));
 
-           
+            string generatedCVV = string.Concat(Enumerable.Range(0, 3)
+              .Select(_ => random.Next(0, 10).ToString()));
+
+
             var creationDate = DateTime.Now;
             var expDate = creationDate.AddYears(7);
 
             var newCard = new VisaCard
             {
                 Number = generatedCardNumber,
-                CVV = vm.CVV, 
+                CVV = generatedCVV, 
                 ExpDate = expDate,
                 CreationDate = creationDate,
                 CardType = vm.CardType,
