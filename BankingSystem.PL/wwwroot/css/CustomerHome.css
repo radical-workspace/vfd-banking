@@ -1,0 +1,175 @@
+﻿.profile-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    padding: 30px;
+}
+
+.welcome-section {
+    background-color: #f1f8ff;
+    border-left: 4px solid #0d6efd;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 25px;
+}
+
+.info-card {
+    transition: transform 0.2s;
+    height: 100%;
+}
+
+    .info-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+.card-icon {
+    font-size: 2.5rem;
+    color: #0d6efd;
+}
+
+.customer-details {
+    margin-bottom: 25px;
+}
+
+.detail-card {
+    border-radius: 8px;
+    border: 1px solid rgba(0,0,0,0.08);
+    padding: 12px;
+    height: 100%;
+    transition: all 0.3s ease;
+    background-color: #fff;
+}
+
+    .detail-card:hover {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        border-color: rgba(13, 110, 253, 0.3);
+    }
+
+.detail-icon {
+    width: 36px;
+    height: 36px;
+    background-color: #e7f1ff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    color: #0d6efd;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.premium-badge {
+    background: linear-gradient(45deg, #0d6efd, #0a58ca);
+    color: white;
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.support-section {
+    margin-top: 25px;
+}
+
+.detail-label {
+    color: #6c757d;
+    font-size: 0.75rem;
+    margin-bottom: 2px;
+}
+
+.detail-value {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #212529;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.detail-content {
+    min-width: 0;
+}
+
+.account-card {
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.08);
+    padding: 20px;
+    height: 100%;
+    transition: all 0.3s ease;
+    background-color: #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+    .account-card:hover {
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        border-color: rgba(13, 110, 253, 0.2);
+        transform: translateY(-5px);
+    }
+
+.account-icon {
+    width: 50px;
+    height: 50px;
+    background-color: #e7f1ff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0d6efd;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.account-balance {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #212529;
+    margin: 10px 0;
+}
+
+.account-number {
+    color: #6c757d;
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+}
+
+.account-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.account-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle at top right, rgba(13, 110, 253, 0.1), transparent 70%);
+    border-radius: 0 0 0 100%;
+    z-index: 0;
+}
+
+.account-details {
+    position: relative;
+    z-index: 1;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}

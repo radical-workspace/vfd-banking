@@ -1,0 +1,55 @@
+﻿@using BankingSystem.PL.ViewModels.Auth
+@model RegisterViewModel
+
+@{
+    ViewData["Title"] = "Create Account";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow rounded-4 border-0">
+                <div class="card-header bg-primary text-white rounded-top-4">
+                    <!-- Render the Header Selection Partial View -->
+                    <partial name="_headerForRegisteration_Partial" />
+                </div>
+                <div class="card-body px-5 py-4">
+                    @if (ViewData["FixedRole"] == "Customer")
+                    {
+                        <form asp-action="CreateCustomer" asp-controller="HandleCustomer" method="post" class="row g-3">
+
+                            <partial name="_RegisterationPartial" />
+
+
+                        </form>
+                    }
+                    else if (ViewData["FixedRole"] == "Teller")
+                    {
+                        <form asp-action="CreateTeller" asp-controller="ManagerTeller" method="post" class="row g-3">
+
+                            <partial name="_RegisterationPartial" />
+
+
+                        </form>
+                    }
+
+                    else
+                    {
+                        <form asp-controller="Account" asp-action="Register" method="post" class="row g-3">
+
+                            <partial name="_RegisterationPartial" />
+
+                        </form>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

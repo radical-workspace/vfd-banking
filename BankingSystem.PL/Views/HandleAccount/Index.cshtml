@@ -1,0 +1,96 @@
+﻿@model IEnumerable<BankingSystem.DAL.Models.Account>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary px-5 my-2">Create Account</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Number)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Balance)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AccountType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AccountStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Branch)
+            </th>
+            @* <th> *@
+            @*     @Html.DisplayNameFor(model => model.IsDeleted) *@
+            @* </th> *@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                @Html.DisplayFor(modelItem => item.Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Balance)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccountType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccountStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Branch.Name)
+            </td>
+            @* <td> *@
+            @*     @Html.DisplayFor(modelItem => item.IsDeleted) *@
+            @* </td> *@
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                @* <a asp-action="Delete" asp-route-id="@item.Id" class="dlt">Delete</a> *@
+
+                <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+
+<script>
+    for(let i = 0; i < document.forms.length; i++)
+    {
+        document.forms[i].addEventListener("submit", (event) => {
+            var msg = confirm("Are you sure you want to delete this Order?");
+
+            if(msg == false)
+                event.preventDefault();
+        });
+    }
+</script>
+

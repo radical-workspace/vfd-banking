@@ -1,0 +1,26 @@
+﻿@using System.Security.Claims
+@model BankingSystem.PL.ViewModels.Manager.TellerDetailsViewModel
+
+@{
+    ViewData["Title"] = "Teller Details";
+    var ManagerId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+}
+
+<h2>Teller Details</h2>
+
+<div class="card">
+    <div class="card-body">
+        <p> <strong>Teller Name:</strong> @Model.FirstName @Model.LastName</p>
+        <p><strong>Email:</strong> @Model.Email</p>
+        <p><strong>Phone Number:</strong> @Model.PhoneNumber</p>
+        <p><strong>Branch:</strong> @Model.BranchName</p>
+        <p><strong>Department:</strong> @Model.DepartmentName</p> 
+        <p><strong>SSN:</strong> @Model.SSN</p>
+        <p><strong>Address:</strong> @Model.Address</p>
+        <p><strong>Join Date:</strong> @Model.JoinDate.ToString("yyyy-MM-dd")</p>
+        <p><strong>Birth Date:</strong> @Model.BirthDate.ToString("yyyy-MM-dd")</p>
+        <p><strong>Salary:</strong> @Model.Salary</p>
+    </div>
+</div>
+
+<a asp-action="GetAllTellers" asp-route-id="@ManagerId" class="btn btn-secondary mt-3">Back to List</a>

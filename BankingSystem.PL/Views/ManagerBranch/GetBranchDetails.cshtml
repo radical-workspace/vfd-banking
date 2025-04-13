@@ -1,0 +1,292 @@
+﻿@using BankingSystem.PL.ViewModels.Manager
+@using System.Security.Claims
+@model BranchDetailsViewModel
+
+@{
+    ViewData["Title"] = "Branch Details";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-sm rounded-3 border-0">
+                <div class="card-header bg-primary text-white rounded-top-3 py-3">
+                    <h3 class="mb-0 text-center fw-bold">
+                        <i class="bi bi-bank me-2"></i>Branch Details
+                    </h3>
+                </div>
+                <div class="card-body px-4 py-4">
+                    @* <form asp-action="UpdateBranch" method="post" class="row g-3"> *@
+                    @*     <input type="hidden" asp-for="Id" /> *@
+
+                    <!-- Basic Information Section -->
+                    <div class="col-12">
+                        <h5 class="fw-bold text-primary mb-3 pb-2 border-bottom">
+                            <i class="bi bi-info-circle me-2"></i>Basic Information
+                        </h5>
+                    </div>
+
+                    <!-- Branch -->
+                    <div class="row">
+
+                        <!-- Branch Name -->
+                        <div class="col-md-6">
+                            <label asp-for="Name" class="form-label fw-semibold">Branch Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-building"></i></span>
+                                <input asp-for="Name" class="form-control rounded-end" readonly />
+                            </div>
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Location -->
+                        <div class="col-md-6">
+                            <label asp-for="Location" class="form-label fw-semibold">Location</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-geo-alt"></i></span>
+                                <input asp-for="Location" class="form-control rounded-end" readonly />
+                            </div>
+                            <span asp-validation-for="Location" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- Operating Hours Section -->
+                    <div class="col-12 mt-4">
+                        <h5 class="fw-bold text-primary mb-3 pb-2 border-bottom">
+                            <i class="bi bi-clock me-2"></i>Operating Hours
+                        </h5>
+                    </div>
+
+                    <!-- Business Hours Form -->
+                    <form asp-action="EditBusinessHours" method="post" id="businessHoursForm">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="Timing.BranchId" value="@Model.Id" />
+
+                        <!-- Opening Time -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label asp-for="Opens" class="form-label fw-semibold">Opening Time</label>
+                                <div class="input-group opening-time">
+                                    <span class="input-group-text bg-light"><i class="bi bi-sun"></i></span>
+                                    <input asp-for="Opens" type="time" class="form-control rounded-end" readonly id="Opens" name="Timing.Opens" />
+                                </div>
+                                <span asp-validation-for="Opens" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Closing Time -->
+                            <div class="col-md-6">
+                                <label asp-for="Closes" class="form-label fw-semibold">Closing Time</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="bi bi-moon"></i></span>
+                                    <input asp-for="Closes" type="time" class="form-control rounded-end" readonly id="Closes" name="Timing.Closes" />
+                                </div>
+                                <span asp-validation-for="Closes" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Edit Business Hours Button -->
+                        <div class="col-12 text-center mt-2">
+
+                            <button type="button" class="btn btn-outline-primary rounded-pill px-4 edit-btn">
+                                <i class="bi bi-pencil-square me-2"></i>
+                                <span class="btn-text">Edit Business Hours</span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Related Entities Section -->
+                    <div class="col-12 mt-4">
+                        <h5 class="fw-bold text-primary mb-3 pb-2 border-bottom">
+                            <i class="bi bi-diagram-3 me-2"></i>Related Entities
+                        </h5>
+                    </div>
+
+                    <!-- Cards for Related Entities -->
+                    <div class="row g-3">
+                        <!-- Loans Card -->
+                        <div class="col-md-6">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0 fw-semibold">
+                                        <i class="bi bi-cash-coin me-2"></i>Loans
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    @if (Model.Loans != null && Model.Loans.Any())
+                                    {
+                                        <ul class="list-group list-group-flush small">
+                                            @foreach (var loan in Model.Loans.Take(3))
+                                            {
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    <span>@loan.LoanAmount.ToString("C")</span>
+                                                    <span class="badge bg-secondary">@loan.CurrentDebt.ToString("C")</span>
+                                                </li>
+                                            }
+                                        </ul>
+                                        <div class="text-end mt-2">
+                                            <button class="btn btn-sm btn-outline-primary">View All (@Model.Loans.Count)</button>
+                                        </div>
+
+                                    }
+                                    else
+                                    {
+                                        <p class="text-muted small mb-0">No loans available</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Customers Card -->
+                        <div class="col-md-6">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0 fw-semibold">
+                                        <i class="bi bi-people me-2"></i>Customers
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    @if (Model.Customers != null && Model.Customers.Any())
+                                    {
+                                        <ul class="list-group list-group-flush small">
+                                            @foreach (var customer in Model.Customers.Take(3))
+                                            {
+                                                <li class="list-group-item">
+                                                    <i class="bi bi-person me-2"></i>@customer.FirstName @customer.LastName
+                                                </li>
+                                            }
+                                        </ul>
+                                        <div class="text-end mt-2">
+                                            <button class="btn btn-sm btn-outline-primary">View All (@Model.Customers.Count)</button>
+                                        </div>
+
+                                    }
+                                    else
+                                    {
+                                        <p class="text-muted small mb-0">No customers available</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tellers Card -->
+                        <div class="col-md-6">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0 fw-semibold">
+                                        <i class="bi bi-person-badge me-2"></i>Tellers
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    @if (Model.Tellers != null && Model.Tellers.Any())
+                                    {
+                                        <ul class="list-group list-group-flush small">
+                                            @foreach (var teller in Model.Tellers.Take(3))
+                                            {
+                                                <li class="list-group-item">
+                                                    <i class="bi bi-person-vcard me-2"></i>@teller.FirstName @teller.LastName
+                                                </li>
+                                            }
+                                        </ul>
+
+                                        <div class="text-end mt-2">
+                                            <button class="btn btn-sm btn-outline-primary">View All (@Model.Tellers.Count)</button>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <p class="text-muted small mb-0">No tellers available</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Departments Card -->
+                        <div class="col-md-6">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0 fw-semibold">
+                                        <i class="bi bi-building-gear me-2"></i>Departments
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    @if (Model.Departments != null && Model.Departments.Any())
+                                    {
+                                        <ul class="list-group list-group-flush small">
+                                            @foreach (var department in Model.Departments.Take(3))
+                                            {
+                                                <li class="list-group-item">
+                                                    <i class="bi bi-collection me-2"></i>@department.Name
+                                                </li>
+                                            }
+                                        </ul>
+
+                                        <div class="text-end mt-2">
+                                            <button class="btn btn-sm btn-outline-primary">View All (@Model.Departments.Count)</button>
+                                        </div>
+
+                                    }
+                                    else
+                                    {
+                                        <p class="text-muted small mb-0">No departments available</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Savings Card (Full Width) -->
+                        <div class="col-12">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0 fw-semibold">
+                                        <i class="bi bi-piggy-bank me-2"></i>Savings Accounts
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    @if (Model.Savings != null && Model.Savings.Any())
+                                    {
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Account</th>
+                                                        <th>Currency</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var saving in Model.Savings.Take(5))
+                                                    {
+                                                        <tr>
+                                                            <td>@saving.Currency</td>
+                                                            <td>@saving.Balance.ToString("C")</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                            <div class="text-end mt-2">
+                                                <a asp-controller="ManagerSavings" asp-action="GetAllSavings" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value" class="btn btn-sm btn-outline-primary">
+                                                    View All (@Model.Savings.Count)
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <p class="text-muted small mb-0">No savings accounts available</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/EditWorkingTime.js"></script>
+
+}
