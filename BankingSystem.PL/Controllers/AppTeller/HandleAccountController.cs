@@ -69,7 +69,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
         // POST: HandleAccountController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
+       
         public IActionResult Create(Account account, string customerId)
         {
             ViewBag.Customer = _genericRepositoryCust.GetAll(customerId).FirstOrDefault();

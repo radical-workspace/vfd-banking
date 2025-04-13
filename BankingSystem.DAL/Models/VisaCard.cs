@@ -25,13 +25,9 @@ namespace BankingSystem.DAL.Models
         public TypeOfCard CardType { get; set; }
 
         [ForeignKey(nameof(Account))]
-        public int AccountId { get; set; }
-        public Account Account { get; set; } = null!;
-
-        //[ForeignKey(nameof(Customer))]
-        //public string? CustomerId { get; set; }
-        //public Customer Customer { get; set; } = null!;
-
+        public int? AccountId { get; set; }
+        public Account? Account { get; set; } = null!;
+        public long AccountNumber { get; set; } 
 
 
 

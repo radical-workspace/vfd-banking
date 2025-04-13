@@ -95,7 +95,7 @@ namespace BankingSystem.PL.Helpers
                     {
                         TransactionType = t.Type.ToString()
                     }).ToList()
-                    : new List<TransactionDetail> { new TransactionDetail { TransactionType = "No transactions available" } }));
+                    : new List<TransactionDetail> { new TransactionDetail { TransactionType = "No transactions available" } })) ;
 
                     //.ForMember(dest => dest.CertificateDetails, opt => opt.MapFrom(src =>
                     //    src.Accounts != null && src.Accounts.SelectMany(a => a.Certificates).Any()
@@ -178,6 +178,13 @@ namespace BankingSystem.PL.Helpers
             .ForMember(dest => dest.VisaCVV, opt => opt.MapFrom(src => src.Card.CVV))
             .ForMember(dest => dest.VisaExpDate, opt => opt.MapFrom(src => src.Card.ExpDate))
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
+
+            CreateMap<VisaCard, CardsViewModel>()
+
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.CardType, opt => opt.MapFrom(src => src.CardType.ToString()))
+            .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Account.Customer.UserName))
+            .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.Account.Number));
         }
 
 

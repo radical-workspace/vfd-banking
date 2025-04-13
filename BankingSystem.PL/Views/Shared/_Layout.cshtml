@@ -216,6 +216,9 @@
 
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="HandleAccount" asp-action="Index">Accounts</a>
+                            </li> 
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="HandleCard" asp-action="GetAllCards">Cards</a>
                             </li>
                         }
 
@@ -301,6 +304,8 @@
 
     @await RenderSectionAsync("Scripts", required: false)
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+
 
 </body>
 </html>
