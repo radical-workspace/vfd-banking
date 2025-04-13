@@ -45,16 +45,13 @@ namespace BankingSystem.PL.Helpers
 
             CreateMap<Customer, CustomersViewModel>()
                     .ForMember(dest => dest.Branch, s => s.MapFrom(s => s.Branch.Name));
-
             CreateMap<Customer, CustomerDetailsViewModel>()
-                    .ForMember(dest => dest.Branch, s => s.MapFrom(s => s.Branch.Name))
-                    .ForMember(dest => dest.Branch, opt => opt.MapFrom(src => src.Branch.Name))
-                    .ForMember(dest => dest.AccountNumbers, opt => opt.MapFrom(src => src.Accounts.Select(a => a.Number)))
-                    .ForMember(dest => dest.LoanTypes, opt => opt.MapFrom(src => src.Loans.Select(l => l.LoanType)))
-                    //.ForMember(dest => dest.CardTypes, opt => opt.MapFrom(src => src.Card.Select(c => c.CardType)))
-                    .ForMember(dest => dest.TransactionDescriptions, opt => opt.MapFrom(src => src.Transactions.Select(t => t.DoneVia)))
-                    .ForMember(dest => dest.TicketSubjects, opt => opt.MapFrom(src => src.SupportTickets.Select(s => s.Description)))
-                    .ReverseMap();
+                .ForMember(dest => dest.Branch, opt => opt.MapFrom(src => src.Branch.Name))
+                .ForMember(dest => dest.Accounts, opt => opt.MapFrom(src => src.Accounts))
+                .ForMember(dest => dest.Loans, opt => opt.MapFrom(src => src.Loans))
+                .ForMember(dest => dest.Transactions, opt => opt.MapFrom(src => src.Transactions))
+                .ForMember(dest => dest.Tickets, opt => opt.MapFrom(src => src.SupportTickets));
+
 
             CreateMap<Customer, ManagerCustomerDetailsViewModel>()
                 .ForMember(dest => dest.LoanDetails, opt => opt.MapFrom(src => src.Loans != null && src.Loans.Any()
