@@ -17,7 +17,7 @@ namespace BankingSystem.DAL.Models
         public List<Teller> Tellers { get; set; } = null!;
         public List<Department> Departments { get; set; } = null!;
         public List<Savings> Savings  { get; set; } = null!;
-
+        public ICollection<Reservation> Reservations { get; set; } = new HashSet<Reservation>();
         public Manager? MyManager { get; set; } = null!;
 
     }

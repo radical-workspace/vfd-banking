@@ -35,6 +35,11 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
         }
 
+        .qr-code {
+            max-width: 150px;
+            max-height: 150px;
+            margin-bottom: 20px;
+        }
         .navbar-brand {
             color: var(--accent-3) !important;
             font-weight: 700;
@@ -225,6 +230,9 @@
                         <li class="nav-item">
                             <a class="nav-link bogus" asp-area="" asp-controller="BogusData" asp-action="CreateBogusData">Create Bogus Data</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Reservation" asp-action="CreateReservation">Reservations</a>
+                        </li>
 
                         @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Customer"))
                         {
@@ -241,6 +249,9 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="CustomerHome" asp-action="Certificates" asp-route-id="@userId">Certificates</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Reservation" asp-action="CreateReservation" >Reservations</a>
                             </li>
                         }
                     </ul>

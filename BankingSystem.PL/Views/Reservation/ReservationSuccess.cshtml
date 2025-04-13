@@ -1,0 +1,55 @@
+﻿@model BankingSystem.DAL.Models.Reservation
+@{
+    ViewData["Title"] = "Reservation Success";
+}
+<h2 class="text-center my-4">Reservation Details</h2>
+
+<div class="alert alert-success">
+    <strong>Success!</strong> Your reservation has been created successfully.
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">Reservation Information</h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li><strong>Reservation ID:</strong> @Model.Id</li>
+                    <li><strong>Branch:</strong> @Model.Branch?.Name</li>
+                    <li><strong>Reservation Date:</strong> @Model.ReservationDate.ToString("dd MMM yyyy")</li>
+                    <li><strong>Service Type:</strong> @Model.ServiceType</li>
+                    <li><strong>Notes:</strong> @Model.Notes</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mt-4 mt-md-0">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h4 class="card-title mb-0">QR Code</h4>
+            </div>
+            <div class="card-body text-center">
+                @if (ViewBag.QrCodeImage != null)
+                {
+                    <img src="data:image/png;base64,@ViewBag.QrCodeImage" alt="QR Code" class="img-fluid qr-code" />
+                    <br />
+                    <br />
+                    <a href="@Url.Action("DownloadQrCode", "Reservation", new { reservationId = Model.Id })" class="btn btn-success">Download QR Code</a>
+                }
+                else
+                {
+                    <p>No QR code available.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="text-center mt-4">
+    <a href="@Url.Action("CreateReservation", "Reservation")" class="btn btn-primary">Back to Reservation</a>
+</div>
+
