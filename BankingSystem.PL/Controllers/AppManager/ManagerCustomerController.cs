@@ -49,7 +49,6 @@ namespace BankingSystem.PL.Controllers.AppManager
                     c => c.Loans,
                     c => c.SupportTickets,
                     c => c.Accounts,
-                    //c => c.Cards,
                     c => c.Branch
                 )
                 .FirstOrDefault(c => c.Id == id);
@@ -60,7 +59,7 @@ namespace BankingSystem.PL.Controllers.AppManager
             }
 
             customer.Accounts = _unitOfWork.Repository<Account>()
-                .GetAllIncluding(a => a.Certificates)
+                .GetAllIncluding(a => a.Certificates, c => c.Card)
                 .Where(a => a.CustomerId == id)
                 .ToList();
 
@@ -73,7 +72,7 @@ namespace BankingSystem.PL.Controllers.AppManager
         public ActionResult GetCustomerLoan(string id)
         {
             var loanWithPayment = _unitOfWork.Repository<Loan>()
-                .GetAllIncluding(l => l.Payments,l => l.Account).Where(l => l.CustomerId == id).ToList();
+                .GetAllIncluding(l => l.Payments, l => l.Account).Where(l => l.CustomerId == id).ToList();
 
             if (loanWithPayment == null)
                 return NotFound("No loan found for this customer.");

@@ -42,19 +42,23 @@ namespace BankingSystem.BLL.Services
         public IEnumerable<Customer> Search(string search, string? tellerID)
         {
             if (search == null)
-                return [];
-
+                return _context.Customers
+                        .Include(c => c.Branch)
+                            .ThenInclude(c => c.Tellers)
+                        .Where(c => c.Branch.Tellers.FirstOrDefault()!.Id == tellerID);
 
             var query = _context.Customers
                 .Include(c => c.Branch)
                     .ThenInclude(b => b.Tellers)
-                .Where(c => c.Branch.Tellers.FirstOrDefault()!.Id == tellerID && c.SSN.ToString() == search.Trim());
+                .Where(c => c.Branch.Tellers.FirstOrDefault()!.Id == tellerID && c.SSN.ToString()
+                    .Contains(ISearchPaginationRepo<Customer>.MyRegex().Replace(search.Trim(), " ")));
 
             if (!query.Any())
                 query = _context.Customers
                 .Include(c => c.Branch)
                     .ThenInclude(b => b.Tellers)
-                .Where(c => c.Branch.Tellers.FirstOrDefault()!.Id == tellerID && (c.FirstName + " " + c.LastName).ToLower().Trim().Contains(search.ToLower().Trim()));
+                .Where(c => c.Branch.Tellers.FirstOrDefault()!.Id == tellerID && (c.FirstName + " " + c.LastName).ToLower().Trim()
+                    .Contains(ISearchPaginationRepo<Customer>.MyRegex().Replace(search.ToLower().Trim(), " ")));
 
 
             return query;

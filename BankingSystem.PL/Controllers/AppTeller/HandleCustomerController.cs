@@ -26,19 +26,21 @@ namespace BankingSystem.PL.Controllers.AppTeller
         private readonly IMapper _mapper;
 
         //
-        private readonly IGenericRepository<Account> _genericRepository;
+        private readonly IGenericRepository<Account> _genericRepositoryAcc;
+        private readonly IGenericRepository<VisaCard> _genericRepositoryCard;
         private readonly ISearchPaginationRepo<Customer> _searchPaginationRepo;
 
         public HandleCustomerController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IMapper mapper, 
-            IGenericRepository<Account> genericRepository, ISearchPaginationRepo<Customer> searchPaginationRepo)
+            IGenericRepository<Account> genericRepository, IGenericRepository<VisaCard> genericRepositoryCard, ISearchPaginationRepo<Customer> searchPaginationRepo)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _mapper = mapper;
 
             //
-            _genericRepository = genericRepository;
+            _genericRepositoryAcc = genericRepository;
             _searchPaginationRepo = searchPaginationRepo;
+            _genericRepositoryCard = genericRepositoryCard;
         }
 
 
@@ -331,7 +333,13 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
         public IActionResult ShowAccounts(string id)
         {
-            return View(_genericRepository.GetAll(id, flag: 2));
+            return View(_genericRepositoryAcc.GetAll(id, flag: 2));
+        }
+
+        
+        public IActionResult ShowCards(string id)
+        {
+            return View(_genericRepositoryCard.GetAll(id));
         }
 
 

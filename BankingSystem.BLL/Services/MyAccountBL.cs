@@ -8,16 +8,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 
 namespace BankingSystem.BLL.Services
 {
-    public class AccountBL : IGenericRepository<Account>, ISearchPaginationRepo<Account>
+    public partial class MyAccountBL : IGenericRepository<Account>, ISearchPaginationRepo<Account>
     {
         private readonly BankingSystemContext _context;
+        private static Random _random = new Random();
 
-        public AccountBL(BankingSystemContext context)
+        public MyAccountBL(BankingSystemContext context)
         {
             _context = context;
         }
@@ -75,14 +77,17 @@ namespace BankingSystem.BLL.Services
         public IEnumerable<Account> Search(string search, string? tellerID)
         {
             if (search == null)
-                return [];
+                return _context.Accounts
+                    .Include(c => c.Customer).ToList();
 
             var query = GetAll(tellerID)
-                .Where(a => a.Number.ToString() == search.Trim());
+                .Where(a => a.Number.ToString()
+                    .Contains(ISearchPaginationRepo<Account>.MyRegex().Replace(search.Trim(), " ")));
 
             if (!query.Any())
                 query = GetAll(tellerID)
-                        .Where(a => (a.Customer?.FirstName + " " + a.Customer?.LastName).ToLower().Trim().Contains(search.ToLower().Trim()));
+                        .Where(a => (a.Customer?.FirstName + " " + a.Customer?.LastName).ToLower().Trim()
+                            .Contains(ISearchPaginationRepo<Account>.MyRegex().Replace(search.ToLower().Trim(), " ")));
 
             return query;
         }
@@ -109,12 +114,24 @@ namespace BankingSystem.BLL.Services
 
                 if (custAccountCount < 2)
                 {
+                    Entity.Number = Generate();
+
                     _context.Accounts.Add(Entity);
                     _context.SaveChanges();
                 }
                 else
                     throw new InvalidOperationException("This customer already have 2 accounts, cannot add more than 2.");
             }
+        }
+
+
+        private long Generate()
+        {
+            var number = "4";
+            for (int i = 1; i < 14; i++)
+                number += _random.Next(0, 10).ToString();
+
+            return long.Parse(number);
         }
 
 

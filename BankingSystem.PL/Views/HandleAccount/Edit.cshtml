@@ -22,7 +22,8 @@
     <div class="col-md-10">
         <form asp-action="Edit">
             <div asp-validation-summary="All" class="text-danger"></div>
-            <partial name="_CreateEditPartial" model="@Model" />
+
+            <partial name="_CreateEditPartial" model="@Model" view-data='new ViewDataDictionary(ViewData) { { "IsEditMode", true } }' />
 
 
             <div hidden class="form-group">
