@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.Operations;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using System.Globalization;
 using System.Security.Claims;
 
@@ -202,7 +203,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
                 }
             }
 
-            return View("Register", UserToRegister);
+            return View(nameof(Register), UserToRegister);
         }
 
 

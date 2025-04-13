@@ -5,11 +5,8 @@ using System.Runtime.ConstrainedExecution;
 
 namespace BankingSystem.DAL.Models
 {
-    public class GeneralCertificate 
+    public class GeneralCertificate : BaseEntity
     {
-        private readonly BaseEntity _entity = new();
-        internal int Id => _entity.Id;
-        internal bool IsDeleted => _entity.IsDeleted;
         public string? Name { get; set; }
         public int Duration { get; set; }
         public double InterestRate { get; set; }

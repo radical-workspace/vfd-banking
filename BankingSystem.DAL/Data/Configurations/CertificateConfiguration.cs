@@ -9,8 +9,6 @@ namespace BankingSystem.DAL.Configurations
         public void Configure(EntityTypeBuilder<Certificate> builder)
         {
 
-        
-
             // Properties
             builder.Property(c => c.CertificateNumber)
                    .IsRequired()
