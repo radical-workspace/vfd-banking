@@ -1,6 +1,123 @@
-﻿namespace BankingSystem.PL.Controllers.AppCustomer
+﻿using BankingSystem.BLL.Interfaces;
+using BankingSystem.DAL.Models;
+using BankingSystem.PL.ViewModels.Customer;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace BankingSystem.PL.Controllers.AppCustomer
 {
-    public class CustomerLoansController
+    public class CustomerLoansController : Controller
     {
+        private readonly IUnitOfWork _UnitOfWork;
+        public CustomerLoansController(IUnitOfWork UnitOfWork)
+        {
+            _UnitOfWork = UnitOfWork;
+        }
+
+        [HttpGet]
+        public IActionResult ApplyLoan(string id)
+        {
+            var customer = _UnitOfWork.Repository<MyCustomer>()
+                            .GetSingleIncluding(c => c.Id == id, c => c.Accounts);
+            if (customer != null)
+            {
+                var accountSelectList = customer.Accounts
+       .Select(a => new SelectListItem
+       {
+           Value = a.Id.ToString(), // assuming Id is the PK and is int/long
+           Text = $"Account No: {a.Number} - {a.AccountType} - Balance: {a.Balance:C}"
+       })
+       .ToList();
+
+                var customerloanvm = new CustomerLoanVM()
+                {
+                    CustomerId = customer.Id,
+                    Accounts = accountSelectList,
+                    BranchId = customer.BranchId,
+                };
+                return View(customerloanvm);
+
+            }
+            else
+            {
+                return NotFound($"No Customer Exist for id : {id}");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ApplyLoan(CustomerLoanVM model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var customer = _UnitOfWork.Repository<MyCustomer>()
+                    .GetSingleIncluding(c => c.Id == model.CustomerId, c => c.Accounts);
+
+                model.Accounts = customer.Accounts
+                    .Select(a => new SelectListItem
+                    {
+                        Value = a.Id.ToString(),
+                        Text = $"Account No: {a.Number} - {a.AccountType} - Balance: {a.Balance:C}"
+                    })
+                    .ToList();
+
+                return View(model);
+            }
+
+            var loan = new Loan
+            {
+                AccountId = model.SelectedAccountId.Value,
+                CustomerId = model.CustomerId,
+                BranchId = model.BranchId.GetValueOrDefault(),
+                StartDate = model.StartDate,
+                LoanAmount = model.LoanAmount.GetValueOrDefault(),
+                CurrentDebt = model.CurrentDebt,
+                InterestRate = model.InterestRate,
+                DurationInMonth = model.DurationInMonth,
+                LoanStatus = model.LoanStatus,
+                LoanType = model.LoanType
+            };
+
+            _UnitOfWork.Repository<Loan>().Add(loan);
+            _UnitOfWork.Complete();
+
+            // No TempData needed, just redirect to ThanksLoan
+            return RedirectToAction("ThanksLoan", new { id = model.CustomerId });
+        }
+
+
+        public IActionResult ThanksLoan(string id)
+        {
+            // Retrieve the customer and their loan information
+            var customer = _UnitOfWork.Repository<MyCustomer>().GetSingleIncluding(c => c.Id == id, c => c.Loans);
+
+            if (customer == null)
+            {
+                return NotFound($"No customer found with id: {id}");
+            }
+
+            var customerLoanVM = customer.Loans
+                .Select(loan => new CustomerLoanVM
+                {
+                    CustomerId = customer.Id,
+                    LoanAmount = loan.LoanAmount,
+                    CurrentDebt = loan.CurrentDebt,
+                    InterestRate = loan.InterestRate,
+                    DurationInMonth = loan.DurationInMonth,
+                    LoanStatus = loan.LoanStatus,
+                    LoanType = loan.LoanType,
+                    StartDate = loan.StartDate
+                }).FirstOrDefault();
+
+            // Ensure the loan was found for the customer
+            if (customerLoanVM == null)
+            {
+                return NotFound($"No loan found for customer with id: {id}");
+            }
+
+            // Return the view with the customer loan details
+            return View(customerLoanVM);
+        }
+
     }
 }

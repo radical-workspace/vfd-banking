@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -78,5 +79,10 @@ namespace BankingSystem.BLL.Services
             throw new NotImplementedException();
         }
 
+    
+        public Task<bool> ExistsAsync(Expression<Func<Account, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

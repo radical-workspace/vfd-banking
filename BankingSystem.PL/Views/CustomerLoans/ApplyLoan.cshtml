@@ -1,0 +1,337 @@
+﻿@using BankingSystem.DAL.Models
+@using BankingSystem.PL.ViewModels.Customer
+@model CustomerLoanVM
+@{
+    ViewData["Title"] = "Apply for Loan";
+}
+
+<link rel="stylesheet" href="/css/CustomerHome.css" />
+<div class="profile-container">
+    <!-- Header Section -->
+    @* <div class="welcome-section"> *@
+    @*     <h2 class="mb-2">Apply for a Loan</h2> *@
+    @*     <p class="mb-0">Complete the form below to submit your loan application.</p> *@
+    @* </div> *@ 
+    <div class="welcome-section" > 
+        @* style="background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), no-repeat center; background-size: cover; padding: 2.5rem; border-radius: 0.5rem; margin-bottom: 2rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); *@
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="mb-2 fw-bold text-primary">Unlock Your Financial Potential</h1>
+                <p class="mb-2 fs-5">Take the next step toward your dreams with our competitive loan options.</p>
+                <p class="mb-0 text-muted">Complete the application below to get started on your journey.</p>
+            </div>
+            <div class="col-md-4 text-center d-none d-md-block">
+                <i class="bi bi-cash-coin text-primary" style="font-size: 5rem;"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loan Application Form -->
+    <div class="customer-details">
+        <div class="card shadow-sm">
+            <div class="card-body p-3">
+                <!-- Form Header -->
+                <div class="profile-header">
+                    <h4 class="mb-0">Loan Application Details</h4>
+                </div>
+
+                <form asp-action="ApplyLoan" asp-controller="CustomerLoans" onsubmit="return validateForm();" method="post">
+                        <input type="hidden" asp-for="CustomerId" value="@Model.CustomerId"/>
+
+                        <!-- Details Grid -->
+                        <div class="row g-3">
+
+                        <input type="hidden" asp-for="BranchId" value="@Model.BranchId" />
+
+                            <!-- Account Selection -->
+                            <div class="col-md-6">
+                                <div class="detail-card">
+                                    <div class="detail-label">Select Account</div>
+                                <div class="form-group">
+                                    @* <label asp-for="SelectedAccountId" class="control-label"></label> *@
+                                    <select asp-for="SelectedAccountId" asp-items="Model.Accounts" class="form-control">
+                                        <option value="">-- Select Account --</option> <!-- default unselected option -->
+                                    </select>
+                                    <span asp-validation-for="SelectedAccountId" class="text-danger"></span>
+                                </div>
+
+                                    @* <select asp-for="SelectedAccountId" class="form-select"> *@
+                                    @*     <option value="">Select Account</option> *@
+                                    @*     @foreach (var account in Model.Accounts) *@
+                                    @*     { *@
+                                    @*         <option value="@account.Id">@account.AccountType - @account.Number</option> *@
+                                    @*     } *@
+                                    @* </select> *@
+                                    @* <span asp-validation-for="SelectedAccountId" class="text-danger"></span> *@
+                                </div>
+                            </div>
+
+                            <!-- Loan Type -->
+                            <div class="col-md-6">
+                                <div class="detail-card">
+                                    <div class="detail-label">Loan Type</div>
+
+
+                                    <select asp-for="LoanType" class="form-select" asp-items="Html.GetEnumSelectList<LoanType>()" onchange="updateLoanDetails()">
+                                        <option value="">Select Loan Type</option>
+                                    </select>
+                                    <span asp-validation-for="LoanType" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <!-- Loan Amount -->
+                            <div class="col-md-6">
+                                <div class="detail-card">
+                                    <div class="detail-label">Loan Amount ($)</div>
+                                    <input asp-for="LoanAmount" type="number" class="form-control" placeholder="Enter amount" />
+                                    <span asp-validation-for="LoanAmount" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <!-- Interest Rate -->
+                            <div class="col-md-6">
+                                <div class="detail-card">
+                                    <div class="detail-label">Interest Rate (%)</div>
+                                    @* <input name="InterestRate" type="number" class="form-control" placeholder="Enter interest rate" readonly /> *@
+                                    <input name="InterestRate" asp-for="InterestRate" type="number" class="form-control" placeholder="Enter interest rate" readonly/>
+                                    <span asp-validation-for="InterestRate" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <!-- Loan Duration -->
+                            <div class="col-md-6">
+                                <div class="detail-card">
+                                    <div class="detail-label">Loan Duration (Months)</div>
+                                    @* <input name="DurationInMonth" type="number" class="form-control" placeholder="Enter duration in months" readonly /> *@
+                                    <input name="DurationInMonth" asp-for="DurationInMonth" type="number" class="form-control" placeholder="Enter duration in months" readonly />
+                                    <span asp-validation-for="DurationInMonth" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <!-- Start Date -->
+                            <div class="col-md-6">
+                                <div class="detail-card">
+                                    <div class="detail-label">Start Date</div>
+                                    <input asp-for="StartDate" type="date" class="form-control" min="@DateTime.Now.AddMonths(1).ToString("yyyy-MM-dd")" />
+                                    <span asp-validation-for="StartDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Terms and Conditions -->
+                        <div class="mt-4">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="acceptTerms" required />
+                            <label class="form-check-label" for="acceptTerms">
+                                I agree to the <a href="#" class="text-primary" data-bs-toggle="modal" data-bs-target="#termsModal">terms and conditions</a> and consent to a credit check.
+                            </label>
+                        </div>
+
+                        </div>
+                    <div id="termsError" class="text-danger" style="display:none;">
+                        You must accept the terms and conditions.
+                    </div>
+                        <!-- Submit Buttons -->
+                        <div class="mt-4 d-flex gap-3">
+                            @* <button type="submit" class="btn btn-primary px-4 py-2"> *@
+                            @*     <i class="bi bi-check-circle me-2"></i>Submit Application *@
+                            @* </button> *@
+                        <button type="submit"  class="btn btn-primary px-4 py-2">
+                            <i class="bi bi-check-circle me-2"></i>Submit Application
+                        </button>
+                        @* onclick="validateForm(); return false;" *@
+                        
+                        @* <a asp-action="HomePage" asp-controller="CustomerHome" asp-route="@Model.CustomerId" class="btn btn-outline-secondary px-4 py-2"> *@
+                        @*         <i class="bi bi-x-circle me-2"></i>Cancel *@
+                        @*     </a> *@
+                        </div>
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loan Information Cards -->
+    <div class="row g-4 mt-4">
+        <!-- Interest Rates Card -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-percent card-icon mb-3"></i>
+                    <h5 class="card-title">Current Interest Rates</h5>
+                    <h2 class="mb-3 text-primary">From 4%</h2>
+                    <p class="card-text text-muted mb-3">Rates vary based on loan type</p>
+                    <div class="text-start small">
+                        <div><strong>Car Loans:</strong> 5%</div>
+                        <div><strong>Business Loans:</strong> 6%</div>
+                        <div><strong>Real Estate Loans:</strong> 4%</div>
+                        <div><strong>Other Loans:</strong> 8%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loan Calculator Card -->
+        <div class="col-md-4">
+            <div class="card  shadow-sm"> <!-- info-card class to make it pop-->
+                <div class="card-body text-center">
+                    <i class="bi bi-calculator card-icon mb-3"></i>
+                    <h5 class="card-title">Loan Terms</h5>
+                    <h2 class="mb-3 text-primary">Durations</h2>
+                    <p class="card-text text-muted mb-3">Standard terms by loan type</p>
+                    <div class="text-start small">
+                        <div><strong>Car Loans:</strong> 36 months</div>
+                        <div><strong>Business Loans:</strong> 24 months</div>
+                        <div><strong>Real Estate Loans:</strong> 180 months</div>
+                        <div><strong>Other Loans:</strong> 12 months</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Required Documents Card -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-file-earmark-text card-icon mb-3"></i>
+                    <h5 class="card-title">Required Documents</h5>
+                    <h2 class="mb-3 text-primary">Checklist</h2>
+                    <p class="card-text text-muted mb-3">Documents needed for approval</p>
+                    <div class="text-start small">
+                        <div>✓ Valid ID</div>
+                        <div>✓ Proof of Income</div>
+                        <div>✓ Bank Statements (3 months)</div>
+                        <div>✓ Credit History</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Support Section -->
+    <div class="support-section mt-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center py-4">
+                <i class="bi bi-headset card-icon mb-3"></i>
+                <h4 class="mb-3">Need Help?</h4>
+                <p class="text-muted mb-4">Our loan specialists are ready to assist you with any questions about your application.</p>
+                <a href="#support" class="btn btn-primary px-4 py-2">
+                    <i class="bi bi-chat-dots me-2"></i>Contact a Loan Specialist
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="mt-4 pt-3 border-top text-center text-muted">
+        <small>&copy; 2025 SecureBank. All rights reserved.</small>
+    </div>
+    <!-- Terms and Conditions Modal -->
+    <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="termsModalLabel">Terms and Conditions</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>Loan Agreement Terms</h6>
+                    <p>By applying for a loan with SecureBank, you agree to the following terms and conditions:</p>
+
+                    <h6>1. Loan Repayment</h6>
+                    <p>You agree to repay the loan amount plus interest according to the payment schedule that will be provided upon loan approval. Payments are due on the same day each month as specified in your loan agreement.</p>
+
+                    <h6>2. Interest Rates</h6>
+                    <p>Interest rates are fixed for the duration of your loan term. The rate applied to your loan will be based on the loan type, your credit history, and other factors determined by SecureBank.</p>
+
+                    <h6>3. Early Repayment</h6>
+                    <p>You may repay your loan in full or in part before the end of the loan term. Early repayment fees may apply as specified in your loan agreement.</p>
+
+                    <h6>4. Late Payments</h6>
+                    <p>Late payments may result in additional fees and may be reported to credit bureaus, which could affect your credit score.</p>
+
+                    <h6>5. Credit Check Authorization</h6>
+                    <p>By accepting these terms, you authorize SecureBank to perform a credit check and access your credit history to evaluate your loan application.</p>
+
+                    <h6>6. Default</h6>
+                    <p>If you fail to make payments as agreed, your loan may be considered in default. In case of default, SecureBank reserves the right to take appropriate actions to recover the outstanding amount, including but not limited to legal proceedings.</p>
+
+                    <h6>7. Privacy Policy</h6>
+                    <p>Your personal and financial information will be handled in accordance with our Privacy Policy, which you can review on our website.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="acceptTerms()">I Accept</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        function updateLoanDetails() {
+            // Get the selected loan type
+            var loanType = document.querySelector('select[name="LoanType"]').value;
+
+            // Get the interest rate and duration fields
+            var interestRateInput = document.querySelector('input[name="InterestRate"]');
+            var durationInput = document.querySelector('input[name="DurationInMonth"]');
+
+            // Define interest rates and durations for each loan type
+            var loanDetails = {
+                "0": { interestRate: 5, duration: 36 },
+                "1": { interestRate: 6, duration: 24 },
+                "2": { interestRate: 4, duration: 180 }, // 15 years
+                "3": { interestRate: 8, duration: 12 }
+            };
+
+            // Check if the loan type exists in the object and set the fields
+            if (loanDetails[loanType]) {
+                // Update the interest rate and duration input values
+                interestRateInput.value = loanDetails[loanType].interestRate;
+                durationInput.value = loanDetails[loanType].duration;
+            } else {
+                // Clear the values if no valid loan type is selected
+                interestRateInput.value = '';
+                durationInput.value = '';
+            }
+            console.log(interestRateInput);
+            console.log(durationInput);
+        }
+
+            // Function to check the terms checkbox when user clicks "I Accept" in the modal
+         function acceptTerms() {
+            document.getElementById("acceptTerms").checked = true;
+        
+                const modal = bootstrap.Modal.getInstance(document.getElementById('termsModal'));
+                modal.hide();
+           
+
+        }
+
+
+        function validateForm() {
+   
+            // Check if terms are accepted
+            if (!document.getElementById('acceptTerms').checked) {
+                document.getElementById('termsError').style.display = 'block';
+                document.getElementById("acceptTerms").checked = true;
+                 return false;
+            } else {
+                document.getElementById('termsError').style.display = 'none';
+                return true;
+            }
+        }
+        
+
+
+
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+}
+
+
