@@ -34,7 +34,7 @@ namespace BankingSystem.PL.ViewModels.Customer
             3456 7890 1234: Your unique account number.
          */
 
-        public string DestinationIban { get; set; } = null!;
+        public string? DestinationIban { get; set; } = null!;
 
         public string? VisaNumber { get; set; }
 
@@ -43,15 +43,15 @@ namespace BankingSystem.PL.ViewModels.Customer
         public DateTime VisaExpDate { get; set; }
 
         // For account selection
-        public long SelectedAccountNumber { get; set; }
+        public long? SelectedAccountNumber { get; set; }
         public List<SelectListItem> UserAccounts { get; set; } = new();
 
         // For card selection
-        public string SelectedCardNumber { get; set; } = string.Empty;
+        public string? SelectedCardNumber { get; set; } = string.Empty;
         public List<SelectListItem> UserVisaCards { get; set; } = new();
 
         // To track which option is selected
-        public bool ShowAccounts { get; set; } = true;
+        public bool ShowAccounts { get; set; }
 
 
     }

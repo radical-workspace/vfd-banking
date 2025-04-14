@@ -43,22 +43,23 @@ namespace BankingSystem.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Withdraw(AccountsViewModel model)
+        public IActionResult Withdraw(AccountsViewModel model, bool IsUsingVisa)
         {
 
             if (!ModelState.IsValid) return View(model);
             var transaction = _transference.CreatePendingTransaction(model, User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
 
+            //IsUsingVisa = true;
             // Get the selected account
-            var (MyAccount, ValidationResult) = _transference.GetAndValidateCurrentAccount(model, transaction);
+            var (MyAccount, ValidationResult) = _transference.GetAndValidateCurrentAccount(model, transaction, User.FindFirst(ClaimTypes.NameIdentifier)?.Value!, IsUsingVisa);
             if (ValidationResult != null) return ValidationResult;
 
             // Validate the withdrawal rules
-            var verifyWithdrawl = _transference.ValidateWithdrawlRules(model, MyAccount, transaction);
+            var verifyWithdrawl = _transference.ValidateWithdrawlRules(model, MyAccount, transaction, IsUsingVisa);
             if (verifyWithdrawl != null) return verifyWithdrawl;
 
             // Execute the withdrawal
-            return _transference.ExecuteWithdraw(model, MyAccount, transaction);
+            return _transference.ExecuteWithdraw(model, MyAccount, transaction, IsUsingVisa);
         }
 
     }

@@ -39,23 +39,32 @@ namespace BankingSystem.PL.Helpers
         }
 
 
-        public (Account myAccount, IActionResult result) GetAndValidateCurrentAccount(AccountsViewModel model, Transaction transaction)
+        public (Account myAccount, IActionResult result) GetAndValidateCurrentAccount(
+            AccountsViewModel model, Transaction transaction, string UserID, bool IsUsingVisa
+            )
         {
             var accounts = _unitOfWork.Repository<Account>()
-                            .GetAllIncluding(c => c.Customer!, a => a.Card)
-                            .Where(c => c.CustomerId == User.FindFirst(ClaimTypes.NameIdentifier)?.Value!)
-                            .ToList();
+                                        .GetAllIncluding(c => c.Customer!, a => a.Card)
+                                        .Where(c => c.CustomerId == UserID)
+                                        .ToList();
 
             if (!accounts.Any())
                 return (null, FailTransfer(transaction, "No accounts found", "No accounts found."))!;
-            var selectedAccount = accounts.FirstOrDefault(a => a.Number == model.SelectedAccountNumber);
+
+            //Console.WriteLine(long.Parse(accounts.Select(e => e.Card.Number).ToString()));
+
+            var selectedAccount = IsUsingVisa ?
+                                                    accounts.FirstOrDefault(a => a.Card.Number.Equals(model.SelectedCardNumber))! :
+                                                    accounts.FirstOrDefault(a => a.Number == model.SelectedAccountNumber)!;
 
             if (selectedAccount == null)
-                return (null, FailTransfer(transaction, "Selected account not found", "Selected account not found."))!;
+                return (null, FailTransfer(transaction, "Selected card not found", "Selected card not found."))!;
 
             transaction.AccountId = selectedAccount.Id;
             transaction.CustomerID = selectedAccount.CustomerId!;
             transaction.AccountDistenationNumber = selectedAccount.Number;
+
+            model.VisaExpDate = selectedAccount.Card.ExpDate;
 
             return (selectedAccount, null)!;
         }
@@ -81,22 +90,29 @@ namespace BankingSystem.PL.Helpers
 
 
         public ViewResult ValidateWithdrawlRules(
-            AccountsViewModel model, Account myAccount, Transaction transaction)
+            AccountsViewModel model, Account myAccount, Transaction transaction, bool isUsingVisa)
         {
-            if ((myAccount.Balance <= 0) || (model.Amount <= 0))
-                return FailTransfer(transaction, "Insufficient balance",
-                                                 "Insufficient balance");
+            if (isUsingVisa && ((model.VisaCVV != myAccount.Card.CVV) || (model.VisaExpDate < DateTime.Now)))
+            {
+                return FailTransfer(transaction, "Invalid card details", "Invalid card details.");
+            }
+            else
+            {
+                if ((myAccount.Balance <= 0) || (model.Amount <= 0))
+                    return FailTransfer(transaction, "Insufficient balance",
+                                                     "Insufficient balance");
 
-            else if ((model.Amount % 50) != 0)
-                return FailTransfer(transaction, "Can only withdraw 50 EGP Or it's multipliers.",
-                                                 "Can only withdraw 50 EGP Or it's multipliers.");
+                else if ((model.Amount % 50) != 0)
+                    return FailTransfer(transaction, "Can only withdraw 50 EGP Or it's multipliers.",
+                                                     "Can only withdraw 50 EGP Or it's multipliers.");
 
-            else if (myAccount.Balance < (model.Amount + 5)) // 5 is for the bank fees
-                return FailTransfer(transaction, "Insufficient balance", "Insufficient balance.");
+                else if (myAccount.Balance < (model.Amount + 5)) // 5 is for the bank fees
+                    return FailTransfer(transaction, "Insufficient balance", "Insufficient balance.");
 
-            else if (model.Amount > 25_000)
-                return FailTransfer(transaction, "AWithdraw amount exceeds the limit. Please visit a branch.",
-                                                 "Withdraw amount exceeds the limit. Please visit a branch.");
+                else if (model.Amount > 25_000)
+                    return FailTransfer(transaction, "AWithdraw amount exceeds the limit. Please visit a branch.",
+                                                     "Withdraw amount exceeds the limit. Please visit a branch.");
+            }
 
             return null;
         }
@@ -125,7 +141,7 @@ namespace BankingSystem.PL.Helpers
             }
         }
         public IActionResult ExecuteWithdraw(
-            AccountsViewModel model, Account MyAccount, Transaction transaction
+            AccountsViewModel model, Account MyAccount, Transaction transaction, bool isUsingVisa
             )
         {
             try
@@ -134,7 +150,7 @@ namespace BankingSystem.PL.Helpers
                 transaction.Status = TransactionStatus.Accepted;
                 transaction.Payment.Status = PaymentStatus.Paid;
                 transaction.Type = TransactionType.Withdraw;
-                transaction.DoneVia = "Withdraw By Customer";
+                transaction.DoneVia = !isUsingVisa ? "Withdraw By Customer Via Account" : "Withdraw By Customer Via Visa Card";
 
                 _unitOfWork.Repository<Account>().Update(MyAccount);
                 _unitOfWork.Repository<Transaction>().Add(transaction);
