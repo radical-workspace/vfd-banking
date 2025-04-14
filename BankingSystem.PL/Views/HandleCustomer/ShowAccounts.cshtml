@@ -5,123 +5,192 @@
     ViewData["Title"] = "Accounts Management";
 }
 
-<div class="container my-5">
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 pb-2 border-bottom">
-        <div>
-            <h1 class="h3 text-primary">
-                <i class="fas fa-building-columns me-2"></i> Accounts Management
-            </h1>
-            <p class="text-muted mb-0">View, update, and manage customer accounts</p>
-        </div>
-        <a asp-controller="HandleAccount" asp-action="Create" asp-route-customerId="@Context.Request.RouteValues["id"]" class="btn btn-primary mt-3 mt-md-0">
-            <i class="fas fa-plus-circle me-1"></i> Create New Account
-        </a>
-    </div>
+<style>
+    :root {
+        --primary-dark: #0a2d2e;
+        --primary-medium: #1c4e4f;
+        --primary-light: #436e6f;
+        --secondary-dark: #6a8e8f;
+        --secondary-light: #879693;
+        --neutral-1: #a49e97;
+        --accent-1: #deae9f;
+        --accent-2: #efd7cf;
+        --accent-3: #f7ebe7;
+        --white: #ffffff;
+    }
 
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
-        <!-- Search Form -->
-        <form asp-action="Search" method="get" class="w-100 w-md-auto">
-            <div class="input-group shadow-sm">
-                <span class="input-group-text bg-white"><i class="fas fa-search text-muted"></i></span>
-                <input type="text" name="name" value="@ViewBag?.name"
-                       class="form-control" placeholder="Search by account number or customer name...">
-                <button type="submit" class="btn btn-primary">
-                    Search
-                </button>
-            </div>
-        </form>
+    .accounts-container {
+        background: var(--accent-3);
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+    }
 
-        <!-- Filter Dropdown -->
-        <div class="dropdown">
-            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-filter me-1"></i> Filter by Status
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="dropdown-item" href="?status=Active">Active Accounts</a></li>
-                <li><a class="dropdown-item" href="?status=Inactive">Inactive Accounts</a></li>
-                <li><a class="dropdown-item" href="?status=Closed">Closed Accounts</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item text-danger" href="/Accounts">Clear Filter</a></li>
-            </ul>
-        </div>
-    </div>
+    .accounts-header {
+        color: var(--primary-dark);
+        border-bottom: 2px solid var(--accent-1);
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+    }
 
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        @foreach (var item in Model)
-        {
-            <div class="col">
-                <div class="card h-100 shadow-sm @(item.AccountStatus == AccountStatus.Closed ? "border-secondary bg-light" : "")">
-                    <div class="card-header bg-white border-bottom-0 pb-0">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="card-title mb-0">
-                                <i class="@GetAccountIcon(item.AccountType) me-2 text-primary"></i>
-                                <span class="fw-semibold text-primary">@Html.DisplayFor(modelItem => item.Number)</span>
-                            </h5>
-                            <span class="badge text-bg-@GetStatusColor(item.AccountStatus)">
-                                @Html.DisplayFor(modelItem => item.AccountStatus)
-                            </span>
-                        </div>
+    .account-card {
+        border-radius: 12px;
+        overflow: hidden;
+        background: var(--white);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s;
+    }
+
+    .account-card:hover {
+        transform: scale(1.01);
+    }
+
+    .account-card.closed {
+        background-color: var(--accent-2);
+        border: 2px solid var(--accent-1);
+    }
+
+    .card-title {
+        color: var(--primary-dark);
+    }
+
+    .account-meta span {
+        color: var(--primary-medium);
+    }
+
+    .action-buttons .btn {
+        border-radius: 6px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .action-buttons .btn:hover {
+        opacity: 0.9;
+    }
+
+    .btn-outline-primary {
+        border-color: var(--primary-medium);
+        color: var(--primary-medium);
+    }
+
+    .btn-outline-primary:hover {
+        background-color: var(--primary-medium);
+        color: var(--white);
+    }
+
+    .btn-outline-warning {
+        border-color: #ffc107;
+        color: #ffc107;
+    }
+
+    .btn-outline-warning:hover {
+        background-color: #ffc107;
+        color: var(--white);
+    }
+
+    .btn-outline-danger {
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        color: var(--white);
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-xxl-10 col-12">
+            <div class="accounts-container">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+                    <div>
+                        <h1 class="accounts-header">
+                            <i class="fas fa-building-columns me-2"></i> Accounts Management
+                        </h1>
+                        <p class="text-muted mb-0">View, update, and manage customer accounts</p>
                     </div>
-                    <div class="card-body pt-2">
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="text-muted">Balance</span>
-                                <span class="fw-bold">@Html.DisplayFor(modelItem => item.Balance)</span>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="text-muted">Type</span>
-                                <span>@Html.DisplayFor(modelItem => item.AccountType)</span>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="text-muted">Opened</span>
-                                <span>@item.CreatedAt.ToString("dd MMM yyyy")</span>
-                            </div>
-                        </div>
+                    <a asp-controller="HandleAccount" asp-action="Create" asp-route-customerId="@Context.Request.RouteValues["id"]" class="btn btn-outline-primary mt-3 mt-md-0">
+                        <i class="fas fa-plus-circle me-1"></i> Create New Account
+                    </a>
+                </div>
 
-                        <div class="border-top pt-3">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="text-muted">Customer</span>
-                                <div class="text-end">
-                                    <div class="fw-medium">@item.Customer.FirstName</div>
-                                    <small class="text-muted">CID: @item.CustomerId</small>
+                <div class="row row-cols-1 row-cols-md-1 row-cols-lg-2 g-4 mt-2">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col">
+                            <div class="card account-card h-100 @(item.AccountStatus == AccountStatus.Closed ? "closed" : "")">
+                                <div class="card-header bg-white border-bottom-0 pb-0">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h5 class="card-title mb-0">
+                                            <i class="@GetAccountIcon(item.AccountType) me-2 text-primary"></i>
+                                            <span class="fw-semibold">@item.Number</span>
+                                        </h5>
+                                        <span class="badge text-bg-@GetStatusColor(item.AccountStatus)">
+                                            @item.AccountStatus
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="card-body pt-2">
+                                    <div class="mb-3 account-meta">
+                                        <div class="d-flex justify-content-between">
+                                            <span>Balance</span>
+                                            <span class="fw-bold">@item.Balance</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <span>Type</span>
+                                            <span>@item.AccountType</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <span>Opened</span>
+                                            <span>@item.CreatedAt.ToString("dd MMM yyyy")</span>
+                                        </div>
+                                    </div>
+                                    <div class="border-top pt-3">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span class="text-muted">Customer</span>
+                                            <div class="text-end">
+                                                <div class="fw-medium">@item?.Customer?.FirstName</div>
+                                                <small class="text-muted">CID: @item?.CustomerId</small>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <span class="text-muted">Branch</span>
+                                            <span>@item?.Branch?.Name</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-white border-top-0 pt-0 action-buttons">
+                                    <div class="d-flex justify-content-end gap-2 mt-2">
+                                        <a asp-controller="HandleAccount" asp-action="Details" asp-route-id="@item?.Id" class="btn btn-outline-primary btn-sm" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+
+                                        <a asp-controller="HandleAccount" asp-action="Edit" asp-route-id="@item?.Id" 
+                                                asp-route-returnUrl="@Context.Request.Path" class="btn btn-outline-warning btn-sm @(item?.AccountStatus == AccountStatus.Closed ? "disabled" : "")" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+
+                                        <form asp-controller="HandleAccount" asp-action="Delete" asp-route-id="@item?.Id" onsubmit="return confirmDelete()" class="d-inline">
+                                            <input type="hidden" name="returnUrl" value="@Url.Action("ShowAccounts", "HandleCustomer", new { id = @Context.Request.RouteValues["id"] })" />
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="text-muted">Branch</span>
-                                <span>@item.Branch.Name</span>
-                            </div>
                         </div>
-                    </div>
-                    <div class="card-footer bg-white border-top-0 pt-0">
-                        <div class="d-flex justify-content-end gap-2">
-                            <a asp-controller="HandleAccount" asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm" title="View">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a asp-controller="HandleAccount" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-warning btn-sm @(item.AccountStatus == AccountStatus.Closed ? "disabled" : "")" title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </a>
-
-                            <form asp-controller="HandleAccount" asp-action="Delete" asp-route-id="@item.Id" onsubmit="return confirmDelete()" class="d-inline">
-                                <input type="hidden" name="returnUrl" value="@Url.Action("ShowAccounts", "HandleCustomer", new { id = @Context.Request.RouteValues["id"] })" />
-
-                                <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </form>
-
-                        </div>
-                    </div>
+                    }
                 </div>
+
+                <a asp-action="GetAllCustomers" class="btn btn-outline-secondary px-5 mt-4">
+                    <i class="fas fa-arrow-left me-2"></i>Back
+                </a>
             </div>
-        }
+        </div>
     </div>
-
-    <a href="javascript:history.back()" class="btn btn-outline-secondary px-5 mt-4">
-        <i class="fas fa-arrow-left me-2"></i>Back
-    </a>
 </div>
-
-
 
 @section Scripts {
     <script>

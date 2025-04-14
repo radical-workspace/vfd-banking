@@ -27,13 +27,14 @@ namespace BankingSystem.BLL.Services
 
         public IEnumerable<Account> GetAllByPagination(string? ID, string? filter, out int totalRecords, out int totalPages, int pageNumber = 1)
         {
-            int pageSize = 5;
+            int pageSize = 10;
 
             var query = _context.Accounts
                 .Include(a => a.Customer)
                     .ThenInclude(c => c.Branch)
                 .Include(a => a.Branch)
-                .Where(a => a.Customer!.Branch.Tellers.Any(t => t.Id == ID));
+                //.Where(a => a.Customer!.Branch.Tellers.Any(t => t.Id == ID))
+                .AsQueryable();
 
 
             if (filter != null)
@@ -61,7 +62,7 @@ namespace BankingSystem.BLL.Services
                     .Include(a => a.Customer)
                         .ThenInclude(c => c.Branch)
                     .Include(a => a.Branch)
-                    .Where(a => a.Customer!.Branch.Tellers.Any(teller => teller.Id == ID))
+                    //.Where(a => a.Customer!.Branch.Tellers.Any(teller => teller.Id == ID))
                     .ToList();
 
             else
@@ -78,7 +79,8 @@ namespace BankingSystem.BLL.Services
         {
             if (search == null)
                 return _context.Accounts
-                    .Include(c => c.Customer).ToList();
+                    .Include(c => c.Customer)
+                    .Include(c => c.Branch).ToList();
 
             var query = GetAll(tellerID)
                 .Where(a => a.Number.ToString()
@@ -94,12 +96,13 @@ namespace BankingSystem.BLL.Services
 
 
 
-        public Account? Get(int id)
+        public Account? Get(int id, long number)
         {
             return _context.Accounts
                 //.IgnoreQueryFilters()
                 .Include(a => a.Customer)
                 .Include(a => a.Branch)
+                .Include(a => a.Card)
                 .FirstOrDefault(a => a.Id == id);
         }
 
@@ -115,6 +118,7 @@ namespace BankingSystem.BLL.Services
                 if (custAccountCount < 2)
                 {
                     Entity.Number = Generate();
+                    Entity.CreatedAt = DateTime.Now;
 
                     _context.Accounts.Add(Entity);
                     _context.SaveChanges();
@@ -127,8 +131,8 @@ namespace BankingSystem.BLL.Services
 
         private long Generate()
         {
-            var number = "4";
-            for (int i = 1; i < 14; i++)
+            var number = "";
+            for (int i = 0; i < 12; i++)
                 number += _random.Next(0, 10).ToString();
 
             return long.Parse(number);
@@ -149,14 +153,22 @@ namespace BankingSystem.BLL.Services
         {
             if (entity != null)
             {
-                var account = _context.Accounts.FirstOrDefault(a => a.Id == entity.Id);
+                var account = _context.Accounts
+                    .Include(a => a.Card)
+                    .FirstOrDefault(a => a.Id == entity.Id);
+
                 if (account != null)
                 {
                     account.IsDeleted = true;
+
+                    if (account.Card != null)
+                        account.Card.IsDeleted = true;
+
                     _context.SaveChanges();
                 }
             }
         }
+
 
 
 

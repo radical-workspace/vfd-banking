@@ -102,6 +102,14 @@
                 width: 70%;
             }
 
+        .uname {
+            text-decoration: none;
+        }
+
+        .uname:hover {
+            cursor: default;
+        }
+
         .btn-primary {
             background-color: var(--accent-1) !important;
             border-color: var(--accent-1) !important;
@@ -262,19 +270,19 @@
                         {
                             <li class="nav-item">
                                 <span class="nav-link">
-                                    @if (User.IsInRole("Admin"))
-                                    {
-                                        <strong>Admin</strong>
-                                    }
-                                    else if (User.IsInRole("Manager"))
-                                    {
-                                        <strong>Manager</strong>
-                                    }
-                                    else if (User.IsInRole("Customer"))
-                                    {
-                                        <strong>Hello </strong>
-                                    }
-                                    <u> @User.Identity.Name</u>
+                                    @* @if (User.IsInRole("Admin")) *@
+                                    @* { *@
+                                    @*     <strong>Admin</strong> *@
+                                    @* } *@
+                                    @* else if (User.IsInRole("Manager")) *@
+                                    @* { *@
+                                    @*     <strong>Manager</strong> *@
+                                    @* } *@
+                                    @* else if (User.IsInRole("Customer")) *@
+                                    @* { *@
+                                    @*     <strong>Hello </strong> *@
+                                    @* } *@
+                                    <u class="uname">Hello, <strong>@User.Identity.Name</strong></u>
                                 </span>
                             </li>
                             <li class="nav-item">

@@ -239,6 +239,10 @@
         .btn-bank:hover {
             background-color: #002244;
         }
+
+    .back {
+        color: white;
+    }
 </style>
 
 <div class="container mt-5">
@@ -379,7 +383,7 @@
     <!-- Back Button -->
     <div class="mt-4 text-end">
         <a class="btn btn-bank btn-lg shadow" asp-action="GetAllCustomers" asp-route-id="@tellerId">
-            <i class="fas fa-arrow-left"></i> Back to Customer List
+            <i class="fas fa-arrow-left"></i> <span class="back">Back to Customer List</span>
         </a>
     </div>
 </div>

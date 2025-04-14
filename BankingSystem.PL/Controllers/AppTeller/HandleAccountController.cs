@@ -79,7 +79,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
                 try
                 {
                     _genericRepositoryAcc.Add(account);
-                    return RedirectToAction("index");
+                    return RedirectToAction("ShowAccounts", "HandleCustomer", new { id = customerId });
                 }
                 catch (Exception ex)
                 {
@@ -91,24 +91,27 @@ namespace BankingSystem.PL.Controllers.AppTeller
         }
 
         // GET: HandleAccountController/Edit/5
-        public IActionResult Edit(int id)
+        public IActionResult Edit(int id, string returnUrl)
         {
+            ViewData["ReturnUrl"] = returnUrl;
             return View(_genericRepositoryAcc.Get(id));
         }
 
         // POST: HandleAccountController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Account account, string? returnUrl = null)
+        public IActionResult Edit(Account account, string returnUrl)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
                     _genericRepositoryAcc.Update(account);
-                    return returnUrl != null
-                        ? Redirect(returnUrl)
-                        : RedirectToAction("Index");
+
+                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                        return Redirect(returnUrl);
+                    
+                    return RedirectToAction("Index");
                 }
                 catch
                 {

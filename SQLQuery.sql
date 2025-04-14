@@ -18,6 +18,7 @@ select * from [dbo].[Tellers]
 
 
 select * from Accounts
+select * from Cards
 select * from Branches
 select * from Banks
 
@@ -29,3 +30,23 @@ from AspNetUsers u inner join Tellers t
 	on b.Id = c.BranchId inner join Accounts a
 	on a.CustomerId = c.Id
 	where t.Id like '571b33ca-09fd-4a41-99ee-d0d7aa882716'
+
+
+
+select * 
+from Accounts a inner join Customers cu
+	on a.CustomerId = cu.Id
+
+
+select * 
+from Accounts a inner join Cards c
+	on c.AccountNumber = a.Number inner join Customers cu
+	on a.CustomerId = cu.Id
+
+
+begin tran
+delete from Cards
+delete from Accounts
+-- commit
+-- rollback
+

@@ -52,6 +52,7 @@ namespace BankingSystem.PL
             builder.Services.AddScoped<TransferFromAccountToAnother>();
             builder.Services.AddScoped<ISearchPaginationRepo<Account>, MyAccountBL>();
             builder.Services.AddScoped<ISearchPaginationRepo<Customer>, MyCustomerBL>();
+            builder.Services.AddScoped<ISearchPaginationRepo<VisaCard>, MyCardBL>();
 
 
             builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfile()));

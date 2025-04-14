@@ -180,7 +180,8 @@ namespace BankingSystem.PL.Helpers
 
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.CardType, opt => opt.MapFrom(src => src.CardType.ToString()))
-            .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Account.Customer.UserName))
+            //.ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Account.Customer.UserName))
+            .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => $"{src.Account.Customer.FirstName} {src.Account.Customer.LastName}"))
             .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.Account.Number));
         }
 
