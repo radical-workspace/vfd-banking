@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 
-namespace BankingSystem.PL.Controllers
+namespace BankingSystem.PL.Controllers.AppCustomer
 {
     public class Withdraw_DepositController(IUnitOfWork unitOfWork, HandleAccountTransferes transference) : Controller
     {
@@ -39,6 +39,7 @@ namespace BankingSystem.PL.Controllers
                 })],
                 ShowAccounts = true
             };
+            ViewBag.Process = TransactionType.Withdraw;
             return View(viewModel);
         }
 
@@ -84,23 +85,25 @@ namespace BankingSystem.PL.Controllers
                 })],
                 ShowAccounts = true
             };
-            return View(viewModel);
+
+            ViewBag.Process = TransactionType.Transfer;
+            return View("~/Views/Withdraw_Deposit/Withdraw.cshtml", viewModel);
         }
 
-        //[HttpPost]
-        //public IActionResult Deposit(AccountsViewModel model, bool IsUsingVisa)
-        //{
-        //    if (!ModelState.IsValid) return View(model);
-        //    var transaction = _transference.CreatePendingTransaction(model, User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
-        //    // Get the selected account
-        //    var (MyAccount, ValidationResult) = _transference.GetAndValidateCurrentAccount(model, transaction, User.FindFirst(ClaimTypes.NameIdentifier)?.Value!, IsUsingVisa);
-        //    if (ValidationResult != null) return ValidationResult;
-        //    // Validate the deposit rules
-        //    var verifyDeposit = _transference.ValidateDepositRules(model, MyAccount, transaction, IsUsingVisa);
-        //    if (verifyDeposit != null) return verifyDeposit;
-        //    // Execute the deposit
-        //    return _transference.ExecuteDeposit(model, MyAccount, transaction, IsUsingVisa);
-        //}
+        [HttpPost]
+        public IActionResult Deposit(AccountsViewModel model, bool IsUsingVisa)
+        {
+            if (!ModelState.IsValid) return View(model);
+            var transaction = _transference.CreatePendingTransaction(model, User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+            // Get the selected account
+            var (MyAccount, ValidationResult) = _transference.GetAndValidateCurrentAccount(model, transaction, User.FindFirst(ClaimTypes.NameIdentifier)?.Value!, IsUsingVisa);
+            if (ValidationResult != null) return ValidationResult;
+            // Validate the deposit rules
+            var verifyDeposit = _transference.ValidateDepositRules(model, MyAccount, transaction, IsUsingVisa);
+            if (verifyDeposit != null) return verifyDeposit;
+            // Execute the deposit
+            return _transference.ExecuteDeposit(model, MyAccount, transaction, IsUsingVisa);
+        }
     }
 }
 

@@ -1,7 +1,10 @@
-﻿@model BankingSystem.PL.ViewModels.Customer.AccountsViewModel
+﻿@using BankingSystem.DAL.Models
+@model BankingSystem.PL.ViewModels.Customer.AccountsViewModel
 
 @{
     ViewData["Title"] = "Withdraw Money";
+    TransactionType IsDepositing = ViewBag.Process;
+    var proecessType = IsDepositing == TransactionType.Withdraw ? "Withdraw" : "Deposit";
 }
 
 <style>
@@ -94,10 +97,20 @@
 
 <div class="transfer-container">
     <h2 class="transfer-header">
-        <i class="fas fa-money-bill-wave me-2"></i>Withdraw Money
+        @if (IsDepositing == TransactionType.Withdraw)
+        {
+            <i class="fas fa-money-bill-wave me-2"></i>
+            <text>Withdraw Money</text>
+        }
+        else
+        {
+
+            <i class="fas fa-money-bill-wave me-2"></i>
+            <text>Deposit Money</text>
+        }
     </h2>
 
-    <form asp-action="Withdraw" method="post">
+    <form asp-action="@proecessType" method="post">
         @Html.AntiForgeryToken()
         <!-- Add this hidden input -->
         <input type="hidden" id="IsUsingVisa" name="IsUsingVisa" value="@(!Model.ShowAccounts).ToString().ToLower()" />
@@ -138,13 +151,25 @@
 
         <!-- Amount Input -->
         <div class="mb-4 amount-input">
-            <label asp-for="Amount" class="form-label">Withdrawal Amount</label>
+            @if (IsDepositing == TransactionType.Withdraw)
+            {
+                <label asp-for="Amount" class="form-label">Withdrawal Amount</label>
+
+            }
+            else
+            {
+                <label asp-for="Amount" class="form-label">Deposit Amount</label>
+
+            }
             <div class="position-relative">
                 <span class="currency-symbol">$</span>
                 <input asp-for="Amount" type="number" step="0.01" class="form-control ps-4" placeholder="0.00" />
             </div>
             <span asp-validation-for="Amount" class="validation-message"></span>
-            <div class="iban-hint">Service fee: $5 (included in total)</div>
+            @if (IsDepositing == TransactionType.Withdraw)
+            {
+                <div class="iban-hint">Service fee: $5 (included in total)</div>
+            }
         </div>
 
         <!-- Security Details -->
@@ -162,7 +187,16 @@
         <div class="mt-4 text-center">
             <button type="submit" class="btn submit-btn text-white"
                     style="width: 200px; border-radius: 25px; padding: 10px 20px; font-size: 1.1rem;">
-                <i class="fas fa-coins me-2"></i>Process Withdrawal
+                @if (IsDepositing == TransactionType.Withdraw)
+                {
+                    <i class="fas fa-coins me-2"></i>
+                    <text>Process Withdrawal</text>
+                }
+                else
+                {
+                    <i class="fas fa-coins me-2"></i>
+                    <text>Process Deposit</text>
+                }
             </button>
         </div>
     </form>

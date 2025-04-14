@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 
-namespace BankingSystem.PL.Controllers
+namespace BankingSystem.PL.Controllers.AppCustomer
 {
     public class CustomerTransferController(IUnitOfWork unitOfWork, IMapper mapper, HandleAccountTransferes transfereHelper) : Controller
     {
