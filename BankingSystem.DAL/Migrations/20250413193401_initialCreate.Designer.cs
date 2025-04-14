@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankingSystem.DAL.Migrations
 {
     [DbContext(typeof(BankingSystemContext))]
-    [Migration("20250413014151_hadyCreate")]
-    partial class hadyCreate
+    [Migration("20250413193401_initialCreate")]
+    partial class initialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -538,6 +538,48 @@ namespace BankingSystem.DAL.Migrations
                     b.ToTable("Payment");
                 });
 
+            modelBuilder.Entity("BankingSystem.DAL.Models.Reservation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CustomerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ReservationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ServiceType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("Reservations");
+                });
+
             modelBuilder.Entity("BankingSystem.DAL.Models.Savings", b =>
                 {
                     b.Property<int>("Id")
@@ -1034,6 +1076,23 @@ namespace BankingSystem.DAL.Migrations
                     b.Navigation("Loan");
                 });
 
+            modelBuilder.Entity("BankingSystem.DAL.Models.Reservation", b =>
+                {
+                    b.HasOne("BankingSystem.DAL.Models.Branch", "Branch")
+                        .WithMany("Reservations")
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BankingSystem.DAL.Models.Customer", "Customer")
+                        .WithMany("Reservations")
+                        .HasForeignKey("CustomerId");
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("Customer");
+                });
+
             modelBuilder.Entity("BankingSystem.DAL.Models.Savings", b =>
                 {
                     b.HasOne("BankingSystem.DAL.Models.Branch", "Branch")
@@ -1257,6 +1316,8 @@ namespace BankingSystem.DAL.Migrations
 
                     b.Navigation("MyManager");
 
+                    b.Navigation("Reservations");
+
                     b.Navigation("Savings");
 
                     b.Navigation("Tellers");
@@ -1274,6 +1335,8 @@ namespace BankingSystem.DAL.Migrations
                     b.Navigation("FinancialDocument");
 
                     b.Navigation("Loans");
+
+                    b.Navigation("Reservations");
 
                     b.Navigation("SupportTickets");
 
