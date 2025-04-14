@@ -170,10 +170,16 @@
                 <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                     <!-- Left Side -->
                     <ul class="navbar-nav me-auto">
-                        @if (!User.IsInRole("Customer"))
+                        @if (User.Identity?.IsAuthenticated == false)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                <li class="nav-item">
+                                    <a class="nav-link text-white" asp-area="" asp-controller="BogusData" asp-action="CreateBogusData">Create Bogus Data</a>
+                                </li>
+                                @* <li class="nav-item"> *@
+                                @*     <a class="nav-link text-white" asp-area="" asp-controller="Reservation" asp-action="CreateReservation">Make Reservations</a> *@
+                                @* </li> *@
                             </li>
                         }
 
@@ -225,14 +231,11 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="HandleCard" asp-action="GetAllCards">Cards</a>
                             </li>
-                        }
 
-                        <li class="nav-item">
-                            <a class="nav-link bogus" asp-area="" asp-controller="BogusData" asp-action="CreateBogusData">Create Bogus Data</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Reservation" asp-action="CreateReservation">Reservations</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="HandleCustomer" asp-action="GetBranchReservations">Branch Reservations</a>
+                            </li>
+                        }
 
                         @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Customer"))
                         {
@@ -250,9 +253,12 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="CustomerHome" asp-action="Certificates" asp-route-id="@userId">Certificates</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Reservation" asp-action="CreateReservation" >Reservations</a>
-                            </li>
+                            @* <li class="nav-item"> *@
+                            @*     <a class="nav-link" asp-area="" asp-controller="Reservation" asp-action="CreateReservation" >Make Reservations</a> *@
+                            @* </li> *@
+							<li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Reservation" asp-action="GetCustomerAllReservations">Reservations</a>
+							</li>
                         }
                     </ul>
 
@@ -261,7 +267,7 @@
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item">
-                                <span class="nav-link">
+                                <span class="nav-link text-white">
                                     @if (User.IsInRole("Admin"))
                                     {
                                         <strong>Admin</strong>
@@ -269,6 +275,10 @@
                                     else if (User.IsInRole("Manager"))
                                     {
                                         <strong>Manager</strong>
+                                    }
+                                    else if (User.IsInRole("Teller"))
+                                    {
+                                        <strong>Teller</strong>
                                     }
                                     else if (User.IsInRole("Customer"))
                                     {

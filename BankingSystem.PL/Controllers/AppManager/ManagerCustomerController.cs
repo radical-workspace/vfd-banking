@@ -54,14 +54,14 @@ namespace BankingSystem.PL.Controllers.AppManager
                 .FirstOrDefault(c => c.Id == id);
 
             if (customer == null)
-            {
                 return NotFound("Customer not found");
-            }
 
-            customer.Accounts = _unitOfWork.Repository<Account>()
-                .GetAllIncluding(a => a.Certificates, c => c.Card)
-                .Where(a => a.CustomerId == id)
+            var accountsWithCards = _unitOfWork.Repository<Account>()
+                .GetAllIncluding(a => a.Certificates, a => a.Card)
+                .Where(a => a.CustomerId == id && a.Card != null && a.Id == a.Card.AccountId)
                 .ToList();
+
+            customer.Accounts = accountsWithCards;
 
             var customerViewModel = _mapper.Map<ManagerCustomerDetailsViewModel>(customer);
 
@@ -96,15 +96,20 @@ namespace BankingSystem.PL.Controllers.AppManager
         [HttpGet]
         public ActionResult GetCustomerCard(string id)
         {
-            //var customerCards = _unitOfWork.Repository<VisaCard>().GetAllIncluding(c => c.Account).Where(l => l.CustomerId == id).ToList();
-            //if (customerCards == null || customerCards.Count == 0)
-            //    return NotFound("No cards found for this customer.");
+            var customerCards = _unitOfWork.Repository<VisaCard>()
+                .GetAllIncluding(c => c.Account)
+                .Where(c => c.Account != null &&
+                            c.Account.CustomerId == id &&
+                            c.Account.Id == c.AccountId)
+                .ToList();
 
-            //var cards = _mapper.Map<List<CustomerCardViewModel>>(customerCards);
-            //ViewBag.CustomerId = id;
-            //return View(cards);
-            return View();
+            if (customerCards == null || customerCards.Count == 0)
+                return NotFound("No cards found for this customer.");
 
+            var cards = _mapper.Map<List<CustomerCardViewModel>>(customerCards);
+
+            ViewBag.CustomerId = id;
+            return View(cards);
         }
         [HttpGet]
         public ActionResult GetCustomerSupportTicket(string id)

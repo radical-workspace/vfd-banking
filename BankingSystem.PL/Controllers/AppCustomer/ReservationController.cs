@@ -73,7 +73,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                 ServiceType = reservationView.ServiceType,
                 Notes = reservationView.Notes,
                 CreatedAt = DateTime.Now,
-                Status = userId == null || reservationView.ServiceType == ServiceType.OpenAccount
+                Status = userId == null && reservationView.ServiceType == ServiceType.OpenAccount
                     ? ReservationStatus.Approved
                     : ReservationStatus.Pending
             };
@@ -150,6 +150,14 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                     return File(qrImageBytes, "image/png", "ReservationQRCode.png");
                 }
             }
+        }
+        [HttpGet]
+        public IActionResult GetCustomerAllReservations()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var reservations = _unitOfWork.Repository<Reservation>().GetAllIncluding(r => r.Branch).Where(r => r.CustomerId == userId)
+                .OrderByDescending(r => r.ReservationDate).ToList();
+            return View(reservations);
         }
 
     }
