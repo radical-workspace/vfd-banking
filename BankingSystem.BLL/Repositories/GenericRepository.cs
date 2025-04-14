@@ -73,6 +73,12 @@ namespace BankingSystem.BLL.Repositories
             return query.FirstOrDefault(predicate);
         }
 
+     //Needed in CertificateNumber Checking
+        public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbContext.Set<T>().AnyAsync(predicate);
+        }
+
         public T? GetSingleDeepIncluding(Expression<Func<T, bool>> predicate,params Func<IQueryable<T>, IIncludableQueryable<T, object>>[] includes)
         {
             IQueryable<T> query = _dbContext.Set<T>();
@@ -82,8 +88,6 @@ namespace BankingSystem.BLL.Repositories
             }
             return query.FirstOrDefault(predicate);
         }
-
-
     }
 }
 

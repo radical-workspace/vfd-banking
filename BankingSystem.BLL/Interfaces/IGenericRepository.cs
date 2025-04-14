@@ -25,6 +25,8 @@ namespace BankingSystem.BLL.Interfaces
 
         IEnumerable<T> GetAllIncluding(params Expression<Func<T, object>>[] includes);
         T? GetSingleIncluding(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
+        Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate); //NEW 
+
         T? GetSingleDeepIncluding(Expression<Func<T, bool>> predicate, params Func<IQueryable<T>, IIncludableQueryable<T, object>>[] includes);
 
     }

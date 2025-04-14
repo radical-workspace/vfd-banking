@@ -80,7 +80,11 @@ namespace BankingSystem.BLL.Services
             throw new NotImplementedException();
         }
 
-        // added this method in generic repository
+         public Task<bool> ExistsAsync(Expression<Func<Account, bool>> predicate)
+            {
+                throw new NotImplementedException();
+            }
+    // added this method in generic repository
         public Account? GetSingleDeepIncluding(Expression<Func<Account, bool>> predicate, params Func<IQueryable<Account>, IIncludableQueryable<Account, object>>[] includes)
         {
             IQueryable<Account> query = _context.Set<Account>();
@@ -90,5 +94,5 @@ namespace BankingSystem.BLL.Services
             }
             return query.FirstOrDefault(predicate);
         }
-    }
+   }
 }

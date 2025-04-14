@@ -138,12 +138,12 @@
                     <h5 class="card-title">Your Cards</h5>
                     <h2 class="mb-3 text-primary">2</h2>
                     <p class="card-text text-muted mb-3">@Model.CreditCardsCount Credit, @Model.DebitCardsCount Debit</p>
-                    <button class="btn btn-outline-primary w-100">
-                        <i class="bi bi-plus-circle me-2"></i>Apply for New Card
-                    </button>
-                    <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="CustomerCards" asp-route-id="@Model.DesiredCustomer.Id">
-                        <i class="bi bi-plus-circle me-2"></i>Cards Details
+                    <a asp-controller="CustomerLoans" asp-action="ApplyCard" asp-route-id="@Model.Id" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-plus-circle me-2"></i>Apply for New Car
                     </a>
+                     <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="CustomerCards" asp-route-id="@Model.DesiredCustomer.Id">
+                         <i class="bi bi-plus-circle me-2"></i>Cards Details
+                     </a>
                 </div>
             </div>
         </div>
@@ -156,10 +156,10 @@
                     <h5 class="card-title">Active Loans</h5>
                     <h2 class="mb-3 text-primary">@Model.LoansCount</h2>
                     <p class="card-text text-muted mb-3"> <br /></p>
-                    <button class="btn btn-outline-primary w-100">
+                    <a asp-controller="CustomerLoans" asp-action="ApplyLoan" asp-route-id="@Model.Id" class="btn btn-outline-primary w-100">
                         <i class="bi bi-plus-circle me-2"></i>Apply for New Loan
-                    </button>
-                    <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="CustomerLoans" asp-route-id="@Model.DesiredCustomer.Id">
+                    </a>
+                                            <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="CustomerLoans" asp-route-id="@Model.DesiredCustomer.Id">
                         <i class="bi bi-plus-circle me-2"></i>Loans Details
                     </a>
                 </div>
@@ -174,10 +174,10 @@
                     <h5 class="card-title">Certificates</h5>
                     <h2 class="mb-3 text-primary">@Model.CertificatesCount</h2>
                     <p class="card-text text-muted mb-3">  <br /> </p>
-                    <button class="btn btn-outline-primary w-100">
-                        <i class="bi bi-plus-circle me-2"></i>Apply for New Card
-                    </button>
-                    <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="CustomerCertificates" asp-route-id ="@Model.DesiredCustomer.Id">
+                    <a asp-controller="CustomerCertificates" asp-action="ApplyCertificate" asp-route-id="@Model.Id" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-plus-circle me-2"></i>Apply for New Loan
+                    </a>
+                                        <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="CustomerCertificates" asp-route-id ="@Model.DesiredCustomer.Id">
                         <i class="bi bi-plus-circle me-2"></i>Certificates Details
                     </a>
                 </div>

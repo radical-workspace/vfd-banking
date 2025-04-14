@@ -16,6 +16,7 @@ namespace BankingSystem.DAL.Models
         public List<Loan>? Loans { get; set; }
         public List<Account>? Accounts { get; set; }
         public IEnumerable<Card> Cards { get; set; } = null!;
-        public List<SupportTicket>? SupportTickets { get; set; } = null!;
+        public List<SupportTicket>? SupportTickets { get; set; } = null!;  
+        public FinancialDocument? FinancialDocument { get; set; } // This will be used to store the financial documents of the customer
     }
 }
