@@ -71,13 +71,13 @@ namespace BankingSystem.PL.Helpers
                     }).ToList()
                     : new List<AccountDetail> { new AccountDetail { AccountNumber = "No accounts available", AccountType = "", AccountStatus = "" } }))
 
-                //.ForMember(dest => dest.CardDetails, opt => opt.MapFrom(src => src.Card != null && src.Card.Any()
-                //    ? src.Card.Select(c => new CardDetail
-                //    {
-                //        CardType = c.CardType.ToString(),
-                //        Number = c.Number.ToString()
-                //    }).ToList()
-                //    : new List<CardDetail> { new CardDetail { CardType = "No cards available", Number = "" } }))
+                .ForMember(dest => dest.CardDetails, opt => opt.MapFrom(src => src.Accounts != null && src.Accounts.Select(a => a.Card).Any(c => c != null)
+                    ? src.Accounts.Where(a => a.Card != null).Select(a => new CardDetail
+                    {
+                        CardType = a.Card.CardType.ToString(),
+                        Number = a.Card.Number
+                    }).ToList()
+                    : new List<CardDetail> { new CardDetail { CardType = "No cards available", Number = "************" } }))
 
                 .ForMember(dest => dest.SupportTicketDetails, opt => opt.MapFrom(src => src.SupportTickets != null && src.SupportTickets.Any()
                     ? src.SupportTickets.Select(st => new SupportTicketDetail
@@ -92,7 +92,7 @@ namespace BankingSystem.PL.Helpers
                     {
                         TransactionType = t.Type.ToString()
                     }).ToList()
-                    : new List<TransactionDetail> { new TransactionDetail { TransactionType = "No transactions available" } })) ;
+                    : new List<TransactionDetail> { new TransactionDetail { TransactionType = "No transactions available" } }));
 
                     //.ForMember(dest => dest.CertificateDetails, opt => opt.MapFrom(src =>
                     //    src.Accounts != null && src.Accounts.SelectMany(a => a.Certificates).Any()

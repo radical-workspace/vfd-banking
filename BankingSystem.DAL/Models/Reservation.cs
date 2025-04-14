@@ -21,6 +21,7 @@ namespace BankingSystem.DAL.Models
         Deposit,
         CardIssuance,
         LoanInquiry,
+        CurrencyExchange,
         Other
     }
 
