@@ -117,7 +117,8 @@ namespace BankingSystem.PL.Controllers.AppTeller
             _unitOfWork.Repository<VisaCard>().Add(newCard);
             _unitOfWork.Complete();
 
-            return RedirectToAction(nameof(GetAllCards));
+            //return RedirectToAction(nameof(GetAllCards));
+            return RedirectToAction("Details", "HandleAccount", new {id = newCard.AccountId});
         }
 
 
