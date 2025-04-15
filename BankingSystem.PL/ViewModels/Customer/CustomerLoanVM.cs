@@ -48,6 +48,7 @@ namespace BankingSystem.PL.ViewModels.Customer
 
         [Required(ErrorMessage = "At least one financial document is required")]
         public List<FinancialDocumentVM> FinancialDocuments { get; set; } = new();
+        public int? loanID { get; set; }
     }
 
     public class FinancialDocumentVM
@@ -64,7 +65,6 @@ namespace BankingSystem.PL.ViewModels.Customer
         public IFormFile? DocumentFile { get; set; }
 
         [Required(ErrorMessage = "Document type is required")]
-        [StringLength(100, ErrorMessage = "Document type cannot exceed 100 characters")]
         public string DocumentType { get; set; } = string.Empty;
     }
 

@@ -149,6 +149,8 @@
                                     <!-- Income Statement Form -->
                                     <div id="IncomeStatementForm" class="document-form" style="display: none;">
                                         <h5>Upload Income Statement</h5>
+                                        <input asp-for="FinancialDocuments[0].DocumentType" type="hidden" id="IncomeStatementType" value="IncomeStatement" />
+
 
                                         <div class="mb-4">
                                             <label asp-for="FinancialDocuments[0].Description" class="form-label">Description</label>
@@ -183,6 +185,7 @@
                                     <!-- Asset Declaration Form -->
                                     <div id="AssetDeclarationForm" class="document-form" style="display: none;">
                                         <h5>Upload Asset Declaration</h5>
+                                        <input asp-for="FinancialDocuments[1].DocumentType" type="hidden" id="AssetDeclarationType" value="AssetDeclaration" />
 
                                         <div class="mb-4">
                                             <label asp-for="FinancialDocuments[1].Description" class="form-label">Description</label>
@@ -218,6 +221,7 @@
                                     <!-- Tax Return Form -->
                                     <div id="TaxReturnForm" class="document-form" style="display: none;">
                                         <h5>Upload Tax Return</h5>
+                                        <input asp-for="FinancialDocuments[2].DocumentType" type="hidden" id="TaxReturnType" value="TaxReturn" />
 
                                         <div class="mb-4">
                                             <label asp-for="FinancialDocuments[2].Description" class="form-label">Description</label>
@@ -297,13 +301,10 @@
 
                     <!-- Hidden fields to store document data -->
                     <input type="hidden" id="IncomeStatementData" name="IncomeStatementData" value="" />
-                    <input type="hidden" id="IncomeStatementType" name="IncomeStatementType" value="IncomeStatement" />
 
                     <input type="hidden" id="AssetDeclarationData" name="AssetDeclarationData" value="" />
-                    <input type="hidden" id="AssetDeclarationType" name="AssetDeclarationType" value="AssetDeclaration" />
 
                     <input type="hidden" id="TaxReturnData" name="TaxReturnData" value="" />
-                    <input type="hidden" id="TaxReturnType" name="TaxReturnType" value="TaxReturn" />
                     <div asp-validation-summary="All" class="text-danger mt-3"></div>
                 </form>
             </div>
@@ -488,7 +489,7 @@
         }
 
         // Save Document
-                   function saveDocument(documentType) {
+         function saveDocument(documentType) {
             try {
 
                 // Define the correct IDs based on the document type
@@ -500,7 +501,7 @@
                         issueDate: 'incomeIssueDate',
                         file: 'incomeFile',
                         error: 'incomeFileError',
-                        DocumentType:'IncomeStatement'
+                        
                     };
                     break;
                 case 'AssetDeclaration':
@@ -509,7 +510,7 @@
                         issueDate: 'assetIssueDate',
                         file: 'assetFile',
                         error: 'assetFileError',
-                        DocumentType:'AssetDeclaration'
+                        
                     };
                     break;
                 case 'TaxReturn':
@@ -518,7 +519,7 @@
                         issueDate: 'taxIssueDate',
                         file: 'taxFile',
                         error: 'taxFileError',
-                        DocumentType:'TaxReturn'
+                        
 
                     };
                     break;
@@ -533,18 +534,14 @@
                 const issueDateElement = document.getElementById(ids.issueDate);
                 const fileInput = document.getElementById(ids.file);
                 const errorElement = document.getElementById(ids.error);
-                // const filetypeElement = document.getElementById(ids.filetype);
+                // const DocumentTypeElement = document.getElementById(ids.type);
 
                 const description = descriptionElement.value.trim();
                 const issueDate = issueDateElement.value;
-                const DocumentType = ids.DocumentType
+                // const DocumentType = DocumentTypeElement.value;
 
                 // Validate inputs
                 let isValid = true;
-
-                
-
-
 
                 if (!description) {
                     descriptionElement.classList.add('is-invalid');
@@ -592,11 +589,12 @@
 
                 // Create document data
                 const documentData = {
-                    DocumentType: DocumentType,
+                    // documentType: DocumentType,
                     description: description,
                     issueDate: issueDate,
                     fileName: fileInput.files[0].name
                 };
+                // console.log(documentData.documentType);
 
                 // Store the document data
 
