@@ -77,12 +77,14 @@ namespace BankingSystem.PL.Controllers.AppCustomer
 
             // Get accounts
             var (senderAccount, receiverAccount, validationResult) = _transfereHelper.GetAndValidateAccounts(transferMoneyVM, transaction);
+            
             if (validationResult != null) return validationResult;
-            //return _transfereHelper.FailTransfer(transaction,"a7a","a7a");
+                //return _transfereHelper.ShowTransferError("One or both of the use accounts is invalid.", "Account invalid");
+
             // Validate transfer rules
             validationResult = _transfereHelper.ValidateTransferRules(transferMoneyVM, senderAccount, receiverAccount, transaction);
             if (validationResult != null) return validationResult;
-            //return _transfereHelper.FailTransfer(transaction, "wla7a", "wla7a");
+            //return _transfereHelper.ShowTransferError("One or both of the use accounts is invalid.", "Account invalid");
 
             // Execute transfer
             return _transfereHelper.ExecuteTransfer(transferMoneyVM, senderAccount, receiverAccount, transaction);

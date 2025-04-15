@@ -19,6 +19,8 @@ namespace BankingSystem.PL.Helpers
             var (senderAccount, validation) = GetAccountBasedOnTransferMethod(model, transaction);
             if (validation != null) return (null, null, validation)!;
 
+            transaction.AccountId = senderAccount.Id;
+
             // Validate and load sender branch savings
             var (loadSuccess, error) = LoadBranchSavings(senderAccount, transaction);
             if (!loadSuccess)
@@ -32,7 +34,7 @@ namespace BankingSystem.PL.Helpers
             // Set transaction details
             try
             {
-                transaction.AccountId = senderAccount.Id;
+                //transaction.AccountId = senderAccount.Id;
                 transaction.CustomerID = senderAccount.CustomerId!;
                 transaction.AccountDistenationNumber = receiverAccount.Number;
 
@@ -48,6 +50,8 @@ namespace BankingSystem.PL.Helpers
         public ViewResult ValidateTransferRules(
             AccountsViewModel model, Account sender, Account receiver, Transaction transaction)
         {
+            transaction.AccountId = sender.Id;
+
             if (sender.Number == receiver.Number)
                 return FailTransfer(transaction, "Same account transfer", "Cannot transfer to the same account.");
 
@@ -66,8 +70,8 @@ namespace BankingSystem.PL.Helpers
                 if (sender.Card?.ExpDate < DateTime.Now)
                     return FailTransfer(transaction, "Card expired", "Card has expired.");
 
-                if (sender.Card?.ExpDate != model.VisaExpDate)
-                    return FailTransfer(transaction, "Card not active", "Card is not active.");
+                if ((sender.Card?.ExpDate != model.VisaExpDate) || (sender.Card?.CVV != model.VisaCVV))
+                    return FailTransfer(transaction, "Invalid Card Information ", "Double chech your Card information and try again.");
             }
 
             return null;
@@ -81,6 +85,8 @@ namespace BankingSystem.PL.Helpers
                 sender.Balance -= model.Amount;
                 receiver.Balance += model.Amount;
 
+                transaction.AccountId = sender.Id;
+
                 var senderbranchSavings = sender.Branch.Savings.FirstOrDefault(b => b.BranchId == sender.BranchId);
 
                 if (senderbranchSavings != null)
@@ -89,7 +95,8 @@ namespace BankingSystem.PL.Helpers
                     _unitOfWork.Repository<Savings>().Update(senderbranchSavings);
                 }
                 else
-                    return  ShowTransferError("No savings account found for branch.", "Bank error.");
+                    //return ShowTransferError("No savings account found for branch.", "Bank error.");
+                    return FailTransfer(transaction, "Bank error.", "No savings account found for branch.");
 
                 if ((senderbranchSavings.Balance * 1.4) <= model.Amount)
                     return FailTransfer(transaction, "Bank limit exceeded", "Branch has insufficient funds for this transfer.");
@@ -138,11 +145,13 @@ namespace BankingSystem.PL.Helpers
                                                 accounts.FirstOrDefault(a => a.Number == model.SelectedAccountNumber)!;
 
             if (selectedAccount == null)
-                return (null,ShowTransferError("Selected card not found.", "Selected card not found."));
+                return (null, ShowTransferError("Selected card not found.", "Selected card not found."));
 
             if (selectedAccount.AccountStatus != AccountStatus.Active)
+            {
+                transaction.AccountId = selectedAccount.Id;
                 return (null, FailTransfer(transaction, "Account is Inactive.", "Account is Inactive."))!;
-
+            }
             selectedAccount.Branch.Savings = [.. _unitOfWork.Repository<Savings>().GetAll().Where(b => b.BranchId == selectedAccount.BranchId)];
 
             transaction.AccountId = selectedAccount.Id;
@@ -157,6 +166,8 @@ namespace BankingSystem.PL.Helpers
         public ViewResult ValidateWithdrawlRules(
           AccountsViewModel model, Account myAccount, Transaction transaction, bool isUsingVisa)
         {
+            transaction.AccountId = myAccount.Id;
+
             if (isUsingVisa && ((model.VisaCVV != myAccount.Card.CVV) || (model.VisaExpDate < DateTime.Now)))
             {
                 return FailTransfer(transaction, "Invalid card details", "Invalid card details.");
@@ -184,17 +195,15 @@ namespace BankingSystem.PL.Helpers
 
         public ViewResult ValidateDepositRules(AccountsViewModel model, Account myAccount, Transaction transaction, bool isUsingVisa)
         {
+
+            transaction.AccountId = myAccount.Id;
             if (isUsingVisa && ((model.VisaCVV != myAccount.Card.CVV) || (model.VisaExpDate < DateTime.Now)))
-            {
                 return FailTransfer(transaction, "Invalid card details", "Invalid card details.");
-            }
+
             else
             {
                 if ((myAccount.Balance < 0) || (model.Amount <= 0))
                     return FailTransfer(transaction, "Insufficient balance", "Insufficient balance");
-                //else if ((model.Amount % 50) != 0)
-                //    return FailTransfer(transaction, "Can only deposit 50 EGP Or it's multipliers.",
-                //                                     "Can only deposit 50 EGP Or it's multipliers.");
             }
             return null;
         }
@@ -237,7 +246,7 @@ namespace BankingSystem.PL.Helpers
                 if (model.SelectedDestination == AccountsViewModel.DepositDestination.Loan)
                 {
                     if (!model.SelectedLoanId.HasValue)
-                         return ShowTransferError("Please select a loan", "Deposit failed.");
+                        return ShowTransferError("Please select a loan", "Deposit failed.");
 
                     var loan = _unitOfWork.Repository<Loan>().Get(model.SelectedLoanId.Value);
 
@@ -287,7 +296,7 @@ namespace BankingSystem.PL.Helpers
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////      Failure         ///////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        
+
         public ViewResult FailTransfer(Transaction transaction, string failureReason, string errorMessage)
         {
             // Update transaction status
@@ -354,7 +363,7 @@ namespace BankingSystem.PL.Helpers
                 return (null, ShowTransferError("Could not extract sender account number ", "Invalid Sender account number"));
 
             if (senderAccount.AccountStatus != AccountStatus.Active)
-                return (null, ShowTransferError("Sender account is Inactive", "Account is Inactive."));
+                return (null, FailTransfer(transaction, "Sender account is Inactive", "Account is Inactive."));
 
             return (senderAccount, null)!;
         }
@@ -378,6 +387,11 @@ namespace BankingSystem.PL.Helpers
                     .GetAll()
                     .Where(b => b.BranchId == account.BranchId)
                     .ToList();
+                if (account.Branch.Savings.Count == 0)
+                {
+                    transaction.AccountId = account.Id;
+                    return (false,FailTransfer(transaction,"Savings Error","The Branch does not Contain the This Currency"));
+                }
 
                 return (true, null);
             }
@@ -409,7 +423,10 @@ namespace BankingSystem.PL.Helpers
                     return (null, ShowTransferError("Recipient account not found", "Invalid receiver account"));
 
                 if (receiverAccount.AccountStatus != AccountStatus.Active)
-                    return (null, ShowTransferError("Receiver account is not active", "Inactive account"));
+                {
+                    transaction.AccountId = receiverAccount.Id;
+                    return (null, FailTransfer(transaction, "Receiver account is not active", "Inactive account"));
+                }
 
                 var (loadSuccess, error) = LoadBranchSavings(receiverAccount, transaction);
                 if (!loadSuccess)
@@ -419,6 +436,8 @@ namespace BankingSystem.PL.Helpers
             }
             catch (Exception ex)
             {
+                //return (null, FailTransfer(transaction, "Receiver account is not active", "Inactive account"));
+
                 return (null, ShowTransferError($"Failed to validate receiver: {ex.Message}", "System error"));
             }
         }
