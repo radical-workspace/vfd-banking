@@ -1,0 +1,42 @@
+﻿<div class="col-md-6 ps-4">
+    <div id="documentFormsContainer">
+        <!-- Default Message -->
+        <div id="defaultDocumentMessage" class="text-center py-5">
+            <i class="bi bi-arrow-left-circle text-muted" style="font-size: 3rem;"></i>
+            <h5 class="mt-3 text-muted">Select a Document Type</h5>
+            <p class="text-muted">Click on one of the document cards on the left to upload that document.</p>
+        </div>
+
+        <!-- Income Statement Form -->
+        <div id="IncomeStatementForm" class="document-form" style="display: none;">
+            <h5 class="mb-4 text-primary">Upload Income Statement</h5>
+
+            <div class="mb-4">
+                <label for="incomeDescription" class="form-label">Description <span class="text-danger">*</span></label>
+                <textarea id="incomeDescription" name="IncomeDescription" class="form-control" rows="3" placeholder="Provide details about your income statement"></textarea>
+                <div class="invalid-feedback">Please provide a description.</div>
+            </div>
+
+            <div class="mb-4">
+                <label for="incomeIssueDate" class="form-label">Issue Date <span class="text-danger">*</span></label>
+                <input type="date" id="incomeIssueDate" name="IncomeIssueDate" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                <div class="invalid-feedback">Please select a valid issue date.</div>
+            </div>
+
+            <div class="mb-4">
+                <label for="incomeFile" class="form-label">Upload Document (PDF only) <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <input type="file" id="incomeFile" name="IncomeFile" class="form-control" accept="application/pdf" />
+                    <span class="input-group-text"><i class="bi bi-file-earmark-pdf"></i></span>
+                </div>
+                <div class="form-text">Maximum file size: 10MB</div>
+                <div id="incomeFileError" class="text-danger" style="display:none;"></div>
+            </div>
+            <span class="input-group-text"><i class="bi bi-file-earmark-pdf"></i></span>
+
+            <div class="text-end">
+                <button type="button" class="btn btn-primary" onclick="saveDocument('IncomeStatement')">
+                    <i class="bi bi-check-circle me-2"></i>Save Document
+                </button>
+            </div>
+        </div>

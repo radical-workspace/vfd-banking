@@ -12,13 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankingSystem.DAL.Migrations
 {
     [DbContext(typeof(BankingSystemContext))]
-<<<<<<<< HEAD:BankingSystem.DAL/Migrations/20250409022021_final.Designer.cs
-    [Migration("20250409022021_final")]
-    partial class final
-========
-    [Migration("20250413082723_ISA")]
-    partial class ISA
->>>>>>>> origin/MoSobhe:BankingSystem.DAL/Migrations/20250413082723_ISA.Designer.cs
+    [Migration("20250415043740_loanDocRel")]
+    partial class loanDocRel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -307,6 +302,9 @@ namespace BankingSystem.DAL.Migrations
                     b.Property<int?>("AccountId")
                         .HasColumnType("int");
 
+                    b.Property<double?>("Amount")
+                        .HasColumnType("float");
+
                     b.Property<string>("CertificateNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -411,8 +409,7 @@ namespace BankingSystem.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId")
-                        .IsUnique();
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("FinancialDocument");
                 });
@@ -946,8 +943,8 @@ namespace BankingSystem.DAL.Migrations
             modelBuilder.Entity("BankingSystem.DAL.Models.FinancialDocument", b =>
                 {
                     b.HasOne("BankingSystem.DAL.Models.MyCustomer", "Customer")
-                        .WithOne("FinancialDocument")
-                        .HasForeignKey("BankingSystem.DAL.Models.FinancialDocument", "CustomerId")
+                        .WithMany("FinancialDocuments")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1206,7 +1203,7 @@ namespace BankingSystem.DAL.Migrations
 
                     b.Navigation("Cards");
 
-                    b.Navigation("FinancialDocument");
+                    b.Navigation("FinancialDocuments");
 
                     b.Navigation("Loans");
 

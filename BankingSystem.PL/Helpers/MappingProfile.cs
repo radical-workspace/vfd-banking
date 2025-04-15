@@ -76,7 +76,7 @@ namespace BankingSystem.PL.Helpers
                 .ForMember(dest => dest.Balance, opt => opt.MapFrom(src => src.Balance ?? 0)) // Default to 0 if null
                 .ForMember(dest => dest.AccountType, opt => opt.MapFrom(src => src.AccountType));
 
-            CreateMap<Customer, CustomerViewModel>()
+            CreateMap<MyCustomer, CustomerViewModel>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
@@ -87,7 +87,7 @@ namespace BankingSystem.PL.Helpers
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate))
                 .ReverseMap(); 
 
-            CreateMap<Customer, CustomerProfileViewModel>()
+            CreateMap<MyCustomer, CustomerProfileViewModel>()
                 .ForMember(dest => dest.DesiredCustomer, opt => opt.MapFrom(src => src))
                 .ForMember(dest => dest.Account, opt => opt.MapFrom(src => src.Accounts));
 

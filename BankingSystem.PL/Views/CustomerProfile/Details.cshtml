@@ -1,5 +1,5 @@
 ﻿@using BankingSystem.PL.ViewModels.Customer
-@model CustomerDetailsVM
+@model CustomerProfileViewModel
 @{
     ViewData["Title"] = "HomePage";
 }
@@ -7,7 +7,7 @@
 <div class="profile-container">
     <!-- Welcome Section -->
     <div class="welcome-section">
-        <h2 class="mb-2">Welcome back, @Model.FirstName @Model.LastName !</h2>
+        <h2 class="mb-2">Welcome back, @Model.DesiredCustomer.FirstName @Model.DesiredCustomer.LastName !</h2>
         <p class="mb-0">We're glad to see you again.</p>
     </div>
 
@@ -18,7 +18,7 @@
                 <!-- Profile Header -->
                 <div class="profile-header">
                     <h4 class="mb-0">Personal Information</h4>
-                    <button class="btn btn-outline-primary" asp-action="EditCustomer" asp-controller="////" asp-route-id="@Model.Id">
+                    <button class="btn btn-outline-primary" asp-action="EditCustomer" asp-controller="////" asp-route-id="@Model.DesiredCustomer.Id">
                         <i class="bi bi-pencil me-2"></i>Edit Profile
                     </button>
                 </div>
@@ -33,7 +33,7 @@
                             </div>
                             <div class="detail-content">
                                 <div class="detail-label">Full Name</div>
-                                <div class="detail-value">@Model.FirstName @Model.LastName</div>
+                                <div class="detail-value">@Model.DesiredCustomer.FirstName @Model.DesiredCustomer.LastName</div>
                             </div>
                         </div>
                     </div>
@@ -46,7 +46,7 @@
                             </div>
                             <div class="detail-content">
                                 <div class="detail-label">Email Address</div>
-                                <div class="detail-value">@Model.Email</div>
+                                <div class="detail-value">@Model.DesiredCustomer.Email</div>
                             </div>
                         </div>
                     </div>
@@ -59,7 +59,7 @@
                             </div>
                             <div class="detail-content">
                                 <div class="detail-label">Phone Number</div>
-                                <div class="detail-value">@Model.PhoneNumber</div>
+                                <div class="detail-value">@Model.DesiredCustomer.PhoneNumber</div>
                             </div>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                             </div>
                             <div class="detail-content">
                                 <div class="detail-label">Address</div>
-                                <div class="detail-value">@Model.Address</div>
+                                <div class="detail-value">@Model.DesiredCustomer.Address</div>
                             </div>
                         </div>
                     </div>
@@ -85,7 +85,7 @@
                             </div>
                             <div class="detail-content">
                                 <div class="detail-label">Birth Date</div>
-                                <div class="detail-value">@Model.BirthDate</div>
+                                <div class="detail-value">@Model.DesiredCustomer.BirthDate</div>
                             </div>
                         </div>
                     </div>
@@ -98,7 +98,7 @@
                             </div>
                             <div class="detail-content">
                                 <div class="detail-label">Join Date</div>
-                                <div class="detail-value">@Model.JoinDate</div>
+                                <div class="detail-value">@Model.DesiredCustomer.JoinDate</div>
                             </div>
                         </div>
                     </div>
@@ -135,7 +135,7 @@
                     <h5 class="card-title">Your Cards</h5>
                     <h2 class="mb-3 text-primary">2</h2>
                     <p class="card-text text-muted mb-3">@Model.CreditCardsCount Credit, @Model.DebitCardsCount Debit</p>
-                    <a asp-controller="CustomerLoans" asp-action="ApplyCard" asp-route-id="@Model.Id" class="btn btn-outline-primary w-100">
+                    <a asp-controller="CustomerLoans" asp-action="ApplyCard" asp-route-id="@Model.DesiredCustomer.Id" class="btn btn-outline-primary w-100">
                         <i class="bi bi-plus-circle me-2"></i>Apply for New Card
                     </a>
                 </div>
@@ -150,7 +150,7 @@
                     <h5 class="card-title">Active Loans</h5>
                     <h2 class="mb-3 text-primary">@Model.LoansCount</h2>
                     <p class="card-text text-muted mb-3"> <br /></p>
-                    <a asp-controller="CustomerLoans" asp-action="ApplyLoan" asp-route-id="@Model.Id" class="btn btn-outline-primary w-100">
+                    <a asp-controller="CustomerLoans" asp-action="ApplyLoan" asp-route-id="@Model.DesiredCustomer.Id" class="btn btn-outline-primary w-100">
                         <i class="bi bi-plus-circle me-2"></i>Apply for New Loan
                     </a>
 
@@ -165,9 +165,9 @@
                 <div class="card-body text-center">
                     <i class="bi bi-credit-card card-icon mb-3"></i>
                     <h5 class="card-title">Certificates</h5>
-                    <h2 class="mb-3 text-primary">@Model.CertificatCount</h2>
+                    <h2 class="mb-3 text-primary">@Model.CertificatesCount</h2>
                     <p class="card-text text-muted mb-3">  <br /> </p>
-                    <a asp-controller="CustomerCertificates" asp-action="ApplyCertificate" asp-route-id="@Model.Id" class="btn btn-outline-primary w-100">
+                    <a asp-controller="CustomerCertificates" asp-action="ApplyCertificate" asp-route-id="@Model.DesiredCustomer.Id" class="btn btn-outline-primary w-100">
                         <i class="bi bi-plus-circle me-2"></i>Apply for New Loan
                     </a>
                 </div>
@@ -186,7 +186,7 @@
                     </div>
 
                     <div class="row g-4">
-                        @foreach (var acc in Model.Accounts)
+                        @foreach (var acc in Model.Account)
                         {
                             <div class="col-md-6">
                                 <div class="account-card">

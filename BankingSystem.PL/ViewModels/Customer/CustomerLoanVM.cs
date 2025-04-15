@@ -46,11 +46,27 @@ namespace BankingSystem.PL.ViewModels.Customer
         [DateAfterMonth(ErrorMessage = "Start date must be at least one month from today")]
         public DateTime StartDate { get; set; }
 
-        // PDF Required
-        //[Display(Name = "Upload Loan Document (PDF)")]
-        //[Required(ErrorMessage = "You must upload a supporting document")]
-        //[DataType(DataType.Upload)]
-        //[FileExtensions(Extensions = "pdf", ErrorMessage = "Only PDF files are allowed")]
-        //public IFormFile Document { get; set; } = null!;
+        [Required(ErrorMessage = "At least one financial document is required")]
+        public List<FinancialDocumentVM> FinancialDocuments { get; set; } = new();
     }
+
+    public class FinancialDocumentVM
+    {
+        [Required(ErrorMessage = "Description is required")]
+        [StringLength(500, ErrorMessage = "Description cannot exceed 500 characters")]
+        public string Description { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Issue date is required")]
+        [DataType(DataType.Date)]
+        public DateTime? IssueDate { get; set; }
+
+        [Required(ErrorMessage = "Document file is required")]
+        public IFormFile? DocumentFile { get; set; }
+
+        [Required(ErrorMessage = "Document type is required")]
+        [StringLength(100, ErrorMessage = "Document type cannot exceed 100 characters")]
+        public string DocumentType { get; set; } = string.Empty;
+    }
+
 }
+

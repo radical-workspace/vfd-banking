@@ -8,12 +8,7 @@
 <link rel="stylesheet" href="/css/CustomerHome.css" />
 <div class="profile-container">
     <!-- Header Section -->
-    @* <div class="welcome-section"> *@
-    @*     <h2 class="mb-2">Apply for a Loan</h2> *@
-    @*     <p class="mb-0">Complete the form below to submit your loan application.</p> *@
-    @* </div> *@ 
-    <div class="welcome-section" > 
-        @* style="background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), no-repeat center; background-size: cover; padding: 2.5rem; border-radius: 0.5rem; margin-bottom: 2rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); *@
+    <div class="welcome-section">
         <div class="row align-items-center">
             <div class="col-md-8">
                 <h1 class="mb-2 fw-bold text-primary">Unlock Your Financial Potential</h1>
@@ -31,121 +26,285 @@
         <div class="card shadow-sm">
             <div class="card-body p-3">
                 <!-- Form Header -->
-                <div class="profile-header">
+                <div class="profile-header mb-4">
                     <h4 class="mb-0">Loan Application Details</h4>
                 </div>
 
-                <form asp-action="ApplyLoan" asp-controller="CustomerLoans" onsubmit="return validateForm();" method="post">
-                        <input type="hidden" asp-for="CustomerId" value="@Model.CustomerId"/>
+                <form asp-action="ApplyLoan" asp-controller="CustomerLoans" onsubmit="return validateForm();" method="post" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="CustomerId" value="@Model.CustomerId" />
+                    <input type="hidden" asp-for="BranchId" value="@Model.BranchId" />
 
-                        <!-- Details Grid -->
-                        <div class="row g-3">
-
-                        <input type="hidden" asp-for="BranchId" value="@Model.BranchId" />
+                    <div class="row">
+                        <!-- Left Half - Loan Details -->
+                        <div class="col-md-6 border-end pe-4">
+                            <h5 class="mb-4 text-primary">Loan Details</h5>
 
                             <!-- Account Selection -->
-                            <div class="col-md-6">
-                                <div class="detail-card">
-                                    <div class="detail-label">Select Account</div>
+                            <div class="mb-4">
+                                <div class="detail-label">Select Account</div>
                                 <div class="form-group">
-                                    @* <label asp-for="SelectedAccountId" class="control-label"></label> *@
                                     <select asp-for="SelectedAccountId" asp-items="Model.Accounts" class="form-control">
-                                        <option value="">-- Select Account --</option> <!-- default unselected option -->
+                                        <option value="">-- Select Account --</option>
                                     </select>
                                     <span asp-validation-for="SelectedAccountId" class="text-danger"></span>
-                                </div>
-
-                                    @* <select asp-for="SelectedAccountId" class="form-select"> *@
-                                    @*     <option value="">Select Account</option> *@
-                                    @*     @foreach (var account in Model.Accounts) *@
-                                    @*     { *@
-                                    @*         <option value="@account.Id">@account.AccountType - @account.Number</option> *@
-                                    @*     } *@
-                                    @* </select> *@
-                                    @* <span asp-validation-for="SelectedAccountId" class="text-danger"></span> *@
                                 </div>
                             </div>
 
                             <!-- Loan Type -->
-                            <div class="col-md-6">
-                                <div class="detail-card">
-                                    <div class="detail-label">Loan Type</div>
-
-
-                                    <select asp-for="LoanType" class="form-select" asp-items="Html.GetEnumSelectList<LoanType>()" onchange="updateLoanDetails()">
-                                        <option value="">Select Loan Type</option>
-                                    </select>
-                                    <span asp-validation-for="LoanType" class="text-danger"></span>
-                                </div>
+                            <div class="mb-4">
+                                <div class="detail-label">Loan Type</div>
+                                <select asp-for="LoanType" class="form-select" asp-items="Html.GetEnumSelectList<LoanType>()" onchange="updateLoanDetails()">
+                                    <option value="">Select Loan Type</option>
+                                </select>
+                                <span asp-validation-for="LoanType" class="text-danger"></span>
                             </div>
 
                             <!-- Loan Amount -->
-                            <div class="col-md-6">
-                                <div class="detail-card">
-                                    <div class="detail-label">Loan Amount ($)</div>
-                                    <input asp-for="LoanAmount" type="number" class="form-control" placeholder="Enter amount" />
-                                    <span asp-validation-for="LoanAmount" class="text-danger"></span>
-                                </div>
+                            <div class="mb-4">
+                                <div class="detail-label">Loan Amount ($)</div>
+                                <input asp-for="LoanAmount" type="number" class="form-control" placeholder="Enter amount" />
+                                <span asp-validation-for="LoanAmount" class="text-danger"></span>
                             </div>
 
                             <!-- Interest Rate -->
-                            <div class="col-md-6">
-                                <div class="detail-card">
-                                    <div class="detail-label">Interest Rate (%)</div>
-                                    @* <input name="InterestRate" type="number" class="form-control" placeholder="Enter interest rate" readonly /> *@
-                                    <input name="InterestRate" asp-for="InterestRate" type="number" class="form-control" placeholder="Enter interest rate" readonly/>
-                                    <span asp-validation-for="InterestRate" class="text-danger"></span>
-                                </div>
+                            <div class="mb-4">
+                                <div class="detail-label">Interest Rate (%)</div>
+                                <input name="InterestRate" asp-for="InterestRate" type="number" class="form-control" placeholder="Enter interest rate" readonly />
+                                <span asp-validation-for="InterestRate" class="text-danger"></span>
                             </div>
 
                             <!-- Loan Duration -->
-                            <div class="col-md-6">
-                                <div class="detail-card">
-                                    <div class="detail-label">Loan Duration (Months)</div>
-                                    @* <input name="DurationInMonth" type="number" class="form-control" placeholder="Enter duration in months" readonly /> *@
-                                    <input name="DurationInMonth" asp-for="DurationInMonth" type="number" class="form-control" placeholder="Enter duration in months" readonly />
-                                    <span asp-validation-for="DurationInMonth" class="text-danger"></span>
-                                </div>
+                            <div class="mb-4">
+                                <div class="detail-label">Loan Duration (Months)</div>
+                                <input name="DurationInMonth" asp-for="DurationInMonth" type="number" class="form-control" placeholder="Enter duration in months" readonly />
+                                <span asp-validation-for="DurationInMonth" class="text-danger"></span>
                             </div>
 
                             <!-- Start Date -->
-                            <div class="col-md-6">
-                                <div class="detail-card">
-                                    <div class="detail-label">Start Date</div>
-                                    <input asp-for="StartDate" type="date" class="form-control" min="@DateTime.Now.AddMonths(1).ToString("yyyy-MM-dd")" />
-                                    <span asp-validation-for="StartDate" class="text-danger"></span>
+                            <div class="mb-4">
+                                <div class="detail-label">Start Date</div>
+                                <input asp-for="StartDate" type="date" class="form-control" min="@DateTime.Now.AddMonths(1).ToString("yyyy-MM-dd")" />
+                                <span asp-validation-for="StartDate" class="text-danger"></span>
+                            </div>
+
+                            <!-- Required Documents Cards -->
+                            <h5 class="mb-3 mt-4 text-primary">Required Documents</h5>
+                            <p class="text-muted mb-3">Click each card to upload the corresponding document</p>
+
+                            <div class="row g-3">
+                                <!-- Income Statement Card -->
+                                <div class="col-md-4">
+                                    <div id="IncomeStatementCard" class="card document-card h-100" onclick="showDocumentForm('IncomeStatement')" style="height: 180px; cursor: pointer;">
+                                        <div class="card-body text-center d-flex flex-column justify-content-center">
+                                            <i class="bi bi-file-earmark-text mb-2" style="font-size: 2rem;"></i>
+                                            <h6 class="card-title">Income Statement</h6>
+                                            <div id="IncomeStatementStatus" class="mt-2">
+                                                <span class="badge bg-warning text-dark">Not Uploaded</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Asset Declaration Card -->
+                                <div class="col-md-4">
+                                    <div id="AssetDeclarationCard" class="card document-card h-100" onclick="showDocumentForm('AssetDeclaration')" style="height: 180px; cursor: pointer;">
+                                        <div class="card-body text-center d-flex flex-column justify-content-center">
+                                            <i class="bi bi-house mb-2" style="font-size: 2rem;"></i>
+                                            <h6 class="card-title">Asset Declaration</h6>
+                                            <div id="AssetDeclarationStatus" class="mt-2">
+                                                <span class="badge bg-warning text-dark">Not Uploaded</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Tax Return Card -->
+                                <div class="col-md-4">
+                                    <div id="TaxReturnCard" class="card document-card h-100" onclick="showDocumentForm('TaxReturn')" style="height: 180px; cursor: pointer;">
+                                        <div class="card-body text-center d-flex flex-column justify-content-center">
+                                            <i class="bi bi-receipt mb-2" style="font-size: 2rem;"></i>
+                                            <h6 class="card-title">Tax Return</h6>
+                                            <div id="TaxReturnStatus" class="mt-2">
+                                                <span class="badge bg-warning text-dark">Not Uploaded</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Terms and Conditions -->
-                        <div class="mt-4">
+                        <!-- Right Half - Financial Document -->
+                        <div class="col-md-6 ps-4">
+                            <div id="documentFormsContainer">
+                                <!-- Default Message -->
+                                <div id="defaultDocumentMessage" class="text-center py-5">
+                                    <i class="bi bi-arrow-left-circle text-muted" style="font-size: 3rem;"></i>
+                                    <h5 class="mt-3 text-muted">Select a Document Type</h5>
+                                    <p class="text-muted">Click on one of the document cards on the left to upload that document.</p>
+                                </div>
+
+                                <div id="documentFormsContainer">
+                                    <h5 class="mb-3 mt-4 text-primary">Required Documents</h5>
+
+                                    <!-- Income Statement Form -->
+                                    <div id="IncomeStatementForm" class="document-form" style="display: none;">
+                                        <h5>Upload Income Statement</h5>
+
+                                        <div class="mb-4">
+                                            <label asp-for="FinancialDocuments[0].Description" class="form-label">Description</label>
+                                            <textarea asp-for="FinancialDocuments[0].Description" class="form-control" id="incomeDescription" rows="3" placeholder="Provide details about your income statement"></textarea>
+                                            <span asp-validation-for="FinancialDocuments[0].Description" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label asp-for="FinancialDocuments[0].IssueDate" class="form-label">Issue Date</label>
+                                            <input type="date" asp-for="FinancialDocuments[0].IssueDate" id="incomeIssueDate" class="form-control" />
+                                            <span asp-validation-for="FinancialDocuments[0].IssueDate" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label asp-for="FinancialDocuments[0].DocumentFile" class="form-label">Upload Document (PDF only)</label>
+                                            <div class="input-group"> 
+                                            <input type="file" asp-for="FinancialDocuments[0].DocumentFile" id="incomeFile" class="form-control" accept="application/pdf" />
+                                            <span asp-validation-for="FinancialDocuments[0].DocumentFile" class="text-danger"></span>
+                                            <span class="input-group-text"><i class="bi bi-file-earmark-pdf"></i></span>
+                                            </div>
+                                            <div class="form-text">Maximum file size: 10MB</div>
+                                            <div id="incomeFileError" class="text-danger" style="display:none;"></div>
+                                        </div>
+
+                                        <div class="text-end">
+                                            <button type="button" class="btn btn-primary" onclick="saveDocument('IncomeStatement')">
+                                                <i class="bi bi-check-circle me-2"></i>Save Document
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Asset Declaration Form -->
+                                    <div id="AssetDeclarationForm" class="document-form" style="display: none;">
+                                        <h5>Upload Asset Declaration</h5>
+
+                                        <div class="mb-4">
+                                            <label asp-for="FinancialDocuments[1].Description" class="form-label">Description</label>
+                                            <textarea asp-for="FinancialDocuments[1].Description" class="form-control" id="assetDescription" rows="3" placeholder="Provide details about your assets"></textarea>
+                                            <span asp-validation-for="FinancialDocuments[1].Description" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label asp-for="FinancialDocuments[1].IssueDate" class="form-label">Issue Date</label>
+                                            <input type="date" asp-for="FinancialDocuments[1].IssueDate" id="assetIssueDate" class="form-control" />
+                                            <span asp-validation-for="FinancialDocuments[1].IssueDate" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label asp-for="FinancialDocuments[1].DocumentFile" class="form-label">Upload Document (PDF only)</label>
+                                            <div class="input-group">
+                                             <input type="file" asp-for="FinancialDocuments[1].DocumentFile" id="assetFile" class="form-control" accept="application/pdf" />
+                                            <span asp-validation-for="FinancialDocuments[1].DocumentFile" class="text-danger"></span>
+                                                <span class="input-group-text"><i class="bi bi-file-earmark-pdf"></i></span>
+                                                </div>
+                                            <div class="form-text">Maximum file size: 10MB</div>
+                                            <div id="assetFileError" class="text-danger" style="display:none;"></div>            
+                                        </div>
+
+                                        <div class="text-end">
+                                            <button type="button" class="btn btn-primary" onclick="saveDocument('AssetDeclaration')">
+                                                <i class="bi bi-check-circle me-2"></i>Save Document
+                                            </button>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- Tax Return Form -->
+                                    <div id="TaxReturnForm" class="document-form" style="display: none;">
+                                        <h5>Upload Tax Return</h5>
+
+                                        <div class="mb-4">
+                                            <label asp-for="FinancialDocuments[2].Description" class="form-label">Description</label>
+                                            <textarea asp-for="FinancialDocuments[2].Description" id="taxDescription" class="form-control" rows="3" placeholder="Provide details about your tax return"></textarea>
+                                            <span asp-validation-for="FinancialDocuments[2].Description" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label asp-for="FinancialDocuments[2].IssueDate" class="form-label">Issue Date</label>
+                                            <input type="date" asp-for="FinancialDocuments[2].IssueDate" id="taxIssueDate" class="form-control" />
+                                            <span asp-validation-for="FinancialDocuments[2].IssueDate" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label asp-for="FinancialDocuments[2].DocumentFile" class="form-label">Upload Document (PDF only)</label>
+                                             <div class="input-group">  
+                                            <input type="file" asp-for="FinancialDocuments[2].DocumentFile" id="taxFile" class="form-control" accept="application/pdf" />
+                                            <span class="input-group-text"><i class="bi bi-file-earmark-pdf"></i></span>
+                                            </div>
+
+                                            <span asp-validation-for="FinancialDocuments[2].DocumentFile" class="text-danger"></span>
+                                            <div class="form-text">Maximum file size: 10MB</div>
+                                            <div id="taxFileError" class="text-danger" style="display:none;"></div>
+                                        </div>
+                                        <div class="text-end">
+                                            <button type="button" class="btn btn-primary" onclick="saveDocument('TaxReturn')">
+                                                <i class="bi bi-check-circle me-2"></i>Save Document
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Document Requirements -->
+                                <div class="alert alert-info mt-4">
+                                    <div class="d-flex">
+                                        <div class="me-3">
+                                            <i class="bi bi-info-circle-fill fs-4"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="alert-heading">Document Requirements</h6>
+                                            <p class="mb-0">Please ensure your document is:</p>
+                                            <ul class="mb-0">
+                                                <li>In PDF format</li>
+                                                <li>Less than 10MB in size</li>
+                                                <li>Clear and legible</li>
+                                                <li>Complete with all pages</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Terms and Conditions -->
+                    <div class="mt-4 pt-3 border-top">
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="acceptTerms" required />
                             <label class="form-check-label" for="acceptTerms">
                                 I agree to the <a href="#" class="text-primary" data-bs-toggle="modal" data-bs-target="#termsModal">terms and conditions</a> and consent to a credit check.
                             </label>
                         </div>
-
+                        <div id="termsError" class="text-danger" style="display:none;">
+                            You must accept the terms and conditions.
                         </div>
-                    <div id="termsError" class="text-danger" style="display:none;">
-                        You must accept the terms and conditions.
                     </div>
-                        <!-- Submit Buttons -->
-                        <div class="mt-4 d-flex gap-3">
-                            @* <button type="submit" class="btn btn-primary px-4 py-2"> *@
-                            @*     <i class="bi bi-check-circle me-2"></i>Submit Application *@
-                            @* </button> *@
-                        <button type="submit"  class="btn btn-primary px-4 py-2">
+
+                    <!-- Submit Button -->
+                    <div class="mt-4 text-center">
+                        <div id="documentsRequiredAlert" class="alert alert-warning mb-3" style="display: none;">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            Please upload all three required documents before submitting.
+                        </div>
+                        <button type="submit" class="btn btn-primary px-5 py-2">
                             <i class="bi bi-check-circle me-2"></i>Submit Application
                         </button>
-                        @* onclick="validateForm(); return false;" *@
-                        
-                        @* <a asp-action="HomePage" asp-controller="CustomerHome" asp-route="@Model.CustomerId" class="btn btn-outline-secondary px-4 py-2"> *@
-                        @*         <i class="bi bi-x-circle me-2"></i>Cancel *@
-                        @*     </a> *@
-                        </div>
-                        <div asp-validation-summary="All" class="text-danger"></div>
+                    </div>
+
+                    <!-- Hidden fields to store document data -->
+                    <input type="hidden" id="IncomeStatementData" name="IncomeStatementData" value="" />
+                    <input type="hidden" id="IncomeStatementType" name="IncomeStatementType" value="IncomeStatement" />
+
+                    <input type="hidden" id="AssetDeclarationData" name="AssetDeclarationData" value="" />
+                    <input type="hidden" id="AssetDeclarationType" name="AssetDeclarationType" value="AssetDeclaration" />
+
+                    <input type="hidden" id="TaxReturnData" name="TaxReturnData" value="" />
+                    <input type="hidden" id="TaxReturnType" name="TaxReturnType" value="TaxReturn" />
+                    <div asp-validation-summary="All" class="text-danger mt-3"></div>
                 </form>
             </div>
         </div>
@@ -173,7 +332,7 @@
 
         <!-- Loan Calculator Card -->
         <div class="col-md-4">
-            <div class="card  shadow-sm"> <!-- info-card class to make it pop-->
+            <div class="card shadow-sm">
                 <div class="card-body text-center">
                     <i class="bi bi-calculator card-icon mb-3"></i>
                     <h5 class="card-title">Loan Terms</h5>
@@ -226,6 +385,7 @@
     <div class="mt-4 pt-3 border-top text-center text-muted">
         <small>&copy; 2025 SecureBank. All rights reserved.</small>
     </div>
+
     <!-- Terms and Conditions Modal -->
     <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -267,8 +427,17 @@
         </div>
     </div>
 </div>
+
 @section Scripts {
     <script>
+        // Track uploaded documents
+        const uploadedDocuments = {
+            IncomeStatement: false,
+            AssetDeclaration: false,
+            TaxReturn: false
+        };
+
+        // Function to update loan details based on loan type
         function updateLoanDetails() {
             // Get the selected loan type
             var loanType = document.querySelector('select[name="LoanType"]').value;
@@ -295,43 +464,427 @@
                 interestRateInput.value = '';
                 durationInput.value = '';
             }
-            console.log(interestRateInput);
-            console.log(durationInput);
         }
 
-            // Function to check the terms checkbox when user clicks "I Accept" in the modal
-         function acceptTerms() {
+        // Function to show the document form for a specific type
+        function showDocumentForm(documentType) {
+            console.log("eh");
+            //Hide all document forms
+            document.querySelectorAll('.document-form').forEach(form => {
+                form.style.display = 'none';
+            });
+
+            // Hide default message
+            document.getElementById('defaultDocumentMessage').style.display = 'none';
+
+            // Show the selected document form
+            document.getElementById(documentType + 'Form').style.display = 'block';
+
+            // Highlight the selected card
+            document.querySelectorAll('.document-card').forEach(card => {
+                card.classList.remove('border-primary');
+            });
+            document.getElementById(documentType.toLowerCase() + 'Card').classList.add('border-primary');
+        }
+
+        // Save Document
+                   function saveDocument(documentType) {
+            try {
+
+                // Define the correct IDs based on the document type
+                let ids;
+                 switch(documentType) {
+                case 'IncomeStatement':
+                    ids = {
+                        description: 'incomeDescription',
+                        issueDate: 'incomeIssueDate',
+                        file: 'incomeFile',
+                        error: 'incomeFileError',
+                        DocumentType:'IncomeStatement'
+                    };
+                    break;
+                case 'AssetDeclaration':
+                    ids = {
+                        description: 'assetDescription',
+                        issueDate: 'assetIssueDate',
+                        file: 'assetFile',
+                        error: 'assetFileError',
+                        DocumentType:'AssetDeclaration'
+                    };
+                    break;
+                case 'TaxReturn':
+                    ids = {
+                        description: 'taxDescription',
+                        issueDate: 'taxIssueDate',
+                        file: 'taxFile',
+                        error: 'taxFileError',
+                        DocumentType:'TaxReturn'
+
+                    };
+                    break;
+                default:
+                    console.error('Invalid document type:', documentType);
+                    alert('Invalid document type');
+                    return false;
+            }
+
+                // Get form elements
+                const descriptionElement = document.getElementById(ids.description);
+                const issueDateElement = document.getElementById(ids.issueDate);
+                const fileInput = document.getElementById(ids.file);
+                const errorElement = document.getElementById(ids.error);
+                // const filetypeElement = document.getElementById(ids.filetype);
+
+                const description = descriptionElement.value.trim();
+                const issueDate = issueDateElement.value;
+                const DocumentType = ids.DocumentType
+
+                // Validate inputs
+                let isValid = true;
+
+                
+
+
+
+                if (!description) {
+                    descriptionElement.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    descriptionElement.classList.remove('is-invalid');
+                }
+
+                if (!issueDate) {
+                    issueDateElement.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    issueDateElement.classList.remove('is-invalid');
+                    // Check if the issue date is after today
+                    const today = new Date();
+                    const selectedDate = new Date(issueDate);
+                    if (selectedDate > today) {
+                        alert("Please enter an issue date that is not after today.");
+                        isValid = false;
+                    }
+                }
+
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    errorElement.textContent = 'Please select a file to upload.';
+                    errorElement.style.display = 'block';
+                    isValid = false;
+                } else {
+                    const file = fileInput.files[0];
+                    if (file.size > 10 * 1024 * 1024) {
+                        errorElement.textContent = 'File size cannot exceed 10MB.';
+                        errorElement.style.display = 'block';
+                        isValid = false;
+                    } else if (file.type !== 'application/pdf') {
+                        errorElement.textContent = 'Only PDF files are allowed.';
+                        errorElement.style.display = 'block';
+                        isValid = false;
+                    } else {
+                        errorElement.style.display = 'none';
+                    }
+                }
+
+                if (!isValid) {
+                    return false;
+                }
+
+                // Create document data
+                const documentData = {
+                    DocumentType: DocumentType,
+                    description: description,
+                    issueDate: issueDate,
+                    fileName: fileInput.files[0].name
+                };
+
+                // Store the document data
+
+                const hiddenField = document.getElementById(documentType + 'Data');
+                if (hiddenField) {
+                    hiddenField.value = JSON.stringify(documentData);
+                }
+                console.log(hiddenField);
+
+                // Mark this document as uploaded
+                uploadedDocuments[documentType] = true;
+
+                // Update UI
+                const statusElement = document.getElementById(documentType + 'Status');
+                if (statusElement) {
+                    statusElement.innerHTML = '<span class="badge bg-success">Uploaded</span>';
+                }
+
+                const card = document.getElementById(documentType + 'Card');
+                if (card) {
+                    card.classList.remove('border-primary');
+                    card.classList.add('border-success');
+                }
+
+                // Update submit button state
+                updateSubmitButtonState();
+
+                // Show success message
+                alert(`${documentType} has been successfully uploaded.`);
+
+                // Hide form and show default message
+                const formElement = document.getElementById(documentType + 'Form');
+                const defaultMessage = document.getElementById('defaultDocumentMessage');
+                if (formElement && defaultMessage) {
+                    formElement.style.display = 'none';
+                    defaultMessage.style.display = 'block';
+                }
+
+                return true;
+
+            } catch (error) {
+                console.error("Error saving document:", error);
+                alert("An error occurred while saving the document. Please try again.");
+                return false;
+            }
+        }
+        // Helper function to update submit button state
+        function updateSubmitButtonState() {
+            try {
+                const allUploaded = uploadedDocuments.IncomeStatement &&
+                                   uploadedDocuments.AssetDeclaration &&
+                                   uploadedDocuments.TaxReturn;
+
+                const alertElement = document.getElementById('documentsRequiredAlert');
+                if (alertElement) {
+                    alertElement.style.display = allUploaded ? 'none' : 'block';
+                }
+
+                // Enable/disable submit button if it exists
+                const submitButton = document.querySelector('button[type="submit"]');
+                if (submitButton) {
+                    submitButton.disabled = !allUploaded;
+                }
+            } catch (error) {
+                console.error("Error updating submit button state:", error);
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                // Initialize uploadedDocuments object
+                window.uploadedDocuments = {
+                    IncomeStatement: false,
+                    AssetDeclaration: false,
+                    TaxReturn: false
+                };
+
+                // Initial UI update
+                updateSubmitButtonState();
+
+                // Add file input listeners
+                document.querySelectorAll('input[type="file"]').forEach(input => {
+                    input.addEventListener('change', function() {
+                        if (this.files && this.files.length > 0) {
+                            const fileNameElement = document.createElement('div');
+                            fileNameElement.className = 'mt-2 text-success';
+                            fileNameElement.innerHTML = '<i class="bi bi-check-circle me-1"></i> Selected: ' + this.files[0].name;
+
+                            const parent = this.parentElement.parentElement;
+                            if (parent) {
+                                // Remove existing filename displays
+                                parent.querySelectorAll('.text-success').forEach(el => el.remove());
+                                parent.appendChild(fileNameElement);
+                            }
+                        }
+                    });
+                });
+            } catch (error) {
+                console.error("Error initializing document upload:", error);
+            }
+        });
+
+      
+        // Function to update the submit button state
+        function updateSubmitButtonState() {
+            const allUploaded = uploadedDocuments.IncomeStatement &&
+                               uploadedDocuments.AssetDeclaration &&
+                               uploadedDocuments.TaxReturn;
+
+            document.getElementById('documentsRequiredAlert').style.display = allUploaded ? 'none' : 'block';
+
+            // Enable or disable the submit button based on document upload status
+            const submitButton = document.querySelector('button[type="submit"]');
+            if (allUploaded) {
+                submitButton.classList.remove('btn-secondary');
+                submitButton.classList.add('btn-primary');
+                submitButton.disabled = false;
+            } else {
+                // Optional: You can disable the button until all documents are uploaded
+                // submitButton.classList.remove('btn-primary');
+                // submitButton.classList.add('btn-secondary');
+                // submitButton.disabled = true;
+            }
+
+            console.log("All documents uploaded:", allUploaded);
+            console.log("Upload status:", uploadedDocuments);
+        }
+
+        // Function to check the terms checkbox when user clicks "I Accept" in the modal
+        function acceptTerms() {
             document.getElementById("acceptTerms").checked = true;
-        
-                const modal = bootstrap.Modal.getInstance(document.getElementById('termsModal'));
-                modal.hide();
-           
-
+            document.getElementById('termsError').style.display = 'none';
         }
 
-
+        // Function to validate the form before submission
         function validateForm() {
-   
+            let isValid = true;
+
             // Check if terms are accepted
             if (!document.getElementById('acceptTerms').checked) {
                 document.getElementById('termsError').style.display = 'block';
-                document.getElementById("acceptTerms").checked = true;
-                 return false;
+                isValid = false;
             } else {
                 document.getElementById('termsError').style.display = 'none';
-                return true;
             }
+
+            // Check if all documents are uploaded
+            if (!uploadedDocuments.IncomeStatement ||
+                !uploadedDocuments.AssetDeclaration ||
+                !uploadedDocuments.TaxReturn) {
+                document.getElementById('documentsRequiredAlert').style.display = 'block';
+
+                // Highlight which documents are missing
+                if (!uploadedDocuments.IncomeStatement) {
+                    document.getElementById('incomeStatementCard').classList.add('border-danger');
+                }
+                if (!uploadedDocuments.AssetDeclaration) {
+                    document.getElementById('assetDeclarationCard').classList.add('border-danger');
+                }
+                if (!uploadedDocuments.TaxReturn) {
+                    document.getElementById('taxReturnCard').classList.add('border-danger');
+                }
+
+                alert("Please upload all required documents before submitting the application.");
+                isValid = false;
+            } else {
+                document.getElementById('documentsRequiredAlert').style.display = 'none';
+
+                // Remove any danger borders
+                document.querySelectorAll('.document-card').forEach(card => {
+                    card.classList.remove('border-danger');
+                });
+            }
+
+            return isValid;
         }
-        
 
+        // Initialize the document upload status on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSubmitButtonState();
 
+            // Check if any documents are already uploaded (from previous form submission)
+            const incomeData = document.getElementById('IncomeStatementData').value;
+            const assetData = document.getElementById('AssetDeclarationData').value;
+            const taxData = document.getElementById('TaxReturnData').value;
 
+            if (incomeData) {
+                uploadedDocuments.IncomeStatement = true;
+                document.getElementById('incomeStatementStatus').innerHTML = '<span class="badge bg-success">Uploaded</span>';
+                document.getElementById('incomeStatementCard').classList.add('border-success');
+            }
+
+            if (assetData) {
+                uploadedDocuments.AssetDeclaration = true;
+                document.getElementById('assetDeclarationStatus').innerHTML = '<span class="badge bg-success">Uploaded</span>';
+                document.getElementById('assetDeclarationCard').classList.add('border-success');
+            }
+
+            if (taxData) {
+                uploadedDocuments.TaxReturn = true;
+                document.getElementById('taxReturnStatus').innerHTML = '<span class="badge bg-success">Uploaded</span>';
+                document.getElementById('taxReturnCard').classList.add('border-success');
+            }
+
+            // Add event listeners to file inputs to show filename
+            document.querySelectorAll('input[type="file"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    if (this.files && this.files.length > 0) {
+                        const fileNameElement = document.createElement('div');
+                        fileNameElement.className = 'mt-2 text-success';
+                        fileNameElement.innerHTML = '<i class="bi bi-check-circle me-1"></i> Selected: ' + this.files[0].name;
+
+                        // Remove any existing filename display
+                        const parent = this.parentElement.parentElement;
+                        const existingFileNames = parent.querySelectorAll('.text-success');
+                        existingFileNames.forEach(el => el.remove());
+
+                        parent.appendChild(fileNameElement);
+                    }
+                });
+            });
+        });
     </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/dist/jquery.validate.unobtrusive.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 }
 
+<style>
+    .document-card {
+        transition: all 0.3s ease;
+        border: 2px solid #dee2e6;
+        height: 180px;
+        cursor: pointer;
+    }
 
+        .document-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .document-card.border-primary {
+            border-color: var(--bs-primary) !important;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+
+        .document-card.border-success {
+            border-color: var(--bs-success) !important;
+            box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+        }
+
+        .document-card.border-danger {
+            border-color: var(--bs-danger) !important;
+            box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+        }
+
+    .card-icon {
+        font-size: 2.5rem;
+        color: var(--bs-primary);
+    }
+
+    .is-invalid {
+        border-color: #dc3545 !important;
+        padding-right: calc(1.5em + 0.75rem) !important;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e") !important;
+        background-repeat: no-repeat !important;
+        background-position: right calc(0.375em + 0.1875rem) center !important;
+        background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem) !important;
+    }
+
+    .border-warning {
+        border-color: var(--bs-warning) !important;
+    }
+
+    .border-success {
+        border-color: #28a745 !important; /* Green color */
+        box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25); /* Optional shadow */
+    }
+
+    .border-primary {
+        border-color: #007bff !important; /* Blue color */
+        box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25); /* Optional shadow */
+    }
+    .badge.bg-warning {
+        background-color: var(--bs-warning) !important;
+        color: var(--bs-dark) !important;
+    }
+
+    .badge.bg-success {
+        background-color: var(--bs-success) !important;
+        color: white !important;
+    }
+</style>
