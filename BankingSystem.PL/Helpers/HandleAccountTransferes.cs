@@ -149,6 +149,7 @@ namespace BankingSystem.PL.Helpers
 
             if (selectedAccount.AccountStatus != AccountStatus.Active)
             {
+
                 transaction.AccountId = selectedAccount.Id;
                 return (null, FailTransfer(transaction, "Account is Inactive.", "Account is Inactive."))!;
             }
