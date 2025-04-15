@@ -134,7 +134,10 @@
                             </div>
                             <div class="detail-content">
                                 <div class="detail-label">Application ID</div>
-                                <div class="detail-value">@Guid.NewGuid().ToString().Substring(0, 8).ToUpper()</div>
+                                <div class="detail-value"> @Guid.NewGuid().ToString().Substring(0, 8).ToUpper()-@Model.loanID </div>
+
+
+                                @* <div class="detail-value">@Guid.NewGuid().ToString().Substring(0, 8).ToUpper()</div> *@
                             </div>
                         </div>
                     </div>

@@ -164,7 +164,8 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                     DurationInMonth = loan.DurationInMonth,
                     LoanStatus = loan.LoanStatus,
                     LoanType = loan.LoanType,
-                    StartDate = loan.StartDate
+                    StartDate = loan.StartDate,
+                    loanID = loan.Id,
                 }).FirstOrDefault();
 
             // Ensure the loan was found for the customer
