@@ -12,7 +12,7 @@ namespace BankingSystem.PL.Helpers
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
         public (Account sender, Account receiver, IActionResult result) GetAndValidateAccounts(
-    AccountsViewModel model, Transaction transaction)
+                     AccountsViewModel model, Transaction transaction)
         {
             var senderAccount = _unitOfWork.Repository<Account>().GetAllIncluding(b => b.Branch)
                                                                     .Where(s => s.Number == model.AccountNumber)
@@ -20,6 +20,9 @@ namespace BankingSystem.PL.Helpers
 
             if (senderAccount == null)
                 return (null, null, FailTransfer(transaction, "Invalid sender account", "Invalid senderAccount details."))!;
+
+            if (senderAccount.AccountStatus != AccountStatus.Active)
+                return (null, null, FailTransfer(transaction, "Account is Inactive.", "Account is Inactive."))!;
 
 
             var receiverAccountNumber = IbanParser.ExtractAccountNumber(model.DestinationIban);
@@ -30,6 +33,8 @@ namespace BankingSystem.PL.Helpers
             if (receiverAccount == null)
                 return (null, null, FailTransfer(transaction, "Invalid receiver account", "Invalid receiverAccount details."))!;
 
+            if (receiverAccount.AccountStatus != AccountStatus.Active)
+                return (null, null, FailTransfer(transaction, "Account is Inactive.", "Account is Inactive."))!;
 
             transaction.AccountId = senderAccount.Id;
             transaction.CustomerID = senderAccount.CustomerId!;
@@ -52,14 +57,15 @@ namespace BankingSystem.PL.Helpers
             if (!accounts.Any())
                 return (null, FailTransfer(transaction, "No accounts found", "No accounts found."))!;
 
-            //Console.WriteLine(long.Parse(accounts.Select(e => e.Card.Number).ToString()));
-
             var selectedAccount = IsUsingVisa ?
                                                 accounts.FirstOrDefault(a => a.Card.Number.Equals(model.SelectedCardNumber))! :
                                                 accounts.FirstOrDefault(a => a.Number == model.SelectedAccountNumber)!;
 
             if (selectedAccount == null)
                 return (null, FailTransfer(transaction, "Selected card not found", "Selected card not found."))!;
+
+            if (selectedAccount.AccountStatus != AccountStatus.Active)
+                return (null, FailTransfer(transaction, "Account is Inactive.", "Account is Inactive."))!;
 
             selectedAccount.Branch.Savings = [.. _unitOfWork.Repository<Savings>().GetAllIncluding()];
 
@@ -209,10 +215,33 @@ namespace BankingSystem.PL.Helpers
 
         public IActionResult ExecuteDeposit(AccountsViewModel model, Account MyAccount, Transaction transaction, bool isUsingVisa)
         {
-
             try
             {
-                MyAccount.Balance += model.Amount;
+                if (model.SelectedDestination == AccountsViewModel.DepositDestination.Loan)
+                {
+                    if (!model.SelectedLoanId.HasValue)
+                        return FailTransfer(transaction, "Deposit failed", "Please select a loan");
+
+                    var loan = _unitOfWork.Repository<Loan>().Get(model.SelectedLoanId.Value);
+
+                    if (loan == null || loan.AccountId != MyAccount.Id)
+                        return FailTransfer(transaction, "Deposit failed", "Invalid loan selection");
+
+                    if (model.Amount > loan.CurrentDebt)
+                        return FailTransfer(transaction, "Deposit failed", "Amount exceeds loan debt");
+
+                    if (model.Amount == loan.CurrentDebt)
+                        loan.LoanStatus = LoanStatus.Paid;
+
+                    loan.CurrentDebt -= model.Amount;
+                    _unitOfWork.Repository<Loan>().Update(loan);
+                }
+                else
+                {
+                    MyAccount.Balance += model.Amount;
+                    _unitOfWork.Repository<Account>().Update(MyAccount);
+                }
+
                 var branchSavings = MyAccount.Branch.Savings.FirstOrDefault();
                 if (branchSavings != null)
                 {
@@ -223,19 +252,21 @@ namespace BankingSystem.PL.Helpers
                 transaction.Status = TransactionStatus.Accepted;
                 transaction.Payment.Status = PaymentStatus.Paid;
                 transaction.Type = TransactionType.Deposit;
-                transaction.DoneVia = !isUsingVisa ? "Deposit By Customer Via Account" : "Deposit By Customer Via Visa Card";
-                _unitOfWork.Repository<Account>().Update(MyAccount);
+                transaction.DoneVia = !isUsingVisa ?
+                        $"Deposit By Customer Via Branch {(model.SelectedDestination == AccountsViewModel.DepositDestination.Loan ? "Loan Payment" : "Account")}" :
+                        $"Deposit By Customer Via Visa Card {(model.SelectedDestination == AccountsViewModel.DepositDestination.Loan ? " (Loan Payment)" : "")}";
+
                 _unitOfWork.Repository<Transaction>().Add(transaction);
                 _unitOfWork.Complete();
+
                 return RedirectToAction("Index", "Home");
             }
             catch
             {
                 return FailTransfer(transaction, "Deposit failed", "An error occurred during deposit.");
             }
-
         }
-        
+
         public ViewResult FailTransfer(Transaction transaction, string failureReason, string errorMessage)
         {
             transaction.Status = TransactionStatus.Denied;

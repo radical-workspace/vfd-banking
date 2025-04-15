@@ -1,4 +1,5 @@
 ﻿@using BankingSystem.DAL.Models
+@using BankingSystem.PL.ViewModels.Customer
 @model BankingSystem.PL.ViewModels.Customer.AccountsViewModel
 
 @{
@@ -117,15 +118,30 @@
 
         <div asp-validation-summary="ModelOnly" class="alert alert-danger validation-message"></div>
 
-        <!-- Account/Card Selection Toggle -->
-        <div class="transfer-options mb-4 text-center">
-            <button type="button" id="showAccounts" class="btn @(Model.ShowAccounts ? "btn-primary" : "btn-outline-dark")" onclick="setAccountType(true)">
-                Withdraw from Account
-            </button>
-            <button type="button" id="showCards" class="btn @(!Model.ShowAccounts ? "btn-primary" : "btn-outline-dark")" onclick="setAccountType(false)">
-                Withdraw from Card
-            </button>
-        </div>
+        @if (IsDepositing == TransactionType.Withdraw)
+        {
+            <div class="transfer-options mb-4 text-center">
+
+                <button type="button" id="showAccounts" class="btn @(Model.ShowAccounts ? "btn-primary" : "btn-outline-dark")" onclick="setAccountType(true)">
+                    Withdraw from Account
+                </button>
+                <button type="button" id="showCards" class="btn @(!Model.ShowAccounts ? "btn-primary" : "btn-outline-dark")" onclick="setAccountType(false)">
+                    Withdraw from Card
+                </button>
+            </div>
+        }
+        else
+        {
+            <div class="transfer-options mb-4 text-center">
+
+                <button type="button" id="showAccounts" class="btn @(Model.ShowAccounts ? "btn-primary" : "btn-outline-dark")" onclick="setAccountType(true)">
+                    Deposit via Account
+                </button>
+                <button type="button" id="showCards" class="btn @(!Model.ShowAccounts ? "btn-primary" : "btn-outline-dark")" onclick="setAccountType(false)">
+                    Deposit via Card
+                </button>
+            </div>
+        }
 
         <!-- Account Selection -->
         <div id="accountSection" style="@(Model.ShowAccounts ? "display:block" : "display:none")">
@@ -172,16 +188,48 @@
             }
         </div>
 
-        <!-- Security Details -->
         <div class="mb-4" id="cardDetailsSection" style="@(!Model.ShowAccounts ? "display:block" : "display:none")">
-            <div class="row">
-                <div class="col-md-6">
+            <div class="row justify-content-center">
+                <div class="col-md-6 mx-auto">
                     <label asp-for="VisaCVV" class="form-label">CVV</label>
                     <input asp-for="VisaCVV" class="form-control" placeholder="XXX" />
                     <span asp-validation-for="VisaCVV" class="validation-message"></span>
                 </div>
             </div>
         </div>
+
+        @if (IsDepositing == TransactionType.Deposit)
+        {
+            <!-- Deposit Destination Selection -->
+            <div class="transfer-options mb-4 text-center">
+                <div class="btn-group" role="group">
+                    <input type="radio" class="btn-check" asp-for="SelectedDestination"
+                           value="@AccountsViewModel.DepositDestination.Account" id="destAccount" checked>
+                    <label class="btn @(Model.SelectedDestination == AccountsViewModel.DepositDestination.Account ? "btn-primary" : "btn-outline-dark")"
+                           for="destAccount">
+                        <i class="fas fa-piggy-bank me-2"></i> Deposit to Account
+                    </label>
+
+                    <input type="radio" class="btn-check" asp-for="SelectedDestination"
+                           value="@AccountsViewModel.DepositDestination.Loan" id="destLoan">
+                    <label class="btn @(Model.SelectedDestination == AccountsViewModel.DepositDestination.Loan ? "btn-primary" : "btn-outline-dark")"
+                           for="destLoan">
+                        <i class="fas fa-hand-holding-usd me-2"></i> Pay Loan
+                    </label>
+                </div>
+            </div>
+
+            <!-- Loan Selection (Conditional) -->
+            <div id="loanSelection" style="display: none;">
+                <div class="mb-3">
+                    <label asp-for="SelectedLoanId" class="form-label">Select Loan</label>
+                    <select asp-for="SelectedLoanId" asp-items="Model.AvailableLoans" class="form-control">
+                        <option value="">-- Select Loan --</option>
+                    </select>
+                    <span asp-validation-for="SelectedLoanId" class="text-danger"></span>
+                </div>
+            </div>
+        }
 
         <!-- Submit Button -->
         <div class="mt-4 text-center">
@@ -208,30 +256,56 @@
     }
 
     <script>
-            function setAccountType(isAccount) {
+                   function setAccountType(isAccount) {
             // Update the hidden input value
-            $('#IsUsingVisa').val(!isAccount); // Visa is used when NOT showing accounts
+            $('#IsUsingVisa').val(!isAccount);
 
-            // Existing UI update logic
+            // Toggle sections visibility
+            $('#accountSection').toggle(isAccount);
+            $('#cardSection').toggle(!isAccount);
+            $('#cardDetailsSection').toggle(!isAccount);
+
+            // Update button states
+            const accountBtn = $('#showAccounts');
+            const cardBtn = $('#showCards');
+
             if (isAccount) {
-                $('#accountSection').show();
-                $('#cardDetailsSection').hide();
-                $('#cardSection').hide();
-                $('#showAccounts').removeClass('btn-outline-dark').addClass('btn-primary');
-                $('#showCards').removeClass('btn-primary').addClass('btn-outline-dark');
+                accountBtn.addClass('btn-primary').removeClass('btn-outline-dark');
+                cardBtn.addClass('btn-outline-dark').removeClass('btn-primary');
             } else {
-                $('#accountSection').hide();
-                $('#cardSection').show();
-                $('#cardDetailsSection').show();
-                $('#showCards').removeClass('btn-outline-dark').addClass('btn-primary');
-                $('#showAccounts').removeClass('btn-primary').addClass('btn-outline-dark');
+                accountBtn.addClass('btn-outline-dark').removeClass('btn-primary');
+                cardBtn.addClass('btn-primary').removeClass('btn-outline-dark');
+            }
+
+            // Reset form fields when switching
+            if (isAccount) {
+                $('#SelectedCardNumber').val('');
+                $('#VisaCVV').val('');
+            } else {
+                $('#SelectedAccountNumber').val('');
             }
         }
-
          $(document).ready(function() {
             // Initialize based on model value
             const isUsingVisa = $('#IsUsingVisa').val() === 'true';
             setAccountType(!isUsingVisa); // Show accounts when NOT using Visa
             });
+
+         $(document).ready(function() {
+            function toggleLoanSelection() {
+                const isLoanSelected = $('#destLoan').is(':checked');
+                $('#loanSelection').toggle(isLoanSelected);
+                $('#SelectedLoanId').prop('required', isLoanSelected);
+
+                // Update button styles
+                $('label[for="destAccount"]')
+                    .toggleClass('btn-primary btn-outline-dark', !isLoanSelected);
+                $('label[for="destLoan"]')
+                    .toggleClass('btn-primary btn-outline-dark', isLoanSelected);
+            }
+
+            $('input[name="SelectedDestination"]').change(toggleLoanSelection);
+            toggleLoanSelection(); // Initial check
+        });
     </script>
 }
