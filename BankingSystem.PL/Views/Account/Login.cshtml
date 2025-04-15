@@ -1,10 +1,12 @@
-﻿
- @using BankingSystem.PL.ViewModels.Auth
+﻿@using BankingSystem.PL.ViewModels.Auth
 @model LoginUserViewModel
 
 @{
     ViewData["Title"] = "Login";
 }
+
+<!-- Font Awesome (optional for other icons) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
 <style>
     :root {
@@ -46,6 +48,34 @@
             font-size: 1.5rem;
             margin-right: 0.75rem;
         }
+
+    .google-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 0.65rem 1rem;
+        font-weight: 500;
+        color: #444;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+
+        .google-btn:hover {
+            background-color: #f5f5f5;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            text-decoration: none;
+            color: #222;
+        }
+
+    .google-icon {
+        height: 20px;
+        width: 20px;
+    }
 </style>
 
 <div class="container py-5">
@@ -86,11 +116,19 @@
                             <a asp-controller="Account" asp-action="ForgotPassword" class="text-decoration-none text-primary fw-semibold">Forgot your password?</a>
                         </div>
 
-                        <div class="d-grid mb-3">
+                        <div class="d-grid mb-3 mt-5">
                             <button type="submit" class="btn btn-primary btn-lg rounded-3">
                                 Login
                             </button>
                         </div>
+
+                        <div class="d-grid mb-3">
+                            <a href="/Account/ExternalLogin?provider=Google" class="google-btn">
+                                <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="google-icon" alt="Google logo" />
+                                <span>Continue with Google</span>
+                            </a>
+                        </div>
+
                     </form>
                 </div>
 

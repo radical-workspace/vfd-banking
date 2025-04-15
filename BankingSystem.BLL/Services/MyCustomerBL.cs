@@ -26,7 +26,7 @@ namespace BankingSystem.BLL.Services
         {
             throw new NotImplementedException();
         }
-        public Customer? Get(int id)
+        public Customer? Get(int id, long number = 0)
         {
             throw new NotImplementedException();
         }

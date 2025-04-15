@@ -1,61 +1,133 @@
 ﻿@using System.Security.Claims
 @model EditCustomerViewModel
+
 @{
-    ViewData["Title"] = "Edit Teller";
+    ViewData["Title"] = "Edit Customer";
     var EditTellerId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 }
 
-<h2>Edit Customer</h2>
+<style>
+    :root {
+        --primary-dark: #0a2d2e;
+        --primary-medium: #1c4e4f;
+        --primary-light: #436e6f;
+        --secondary-dark: #6a8e8f;
+        --secondary-light: #879693;
+        --neutral-1: #a49e97;
+        --accent-1: #deae9f;
+        --accent-2: #efd7cf;
+        --accent-3: #f7ebe7;
+        --white: #ffffff;
+    }
 
-<form asp-action="EditCustomer" method="post">
-    <input type="hidden" asp-for="Id" />
+    .card-grid {
+        background: var(--accent-3);
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
 
-    <div class="form-group mb-3">
-        <label asp-for="FirstName" class="form-label">First Name</label>
-        <input asp-for="FirstName" class="form-control" />
-        <span asp-validation-for="FirstName" class="text-danger"></span>
+    .summary-header {
+        border-bottom: 2px solid var(--accent-1);
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+        color: var(--primary-dark);
+    }
+
+    .btn-save {
+        background-color: var(--primary-dark);
+        border: none;
+        color: var(--white);
+    }
+
+        .btn-save:hover {
+            background-color: var(--primary-medium);
+        }
+
+    .btn-cancel {
+        border-color: var(--secondary-dark);
+        color: var(--secondary-dark);
+    }
+
+        .btn-cancel:hover {
+            background-color: var(--secondary-light);
+            color: var(--white);
+        }
+</style>
+
+<div class="container card-grid my-5">
+    <!-- Header -->
+    <div class="summary-header text-center">
+        <h3 class="fw-semibold">
+            <i class="fas fa-user-edit me-2"></i>Edit Customer
+        </h3>
+        <p class="text-muted mb-0">
+            <span class="fw-medium">@Model.FirstName @Model.LastName</span>
+        </p>
     </div>
 
-    <div class="form-group mb-3">
-        <label asp-for="LastName" class="form-label">Last Name</label>
-        <input asp-for="LastName" class="form-control" />
-        <span asp-validation-for="LastName" class="text-danger"></span>
+    <!-- Form -->
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <form asp-action="EditCustomer" method="post">
+                <input type="hidden" asp-for="Id" />
+                <div asp-validation-summary="All" class="text-danger mb-4"></div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="FirstName" class="form-label">First Name</label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="LastName" class="form-label">Last Name</label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="SSN" class="form-label">SSN</label>
+                    <input asp-for="SSN" class="form-control" />
+                    <span asp-validation-for="SSN" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Address" class="form-label">Address</label>
+                    <input asp-for="Address" class="form-control" />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="JoinDate" class="form-label">Join Date</label>
+                    <input asp-for="JoinDate" class="form-control" type="date" />
+                    <span asp-validation-for="JoinDate" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="BirthDate" class="form-label">Birth Date</label>
+                    <input asp-for="BirthDate" class="form-control" type="date" />
+                    <span asp-validation-for="BirthDate" class="text-danger"></span>
+                </div>
+
+                <!-- Buttons -->
+                <div class="mt-4 d-flex justify-content-center gap-3">
+                    <button type="submit" class="btn btn-save px-5 py-2 fs-5 rounded-3 shadow-sm">
+                        <i class="fas fa-save me-2"></i>Save Changes
+                    </button>
+                    <a asp-action="GetAllCustomers" asp-route-id="@EditTellerId" class="btn btn-cancel px-5 py-2 fs-5 rounded-3 shadow-sm">
+                        <i class="fas fa-arrow-left me-2"></i>Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <div class="form-group mb-3">
-        <label asp-for="Email" class="form-label">Email</label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-
-    <div class="form-group mb-3">
-        <label asp-for="SSN" class="form-label">SSN</label>
-        <input asp-for="SSN" class="form-control" />
-        <span asp-validation-for="SSN" class="text-danger"></span>
-    </div>
-
-    <div class="form-group mb-3">
-        <label asp-for="Address" class="form-label">Address</label>
-        <input asp-for="Address" class="form-control" />
-        <span asp-validation-for="Address" class="text-danger"></span>
-    </div>
-
-    <div class="form-group mb-3">
-        <label asp-for="JoinDate" class="form-label">Join Date</label>
-        <input asp-for="JoinDate" class="form-control" type="date" />
-        <span asp-validation-for="JoinDate" class="text-danger"></span>
-    </div>
-
-    <div class="form-group mb-3">
-        <label asp-for="BirthDate" class="form-label">Birth Date</label>
-        <input asp-for="BirthDate" class="form-control" type="date" />
-        <span asp-validation-for="BirthDate" class="text-danger"></span>
-    </div>
-
-
-    <button type="submit" class="btn btn-primary">Save Changes</button>
-    <a asp-action="GetAllCustomers" asp-route-id="@EditTellerId" class="btn btn-secondary">Cancel</a>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
