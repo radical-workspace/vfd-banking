@@ -39,7 +39,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                     Value = c.Card!.Number.ToString(),
                     Text = $"Card : {c.Card.Number} - Balance: {c.Balance:C}"
                 })],
-                ShowAccounts = true 
+                ShowAccounts = true
             };
 
             return View(viewModel);
@@ -48,25 +48,44 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         [HttpPost]
         public IActionResult TransferMoney(AccountsViewModel transferMoneyVM)
         {
-            //private TransferFromAccountToAnother TransfereHelper = new TransferFromAccountToAnother(_unitOfWork);
-            if (!ModelState.IsValid) return View(transferMoneyVM);
+            if (!ModelState.IsValid)
+            {
+                // Repopulate dropdowns
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var accounts = _unitOfWork.Repository<Account>()
+                    .GetAllIncluding(c => c.Customer!, a => a.Card)
+                    .Where(c => c.CustomerId == userId)
+                    .ToList();
 
+                transferMoneyVM.UserAccounts = accounts.Select(a => new SelectListItem
+                {
+                    Value = a.Number.ToString(),
+                    Text = $"Account: {a.Number} - Balance: {a.Balance:C}"
+                }).ToList();
+
+                transferMoneyVM.UserVisaCards = accounts.Where(a => a.Card != null)
+                    .Select(c => new SelectListItem
+                    {
+                        Value = c.Card!.Number,
+                        Text = $"Card: {c.Card.Number}"
+                    }).ToList();
+
+                return View(transferMoneyVM);
+            }
             // Initialize transaction
             var transaction = _transfereHelper.CreatePendingTransaction(transferMoneyVM, User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
 
             // Get accounts
             var (senderAccount, receiverAccount, validationResult) = _transfereHelper.GetAndValidateAccounts(transferMoneyVM, transaction);
             if (validationResult != null) return validationResult;
-
+            //return _transfereHelper.FailTransfer(transaction,"a7a","a7a");
             // Validate transfer rules
             validationResult = _transfereHelper.ValidateTransferRules(transferMoneyVM, senderAccount, receiverAccount, transaction);
             if (validationResult != null) return validationResult;
+            //return _transfereHelper.FailTransfer(transaction, "wla7a", "wla7a");
 
             // Execute transfer
             return _transfereHelper.ExecuteTransfer(transferMoneyVM, senderAccount, receiverAccount, transaction);
         }
-
-
-
     }
 }

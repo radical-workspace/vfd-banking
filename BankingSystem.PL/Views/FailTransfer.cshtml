@@ -1,0 +1,88 @@
+﻿@model BankingSystem.PL.ViewModels.Customer.TransactionErrorViewModel
+@{
+    ViewData["Title"] = "Transfer Failed";
+}
+
+<div class="alert-container">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="alert-header">
+            <i class="fas fa-times-circle fa-2x me-2"></i>
+            <h4 class="alert-title">Transfer Failed</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div class="alert-body">
+            <p class="lead">@Model.ErrorMessage</p>
+
+            <div class="transaction-details mt-4">
+                <h5>Transaction Details:</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <strong>Reference:</strong>
+                        <span class="monospace">@Model.TransactionId</span>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Date:</strong>
+                        @DateTime.Now.ToString("f")
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Amount:</strong>
+                        @Model.Amount.ToString("C")
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Reason:</strong>
+                        <span class="badge bg-danger">@Model.FailureReason</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="alert-footer mt-3">
+            <div class="d-flex justify-content-between">
+                <a asp-action="TransferMoney" class="btn btn-outline-primary">
+                    <i class="fas fa-undo me-2"></i>Try Again
+                </a>
+                <a asp-action="Index" asp-controller="Home" class="btn btn-primary">
+                    <i class="fas fa-home me-2"></i>Return Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .alert-container {
+        max-width: 600px;
+        margin: 2rem auto;
+    }
+
+    .alert-header {
+        display: flex;
+        align-items: center;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .alert-title {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .monospace {
+        font-family: 'Courier New', monospace;
+        background: rgba(0,0,0,0.1);
+        padding: 2px 5px;
+        border-radius: 3px;
+    }
+
+    .transaction-details {
+        background: rgba(0,0,0,0.05);
+        border-radius: 8px;
+        padding: 1rem;
+    }
+
+    .list-group-item {
+        background: transparent;
+        padding: 0.75rem 0;
+    }
+</style>

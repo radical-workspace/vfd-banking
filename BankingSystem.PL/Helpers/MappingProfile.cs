@@ -170,8 +170,8 @@ namespace BankingSystem.PL.Helpers
                     .ReverseMap();
 
             CreateMap<Account, AccountsViewModel>()
-            .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.Number))
-            .ForMember(dest => dest.VisaNumber, opt => opt.MapFrom(src => src.Card.Number))
+            .ForMember(dest => dest.SelectedAccountNumber, opt => opt.MapFrom(src => src.Number))
+            .ForMember(dest => dest.SelectedCardNumber, opt => opt.MapFrom(src => src.Card.Number))
             .ForMember(dest => dest.VisaCVV, opt => opt.MapFrom(src => src.Card.CVV))
             .ForMember(dest => dest.VisaExpDate, opt => opt.MapFrom(src => src.Card.ExpDate))
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));

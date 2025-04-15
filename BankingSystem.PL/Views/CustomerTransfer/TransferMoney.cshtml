@@ -99,6 +99,7 @@
     <form asp-action="TransferMoney" method="post">
         @Html.AntiForgeryToken()
 
+        <input type="hidden" asp-for="ShowAccounts" id="ShowAccounts" />
         <div asp-validation-summary="ModelOnly" class="alert alert-danger validation-message"></div>
 
         <div class="transfer-options mb-4 text-center">
@@ -110,9 +111,10 @@
             </button>
         </div>
 
+        <!-- Account Section -->
         <div id="accountSection" style="@(Model.ShowAccounts ? "display:block" : "display:none")">
-            <div class="mb-3">
-                <label asp-for="SelectedAccountNumber" class="form-label">From Account</label>
+            <div class="form-group">
+                <label asp-for="SelectedAccountNumber"></label>
                 <select asp-for="SelectedAccountNumber" asp-items="Model.UserAccounts" class="form-control">
                     <option value="">-- Select Account --</option>
                 </select>
@@ -120,13 +122,28 @@
             </div>
         </div>
 
+        <!-- Card Section -->
         <div id="cardSection" style="@(!Model.ShowAccounts ? "display:block" : "display:none")">
-            <div class="mb-3">
-                <label asp-for="SelectedCardNumber" class="form-label">From Card</label>
+            <div class="form-group">
+                <label asp-for="SelectedCardNumber"></label>
                 <select asp-for="SelectedCardNumber" asp-items="Model.UserVisaCards" class="form-control">
                     <option value="">-- Select Card --</option>
                 </select>
                 <span asp-validation-for="SelectedCardNumber" class="text-danger"></span>
+            </div>
+
+            <!-- CVV Field -->
+            <div class="form-group" id="cardDetailsSection">
+                <label asp-for="VisaCVV"></label>
+                <input asp-for="VisaCVV" class="form-control" placeholder="123" />
+                <span asp-validation-for="VisaCVV" class="text-danger"></span>
+            </div>
+
+            <!-- Expiration Date -->
+            <div class="form-group">
+                <label asp-for="VisaExpDate"></label>
+                <input asp-for="VisaExpDate" type="date" class="form-control" />
+                <span asp-validation-for="VisaExpDate" class="text-danger"></span>
             </div>
         </div>
 
