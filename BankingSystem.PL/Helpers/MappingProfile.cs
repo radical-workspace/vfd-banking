@@ -71,13 +71,13 @@ namespace BankingSystem.PL.Helpers
                     }).ToList()
                     : new List<AccountDetail> { new AccountDetail { AccountNumber = "No accounts available", AccountType = "", AccountStatus = "" } }))
 
-                //.ForMember(dest => dest.CardDetails, opt => opt.MapFrom(src => src.Card != null && src.Card.Any()
-                //    ? src.Card.Select(c => new CardDetail
-                //    {
-                //        CardType = c.CardType.ToString(),
-                //        Number = c.Number.ToString()
-                //    }).ToList()
-                //    : new List<CardDetail> { new CardDetail { CardType = "No cards available", Number = "" } }))
+                .ForMember(dest => dest.CardDetails, opt => opt.MapFrom(src => src.Accounts != null && src.Accounts.Select(a => a.Card).Any(c => c != null)
+                    ? src.Accounts.Where(a => a.Card != null).Select(a => new CardDetail
+                    {
+                        CardType = a.Card.CardType.ToString(),
+                        Number = a.Card.Number
+                    }).ToList()
+                    : new List<CardDetail> { new CardDetail { CardType = "No cards available", Number = "************" } }))
 
                 .ForMember(dest => dest.SupportTicketDetails, opt => opt.MapFrom(src => src.SupportTickets != null && src.SupportTickets.Any()
                     ? src.SupportTickets.Select(st => new SupportTicketDetail
@@ -92,7 +92,7 @@ namespace BankingSystem.PL.Helpers
                     {
                         TransactionType = t.Type.ToString()
                     }).ToList()
-                    : new List<TransactionDetail> { new TransactionDetail { TransactionType = "No transactions available" } })) ;
+                    : new List<TransactionDetail> { new TransactionDetail { TransactionType = "No transactions available" } }));
 
                     //.ForMember(dest => dest.CertificateDetails, opt => opt.MapFrom(src =>
                     //    src.Accounts != null && src.Accounts.SelectMany(a => a.Certificates).Any()
@@ -170,8 +170,8 @@ namespace BankingSystem.PL.Helpers
                     .ReverseMap();
 
             CreateMap<Account, AccountsViewModel>()
-            .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.Number))
-            .ForMember(dest => dest.VisaNumber, opt => opt.MapFrom(src => src.Card.Number))
+            .ForMember(dest => dest.SelectedAccountNumber, opt => opt.MapFrom(src => src.Number))
+            .ForMember(dest => dest.SelectedCardNumber, opt => opt.MapFrom(src => src.Card.Number))
             .ForMember(dest => dest.VisaCVV, opt => opt.MapFrom(src => src.Card.CVV))
             .ForMember(dest => dest.VisaExpDate, opt => opt.MapFrom(src => src.Card.ExpDate))
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
@@ -181,7 +181,58 @@ namespace BankingSystem.PL.Helpers
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.CardType, opt => opt.MapFrom(src => src.CardType.ToString()))
             .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Account.Customer.UserName))
-            .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.Account.Number));
+            .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.Account.Number));            
+            CreateMap<Account, AccountMinimal>()
+                .ForMember(dest => dest.Number, opt => opt.MapFrom(src => src.Number))
+                .ForMember(dest => dest.Balance, opt => opt.MapFrom(src => src.Balance ?? 0)) // Default to 0 if null
+                .ForMember(dest => dest.AccountType, opt => opt.MapFrom(src => src.AccountType));
+
+            CreateMap<Customer, CustomerViewModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
+                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
+                .ForMember(dest => dest.JoinDate, opt => opt.MapFrom(src => src.JoinDate))
+                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate))
+                .ReverseMap(); 
+
+            CreateMap<Customer, CustomerProfileViewModel>()
+                .ForMember(dest => dest.DesiredCustomer, opt => opt.MapFrom(src => src))
+                .ForMember(dest => dest.Account, opt => opt.MapFrom(src => src.Accounts));
+
+
+            CreateMap<VisaCard, CustomerCardsViewModel>()
+                    .ReverseMap()
+                    .ForMember(dest => dest.AccountId, opt => opt.Ignore())
+                    .ForMember(dest => dest.Account, opt => opt.Ignore());
+
+            CreateMap<Loan, CustomerLoansViewModel>()
+              .ReverseMap()
+              .ForMember(dest => dest.Payments, opt => opt.Ignore())
+              .ForMember(dest => dest.AccountId, opt => opt.Ignore())
+              .ForMember(dest => dest.Account, opt => opt.Ignore())
+              .ForMember(dest => dest.CustomerId, opt => opt.Ignore())
+              .ForMember(dest => dest.Customer, opt => opt.Ignore())
+              .ForMember(dest => dest.BranchId, opt => opt.Ignore())
+              .ForMember(dest => dest.Branch, opt => opt.Ignore());
+
+            CreateMap<SupportTicket , CustomerSupportTicket>()
+            .ReverseMap()
+            .ForMember(dest => dest.CustomerId, opt => opt.Ignore())  // Set separately
+            .ForMember(dest => dest.TellerId, opt => opt.Ignore())    // Set separately
+            .ForMember(dest => dest.Customer, opt => opt.Ignore())
+            .ForMember(dest => dest.Teller, opt => opt.Ignore());
+
+            CreateMap<Account, CustomerAccountsViewModel>()
+               .ReverseMap()
+               .ForMember(dest => dest.AccountTransactions, opt => opt.Ignore())
+               .ForMember(dest => dest.Certificates, opt => opt.Ignore())
+               .ForMember(dest => dest.Loans, opt => opt.Ignore())
+               .ForMember(dest => dest.Customer, opt => opt.Ignore())
+               .ForMember(dest => dest.Branch, opt => opt.Ignore());
+
         }
 
 

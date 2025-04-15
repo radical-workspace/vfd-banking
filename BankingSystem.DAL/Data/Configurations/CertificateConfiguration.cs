@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using BankingSystem.DAL.Models;
+using BankingSystem.DAL.Data.Configurations;
 
 namespace BankingSystem.DAL.Configurations
 {
@@ -8,29 +9,22 @@ namespace BankingSystem.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<Certificate> builder)
         {
+            builder.HasIndex(c => c.CertificateNumber)
+                   .IsUnique();
 
-            // Properties
             builder.Property(c => c.CertificateNumber)
-                   .IsRequired()
-                   .HasMaxLength(50); // Assuming a max length for certificate number
+                   .IsRequired();
 
             builder.Property(c => c.IssueDate)
-                .HasDefaultValueSql("GETDATE()")
                    .IsRequired();
 
             builder.Property(c => c.ExpiryDate)
                    .IsRequired();
 
-            //builder.Property(c => c.Amount)
-            //       .IsRequired()
-            //       .HasColumnType("decimal(18,4)");
 
-            builder.Property(c => c.IsDeleted)
-                   .HasDefaultValue(false);
-
-          
             builder.HasQueryFilter(P => !P.IsDeleted);
-
         }
+
     }
 }
+

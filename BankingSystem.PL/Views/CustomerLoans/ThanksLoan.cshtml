@@ -1,0 +1,240 @@
+﻿@using BankingSystem.DAL.Models
+@using BankingSystem.PL.ViewModels.Customer
+@model CustomerLoanVM
+@{
+    ViewData["Title"] = "Application Received";
+}
+
+<link rel="stylesheet" href="/css/CustomerHome.css" />
+<div class="profile-container">
+    <!-- Thank You Header Section -->
+    <div class="welcome-section" style="background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('/images/loan-bg.jpg') no-repeat center; background-size: cover; padding: 2.5rem; border-radius: 0.5rem; margin-bottom: 2rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+        <div class="row align-items-center">
+            <div class="col-md-9">
+                <h2 class="mb-2 display-5 fw-bold text-success">Thank You for Your Application!</h2>
+                <p class="mb-0 fs-5">Your loan application has been successfully submitted and is now under review.</p>
+            </div>
+            <div class="col-md-3 text-center d-none d-md-block">
+                <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loan Details Card -->
+    <div class="customer-details">
+        <div class="card shadow-sm">
+            <div class="card-body p-3">
+                <div class="profile-header">
+                    <h4 class="mb-3">Loan Application Details</h4>
+                    @* <span class="badge bg-warning text-dark">Under Review</span> *@
+                    @* status of the application *@
+                    @{
+                        string badgeText = "Loan Status Unknown"; // Default text
+                        string badgeClass = "bg-secondary text-white"; // Default badge color
+
+                        switch (Model.LoanStatus)
+                        {
+                            case LoanStatus.Pending:
+                                badgeText = "Pending";
+                                badgeClass = "bg-warning text-dark"; // Yellow for Pending
+                                break;
+                            case LoanStatus.Denied:
+                                badgeText = "Denied";
+                                badgeClass = "bg-danger text-white"; // Red for Denied
+                                break;
+                            case LoanStatus.Accepted:
+                                badgeText = "Accepted";
+                                badgeClass = "bg-success text-white"; // Green for Accepted
+                                break;
+                            case LoanStatus.Paid:
+                                badgeText = "Paid";
+                                badgeClass = "bg-primary text-white"; // Blue for Paid
+                                break;
+                            default:
+                                badgeText = "Loan Status Unknown"; // Default text if no match
+                                badgeClass = "bg-secondary text-white"; // Default gray color
+                                break;
+                        }
+                    }
+                    <span class="badge @badgeClass">@badgeText</span>
+
+                </div>
+
+                <div class="row g-3">
+                    <!-- Loan Type -->
+                    <div class="col-md-6">
+                        <div class="detail-card d-flex align-items-center">
+                            <div class="detail-icon">
+                                <i class="bi bi-tag"></i>
+                            </div>
+                            <div class="detail-content">
+                                <div class="detail-label">Loan Type</div>
+                                <div class="detail-value">@Model.LoanType</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Loan Amount -->
+                    <div class="col-md-6">
+                        <div class="detail-card d-flex align-items-center">
+                            <div class="detail-icon">
+                                <i class="bi bi-cash"></i>
+                            </div>
+                            <div class="detail-content">
+                                <div class="detail-label">Loan Amount</div>
+                                <div class="detail-value">$@Model.LoanAmount</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interest Rate -->
+                    <div class="col-md-6">
+                        <div class="detail-card d-flex align-items-center">
+                            <div class="detail-icon">
+                                <i class="bi bi-percent"></i>
+                            </div>
+                            <div class="detail-content">
+                                <div class="detail-label">Interest Rate</div>
+                                <div class="detail-value">@Model.InterestRate%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Duration -->
+                    <div class="col-md-6">
+                        <div class="detail-card d-flex align-items-center">
+                            <div class="detail-icon">
+                                <i class="bi bi-calendar-date"></i>
+                            </div>
+                            <div class="detail-content">
+                                <div class="detail-label">Duration</div>
+                                <div class="detail-value">@Model.DurationInMonth months</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Start Date -->
+                    <div class="col-md-6">
+                        <div class="detail-card d-flex align-items-center">
+                            <div class="detail-icon">
+                                <i class="bi bi-calendar-check"></i>
+                            </div>
+                            <div class="detail-content">
+                                <div class="detail-label">Start Date</div>
+                                <div class="detail-value">@Model.StartDate.ToString("MMMM d, yyyy")</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Application ID -->
+                    <div class="col-md-6">
+                        <div class="detail-card d-flex align-items-center">
+                            <div class="detail-icon">
+                                <i class="bi bi-hash"></i>
+                            </div>
+                            <div class="detail-content">
+                                <div class="detail-label">Application ID</div>
+                                <div class="detail-value">@Guid.NewGuid().ToString().Substring(0, 8).ToUpper()</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Next Steps Card -->
+    <div class="mt-4">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h4 class="mb-3">What Happens Next?</h4>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="d-flex align-items-start">
+                            <div class="me-3">
+                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">1</div>
+                            </div>
+                            <div>
+                                <h5>Application Review</h5>
+                                <p class="text-muted">Our team will review your application within 1-2 business days.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="d-flex align-items-start">
+                            <div class="me-3">
+                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">2</div>
+                            </div>
+                            <div>
+                                <h5>Verification</h5>
+                                <p class="text-muted">We may contact you to verify information or request additional documents.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="d-flex align-items-start">
+                            <div class="me-3">
+                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">3</div>
+                            </div>
+                            <div>
+                                <h5>Final Decision</h5>
+                                <p class="text-muted">You'll receive notification of approval or any additional requirements.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="mt-4 text-center">
+        @* <a asp-action="Index" asp-controller="Customer" class="btn btn-primary px-4 py-2 me-2"> *@
+        @*     <i class="bi bi-house-door me-2"></i>Return to Dashboard *@
+        @* </a> *@
+        <a href="#" class="btn btn-outline-primary px-4 py-2" data-bs-toggle="modal" data-bs-target="#termsModal"><i class="bi bi-question-circle me-2"></i>Loan terms and conditions</a>
+    </div>
+    <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="termsModalLabel">Terms and Conditions</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>Loan Agreement Terms</h6>
+                    <p>By applying for a loan with SecureBank, you agree to the following terms and conditions:</p>
+
+                    <h6>1. Loan Repayment</h6>
+                    <p>You agree to repay the loan amount plus interest according to the payment schedule that will be provided upon loan approval. Payments are due on the same day each month as specified in your loan agreement.</p>
+
+                    <h6>2. Interest Rates</h6>
+                    <p>Interest rates are fixed for the duration of your loan term. The rate applied to your loan will be based on the loan type, your credit history, and other factors determined by SecureBank.</p>
+
+                    <h6>3. Early Repayment</h6>
+                    <p>You may repay your loan in full or in part before the end of the loan term. Early repayment fees may apply as specified in your loan agreement.</p>
+
+                    <h6>4. Late Payments</h6>
+                    <p>Late payments may result in additional fees and may be reported to credit bureaus, which could affect your credit score.</p>
+
+                    <h6>5. Credit Check Authorization</h6>
+                    <p>By accepting these terms, you authorize SecureBank to perform a credit check and access your credit history to evaluate your loan application.</p>
+
+                    <h6>6. Default</h6>
+                    <p>If you fail to make payments as agreed, your loan may be considered in default. In case of default, SecureBank reserves the right to take appropriate actions to recover the outstanding amount, including but not limited to legal proceedings.</p>
+
+                    <h6>7. Privacy Policy</h6>
+                    <p>Your personal and financial information will be handled in accordance with our Privacy Policy, which you can review on our website.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- Footer -->
+    <div class="mt-4 pt-3 border-top text-center text-muted">
+        <small>&copy; 2025 SecureBank. All rights reserved.</small>
+    </div>
+</div>

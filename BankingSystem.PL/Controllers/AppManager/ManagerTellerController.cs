@@ -93,19 +93,21 @@ namespace BankingSystem.PL.Controllers.Manager
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(teller, UserToRegister.Role);
+                    //await _userManager.AddToRoleAsync(teller, "Teller");
                     return RedirectToAction(nameof(GetAllTellers), new { id = managerId });
                 }
                 else
                 {
                     foreach (var error in result.Errors)
                     {
-                        ModelState.AddModelError("", error.Description);
+                        ModelState.AddModelError(string.Empty, error.Description);
                     }
                 }
             }
 
             return View(nameof(Register), UserToRegister);
         }
+
         [HttpGet]
         public ActionResult EditTeller(string id)
         {

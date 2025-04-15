@@ -77,7 +77,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
             //var Customerr = _unitOfWork.Repository<Customer>()
             //   .GetSingleIncluding(C => C.Id == id, C => C.Branch, C => C.Loans, C => C.Transactions, C => C.SupportTickets, C => C.Accounts);
 
-            //Different Logic By Hady
+            //Different Logic By Hady meen ya علق 
 
             var Customerr = _unitOfWork.Repository<Customer>()
             .GetAllIncluding(
@@ -188,6 +188,8 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
             if (UserToRegister is not null)
             {
+                ModelState.Remove("Salary");
+
                 if (ModelState.IsValid)
                 {
                     IdentityResult result;
@@ -195,19 +197,15 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
                     if (UserToRegister.Role == "Customer")
                     {
-                        // Map directly to Customer
                         var customer = _mapper.Map<Customer>(UserToRegister);
 
-                        // Manually assign the branch from teller
                         customer.BranchId = TellerHandleCustomer.BranchId;
 
-                        // Save to database
                         result = await _userManager.CreateAsync(customer, UserToRegister.Password);
                         appUser = customer;
                     }
                     else
                     {
-                        // For other roles, map to ApplicationUser
                         appUser = _mapper.Map<ApplicationUser>(UserToRegister);
                         result = await _userManager.CreateAsync(appUser, UserToRegister.Password);
                     }
@@ -221,7 +219,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
                     {
                         foreach (var error in result.Errors)
                         {
-                            ModelState.AddModelError("", error.Description);
+                            ModelState.AddModelError(string.Empty, error.Description);
                         }
                     }
                 }
@@ -356,6 +354,45 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
             return View("GetAllCustomers", cutomerstoView);
         }
+
+        [HttpGet]
+        public IActionResult GetBranchReservations()
+        {
+            var tellerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (tellerId == null)
+                return NotFound();
+
+            var teller = _unitOfWork.Repository<Teller>()
+                .GetSingleIncluding(t => t.Id == tellerId);
+
+            if (teller == null || teller.BranchId == null)
+                return NotFound("Teller or branch not found.");
+
+            var branchId = teller.BranchId;
+
+            var reservations = _unitOfWork.Repository<Reservation>()
+                .GetAllIncluding(r => r.Customer)
+                .Where(r => r.BranchId == branchId)
+                .OrderByDescending(r => r.ReservationDate)
+                .ToList();
+
+            return View(reservations);
+        }
+        [Authorize(Roles = "Teller")]
+        [HttpPost]
+        public IActionResult UpdateReservationStatus(int id, ReservationStatus status)
+        {
+            var reservation = _unitOfWork.Repository<Reservation>().Get(id);
+            if (reservation == null)
+                return NotFound();
+
+            reservation.Status = status;
+            _unitOfWork.Complete();
+
+            return RedirectToAction("GetBranchReservations");
+        }
+
 
     }
 }

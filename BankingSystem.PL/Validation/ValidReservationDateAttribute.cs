@@ -35,7 +35,7 @@ namespace BankingSystem.PL.Validation
 
             var reservationTime = reservationVM.ReservationDate.TimeOfDay;
 
-            if (reservationTime < branch.Opens || reservationTime > branch.Closes)
+            if (reservationTime < branch.Opens || reservationTime >= branch.Closes)
             {
                 var opens = branch.Opens.ToString(@"hh\:mm");
                 var closes = branch.Closes.ToString(@"hh\:mm");
