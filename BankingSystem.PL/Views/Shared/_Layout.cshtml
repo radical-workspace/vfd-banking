@@ -233,13 +233,17 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="HandleCard" asp-action="GetAllCards">Cards</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="HandleTicket" asp-action="Index">Tickets</a>
+                            </li>
                         }
 
                         <li class="nav-item">
-                            <a class="nav-link bogus" asp-area="" asp-controller="BogusData" asp-action="CreateBogusData">Create Bogus Data</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Reservation" asp-action="CreateReservation">Reservations</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link bogus" asp-area="" asp-controller="BogusData" asp-action="CreateBogusData">Create Bogus Data</a>
                         </li>
 
                         @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Customer"))

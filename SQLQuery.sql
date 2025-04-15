@@ -21,6 +21,7 @@ select * from Accounts
 select * from Cards
 select * from Branches
 select * from Banks
+select * from SupportTickets
 
 
 select u.UserName [Teller Name], t.Id [Teller ID], u.Email, c.Id [CID], b.Name [Branch], a.*
@@ -47,6 +48,9 @@ from Accounts a inner join Cards c
 begin tran
 delete from Cards
 delete from Accounts
+delete from SupportTickets
 -- commit
 -- rollback
+
+select len(106727542162)
 
