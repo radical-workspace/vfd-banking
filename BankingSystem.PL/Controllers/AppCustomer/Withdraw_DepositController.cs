@@ -66,27 +66,43 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null) return NotFound("User not found.");
+
             var accounts = _unitOfWork.Repository<Account>()
-                                        .GetAllIncluding(c => c.Customer!, a => a.Card)
-                                        .Where(c => c.CustomerId == userId)
-                                        .ToList();
+                                    .GetAllIncluding(c => c.Customer!, a => a.Card, a => a.Loans)
+                                    .Where(c => c.CustomerId == userId)
+                                    .ToList();
+
             if (!accounts.Any()) return NotFound("No accounts found.");
+
+            var activeLoans = accounts.SelectMany(a => a.Loans)
+                                     .Where(l => l.LoanStatus == LoanStatus.Accepted && l.CurrentDebt > 0)
+                                     .ToList();
+
             var viewModel = new AccountsViewModel
             {
-                // Map accounts to SelectListItems
-                UserAccounts = [.. accounts.Select(a => new SelectListItem
+                UserAccounts = accounts.Select(a => new SelectListItem
                 {
                     Value = a.Number.ToString(),
                     Text = $"Account: {a.Number} - Balance: {a.Balance:C}"
-                })],
-                UserVisaCards = [.. accounts.Select(c=> new SelectListItem {
-                    Value = c.Card!.Number.ToString(),
-                    Text = $"Card : {c.Card.Number} - Balance: {c.Balance:C}"
-                })],
+                }).ToList(),
+
+                UserVisaCards = accounts.Where(a => a.Card != null)
+                                       .Select(c => new SelectListItem
+                                       {
+                                           Value = c.Card!.Number.ToString(),
+                                           Text = $"Card : {c.Card.Number} - Balance: {c.Balance:C}"
+                                       }).ToList(),
+
+                AvailableLoans = activeLoans.Select(l => new SelectListItem
+                {
+                    Value = l.Id.ToString(),
+                    Text = $"{l.LoanType} Loan - Remaining: {l.CurrentDebt:C}"
+                }),
+
                 ShowAccounts = true
             };
 
-            ViewBag.Process = TransactionType.Transfer;
+            ViewBag.Process = TransactionType.Deposit;
             return View("~/Views/Withdraw_Deposit/Withdraw.cshtml", viewModel);
         }
 

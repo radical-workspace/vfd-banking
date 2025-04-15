@@ -1,5 +1,6 @@
 ﻿using BankingSystem.DAL.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace BankingSystem.PL.ViewModels.Customer
 {
@@ -49,6 +50,24 @@ namespace BankingSystem.PL.ViewModels.Customer
         // For card selection
         public string? SelectedCardNumber { get; set; } = string.Empty;
         public List<SelectListItem> UserVisaCards { get; set; } = new();
+
+
+        [Display(Name = "Deposit Destination")]
+        [Required(ErrorMessage = "Please select a deposit destination")]
+        public DepositDestination SelectedDestination { get; set; }
+
+        [Display(Name = "Select Loan")]
+        public int? SelectedLoanId { get; set; }
+        public IEnumerable<SelectListItem> AvailableLoans { get; set; } = new List<SelectListItem>();
+
+        // Add this enum
+        public enum DepositDestination
+        {
+            [Display(Name = "My Account")]
+            Account,
+            [Display(Name = "Loan Payment")]
+            Loan
+        }
 
         // To track which option is selected
         public bool ShowAccounts { get; set; }
