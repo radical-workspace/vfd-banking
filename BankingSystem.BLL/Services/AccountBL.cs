@@ -94,5 +94,10 @@ namespace BankingSystem.BLL.Services
             }
             return query.FirstOrDefault(predicate);
         }
-   }
+
+        public IEnumerable<Account> GetAll(string? userID = "", int flag = 1)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

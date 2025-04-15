@@ -187,7 +187,7 @@ namespace BankingSystem.PL.Helpers
                 .ForMember(dest => dest.Balance, opt => opt.MapFrom(src => src.Balance ?? 0)) // Default to 0 if null
                 .ForMember(dest => dest.AccountType, opt => opt.MapFrom(src => src.AccountType));
 
-            CreateMap<MyCustomer, CustomerViewModel>()
+            CreateMap<Customer, CustomerViewModel>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
@@ -198,17 +198,15 @@ namespace BankingSystem.PL.Helpers
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate))
                 .ReverseMap(); 
 
-            CreateMap<MyCustomer, CustomerProfileViewModel>()
+            CreateMap<Customer, CustomerProfileViewModel>()
                 .ForMember(dest => dest.DesiredCustomer, opt => opt.MapFrom(src => src))
                 .ForMember(dest => dest.Account, opt => opt.MapFrom(src => src.Accounts));
 
 
-            CreateMap<Card, CustomerCardsViewModel>()
+            CreateMap<VisaCard, CustomerCardsViewModel>()
                     .ReverseMap()
                     .ForMember(dest => dest.AccountId, opt => opt.Ignore())
-                    .ForMember(dest => dest.Account, opt => opt.Ignore())
-                    .ForMember(dest => dest.CustomerId, opt => opt.Ignore())
-                    .ForMember(dest => dest.Customer, opt => opt.Ignore());
+                    .ForMember(dest => dest.Account, opt => opt.Ignore());
 
             CreateMap<Loan, CustomerLoansViewModel>()
               .ReverseMap()
@@ -232,7 +230,6 @@ namespace BankingSystem.PL.Helpers
                .ForMember(dest => dest.AccountTransactions, opt => opt.Ignore())
                .ForMember(dest => dest.Certificates, opt => opt.Ignore())
                .ForMember(dest => dest.Loans, opt => opt.Ignore())
-               .ForMember(dest => dest.Cards, opt => opt.Ignore())
                .ForMember(dest => dest.Customer, opt => opt.Ignore())
                .ForMember(dest => dest.Branch, opt => opt.Ignore());
 

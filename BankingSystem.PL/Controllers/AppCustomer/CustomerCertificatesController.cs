@@ -22,7 +22,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         {
             
             var allcertificates = _UnitOfWork.Repository<GeneralCertificate>().GetAll().ToList();
-            var customer = _UnitOfWork.Repository<MyCustomer>().
+            var customer = _UnitOfWork.Repository<Customer>().
                 GetSingleIncluding(c => c.Id == id,c => c.Accounts);
 
             var accountSelectList = customer.Accounts

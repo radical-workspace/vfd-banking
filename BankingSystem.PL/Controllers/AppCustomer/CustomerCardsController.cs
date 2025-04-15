@@ -19,14 +19,26 @@ namespace BankingSystem.PL.Controllers.AppCustomer
 
         public IActionResult Details(string id)
         {
-            var customer = _UnitOfWork.Repository<MyCustomer>()
-                                  .GetSingleIncluding(c => c.Id == id, c => c.Cards);
+            var customer = _UnitOfWork.Repository<Customer>()
+                                  .GetSingleIncluding(c => c.Id == id, c => c.Accounts);
+
+            customer.Accounts= _UnitOfWork.Repository<Account>().GetAllIncluding(Account => Account.Card).ToList();
+
+            List<VisaCard> cards = [];
+            foreach (var account in customer.Accounts)
+            {
+
+                account.Card = _UnitOfWork.Repository<VisaCard>()
+                    .GetSingleIncluding(c => c.AccountId == account.Id);
+                cards.Add(account.Card);
+
+            }
 
             if (customer != null)
             {
-                if (customer.Cards.Any())
+                if (cards.Any())
                 {
-                    var CardsModel = _mapper.Map<List<CustomerCardsViewModel>>(customer.Cards);
+                    var CardsModel = _mapper.Map<List<CustomerCardsViewModel>>(cards);
                     return View(CardsModel);
                 }
                 else

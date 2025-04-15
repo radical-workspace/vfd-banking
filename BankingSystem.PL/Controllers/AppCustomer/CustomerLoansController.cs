@@ -24,7 +24,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         }
          public IActionResult Details(string id)
         {
-            var customer = _UnitOfWork.Repository<MyCustomer>()
+            var customer = _UnitOfWork.Repository<Customer>()
                                   .GetSingleIncluding(c => c.Id == id, c => c.Loans);
 
             if (customer != null)
@@ -49,7 +49,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         [HttpGet]
         public IActionResult ApplyLoan(string id)
         {
-            var customer = _UnitOfWork.Repository<MyCustomer>()
+            var customer = _UnitOfWork.Repository<Customer>()
                             .GetSingleIncluding(c => c.Id == id, c => c.Accounts);
             if (customer != null)
             {
@@ -88,7 +88,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         {
             if (!ModelState.IsValid)
             {
-                var customer = _UnitOfWork.Repository<MyCustomer>()
+                var customer = _UnitOfWork.Repository<Customer>()
                     .GetSingleIncluding(c => c.Id == model.CustomerId, c => c.Accounts);
 
                 model.Accounts = customer.Accounts
@@ -147,7 +147,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         public IActionResult ThanksLoan(string id)
         {
             // Retrieve the customer and their loan information
-            var customer = _UnitOfWork.Repository<MyCustomer>().GetSingleIncluding(c => c.Id == id, c => c.Loans);
+            var customer = _UnitOfWork.Repository<Customer>().GetSingleIncluding(c => c.Id == id, c => c.Loans);
 
             if (customer == null)
             {
