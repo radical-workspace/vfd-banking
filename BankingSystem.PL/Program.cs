@@ -53,6 +53,8 @@ namespace BankingSystem.PL
             builder.Services.AddScoped<ISearchPaginationRepo<Account>, MyAccountBL>();
             builder.Services.AddScoped<ISearchPaginationRepo<Customer>, MyCustomerBL>();
 
+            builder.Services.AddScoped<FinancialDocumentService>();
+
 
             builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfile()));
             #endregion
