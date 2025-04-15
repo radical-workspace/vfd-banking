@@ -4,29 +4,45 @@ using BankingSystem.DAL.Models;
 using BankingSystem.PL.Helpers;
 using BankingSystem.PL.ViewModels.Customer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 
-namespace BankingSystem.PL.Controllers
+namespace BankingSystem.PL.Controllers.AppCustomer
 {
-    public class CustomerTransferController(IUnitOfWork unitOfWork, IMapper mapper, TransferFromAccountToAnother transfereHelper) : Controller
+    public class CustomerTransferController(IUnitOfWork unitOfWork, IMapper mapper, HandleAccountTransferes transfereHelper) : Controller
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IMapper _mapper = mapper;
-        private readonly TransferFromAccountToAnother _transfereHelper = transfereHelper;
-
+        private readonly HandleAccountTransferes _transfereHelper = transfereHelper;
 
         public IActionResult TransferMoney()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null) return NotFound("User not found.");
-            //4e30f6dc - a62d - 4012 - 8558 - fcb0594d1b3c
-            var Accounts = _unitOfWork.Repository<Account>().GetAllIncluding(c => c.Customer!, a => a.Card)
-                                                            .Where(c => c.CustomerId == userId).FirstOrDefault();
-            if (Accounts == null) return NotFound();
 
-            AccountsViewModel AccountsVM = _mapper.Map<AccountsViewModel>(Accounts);
+            var accounts = _unitOfWork.Repository<Account>()
+                                        .GetAllIncluding(c => c.Customer!, a => a.Card)
+                                        .Where(c => c.CustomerId == userId)
+                                        .ToList();
 
-            return View();
+            if (!accounts.Any()) return NotFound("No accounts found.");
+
+            var viewModel = new AccountsViewModel
+            {
+                // Map accounts to SelectListItems
+                UserAccounts = [.. accounts.Select(a => new SelectListItem
+                {
+                    Value = a.Number.ToString(),
+                    Text = $"Account: {a.Number} - Balance: {a.Balance:C}"
+                })],
+                UserVisaCards = [.. accounts.Select(c=> new SelectListItem {
+                    Value = c.Card!.Number.ToString(),
+                    Text = $"Card : {c.Card.Number} - Balance: {c.Balance:C}"
+                })],
+                ShowAccounts = true 
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]

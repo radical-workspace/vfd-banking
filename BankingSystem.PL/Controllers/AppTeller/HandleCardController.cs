@@ -95,7 +95,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
             var newCard = new VisaCard
             {
-                Number = generatedCardNumber,
+                Number =  generatedCardNumber,
                 CVV = generatedCVV, 
                 ExpDate = expDate,
                 CreationDate = creationDate,
