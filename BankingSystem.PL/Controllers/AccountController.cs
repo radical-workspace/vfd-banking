@@ -104,6 +104,7 @@ namespace BankingSystem.PL.Controllers
 
             if (UserToRegister is not null)
             {
+                ModelState.Remove("Salary");
                 if (ModelState.IsValid)
                 {
                     ApplicationUser appUser;
