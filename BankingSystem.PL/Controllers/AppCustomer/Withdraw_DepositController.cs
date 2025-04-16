@@ -75,8 +75,8 @@ namespace BankingSystem.PL.Controllers.AppCustomer
             if (!accounts.Any()) return NotFound("No accounts found.");
 
             var activeLoans = accounts.SelectMany(a => a.Loans)
-                                     .Where(l => l.LoanStatus == LoanStatus.Accepted && l.CurrentDebt > 0)
-                                     .ToList();
+                                         .Where(l => l.LoanStatus == LoanStatus.Accepted && l.CurrentDebt > 0)
+                                         .ToList();
 
             var viewModel = new AccountsViewModel
             {

@@ -92,23 +92,28 @@ namespace BankingSystem.PL.Helpers
                     {
                         TransactionType = t.Type.ToString()
                     }).ToList()
-                    : new List<TransactionDetail> { new TransactionDetail { TransactionType = "No transactions available" } }));
+                    : new List<TransactionDetail> { new TransactionDetail { TransactionType = "No transactions available" } }))
 
-                    //.ForMember(dest => dest.CertificateDetails, opt => opt.MapFrom(src =>
-                    //    src.Accounts != null && src.Accounts.SelectMany(a => a.Certificates).Any()
-                    //        ? src.Accounts.SelectMany(a => a.Certificates).Select(c => new CertificateDetail
-                    //        {
-                    //            CertificateNumber = c.CertificateNumber,
-                    //            IssueDate = c.IssueDate,
-                    //            ExpiryDate = c.ExpiryDate,
-                    //            Amount = c.Amount,
-                    //            InterestRate = c.InterestRate
-                    //        }).ToList()
-                    //        : new List<CertificateDetail>
-                    //        {
-                    //            new CertificateDetail { CertificateNumber = "No Certificate available" }
-                    //        }));
+            .ForMember(dest => dest.CertificateDetails, opt => opt.MapFrom(src =>
+                src.Accounts != null && src.Accounts.SelectMany(a => a.Certificates).Any()
+                    ? src.Accounts.SelectMany(a => a.Certificates).Select(c => new CertificateDetail
+                    {
+                        CertificateNumber = c.CertificateNumber,
+                        IssueDate = c.IssueDate,
+                        ExpiryDate = c.ExpiryDate,
+                        Amount = (double)c.Amount,
+                        InterestRate = (double)c.GeneralCertificate.InterestRate
 
+                    }).ToList()
+                    : new List<CertificateDetail>
+                    {
+                        new CertificateDetail { CertificateNumber = "No Certificate available" }
+                    }));
+
+
+            CreateMap<Certificate, CertificateDetail>()
+                .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.Account.Number))
+                .ForMember(des => des.InterestRate, opt => opt.MapFrom(src => src.GeneralCertificate.InterestRate));
 
             CreateMap<Loan, LoanViewModel>()
                 .ForMember(dest => dest.LoanStatus, opt => opt.MapFrom(src => src.LoanStatus))
@@ -125,7 +130,7 @@ namespace BankingSystem.PL.Helpers
                 .ForMember(dest => dest.AccountStatus, opt => opt.MapFrom(src => src.AccountStatus != null ? src.AccountStatus.ToString() : "No data"));
 
             CreateMap<VisaCard, CustomerCardViewModel>()
-                .ForMember(dest => dest.CardType, opt => opt.MapFrom(src => src.CardType != null ? src.CardType.ToString(): "No Card Data"))
+                .ForMember(dest => dest.CardType, opt => opt.MapFrom(src => src.CardType != null ? src.CardType.ToString() : "No Card Data"))
                 .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.Account.Number));
 
 
@@ -146,12 +151,11 @@ namespace BankingSystem.PL.Helpers
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type))
                 .ForMember(dest => dest.DoneVia, opt => opt.MapFrom(src => src.DoneVia));
 
-            CreateMap<Certificate, CertificateDetail>()
-                .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.Account.Number));
+
             CreateMap<Loan, LoansViewModel>()
                     .ForMember(dest => dest.CustomerName, s => s.MapFrom(s => s.Customer.UserName))
                     .ForMember(dest => dest.AccountNumber, s => s.MapFrom(s => s.Account.Number))
-                    .ForMember(dest=>dest.SSN,opt=>opt.MapFrom(src=>src.Customer.SSN))
+                    .ForMember(dest => dest.SSN, opt => opt.MapFrom(src => src.Customer.SSN))
                     .ReverseMap();
 
             CreateMap<Loan, LoanDetailsViewModel>()
@@ -181,7 +185,7 @@ namespace BankingSystem.PL.Helpers
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.CardType, opt => opt.MapFrom(src => src.CardType.ToString()))
             .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Account.Customer.UserName))
-            .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.Account.Number));            
+            .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.Account.Number));
             CreateMap<Account, AccountMinimal>()
                 .ForMember(dest => dest.Number, opt => opt.MapFrom(src => src.Number))
                 .ForMember(dest => dest.Balance, opt => opt.MapFrom(src => src.Balance ?? 0)) // Default to 0 if null
@@ -196,7 +200,7 @@ namespace BankingSystem.PL.Helpers
                 .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
                 .ForMember(dest => dest.JoinDate, opt => opt.MapFrom(src => src.JoinDate))
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate))
-                .ReverseMap(); 
+                .ReverseMap();
 
             CreateMap<Customer, CustomerProfileViewModel>()
                 .ForMember(dest => dest.DesiredCustomer, opt => opt.MapFrom(src => src))
@@ -218,7 +222,7 @@ namespace BankingSystem.PL.Helpers
               .ForMember(dest => dest.BranchId, opt => opt.Ignore())
               .ForMember(dest => dest.Branch, opt => opt.Ignore());
 
-            CreateMap<SupportTicket , CustomerSupportTicket>()
+            CreateMap<SupportTicket, CustomerSupportTicket>()
             .ReverseMap()
             .ForMember(dest => dest.CustomerId, opt => opt.Ignore())  // Set separately
             .ForMember(dest => dest.TellerId, opt => opt.Ignore())    // Set separately
