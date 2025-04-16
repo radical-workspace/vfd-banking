@@ -40,6 +40,7 @@
             max-height: 150px;
             margin-bottom: 20px;
         }
+
         .navbar-brand {
             color: var(--accent-3) !important;
             font-weight: 700;
@@ -106,9 +107,9 @@
             text-decoration: none;
         }
 
-        .uname:hover {
-            cursor: default;
-        }
+            .uname:hover {
+                cursor: default;
+            }
 
         .btn-primary {
             background-color: var(--accent-1) !important;
@@ -181,10 +182,10 @@
                         @if (User.Identity?.IsAuthenticated == false)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                                <li class="nav-item">
-                                    <a class="nav-link text-white" asp-area="" asp-controller="BogusData" asp-action="CreateBogusData">Create Bogus Data</a>
-                                </li>
+                                @* <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a> *@
+                                @* <li class="nav-item"> *@
+                                @*     <a class="nav-link text-white" asp-area="" asp-controller="BogusData" asp-action="CreateBogusData">Create Bogus Data</a> *@
+                                @* </li> *@
                                 @* <li class="nav-item"> *@
                                 @*     <a class="nav-link text-white" asp-area="" asp-controller="Reservation" asp-action="CreateReservation">Make Reservations</a> *@
                                 @* </li> *@
@@ -235,18 +236,17 @@
 
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="HandleAccount" asp-action="Index">Accounts</a>
-                            </li> 
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="HandleCard" asp-action="GetAllCards">Cards</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="HandleTicket" asp-action="Index">Tickets</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="HandleCustomer" asp-action="GetBranchReservations">Reservations</a>
+                            </li>
                         }
-
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Reservation" asp-action="CreateReservation">Reservations</a>
-                        </li>
 
                         <li class="nav-item">
                             <a class="nav-link bogus" asp-area="" asp-controller="BogusData" asp-action="CreateBogusData">Create Bogus Data</a>
@@ -274,12 +274,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="CustomerSupportTickets" asp-action="Details" asp-route-id="@userId">Support Tickets</a>
                             </li>
-                            @* <li class="nav-item"> *@
-                            @*     <a class="nav-link" asp-area="" asp-controller="Reservation" asp-action="CreateReservation" >Make Reservations</a> *@
-                            @* </li> *@
-							<li class="nav-item">
+                            <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Reservation" asp-action="GetCustomerAllReservations">Reservations</a>
-							</li>
+                            </li>
                         }
                     </ul>
 
@@ -315,8 +312,12 @@
                             <li class="nav-item">
                                 <a class="nav-link btn btn-primary text-white" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
                             </li>
-                            <li class="nav-item ms-3">
-                                <a class="nav-link btn btn-primary text-white" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+                            @* <li class="nav-item ms-3"> *@
+                            @*     <a class="nav-link btn btn-primary text-white" asp-area="" asp-controller="Account" asp-action="Register">Register</a> *@
+                            @* </li> *@
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Reservation" asp-action="CreateReservation">Make Reservations</a>
                             </li>
                         }
                     </ul>

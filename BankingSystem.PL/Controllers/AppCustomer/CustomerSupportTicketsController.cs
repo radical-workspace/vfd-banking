@@ -43,7 +43,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         [HttpGet]
         public IActionResult ApplyTicket(string id)
         {
-            var customer = _UnitOfWork.Repository<MyCustomer>()
+            var customer = _UnitOfWork.Repository<Customer>()
                 .GetSingleIncluding(c => c.Id == id);
             if (customer != null)
             {
