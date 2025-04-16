@@ -47,6 +47,8 @@ namespace BankingSystem.PL
             // Register Unit of Work
             builder.Services.AddScoped<IUnitOfWork ,UnitOfWork>();
             builder.Services.AddScoped<IGenericRepository<Account>, AccountBL>();
+            builder.Services.AddScoped<FinancialDocumentService>();
+
 
             builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfile()));
 

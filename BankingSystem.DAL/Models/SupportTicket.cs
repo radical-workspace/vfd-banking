@@ -39,5 +39,6 @@ namespace BankingSystem.DAL.Models
         [ForeignKey(nameof(Teller))]
         public string? TellerId { get; set; }
         public Teller? Teller { get; set; }
+
     }
 }

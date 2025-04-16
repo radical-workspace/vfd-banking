@@ -12,13 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankingSystem.DAL.Migrations
 {
     [DbContext(typeof(BankingSystemContext))]
-<<<<<<<< HEAD:BankingSystem.DAL/Migrations/20250409022021_final.Designer.cs
-    [Migration("20250409022021_final")]
-    partial class final
-========
-    [Migration("20250413082723_ISA")]
-    partial class ISA
->>>>>>>> origin/MoSobhe:BankingSystem.DAL/Migrations/20250413082723_ISA.Designer.cs
+    [Migration("20250414153706_first")]
+    partial class first
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -306,6 +301,9 @@ namespace BankingSystem.DAL.Migrations
 
                     b.Property<int?>("AccountId")
                         .HasColumnType("int");
+
+                    b.Property<double?>("Amount")
+                        .HasColumnType("float");
 
                     b.Property<string>("CertificateNumber")
                         .IsRequired()

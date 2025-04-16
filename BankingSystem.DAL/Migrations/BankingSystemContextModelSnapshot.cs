@@ -406,8 +406,7 @@ namespace BankingSystem.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId")
-                        .IsUnique();
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("FinancialDocument");
                 });
@@ -941,8 +940,8 @@ namespace BankingSystem.DAL.Migrations
             modelBuilder.Entity("BankingSystem.DAL.Models.FinancialDocument", b =>
                 {
                     b.HasOne("BankingSystem.DAL.Models.MyCustomer", "Customer")
-                        .WithOne("FinancialDocument")
-                        .HasForeignKey("BankingSystem.DAL.Models.FinancialDocument", "CustomerId")
+                        .WithMany("FinancialDocuments")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1201,7 +1200,7 @@ namespace BankingSystem.DAL.Migrations
 
                     b.Navigation("Cards");
 
-                    b.Navigation("FinancialDocument");
+                    b.Navigation("FinancialDocuments");
 
                     b.Navigation("Loans");
 

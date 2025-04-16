@@ -18,5 +18,8 @@ namespace BankingSystem.PL.ViewModels.Customer
         public SupportTicketStatus Status { get; set; }
         public SupportTicketType Type { get; set; }
         public string? Response { get; set; }
+        public string? CustomerId { get; set; }
     }
+
+    
 }
