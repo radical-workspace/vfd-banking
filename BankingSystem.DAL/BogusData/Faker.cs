@@ -140,7 +140,7 @@ namespace BankingSystem.BogusFakers
             foreach (var customer in customers)
             {
                 var faker = new Faker<Account>("en")
-                    .RuleFor(a => a.Number, f => f.Random.Long(1000000000, 9999999999))
+                    .RuleFor(a => a.Number, f => f.Random.Long(100000000000, 999999999999))
                     .RuleFor(a => a.Balance, f => f.Random.Double(10000, 10000000000))
                     .RuleFor(a => a.CreatedAt, f => f.Date.Past(5))
                     .RuleFor(a => a.AccountType, f => f.PickRandom<AccountType>())
@@ -149,7 +149,7 @@ namespace BankingSystem.BogusFakers
                     .RuleFor(a => a.BranchId, f => customer.BranchId)
                     .RuleFor(a => a.Certificates, f => new List<Certificate>())
                     .RuleFor(a => a.Loans, f => new List<Loan>())
-                    .RuleFor(a => a.Card, f => new VisaCard())
+                    .RuleFor(a => a.Card, f => null /*new VisaCard()*/)
                     .RuleFor(a => a.AccountTransactions, f => new List<Transaction>());
 
                 accounts.AddRange(faker.Generate(accountsPerCustomer));
@@ -185,6 +185,25 @@ namespace BankingSystem.BogusFakers
             return faker.Generate(count);
         }
 
+        public static List<SupportTicket> GenerateFakeTickets(int count = 10, List<Customer> customers = null, List<Account> accounts = null)
+        {
+            var ticketFaker = new Faker<SupportTicket>("en")
+                .RuleFor(t => t.Title, f => f.Lorem.Sentence(3, 6))
+                .RuleFor(t => t.Description, f => f.Lorem.Paragraph(2))
+                .RuleFor(t => t.Date, f => f.Date.Past(30))
+                .RuleFor(t => t.Status, f => f.PickRandom<SupportTicketStatus>())
+                .RuleFor(t => t.Type, f => f.PickRandom<SupportTicketType>())
+                .RuleFor(t => t.Response, f => f.Random.Bool(0.7f) ? f.Lorem.Paragraphs(1, 3) : null)
+                .RuleFor(t => t.CustomerId, f => customers != null ? f.PickRandom(customers)?.Id : null)
+                .RuleFor(t => t.Customer, f => customers != null ? f.PickRandom(customers) : null)
+                .RuleFor(t => t.TellerId, f => null) // Can be populated if you have tellers
+                .RuleFor(t => t.Teller, f => null) // Can be populated if you have tellers
+                .RuleFor(t => t.AccountId, f => accounts != null && f.Random.Bool(0.8f) ? f.PickRandom(accounts)?.Id : null)
+                .RuleFor(t => t.Account, f => accounts != null && f.Random.Bool(0.8f) ? f.PickRandom(accounts) : null)
+                .RuleFor(t => t.Date, f => DateTime.Now);
+
+            return ticketFaker.Generate(count);
+        }
 
     }
 }

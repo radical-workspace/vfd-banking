@@ -40,11 +40,11 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                     ViewBag.statusList = new SelectList(Enum.GetValues(typeof(SupportTicketStatus)) , SelectedStatus);
                     return View(SupportTicketModel);
         }
-
+        [HttpGet]
         public IActionResult ApplyTicket(string id)
         {
             var customer = _UnitOfWork.Repository<Customer>()
-                .GetSingleIncluding(c => c.Id == id, c => c.SupportTickets);
+                .GetSingleIncluding(c => c.Id == id);
             if (customer != null)
             {
                 var SupportTicketModel = new CustomerSupportTicket
@@ -62,5 +62,55 @@ namespace BankingSystem.PL.Controllers.AppCustomer
             }
 
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ApplyTicket(CustomerSupportTicket model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
+            {
+                var supportTicket = new SupportTicket
+                {
+                    Title = model.Title,
+                    Description = model.Description,
+                    Date = DateTime.Now, 
+                    Status = SupportTicketStatus.Pending,
+                    Type = model.Type,
+                    CustomerId = model.CustomerId,
+                    Response = null,
+                    TellerId = null  
+                };
+
+                _UnitOfWork.Repository<SupportTicket>().Add(supportTicket);
+                _UnitOfWork.Complete();
+
+                TempData["SuccessMessage"] = "Your support ticket has been submitted successfully. We'll respond as soon as possible.";
+
+                return RedirectToAction("ThanksTicket", new { id = supportTicket.Id });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An error occurred while submitting your ticket. Please try again.");
+                return View(model);
+            }
+        }
+        public IActionResult ThanksTicket(int id)
+        {
+            var ticket = _UnitOfWork.Repository<SupportTicket>().Get(id);
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            return View(ticket);
+        }
+
+
+
     }
 }

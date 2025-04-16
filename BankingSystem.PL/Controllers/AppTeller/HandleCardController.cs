@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Globalization;
+using System.Security.Claims;
 
 namespace BankingSystem.PL.Controllers.AppTeller
 {
@@ -15,15 +17,27 @@ namespace BankingSystem.PL.Controllers.AppTeller
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public HandleCardController(IUnitOfWork unitOfWork ,IMapper mapper)
+
+        //
+        private readonly ISearchPaginationRepo<VisaCard> _searchPaginationRepo;
+
+        public HandleCardController(IUnitOfWork unitOfWork ,IMapper mapper, ISearchPaginationRepo<VisaCard> searchPaginationRepo)
         {
             _unitOfWork = unitOfWork;
            _mapper = mapper;
+
+            //
+            _searchPaginationRepo = searchPaginationRepo;
         }
         // GET: HandleCardController
-        public ActionResult GetAllCards()
+        public ActionResult GetAllCards(string? filter)
         {
+
             var AllCards = _unitOfWork.Repository<VisaCard>().GetAllIncluding(C => C.Account,C=>C.Account.Customer);
+
+            if (filter != null)
+                AllCards = AllCards.Where(c => c.CardType.ToString() == filter).ToList();
+
             var cardsToReturnViewModel = _mapper.Map<List<CardsViewModel>>(AllCards);
 
             return View(cardsToReturnViewModel);
@@ -54,19 +68,16 @@ namespace BankingSystem.PL.Controllers.AppTeller
             ViewBag.Accounts = accountsVM;
 
             return View();
-
-           
-
         }
+
+
         [HttpPost]
-
-
         public IActionResult Create(CreateCardViewModel vm)
         {
             if (!ModelState.IsValid)
             {
                 PopulateAccountsDropdown();
-                
+
             }
 
             var account = _unitOfWork.Repository<Account>()
@@ -106,8 +117,18 @@ namespace BankingSystem.PL.Controllers.AppTeller
             _unitOfWork.Repository<VisaCard>().Add(newCard);
             _unitOfWork.Complete();
 
-            return RedirectToAction(nameof(GetAllCards));
+            //return RedirectToAction(nameof(GetAllCards));
+            return RedirectToAction("Details", "HandleAccount", new {id = newCard.AccountId});
         }
+
+
+        //[HttpPost]
+        //public IActionResult Create(CreateCardViewModel vm)
+        //{
+
+        //    return RedirectToAction("Details", "HandleAccount", new { id = 0 });
+        //}
+
 
         private void PopulateAccountsDropdown()
         {
@@ -128,7 +149,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
 
         // POST: HandleCardController/Create
-        [HttpPost]
+        //[HttpPost]
       
     
 
@@ -138,8 +159,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
    
         // POST: HandleCardController/Delete/5
         [HttpPost]
-
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int id, string? returnUrl = null)
         {
             var card = _unitOfWork.Repository<VisaCard>().Get(id);
             if (card != null)
@@ -150,9 +170,30 @@ namespace BankingSystem.PL.Controllers.AppTeller
                     
                 _unitOfWork.Repository<VisaCard>().Delete(card);
                 _unitOfWork.Complete(); // Save changes to the database
-                return Json(new { success = true });
+
+                //return Json(new { success = true });
+
+                if (returnUrl != null)
+                    return Redirect(returnUrl);
+
+                return RedirectToAction(nameof(GetAllCards));
             }
-            return Json(new { success = false, message = "Card not found" });
+            //return Json(new { success = false, message = "Card not found" });
+            return NotFound();
+        }
+
+
+
+
+        [HttpGet]
+        public IActionResult Search(string search)
+        {
+            var results = _searchPaginationRepo.Search(search);
+
+            var cardsToReturnViewModel = _mapper.Map<List<CardsViewModel>>(results);
+            ViewBag.Search = search;
+
+            return View("GetAllCards", cardsToReturnViewModel);
         }
     }
 }
