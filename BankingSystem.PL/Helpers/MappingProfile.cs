@@ -125,6 +125,20 @@ namespace BankingSystem.PL.Helpers
                .ForMember(dest => dest.Customer, opt => opt.Ignore())
                .ForMember(dest => dest.Branch, opt => opt.Ignore());
 
+            CreateMap<GeneralCertificate, GeneralCertificatesViewModel>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name ?? string.Empty))
+                .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.Duration))
+                .ForMember(dest => dest.InterestRate, opt => opt.MapFrom(src => src.InterestRate));
+
+            CreateMap<Certificate, CustomerCertificatesViewModel>()
+                .ForMember(dest => dest.GeneralCertDetails,
+                    opt => opt.MapFrom(src => src.GeneralCertificate))
+                .ForMember(dest => dest.Amount,
+                    opt => opt.MapFrom(src => src.Amount ?? 0))
+                .ForMember(dest => dest.IssueDate,
+                    opt => opt.MapFrom(src => src.IssueDate))
+                .ForMember(dest => dest.ExpiryDate,
+                    opt => opt.MapFrom(src => src.ExpiryDate));
         }
 
 

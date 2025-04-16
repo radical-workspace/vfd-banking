@@ -18,9 +18,6 @@
                 <!-- Profile Header -->
                 <div class="profile-header">
                     <h4 class="mb-0">Personal Information</h4>
-                    <button class="btn btn-outline-primary" asp-action="EditCustomer" asp-controller="////" asp-route-id="@Model.DesiredCustomer.Id">
-                        <i class="bi bi-pencil me-2"></i>Edit Profile
-                    </button>
                 </div>
 
                 <!-- Details Grid -->
@@ -85,7 +82,7 @@
                             </div>
                             <div class="detail-content">
                                 <div class="detail-label">Birth Date</div>
-                                <div class="detail-value">@Model.DesiredCustomer.BirthDate</div>
+                                <div class="detail-value">@Model.DesiredCustomer.BirthDate.ToShortDateString()</div>
                             </div>
                         </div>
                     </div>
@@ -98,7 +95,7 @@
                             </div>
                             <div class="detail-content">
                                 <div class="detail-label">Join Date</div>
-                                <div class="detail-value">@Model.DesiredCustomer.JoinDate</div>
+                                <div class="detail-value">@Model.DesiredCustomer.JoinDate.ToShortDateString()</div>
                             </div>
                         </div>
                     </div>
@@ -117,10 +114,10 @@
                 <div class="card-body text-center">
                     <i class="bi bi-wallet2 card-icon mb-3"></i>
                     <h5 class="card-title">Current Balance</h5>
-                    <h2 class="mb-3 text-primary">$ @Model.TotalBalance</h2>
+                    <h2 class="mb-3 text-primary">$ @Model.TotalBalance.ToString("N2")</h2>
                     <p class="card-text text-muted mb-3">Across all accounts</p>
                     <a class="btn btn-outline-primary w-100">
-                        <i class="bi bi-plus-circle me-2"></i>Open New Account
+                        <i asp-action="Apply" asp-controller="CustomerApply" asp-route-id="@Model.DesiredCustomer.Id" class="bi bi-plus-circle me-2"></i>Open New Account
                     </a>
                     <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="CustomerAccounts" asp-route-id="@Model.DesiredCustomer.Id">
                         <i class="bi bi-plus-circle me-2"></i>Accounts Details
@@ -136,13 +133,13 @@
                 <div class="card-body text-center">
                     <i class="bi bi-credit-card card-icon mb-3"></i>
                     <h5 class="card-title">Your Cards</h5>
-                    <h2 class="mb-3 text-primary">2</h2>
+                    <h2 class="mb-3 text-primary">@Model.CardsCount</h2>
                     <p class="card-text text-muted mb-3">@Model.CreditCardsCount Credit, @Model.DebitCardsCount Debit</p>
-                     <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="CustomerCards" asp-route-id="@Model.DesiredCustomer.Id">
-                         <i class="bi bi-plus-circle me-2"></i>Cards Details
-                     </a>
-                    <a asp-controller="CustomerLoans" asp-action="ApplyCard" asp-route-id="@Model.Id" class="btn btn-outline-primary w-100">
+                    <a asp-controller="CustomerLoans" asp-action="ApplyCard" asp-route-id="@Model.DesiredCustomer.Id" class="btn btn-outline-primary w-100">
                         <i class="bi bi-plus-circle me-2"></i>Apply for New Card
+                    </a>
+                    <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="CustomerCards" asp-route-id="@Model.DesiredCustomer.Id">
+                        <i class="bi bi-plus-circle me-2"></i>Cards Details
                     </a>
                 </div>
             </div>
@@ -159,7 +156,7 @@
                     <a asp-controller="CustomerLoans" asp-action="ApplyLoan" asp-route-id="@Model.DesiredCustomer.Id" class="btn btn-outline-primary w-100">
                         <i class="bi bi-plus-circle me-2"></i>Apply for New Loan
                     </a>
-                                            <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="CustomerLoans" asp-route-id="@Model.DesiredCustomer.Id">
+                    <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="CustomerLoans" asp-route-id="@Model.DesiredCustomer.Id">
                         <i class="bi bi-plus-circle me-2"></i>Loans Details
                     </a>
                 </div>
@@ -175,9 +172,9 @@
                     <h2 class="mb-3 text-primary">@Model.CertificatesCount</h2>
                     <p class="card-text text-muted mb-3">  <br /> </p>
                     <a asp-controller="CustomerCertificates" asp-action="ApplyCertificate" asp-route-id="@Model.DesiredCustomer.Id" class="btn btn-outline-primary w-100">
-                        <i class="bi bi-plus-circle me-2"></i>Apply for New Loan
+                        <i class="bi bi-plus-circle me-2"></i>Apply for New Certificate
                     </a>
-                                        <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="CustomerCertificates" asp-route-id ="@Model.DesiredCustomer.Id">
+                    <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="CustomerCertificates" asp-route-id ="@Model.DesiredCustomer.Id">
                         <i class="bi bi-plus-circle me-2"></i>Certificates Details
                     </a>
                 </div>
@@ -205,12 +202,9 @@
                                             <i class="bi bi-wallet2"></i>
                                         </div>
                                         <h5>@acc.AccountType Account</h5>
-                                        <div class="account-balance">$@acc.Balance</div>
-                                        <div class="account-number">Account #: @acc.Number</div>
+                                        <div class="account-balance text-primary">$@acc.Balance.ToString("N2")</div>
+                                        <div class="account-number ">Account #: @acc.Number</div>
                                         <div class="account-actions">
-@*                                             <button class="btn btn-sm btn-outline-primary">
-                                                <i class="bi bi-arrow-left-right me-1"></i>Transfer
-                                            </button> *@
                                         </div>
                                     </div>
                                 </div>
