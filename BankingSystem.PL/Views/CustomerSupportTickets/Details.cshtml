@@ -1,0 +1,62 @@
+﻿@using BankingSystem.PL.ViewModels.Customer
+@model CustomerSupportTicketsViewModel
+@{
+    ViewData["Title"] = "Details";
+}
+<link rel="stylesheet" href="/css/CustomerSupportTickets.css" />
+
+
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="mb-3">Your Support Tickets</h1>
+            <p class="text-muted">View and track all your support requests</p>
+            <a asp-action="ApplyTicket" asp-controller="CustomerSupportTickets" asp-route-id="@Model.Id" class="btn btn-primary">Create New Ticket</a>
+
+        </div>
+        <div class="col-auto d-flex align-items-center">
+            <form asp-action="Details" asp-route-id="@Model.Id" asp method="post">
+                <select asp-for="SelectedStatus" asp-items="ViewBag.statusList" class="btn btn-warning dropdown-toggle" onchange="this.form.submit()">
+                </select>
+            </form>
+        </div>
+    </div>
+</div>
+
+@if(!Model.Tickets.Any())
+{
+    <!-- No Tickets Available Box -->
+    <div class="card text-center my-5 py-5">
+        <div class="card-body">
+            <h3 class="card-title mb-3">No Support Tickets Available</h3>
+            <p class="card-text text-muted mb-4">You don't have any support tickets at the moment.</p>
+            <a asp-action="ApplyTicket" asp-controller="CustomerSupportTickets" asp-route-id="@Model.Id" class="btn btn-primary">Create New Ticket</a>
+        </div>
+    </div>
+}
+@foreach ( var ticket in Model.Tickets)
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="card ticket-card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="badge bg-warning text-dark status-badge me-2">@ticket.Status</span>
+                                <span class="badge bg-info text-dark status-badge">@ticket.Type </span>
+                        </div>
+                            <span class="ticket-date">@ticket.Date.ToShortDateString()</span>
+                    </div>
+                    <div class="card-body">
+                            <h5 class="card-title">@ticket.Title</h5>
+                            <p class="card-text">@ticket.Description</p>
+
+                        <div class="ticket-response">
+                                <p class="mb-0"><strong>Support Response:</strong> @ticket.Response</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    
+

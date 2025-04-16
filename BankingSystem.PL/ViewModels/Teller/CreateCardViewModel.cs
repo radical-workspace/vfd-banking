@@ -21,5 +21,6 @@ namespace BankingSystem.PL.ViewModels.Teller
 
         [Required]
         public TypeOfCard CardType { get; set; }
+
     }
 }

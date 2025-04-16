@@ -3,14 +3,40 @@
 
 @{
     ViewData["Title"] = "Customers Management";
-    
+
     var search = ViewBag.search;
     int TotalRecords = ViewBag.TotalRecords;
     var months = DateTimeFormatInfo.CurrentInfo.MonthNames.Where(m => !string.IsNullOrEmpty(m)).ToList();
 }
 
-
 <style>
+    :root {
+        --primary-dark: #0a2d2e;
+        --primary-medium: #1c4e4f;
+        --primary-light: #436e6f;
+        --secondary-dark: #6a8e8f;
+        --secondary-light: #879693;
+        --neutral-1: #a49e97;
+        --accent-1: #deae9f;
+        --accent-2: #efd7cf;
+        --accent-3: #f7ebe7;
+        --white: #ffffff;
+    }
+
+    .customers-container {
+        background: var(--accent-3);
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+    }
+
+    .customers-header {
+        color: var(--primary-dark);
+        border-bottom: 2px solid var(--accent-1);
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+    }
+
     .visa-btn {
         border: 1px solid #003087;
         color: #003087;
@@ -28,118 +54,142 @@
             color: white;
         }
 
-        .visa-btn:hover i {
-            color: white;
+            .visa-btn:hover i {
+                color: white;
+            }
+
+    .customers-table {
+        background: var(--white);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+        .customers-table thead th {
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-medium));
+            color: var(--white) !important;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 1rem;
         }
+
+        .customers-table th, .customers-table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .customers-table tr:hover {
+            background-color: var(--accent-2);
+        }
+
+    .empty-message {
+        background: var(--accent-2);
+        border-left: 4px solid var(--accent-1);
+        color: var(--primary-dark);
+        padding: 1rem;
+        border-radius: 5px;
+    }
 </style>
 
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-xxl-12 col-12">
+            <div class="customers-container">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+                    <div>
+                        <h1 class="customers-header">
+                            <i class="fas fa-users me-2"></i> Customers Management
+                        </h1>
+                        <p class="text-muted mb-1">View, update, and manage customer information</p>
+                        <p class="text-muted mb-0">Total Records → <strong>@TotalRecords</strong></p>
+                    </div>
+                    <a asp-action="CreateCustomer" class="btn btn-primary mt-3 mt-md-0">
+                        <i class="fas fa-plus-circle me-1"></i> Add New Customer
+                    </a>
+                </div>
 
-<div class="container my-3">
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 pb-2 border-bottom">
-        <div>
-            <h1 class="h3 text-primary">
-                <i class="fas fa-users me-2"></i> Customers Management
-            </h1>
-            <p class="text-muted mb-0">View, update, and manage customer information</p>
-            <p class="text-muted mb-0">Total Records → <strong>@TotalRecords</strong></p>
-        </div>
-        <a asp-action="CreateCustomer" class="btn btn-primary mt-3 mt-md-0">
-            <i class="fas fa-plus-circle me-1"></i> Add New Customer
-        </a>
-    </div>
+                <!-- Search and Filter -->
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+                    <!-- Search Form -->
+                    <form asp-action="Search" asp-route-id="@Context.Request.RouteValues["id"]" method="get" class="w-100 w-md-auto">
+                        <div class="input-group shadow-sm">
+                            <span class="input-group-text bg-white"><i class="fas fa-search text-muted"></i></span>
+                            <input type="text" name="search" value="@search" class="form-control" placeholder="Search by customer name or SSN...">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </div>
+                    </form>
 
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
-        <!-- Search Form -->
-        <form asp-action="Search" asp-route-id="@Context.Request.RouteValues["id"]" method="get" class="w-100 w-md-auto">
-            <div class="input-group shadow-sm">
-                <span class="input-group-text bg-white"><i class="fas fa-search text-muted"></i></span>
+                    <!-- Filter Dropdown -->
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-filter me-1"></i> Filter by Month
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            @foreach (var month in months)
+                            {
+                                <li>
+                                    <a class="dropdown-item" asp-action="GetAllCustomers" asp-route-id="@Context.Request.RouteValues["id"]" asp-route-filter="@month">@month</a>
+                                </li>
+                            }
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" asp-action="GetAllCustomers" asp-route-id="@Context.Request.RouteValues["id"]">Clear Filter</a></li>
+                        </ul>
+                    </div>
+                </div>
 
-                <input type="text" name="search" value="@search" class="form-control" placeholder="Search by customer name or SSN...">
+                <!-- Table -->
+                <div class="table-responsive">
+                    <table class="table customers-table">
+                        <thead>
+                            <tr>
+                                <th>SSN</th>
+                                <th>Full Name</th>
+                                <th>Branch</th>
+                                <th>Address</th>
+                                <th>Join Date</th>
+                                <th class="w-25">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var customer in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong><i class="fas fa-id-card me-1"></i> @customer.SSN</strong>
+                                    </td>
+                                    <td>@customer.FirstName @customer.LastName</td>
+                                    <td>@customer.Branch</td>
+                                    <td class="text-muted">@customer.Address</td>
+                                    <td>@customer.JoinDate.ToString("dd MMM yyyy")</td>
+                                    <td>
+                                        <div class="d-flex gap-2 justify-content-center flex-wrap">
+                                            <a asp-action="ShowAccounts" asp-route-id="@customer.Id" class="btn btn-outline-info btn-sm" title="Accounts">
+                                                <i class="fas fa-building-columns"></i>
+                                            </a>
+                                            <a asp-action="ShowCards" asp-route-id="@customer.Id" class="btn visa-btn btn-sm" title="Cards">
+                                                <i class="fab fa-cc-visa"></i>
+                                            </a>
+                                            <a asp-action="GetCustomerDetails" asp-route-id="@customer.Id" class="btn btn-outline-primary btn-sm" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a asp-action="EditCustomer" asp-route-id="@customer.Id" class="btn btn-outline-warning btn-sm" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <form asp-action="DeleteCustomer" asp-route-id="@customer.Id" method="post" onsubmit="return confirmDelete()" class="d-inline">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
 
-                <button type="submit" class="btn btn-primary">Search</button>
             </div>
-        </form>
-
-        <!-- Filter Dropdown -->
-        <div class="dropdown">
-            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-filter me-1"></i> Filter by Month
-            </button>
-
-            <ul class="dropdown-menu dropdown-menu-end">
-                @foreach (var month in months)
-                {
-                    <li>
-                        <a class="dropdown-item" asp-action="GetAllCustomers" asp-route-id="@Context.Request.RouteValues["id"]" asp-route-filter="@month" @* asp-route-pageNumber="@CurrentPage" *@>@month</a>
-                    </li>
-                }
-
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item text-danger" asp-action="GetAllCustomers" asp-route-id="@Context.Request.RouteValues["id"]">Clear Filter</a></li>
-            </ul>
         </div>
-    </div>
-
-    <div class="table-responsive shadow-sm rounded bg-white">
-        <table class="table table-hover table-striped align-middle mb-0">
-            <thead class="table-dark text-white text-center">
-                <tr>
-                    <th>SSN</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Branch</th>
-                    <th>Address</th>
-                    <th>Join Date</th>
-                    <th>Birth Date</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var customer in Model)
-                {
-                    <tr class="text-center">
-                        <td class="fw-bold text-primary">
-                            <i class="fas fa-id-card me-2"></i>
-                            @customer.SSN
-                        </td>
-                        <td>@customer.FirstName</td>
-                        <td>@customer.LastName</td>
-                        <td>@customer.Branch</td>
-                        <td class="text-muted">@customer.Address</td>
-                        <td>@customer.JoinDate.ToString("dd MMM yyyy")</td>
-                        <td>@customer.BirthDate.ToString("dd MMM yyyy")</td>
-                        <td>
-                            <div class="d-flex gap-2 justify-content-center">
-                                <!-- Accounts Button -->
-                                <a asp-action="ShowAccounts" asp-route-id="@customer.Id" class="btn btn-outline-info btn-sm" title="Accounts">
-                                    <i class="fas fa-building-columns"></i>
-                                </a>
-                                
-                                <!-- Cards Button -->
-                                <a asp-action="ShowCards" asp-route-id="@customer.Id" class="btn visa-btn btn-sm" title="Card">
-                                    <i class="fab fa-cc-visa"></i>
-                                </a>
-
-                                <!-- Details Button -->
-                                <a asp-action="GetCustomerDetails" asp-route-id="@customer.Id" class="btn btn-outline-primary btn-sm" title="View">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                <!-- Edit Button -->
-                                <a asp-action="EditCustomer" asp-route-id="@customer.Id" class="btn btn-outline-warning btn-sm" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <!-- Delete Button -->
-                                <form asp-action="DeleteCustomer" asp-route-id="@customer.Id" method="post" onsubmit="return confirmDelete()" class="d-inline">
-                                    <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
     </div>
 </div>
 

@@ -49,9 +49,14 @@ namespace BankingSystem.PL
             builder.Services.AddScoped<IGenericRepository<Account>, MyAccountBL>();
             builder.Services.AddScoped<IGenericRepository<Customer>, MyCustomerBL>();
             builder.Services.AddScoped<IGenericRepository<VisaCard>, MyCardBL>();
+            builder.Services.AddScoped<IGenericRepository<SupportTicket>, MyTicketBL>();
             builder.Services.AddScoped<HandleAccountTransferes>();
             builder.Services.AddScoped<ISearchPaginationRepo<Account>, MyAccountBL>();
             builder.Services.AddScoped<ISearchPaginationRepo<Customer>, MyCustomerBL>();
+            builder.Services.AddScoped<ISearchPaginationRepo<VisaCard>, MyCardBL>();
+            builder.Services.AddScoped<ISearchPaginationRepo<SupportTicket>, MyTicketBL>();
+
+            builder.Services.AddScoped<FinancialDocumentService>();
 
 
             builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfile()));

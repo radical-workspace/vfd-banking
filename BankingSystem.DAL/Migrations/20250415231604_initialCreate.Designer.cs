@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankingSystem.DAL.Migrations
 {
     [DbContext(typeof(BankingSystemContext))]
-    [Migration("20250413193401_initialCreate")]
+    [Migration("20250415231604_initialCreate")]
     partial class initialCreate
     {
         /// <inheritdoc />
@@ -174,32 +174,6 @@ namespace BankingSystem.DAL.Migrations
                     b.UseTptMappingStrategy();
                 });
 
-            modelBuilder.Entity("BankingSystem.DAL.Models.Asset", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("EstimatedValue")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18,4)")
-                        .HasDefaultValue(0m);
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Asset");
-                });
-
             modelBuilder.Entity("BankingSystem.DAL.Models.Bank", b =>
                 {
                     b.Property<int>("Id")
@@ -278,9 +252,12 @@ namespace BankingSystem.DAL.Migrations
                     b.Property<int?>("AccountId")
                         .HasColumnType("int");
 
-                    b.Property<long>("CertificateNumber")
-                        .HasMaxLength(50)
-                        .HasColumnType("bigint");
+                    b.Property<double?>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<string>("CertificateNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("ExpiryDate")
                         .HasColumnType("datetime2");
@@ -289,18 +266,17 @@ namespace BankingSystem.DAL.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("IssueDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
+
+                    b.HasIndex("CertificateNumber")
+                        .IsUnique();
 
                     b.HasIndex("GeneralCertificateId");
 
@@ -410,37 +386,12 @@ namespace BankingSystem.DAL.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("GeneralCertificate");
-                });
-
-            modelBuilder.Entity("BankingSystem.DAL.Models.IncomeSource", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal>("MonthlyAmount")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18,4)")
-                        .HasDefaultValue(0m);
-
-                    b.Property<string>("Type")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("IncomeSource");
+                    b.ToTable("GeneralCertificates");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Loan", b =>

@@ -21,7 +21,8 @@ namespace BankingSystem.PL.Controllers.AppCustomer
             var branches = _unitOfWork.Repository<Branch>().GetAll();
             ViewBag.Branches = branches;
 
-            var locations = branches.Select(b => new {
+            var locations = branches.Select(b => new
+            {
                 lat = b.Location.Split(',')[0],
                 lng = b.Location.Split(',')[1],
                 title = b.Name,
@@ -40,7 +41,8 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                 var branches = _unitOfWork.Repository<Branch>().GetAll();
                 ViewBag.Branches = branches;
 
-                var locations = branches.Select(b => new {
+                var locations = branches.Select(b => new
+                {
                     lat = b.Location.Split(',')[0],
                     lng = b.Location.Split(',')[1],
                     title = b.Name,
@@ -120,7 +122,9 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                     ViewBag.QrCodeImage = Convert.ToBase64String(qrImageBytes);
                 }
             }
+            //return User.Identity?.IsAuthenticated == true ? View(reservation) : RedirectToAction("Index", "Home");
             return View(reservation);
+
         }
         [HttpGet]
         public IActionResult DownloadQrCode(int reservationId)

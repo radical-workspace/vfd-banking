@@ -59,21 +59,6 @@ namespace BankingSystem.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Asset",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Type = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    EstimatedValue = table.Column<decimal>(type: "decimal(18,4)", nullable: false, defaultValue: 0m),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Asset", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Banks",
                 columns: table => new
                 {
@@ -89,12 +74,12 @@ namespace BankingSystem.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GeneralCertificate",
+                name: "GeneralCertificates",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Duration = table.Column<int>(type: "int", nullable: false),
                     InterestRate = table.Column<double>(type: "float", nullable: false),
                     Amount = table.Column<double>(type: "float", nullable: false),
@@ -102,22 +87,7 @@ namespace BankingSystem.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GeneralCertificate", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "IncomeSource",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Type = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    MonthlyAmount = table.Column<decimal>(type: "decimal(18,4)", nullable: false, defaultValue: 0m),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_IncomeSource", x => x.Id);
+                    table.PrimaryKey("PK_GeneralCertificates", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -489,12 +459,13 @@ namespace BankingSystem.DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CertificateNumber = table.Column<long>(type: "bigint", maxLength: 50, nullable: false),
-                    IssueDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    CertificateNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    IssueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Amount = table.Column<double>(type: "float", nullable: true),
                     GeneralCertificateId = table.Column<int>(type: "int", nullable: true),
                     AccountId = table.Column<int>(type: "int", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -505,9 +476,9 @@ namespace BankingSystem.DAL.Migrations
                         principalTable: "Accounts",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Certificates_GeneralCertificate_GeneralCertificateId",
+                        name: "FK_Certificates_GeneralCertificates_GeneralCertificateId",
                         column: x => x.GeneralCertificateId,
-                        principalTable: "GeneralCertificate",
+                        principalTable: "GeneralCertificates",
                         principalColumn: "Id");
                 });
 
@@ -759,6 +730,12 @@ namespace BankingSystem.DAL.Migrations
                 column: "AccountId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Certificates_CertificateNumber",
+                table: "Certificates",
+                column: "CertificateNumber",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Certificates_GeneralCertificateId",
                 table: "Certificates",
                 column: "GeneralCertificateId");
@@ -894,9 +871,6 @@ namespace BankingSystem.DAL.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Asset");
-
-            migrationBuilder.DropTable(
                 name: "Cards");
 
             migrationBuilder.DropTable(
@@ -904,9 +878,6 @@ namespace BankingSystem.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "FinancialDocument");
-
-            migrationBuilder.DropTable(
-                name: "IncomeSource");
 
             migrationBuilder.DropTable(
                 name: "Reservations");
@@ -924,7 +895,7 @@ namespace BankingSystem.DAL.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "GeneralCertificate");
+                name: "GeneralCertificates");
 
             migrationBuilder.DropTable(
                 name: "Tellers");
