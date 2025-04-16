@@ -25,13 +25,20 @@ namespace BankingSystem.BLL.Services
 
         public IEnumerable<SupportTicket> GetAll(string? userID = "", int flag = 1)
         {
-            return _context.SupportTickets
-                .Include(t => t.Account)
-                .Include(t => t.Teller)
-                    .ThenInclude(t => t.Branch)
-                .Include(t => t.Customer)
-                    .ThenInclude(c => c.Accounts)
-                .ToList();
+            var query = _context.SupportTickets
+                        .Include(t => t.Account)
+                        .Include(t => t.Teller)
+                            .ThenInclude(t => t.Branch)
+                        .Include(t => t.Customer)
+                            .ThenInclude(c => c.Accounts)
+                        .ToList();
+
+            if (flag == 1)
+                return query;
+
+
+            return query
+                   .Where(t => t.TellerId == userID);
         }
 
 
@@ -60,28 +67,38 @@ namespace BankingSystem.BLL.Services
 
         public IEnumerable<SupportTicket> Search(string search, string? userID = "")
         {
-            var query = GetAll();
+            var allTickets = GetAll();
 
-            if (search == null)
-                return query;
-
+            if (string.IsNullOrWhiteSpace(search))
+                return allTickets;
 
             var sanitizedSearch = ISearchPaginationRepo<SupportTicket>.MyRegex().Replace(search.Trim(), "");
 
-            query = query
+
+            var byAccount = allTickets
                 .Where(t => t.Customer != null
                     && t.Customer.Accounts != null
                     && t.Customer.Accounts
-                        .Any(a => a.Number.ToString().Contains(sanitizedSearch)));
+                        .Any(a => a.Number.ToString().Contains(sanitizedSearch)))
+                .ToList();
 
 
-            if (!query.Any())
-                query = query
-                            .Where(t => (t.Customer?.FirstName + " " + t.Customer?.LastName).ToLower().Trim()
-                                .Contains(ISearchPaginationRepo<Account>.MyRegex().Replace(search.ToLower().Trim(), " ")));
+            if (byAccount.Any())
+                return byAccount;
 
-            return query;
+            var lowerSearch = search.ToLower().Trim();
+            var sanitizedNameSearch = ISearchPaginationRepo<SupportTicket>.MyRegex().Replace(lowerSearch, " ");
+
+            var byName = allTickets
+                .Where(t =>
+                    !string.IsNullOrEmpty(t.Customer?.FirstName) &&
+                    !string.IsNullOrEmpty(t.Customer?.LastName) &&
+                    (t.Customer.FirstName + " " + t.Customer.LastName).ToLower().Contains(sanitizedNameSearch))
+                .ToList();
+
+            return byName;
         }
+
 
 
 
