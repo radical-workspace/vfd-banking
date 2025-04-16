@@ -246,6 +246,9 @@ namespace BankingSystem.PL.Helpers
             {
                 if (model.SelectedDestination == AccountsViewModel.DepositDestination.Loan)
                 {
+                    transaction.Type = TransactionType.LoanPayment;
+
+
                     if (!model.SelectedLoanId.HasValue)
                         return ShowTransferError("Please select a loan", "Deposit failed.");
 
@@ -254,6 +257,9 @@ namespace BankingSystem.PL.Helpers
                     if (loan == null || loan.AccountId != MyAccount.Id)
                         return ShowTransferError("Invalid loan selection", "Deposit failed.");
 
+                    // known that the loan is already Validated
+                    transaction.Payment.LoanId = model.SelectedLoanId.Value;
+                    
                     if (model.Amount > loan.CurrentDebt)
                         return FailTransfer(transaction, "Deposit failed", "Amount exceeds loan debt");
 
@@ -265,6 +271,7 @@ namespace BankingSystem.PL.Helpers
                 }
                 else
                 {
+                    transaction.Type = TransactionType.Deposit;
                     MyAccount.Balance += model.Amount;
                     _unitOfWork.Repository<Account>().Update(MyAccount);
                 }
@@ -278,7 +285,6 @@ namespace BankingSystem.PL.Helpers
 
                 transaction.Status = TransactionStatus.Accepted;
                 transaction.Payment.Status = PaymentStatus.Paid;
-                transaction.Type = TransactionType.Deposit;
                 transaction.DoneVia = !isUsingVisa ?
                         $"Deposit By Customer Via Branch {(model.SelectedDestination == AccountsViewModel.DepositDestination.Loan ? "Loan Payment" : "Account")}" :
                         $"Deposit By Customer Via Visa Card {(model.SelectedDestination == AccountsViewModel.DepositDestination.Loan ? " (Loan Payment)" : "")}";
@@ -391,7 +397,7 @@ namespace BankingSystem.PL.Helpers
                 if (account.Branch.Savings.Count == 0)
                 {
                     transaction.AccountId = account.Id;
-                    return (false,FailTransfer(transaction,"Savings Error","The Branch does not Contain the This Currency"));
+                    return (false, FailTransfer(transaction, "Savings Error", "The Branch does not Contain the This Currency"));
                 }
 
                 return (true, null);

@@ -16,9 +16,11 @@ namespace BankingSystem.DAL.Models
         public List<Customer> Customers { get; set; } = null!;
         public List<Teller> Tellers { get; set; } = null!;
         public List<Department> Departments { get; set; } = null!;
-        public List<Savings> Savings  { get; set; } = null!;
+        public List<Savings> Savings { get; set; } = null!;
         public ICollection<Reservation> Reservations { get; set; } = new HashSet<Reservation>();
-        public Manager? MyManager { get; set; } = null!;
+        //[ForeignKey(nameof(MyManager))]
+        //public string ManagerId { get; set; }=string.Empty;
+        public Manager ?MyManager { get; set; } = null!;
 
     }
 }

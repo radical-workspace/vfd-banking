@@ -13,7 +13,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         private readonly IUnitOfWork _UnitOfWork;
         private readonly IMapper mapper;
 
-        public CustomerProfileController(IUnitOfWork UnitOfWork , IMapper _mapper)
+        public CustomerProfileController(IUnitOfWork UnitOfWork, IMapper _mapper)
         {
             _UnitOfWork = UnitOfWork;
             mapper = _mapper;
@@ -37,11 +37,10 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                 account.Card = _UnitOfWork.Repository<VisaCard>()
                     .GetSingleIncluding(c => c.AccountId == account.Id);
                 cards.Add(account.Card);
-
             }
             if (customer != null)
             {
-                var CustomerProfileModel =mapper.Map<CustomerProfileViewModel>(customer);
+                var CustomerProfileModel = mapper.Map<CustomerProfileViewModel>(customer);
 
                 CustomerProfileModel.TotalBalance = customer.Accounts?.Sum(acc => acc.Balance ?? 0) ?? 0;
                 CustomerProfileModel.AccountsCount = customer.Accounts?.Count() ?? 0;
@@ -50,7 +49,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                 CustomerProfileModel.CreditCardsCount = cards.Where(c => c.CardType == TypeOfCard.Credit).ToList().Count();
                 CustomerProfileModel.LoansCount = customer.Loans?.Count() ?? 0;
                 CustomerProfileModel.CertificatesCount = customer.Accounts?.Sum(acc => acc.Certificates?.Count() ?? 0) ?? 0;
-            
+
                 return View(CustomerProfileModel);
             }
             else
@@ -76,12 +75,12 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         }
 
         [HttpPost]
-        public IActionResult Edit( CustomerViewModel CustomerVM )
+        public IActionResult Edit(CustomerViewModel CustomerVM)
         {
-           
-            if( CustomerVM != null && ModelState.IsValid)
+
+            if (CustomerVM != null && ModelState.IsValid)
             {
-                var CustomerToUpdate = _UnitOfWork.Repository<Customer>().GetSingleIncluding( c=> c.Id == CustomerVM.Id);
+                var CustomerToUpdate = _UnitOfWork.Repository<Customer>().GetSingleIncluding(c => c.Id == CustomerVM.Id);
                 if (CustomerToUpdate == null)
                 {
                     return NotFound($"No Customer Exist for id : {CustomerVM.Id}");

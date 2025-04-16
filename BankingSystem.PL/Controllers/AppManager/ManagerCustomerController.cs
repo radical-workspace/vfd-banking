@@ -53,13 +53,21 @@ namespace BankingSystem.PL.Controllers.AppManager
                 )
                 .FirstOrDefault(c => c.Id == id);
 
-            if (customer == null)
-                return NotFound("Customer not found");
+            //if (customer == null)
+            //    return NotFound("Customer not found");
 
             var accountsWithCards = _unitOfWork.Repository<Account>()
                 .GetAllIncluding(a => a.Certificates, a => a.Card)
                 .Where(a => a.CustomerId == id && a.Card != null && a.Id == a.Card.AccountId)
                 .ToList();
+            
+            foreach (var certificate in accountsWithCards)
+            {
+                certificate.Certificates = _unitOfWork.Repository<Certificate>()
+                    .GetAllIncluding(c => c.GeneralCertificate)
+                    .Where(c => c.AccountId == certificate.Id && c.GeneralCertificate != null && c.GeneralCertificate.Id == c.GeneralCertificateId)
+                    .ToList();
+            }
 
             customer.Accounts = accountsWithCards;
 
@@ -74,8 +82,8 @@ namespace BankingSystem.PL.Controllers.AppManager
             var loanWithPayment = _unitOfWork.Repository<Loan>()
                 .GetAllIncluding(l => l.Payments, l => l.Account).Where(l => l.CustomerId == id).ToList();
 
-            if (loanWithPayment == null)
-                return NotFound("No loan found for this customer.");
+            //if (loanWithPayment == null)
+            //    return NotFound("No loan found for this customer.");
 
             var loans = _mapper.Map<List<LoanViewModel>>(loanWithPayment);
 
@@ -86,8 +94,8 @@ namespace BankingSystem.PL.Controllers.AppManager
         public ActionResult GetCustomerAccount(string id)
         {
             var customerAccount = _unitOfWork.Repository<Account>().GetAll().Where(l => l.CustomerId == id).ToList();
-            if (customerAccount == null || customerAccount.Count == 0)
-                return NotFound("No accounts found for this customer.");
+            //if (customerAccount == null || customerAccount.Count == 0)
+            //    return NotFound("No accounts found for this customer.");
 
             var account = _mapper.Map<List<CustomerAccountViewModel>>(customerAccount);
             ViewBag.CustomerId = id;
@@ -103,8 +111,8 @@ namespace BankingSystem.PL.Controllers.AppManager
                             c.Account.Id == c.AccountId)
                 .ToList();
 
-            if (customerCards == null || customerCards.Count == 0)
-                return NotFound("No cards found for this customer.");
+            //if (customerCards == null || customerCards.Count == 0)
+            //    return NotFound("No cards found for this customer.");
 
             var cards = _mapper.Map<List<CustomerCardViewModel>>(customerCards);
 
@@ -115,8 +123,8 @@ namespace BankingSystem.PL.Controllers.AppManager
         public ActionResult GetCustomerSupportTicket(string id)
         {
             var supportsTickets = _unitOfWork.Repository<SupportTicket>().GetAllIncluding(s => s.Customer.Accounts).Where(s => s.CustomerId == id).ToList();
-            if (supportsTickets == null || supportsTickets.Count == 0)
-                return NotFound("No support tickets found for this customer.");
+            //if (supportsTickets == null || supportsTickets.Count == 0)
+            //    return NotFound("No support tickets found for this customer.");
 
             var supportTicketViewModels = _mapper.Map<List<CustomerSupportTicketViewModel>>(supportsTickets);
             ViewBag.CustomerId = id;
@@ -126,23 +134,21 @@ namespace BankingSystem.PL.Controllers.AppManager
         public ActionResult GetCustomerTransaction(string id)
         {
             var transactions = _unitOfWork.Repository<Transaction>().GetAllIncluding(s => s.Customer.Accounts).Where(t => t.CustomerID == id).ToList();
-            if (transactions == null || transactions.Count == 0)
-                return NotFound("No transactions found for this customer.");
+            //if (transactions == null || transactions.Count == 0)
+            //    return NotFound("No transactions found for this customer.");
 
             var customerTransactions = _mapper.Map<List<CustomerTransactionViewModel>>(transactions);
             ViewBag.CustomerId = id;
             return View(customerTransactions);
         }
+
         [HttpGet]
         public ActionResult GetCustomerCertificate(string id)
         {
             var certificates = _unitOfWork.Repository<Certificate>()
-                .GetAllIncluding(c => c.Account)
+                .GetAllIncluding(c => c.Account, c => c.GeneralCertificate)
                 .Where(t => t.Account.CustomerId == id)
                 .ToList();
-
-            if (certificates == null || certificates.Count == 0)
-                return NotFound("No certificates found for this customer.");
 
             var customerCertificate = _mapper.Map<List<CertificateDetail>>(certificates);
             ViewBag.CustomerId = id;

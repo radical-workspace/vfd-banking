@@ -13,9 +13,9 @@ namespace BankingSystem.PL.ViewModels.Customer
         [Range(0.01, double.MaxValue, ErrorMessage = "Amount must be greater than 0")]
         public double Amount { get; set; }
 
-        [Required(ErrorMessage = "Destination IBAN is required")]
+        [RequiredWhen(nameof(SelectedDestination), true, ErrorMessage = "Destination IBAN is required")]
         [StringLength(34, MinimumLength = 15, ErrorMessage = "IBAN must be between 15-34 characters")]
-        public string DestinationIban { get; set; }
+        public string? DestinationIban { get; set; }
 
         // Account transfer fields
         [RequiredWhen(nameof(ShowAccounts), true, ErrorMessage = "Please select an account")]

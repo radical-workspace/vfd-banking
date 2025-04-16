@@ -191,43 +191,48 @@
                 <div class="card-header response-card-header py-3">
                     <h5 class="m-0"><i class="fas fa-comment-dots me-2"></i>Official Response</h5>
                 </div>
+
+                <div class="card-body">
+                    <p class="card-text">Teller in Charge : @Model.Ticket.TellerName </p>
+                </div>
                 <div class="card-body">
                     <p class="card-text">@Model.Response</p>
                 </div>
+
             </div>
         }
 
         <!-- Actions Card -->
-        @if (Model.Ticket.Status == SupportTicketStatus.Pending || Model.Ticket.Status == SupportTicketStatus.InProgress)
-        {
-            <div class="card info-card">
-                <div class="card-header actions-card-header py-3">
-                    <h5 class="m-0"><i class="fas fa-tools me-2"></i>Ticket Actions</h5>
-                </div>
-                <div class="card-body">
-                    <div class="d-flex flex-wrap">
-                        @if (Model.Ticket.Status == SupportTicketStatus.Pending)
-                        {
-                            <a asp-action="StartProgress" asp-route-ticketId="@Model.Id"
-                               class="btn btn-start text-white action-btn">
-                                <i class="fas fa-play-circle me-2"></i>Start Progress
-                            </a>
-                        }
-                        @if (Model.Ticket.Status == SupportTicketStatus.InProgress)
-                        {
-                            <a asp-action="ResolveTicket" asp-route-ticketId="@Model.Id"
-                               class="btn btn-resolve text-white action-btn">
-                                <i class="fas fa-check-circle me-2"></i>Mark Resolved
-                            </a>
-                        }
-                        <a asp-action="AddResponse" asp-route-ticketId="@Model.Id"
-                           class="btn btn-response text-white action-btn">
-                            <i class="fas fa-comment-medical me-2"></i>Add Response
-                        </a>
-                    </div>
-                </div>
-            </div>
-        }
+        @* @if (Model.Ticket.Status == SupportTicketStatus.Pending || Model.Ticket.Status == SupportTicketStatus.InProgress) *@
+        @* { *@
+        @*     <div class="card info-card"> *@
+        @*         <div class="card-header actions-card-header py-3"> *@
+        @*             <h5 class="m-0"><i class="fas fa-tools me-2"></i>Ticket Actions</h5> *@
+        @*         </div> *@
+        @*         <div class="card-body"> *@
+        @*             <div class="d-flex flex-wrap"> *@
+        @*                 @if (Model.Ticket.Status == SupportTicketStatus.Pending) *@
+        @*                 { *@
+        @*                     <a asp-action="StartProgress" asp-route-ticketId="@Model.Id" *@
+        @*                        class="btn btn-start text-white action-btn"> *@
+        @*                         <i class="fas fa-play-circle me-2"></i>Start Progress *@
+        @*                     </a> *@
+        @*                 } *@
+        @*                 @if (Model.Ticket.Status == SupportTicketStatus.InProgress) *@
+        @*                 { *@
+        @*                     <a asp-action="ResolveTicket" asp-route-ticketId="@Model.Id" *@
+        @*                        class="btn btn-resolve text-white action-btn"> *@
+        @*                         <i class="fas fa-check-circle me-2"></i>Mark Resolved *@
+        @*                     </a> *@
+        @*                 } *@
+        @*                 <a asp-action="AddResponse" asp-route-ticketId="@Model.Id" *@
+        @*                    class="btn btn-response text-white action-btn"> *@
+        @*                     <i class="fas fa-comment-medical me-2"></i>Add Response *@
+        @*                 </a> *@
+        @*             </div> *@
+        @*         </div> *@
+        @*     </div> *@
+        @* } *@
     </div>
 </div>
 
@@ -245,22 +250,22 @@
     }
 }
 
-<style> 
-/*     dt { */
-/*         font-weight: 500; */
-/*         color: #6c757d; */
-/*     } */
+<style>
+    /*     dt { */
+    /*         font-weight: 500; */
+    /*         color: #6c757d; */
+    /*     } */
 
-/*     .card { */
-/*         border-radius: 0.35rem; */
-/*     } */
+    /*     .card { */
+    /*         border-radius: 0.35rem; */
+    /*     } */
 
-/*     .badge { */
-/*         font-size: 0.85em; */
-/*         padding: 0.5em 0.75em; */
-/*     } */
+    /*     .badge { */
+    /*         font-size: 0.85em; */
+    /*         padding: 0.5em 0.75em; */
+    /*     } */
 
-/*     .card-text { */
-/*         white-space: pre-wrap; */
-/*     } */
- </style>
+    /*     .card-text { */
+    /*         white-space: pre-wrap; */
+    /*     } */
+</style>

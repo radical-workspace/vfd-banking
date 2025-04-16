@@ -9,9 +9,10 @@ namespace BankingSystem.DAL.Models
 {
     public enum TransactionType
     {
-        Deposit = 1,
-        Withdraw = 2,
-        Transfer = 3
+        Deposit,
+        Withdraw,
+        Transfer,
+        LoanPayment
     }
     public enum TransactionStatus
     {
@@ -25,7 +26,7 @@ namespace BankingSystem.DAL.Models
         public TransactionStatus Status { get; set; }
         public TransactionType Type { get; set; }
         public string DoneVia { get; set; } = string.Empty;
-        public long ?AccountDistenationNumber { get; set; }
+        public long? AccountDistenationNumber { get; set; }
 
         [ForeignKey(nameof(Payment))]
         public int PaymentId { get; set; }
