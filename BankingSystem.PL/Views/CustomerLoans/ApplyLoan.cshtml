@@ -375,7 +375,7 @@
                 <i class="bi bi-headset card-icon mb-3"></i>
                 <h4 class="mb-3">Need Help?</h4>
                 <p class="text-muted mb-4">Our loan specialists are ready to assist you with any questions about your application.</p>
-                <a href="#support" class="btn btn-primary px-4 py-2">
+                <a asp-action="ApplyTicket" asp-controller="CustomerSupportTickets" asp-route-id="@Model.CustomerId" class="btn btn-primary px-4 py-2">
                     <i class="bi bi-chat-dots me-2"></i>Contact a Loan Specialist
                 </a>
             </div>

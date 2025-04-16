@@ -145,6 +145,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
 
             var customerCertificateVM = new CustomerCertificateVM
             {
+                CustomerId = certificate.Account.CustomerId,
                 CustomerCertificateNumber = certificate.CertificateNumber,
                 Amount = certificate.Amount,
                 IssueDate = certificate.IssueDate,

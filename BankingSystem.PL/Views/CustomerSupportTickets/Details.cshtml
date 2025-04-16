@@ -23,7 +23,7 @@
     </div>
 </div>
 
-@if(!Model.Tickets.Any())
+@if(Model == null || !Model.Tickets.Any())
 {
     <!-- No Tickets Available Box -->
     <div class="card text-center my-5 py-5">

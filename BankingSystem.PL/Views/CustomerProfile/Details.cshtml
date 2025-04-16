@@ -111,14 +111,14 @@
         <!-- Balance Card -->
         <div class="col-md-3">
             <div class="card info-card shadow-sm">
-                <div class="card-body text-center">
-                    <i class="bi bi-wallet2 card-icon mb-3"></i>
+                <div class="card-body text-center w-auto">
+                    <i class="bi bi-wallet2 card-icon mb-3 "></i>
                     <h5 class="card-title">Current Balance</h5>
                     <h2 class="mb-3 text-primary">$ @Model.TotalBalance.ToString("N2")</h2>
                     <p class="card-text text-muted mb-3">Across all accounts</p>
-                    <a class="btn btn-outline-primary w-100">
+@*                     <a class="btn btn-outline-primary w-100">
                         <i asp-action="Apply" asp-controller="CustomerApply" asp-route-id="@Model.DesiredCustomer.Id" class="bi bi-plus-circle me-2"></i>Open New Account
-                    </a>
+                    </a> *@
                     <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="CustomerAccounts" asp-route-id="@Model.DesiredCustomer.Id">
                         <i class="bi bi-plus-circle me-2"></i>Accounts Details
                     </a>
@@ -135,9 +135,9 @@
                     <h5 class="card-title">Your Cards</h5>
                     <h2 class="mb-3 text-primary">@Model.CardsCount</h2>
                     <p class="card-text text-muted mb-3">@Model.CreditCardsCount Credit, @Model.DebitCardsCount Debit</p>
-                    <a asp-controller="CustomerLoans" asp-action="ApplyCard" asp-route-id="@Model.DesiredCustomer.Id" class="btn btn-outline-primary w-100">
+@*                     <a asp-controller="CustomerLoans" asp-action="ApplyCard" asp-route-id="@Model.DesiredCustomer.Id" class="btn btn-outline-primary w-100">
                         <i class="bi bi-plus-circle me-2"></i>Apply for New Card
-                    </a>
+                    </a> *@
                     <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="CustomerCards" asp-route-id="@Model.DesiredCustomer.Id">
                         <i class="bi bi-plus-circle me-2"></i>Cards Details
                     </a>
@@ -223,7 +223,7 @@
                 <i class="bi bi-headset card-icon mb-3"></i>
                 <h4 class="mb-3">Need Help?</h4>
                 <p class="text-muted mb-4">Our support team is ready to assist you with any questions or issues you may have.</p>
-                <a href="#support" class="btn btn-primary px-4 py-2">
+                <a asp-action="ApplyTicket" asp-controller="CustomerSupportTickets" asp-route-id="@Model.DesiredCustomer.Id" class="btn btn-primary px-4 py-2">
                     <i class="bi bi-ticket-detailed me-2"></i>Get Help
                 </a>
                 <a asp-action="Details" asp-controller="CustomerSupportTickets" asp-route-id="@Model.DesiredCustomer.Id" class="btn btn-primary px-4 py-2">

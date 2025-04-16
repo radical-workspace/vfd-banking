@@ -29,15 +29,9 @@ namespace BankingSystem.PL.Controllers.AppCustomer
 
             if (customer != null)
             {
-                if (customer.Loans?.Any() ?? false)
-                {
-                    var LoanModel = _mapper.Map<List<CustomerLoansViewModel>>(customer.Loans);
-                    return View(LoanModel);
-                }
-                else
-                {
-                    return RedirectToAction("Details", "CustomerProfile", new { id = customer?.Id });
-                }
+                var LoanModel = _mapper.Map<List<CustomerLoansViewModel>>(customer.Loans ?? new List<Loan>());
+                ViewBag.id = customer.Id;
+                return View(LoanModel);
             }
             else
             {

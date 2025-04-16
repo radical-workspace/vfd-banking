@@ -24,15 +24,8 @@ namespace BankingSystem.PL.Controllers.AppCustomer
 
             if (customer != null)
             {
-                if (customer.Cards.Any())
-                {
-                    var CardsModel = _mapper.Map<List<CustomerCardsViewModel>>(customer.Cards);
+                    var CardsModel = _mapper.Map<List<CustomerCardsViewModel>>(customer.Cards ?? new List<Card>());
                     return View(CardsModel);
-                }
-                else
-                {
-                    return RedirectToAction("Details", "CustomerProfile", new { id = customer?.Id });
-                }
             }
             else
             {
