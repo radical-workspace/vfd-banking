@@ -35,8 +35,8 @@ namespace BankingSystem.PL.ViewModels.Manager
         public DateTime StartDate { get; set; }
 
         [Required(ErrorMessage = "Account number is required.")]
-        [Range(1, int.MaxValue, ErrorMessage = "Account number must be valid.")]
-        public int AccountNumber { get; set; }
+        [Range(1, long.MaxValue, ErrorMessage = "Account number must be valid.")]
+        public long AccountNumber { get; set; }
 
         [Required(ErrorMessage = "Customer name is required.")]
         [StringLength(100, ErrorMessage = "Customer name cannot exceed 100 characters.")]
