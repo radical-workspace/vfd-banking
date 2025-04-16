@@ -99,5 +99,10 @@ namespace BankingSystem.BLL.Services
         {
             throw new NotImplementedException();
         }
+
+        public Account? Get(int id, long number = 0)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -4,57 +4,111 @@
     ViewData["Title"] = "Edit";
 }
 
+<style>
+    :root {
+        --primary-dark: #0a2d2e;
+        --primary-medium: #1c4e4f;
+        --primary-light: #436e6f;
+        --secondary-dark: #6a8e8f;
+        --secondary-light: #879693;
+        --neutral-1: #a49e97;
+        --accent-1: #deae9f;
+        --accent-2: #efd7cf;
+        --accent-3: #f7ebe7;
+        --white: #ffffff;
+    }
 
-<div class="d-flex justify-content-between pt-4">
-    <h1 class="h2 text-primary text-center w-100">
-        <i class="fas fa-pen me-2"></i> Edit Account
-    </h1>
-</div>
+    .card-grid {
+        background: var(--accent-3);
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .summary-header {
+        border-bottom: 2px solid var(--accent-1);
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+        color: var(--primary-dark);
+    }
+
+    .text-primary {
+        color: var(--primary-dark) !important;
+    }
+
+    .btn-save {
+        background-color: var(--primary-dark);
+        border: none;
+        color: var(--white);
+    }
+
+        .btn-save:hover {
+            background-color: var(--primary-medium);
+        }
+
+    .btn-cancel {
+        border-color: var(--secondary-dark);
+        color: var(--secondary-dark);
+    }
+
+        .btn-cancel:hover {
+            background-color: var(--secondary-light);
+            color: var(--white);
+        }
+</style>
+
+<div class="container card-grid my-5">
+    <!-- Header -->
+    <div class="mb-1 summary-header text-center">
+        <h3 class="fw-semibold">
+            <i class="fas fa-pen me-2"></i>Edit Account
+        </h3>
+        <p class="text-muted mb-0">
+            <span class="fw-medium">@Model?.Customer?.FirstName @Model?.Customer?.LastName</span>
+            <small class="text-muted">→ CID: @Model?.CustomerId</small>
+        </p>
+    </div>
+
+    <!-- Form -->
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <form asp-action="Edit">
+                <div asp-validation-summary="All" class="text-danger mb-4"></div>
+
+                <partial name="_CreateEditPartial" model="@Model" view-data='new ViewDataDictionary(ViewData) { { "IsEditMode", true } }' />
+
+                <!-- Hidden Customer & Branch Info -->
+                <div hidden class="form-group">
+                    <label>Customer</label>
+                    <input class="form-control" value="@($"{Model?.Customer?.FirstName} {Model?.Customer?.LastName}")" />
+                    <input type="hidden" asp-for="CustomerId" value="@Model?.CustomerId" />
+                </div>
+
+                <div hidden class="form-group">
+                    <label>Branch</label>
+                    <input class="form-control" value="@Model?.Branch?.Name" />
+                    <input type="hidden" asp-for="BranchId" value="@Model?.BranchId" />
+                </div>
 
 
-<div class="text-center">
-    <span class="fw-medium">@Model?.Customer?.FirstName @Model?.Customer?.LastName →</span>
-    <small class="text-muted">CID: @Model?.CustomerId</small>
-</div>
+                <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
 
-
-<div class="row justify-content-center">
-    <div class="col-md-10">
-        <form asp-action="Edit">
-            <div asp-validation-summary="All" class="text-danger"></div>
-
-            <partial name="_CreateEditPartial" model="@Model" view-data='new ViewDataDictionary(ViewData) { { "IsEditMode", true } }' />
-
-
-            <div hidden class="form-group">
-                <label>Customer</label>
-                <input class="form-control" value="@($"{Model.Customer?.FirstName} {Model.Customer?.LastName}")" />
-                <input type="hidden" asp-for="CustomerId" value="@Model.CustomerId" />
-            </div>
-
-            <div hidden class="form-group">
-                <label>Branch</label>
-                <input class="form-control" value="@Model.Branch?.Name" />
-                <input type="hidden" asp-for="BranchId" value="@Model.BranchId" />
-            </div>
-
-
-            <div class="mt-4 d-flex justify-content-center gap-3">
-                <input type="hidden" name="returnUrl" value="@Url.Action("ShowAccounts", "HandleCustomer", new { id = Model.CustomerId })" />
-
-                <button type="submit" class="btn btn-success px-5 py-2 fs-5">
-                    <i class="fas fa-edit me-2"></i>Save
-                </button>
-
-                <a href="javascript:history.back()" class="btn btn-outline-secondary px-5 py-2 fs-5">
-                     <i class="fas fa-arrow-left me-2"></i>Cancel
-                 </a> 
-            </div>
-        </form>
+                <!-- Buttons -->
+                <div class="mt-4 d-flex justify-content-center gap-3">
+                    <button type="submit" class="btn btn-save px-5 py-2 fs-5 rounded-3 shadow-sm">
+                        <i class="fas fa-save me-2"></i>Save
+                    </button>
+                    <a href="javascript:history.back()" class="btn btn-cancel px-5 py-2 fs-5 rounded-3 shadow-sm">
+                        <i class="fas fa-arrow-left me-2"></i>Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
