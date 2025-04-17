@@ -120,7 +120,7 @@ namespace BankingSystem.PL.Controllers
                     else if (UserToRegister.Role == "Teller") appUser = _mapper.Map<Teller>(UserToRegister);
 
                     else appUser = _mapper.Map<ApplicationUser>(UserToRegister);
-
+                    appUser.Id = Guid.NewGuid().ToString();
                     IdentityResult result = await _userManager.CreateAsync(appUser, UserToRegister.Password);
 
                     // Ensure the role is "Teller" when added by a manager
