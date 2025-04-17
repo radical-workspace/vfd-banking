@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Azure.Core;
 using BankingSystem.BLL.Interfaces;
 using BankingSystem.DAL.Models;
 using BankingSystem.PL.ViewModels.Auth;
@@ -7,143 +6,23 @@ using BankingSystem.PL.ViewModels.Manager;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using System.Security.Claims;
 
 
 namespace BankingSystem.PL.Controllers.Manager
 {
     [Authorize(Roles = "Manager")]
-    public class ManagerTellerController(IUnitOfWork unitOfWork, IMapper mapper) : Controller
+    public class ManagerTellerController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager) : Controller
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IMapper _mapper = mapper;
-
-
-        // Modify Teller To Be Inserted By Manager Instead Of Customer
-
-        //public ActionResult CreateTeller()
-        //{
-        //    ViewData["FixedRole"] = "Customer";
-        //    return View("~/Views/Account/Register.cshtml");
-        //}
-
-
-        //[HttpPost]
-
-        //public async Task<ActionResult> CreateTeller(RegisterViewModel UserToRegister)
-        //{
-        //    ViewData["FixedRole"] = "Customer";
-        //    var TellerHandleCustomer = _unitOfWork.Repository<Teller>().GetSingleIncluding(T => T.Id == User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-        //    // Load roles again in case of return to the view
-
-        //    if (UserToRegister is not null)
-        //    {
-        //        if (ModelState.IsValid)
-        //        {
-        //            ApplicationUser appUser;
-        //            Customer customer = new Customer();
-
-        //            // Create the correct derived class based on role
-        //            if (UserToRegister.Role == "Customer")
-        //            {
-        //                appUser = _mapper.Map<Customer>(UserToRegister);
-
-
-        //                customer.FirstName = appUser.FirstName;
-        //                customer.LastName = appUser.LastName;
-        //                customer.UserName = appUser.UserName;
-        //                customer.Email = appUser.Email;
-        //                customer.SSN = appUser.SSN;
-        //                customer.Address = appUser.Address;
-        //                customer.BirthDate = appUser.BirthDate;
-        //                customer.JoinDate = appUser.JoinDate;
-        //                customer.IsDeleted = appUser.IsDeleted;
-        //                customer.BranchId = TellerHandleCustomer.BranchId;
-
-
-
-
-
-
-
-        //            }
-
-        //            // How Cast From Applicaton User To Customer To Add BranchId
-
-        //            else appUser = _mapper.Map<ApplicationUser>(UserToRegister);
-
-        //            IdentityResult result = await _userManager.CreateAsync(customer, UserToRegister.Password);
-
-
-
-        //            // Check if the user was created successfully
-        //            if (result.Succeeded)
-        //            {
-        //                // Assign role
-        //                await _userManager.AddToRoleAsync(appUser, UserToRegister.Role);
-
-        //                // Optional: Sign in
-        //                // await _signInManager.SignInAsync(appUser, false);
-
-        //                return RedirectToAction("GetAllCustomers", new { id = User.FindFirst(ClaimTypes.NameIdentifier).Value });
-        //            }
-        //            else
-        //            {
-        //                foreach (var error in result.Errors)
-        //                {
-        //                    ModelState.AddModelError("", error.Description);
-        //                }
-        //            }
-        //        }
-        //    }
-        //    return View("Register", UserToRegister);
-        //}
-
-
-
-        [HttpGet]
-        public ActionResult AddTeller(TellerDetailsViewModel model)
-        {
-            var managerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var branchId = _unitOfWork.Repository<MyManager>().GetSingleIncluding(b => b.Id == managerId)?.BranchId;
-            if (branchId == null) return NotFound("Branch not found");
-            //return View(model);
-            TempData["FixedRole"] = "Manager";
-            return RedirectToAction("Register", "Account", managerId);
-
-        }
-
-
-        //// still need to update
-        //[HttpPost]
-        //public ActionResult AddTeller(TellerDetailsViewModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //    }
-
-        //    var teller = _mapper.Map();
-
-        //    try
-        //    {
-        //        _unitOfWork.Repository<Teller>().Add(teller);
-        //        _unitOfWork.Complete();
-        //        TempData["SuccessMessage"] = "Employee added successfully";
-        //        return RedirectToAction("GetAllTellers", new { id = teller.Branch.MyManager.Id });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        ModelState.AddModelError("", "Error saving employee: " + ex.Message);
-        //        model.Branches = GetBranchSelectList();
-        //        return View(model);
-        //    }
-        //}
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
 
         [HttpGet]
         public ActionResult GetAllTellers(string id)
         {
-            var manager = _unitOfWork.Repository<MyManager>().GetSingleIncluding(b => b.Id == id);
+            var manager = _unitOfWork.Repository<DAL.Models.Manager>().GetSingleIncluding(b => b.Id == id);
             if (manager == null)
             {
                 return NotFound($"Manager with ID {id} not found.");
@@ -182,6 +61,54 @@ namespace BankingSystem.PL.Controllers.Manager
             return View(tellerDetailsViewModel);
         }
         [HttpGet]
+        public ActionResult CreateTeller()
+        {
+            var managerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var manager = _unitOfWork.Repository<DAL.Models.Manager>().GetSingleIncluding(m => m.Id == managerId);
+
+            if (manager == null)
+                return NotFound("Manager not found");
+
+            ViewData["FixedRole"] = "Teller";
+            return View("~/Views/Account/Register.cshtml");
+        }
+        [HttpPost]
+        public async Task<ActionResult> CreateTeller(RegisterViewModel UserToRegister)
+        {
+            ViewData["FixedRole"] = "Teller";
+            var managerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var manager = _unitOfWork.Repository<DAL.Models.Manager>().GetSingleIncluding(m => m.Id == managerId);
+
+            if (manager == null || manager.BranchId == null)
+                return NotFound("Manager or Branch not found");
+
+            if (UserToRegister != null && ModelState.IsValid)
+            {
+                var teller = _mapper.Map<Teller>(UserToRegister);
+                teller.BranchId = manager.BranchId;
+                teller.ManagerId = manager.Id;
+
+                IdentityResult result = await _userManager.CreateAsync(teller, UserToRegister.Password);
+
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(teller, UserToRegister.Role);
+                    //await _userManager.AddToRoleAsync(teller, "Teller");
+                    return RedirectToAction(nameof(GetAllTellers), new { id = managerId });
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+            }
+
+            return View(nameof(Register), UserToRegister);
+        }
+
+        [HttpGet]
         public ActionResult EditTeller(string id)
         {
             var teller = _unitOfWork.Repository<Teller>()
@@ -216,7 +143,7 @@ namespace BankingSystem.PL.Controllers.Manager
 
                 _mapper.Map(tellerDetailsViewModel, teller);
                 _unitOfWork.Complete();
-                return RedirectToAction("GetAllTellers", new { id = teller.Branch.MyManager.Id });
+                return RedirectToAction("GetAllTellers", new { id = teller.ManagerId });
             }
             return View(tellerDetailsViewModel);
         }

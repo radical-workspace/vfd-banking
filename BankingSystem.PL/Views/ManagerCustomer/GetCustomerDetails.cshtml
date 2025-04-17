@@ -1,0 +1,183 @@
+﻿@model BankingSystem.PL.ViewModels.Manager.ManagerCustomerDetailsViewModel
+
+@{
+    ViewData["Title"] = "Customer Details";
+    var ManagerId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+    var customerId = ViewBag.CustomerId as string;
+}
+
+<h2>@Model.FirstName @Model.LastName's Details</h2>
+
+<div class="container">
+    <!-- Personal Information Card -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Personal Information</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Full Name:</strong> @Model.FirstName @Model.LastName</p>
+            <p><strong>SSN:</strong> @Model.SSN</p>
+            <p><strong>Branch Name:</strong> @Model.BranchName</p>
+            <p><strong>Join Date:</strong> @Model.JoinDate.ToString("dd/MM/yyyy")</p>
+            <p><strong>Birth Date:</strong> @Model.BirthDate.ToString("dd/MM/yyyy")</p>
+        </div>
+    </div>
+
+    <!-- Loan Details Card -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Loan Details</h4>
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                @foreach (var loan in Model.LoanDetails)
+                {
+                    <li class="list-group-item">
+                        <strong>Loan Type:</strong> @loan.LoanType <br />
+                        <strong>Loan Status:</strong> @loan.LoanStatus
+                    </li>
+                }
+            </ul>
+            <br />
+
+            <!-- View Loan Details Button -->
+            <a asp-controller="ManagerCustomer"
+               asp-action="GetCustomerLoan"
+               asp-route-id="@customerId"
+               class="btn btn-primary">
+                View Loan Details
+            </a>
+        </div>
+    </div>
+
+
+    <!-- Account Details Card -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Account Details</h4>
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                @foreach (var account in Model.AccountDetails)
+                {
+                    <li class="list-group-item">
+                        <strong>Account Number:</strong> @account.AccountNumber<br>
+                        <strong>Account Type:</strong> @account.AccountType<br>
+                        <strong>Account Status:</strong> @account.AccountStatus
+                    </li>
+                }
+            </ul>
+            <br />
+
+            <a asp-controller="ManagerCustomer"
+               asp-action="GetCustomerAccount"
+               asp-route-id="@customerId"
+               class="btn btn-primary">
+                View Account Details
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Card Details Card -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Card Details</h4>
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                @foreach (var card in Model.CardDetails)
+                {
+                    <li class="list-group-item">
+                        <strong>Card Type:</strong> @card.CardType<br>
+                        <strong>Card Number:</strong> @card.Number
+                    </li>
+                }
+            </ul>
+            <br />
+
+            <a asp-controller="ManagerCustomer"
+               asp-action="GetCustomerCard"
+               asp-route-id="@customerId"
+               class="btn btn-primary">
+                View Card Details
+            </a>
+        </div>
+    </div>
+
+    <!-- Support Ticket Details Card -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Support Ticket Details</h4>
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                @foreach (var ticket in Model.SupportTicketDetails)
+                {
+                    <li class="list-group-item">
+                        <strong>Status:</strong> @ticket.Status<br>
+                        <strong>Type:</strong> @ticket.Type
+                    </li>
+                }
+            </ul>
+            <br />
+
+            <a asp-controller="ManagerCustomer"
+               asp-action="GetCustomerSupportTicket"
+               asp-route-id="@customerId"
+               class="btn btn-primary">
+                View Support Ticket Details
+            </a>
+        </div>
+    </div>
+
+    <!-- Transaction Details Card -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Transaction Details</h4>
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                @foreach (var transaction in Model.TransactionDetails)
+                {
+                    <li class="list-group-item">
+                        <strong>Transaction Type:</strong> @transaction.TransactionType
+                    </li>
+                }
+            </ul>
+            <br />
+            <a asp-controller="ManagerCustomer"
+               asp-action="GetCustomerTransaction"
+               asp-route-id="@customerId"
+               class="btn btn-primary">
+                View Transaction Details
+            </a>
+        </div>
+    </div>
+    <!-- Transaction Details Card -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Certificate Details</h4>
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                @foreach (var certificate in Model.CertificateDetails)
+                {
+                    <li class="list-group-item">
+                        <strong>Certificate Number:</strong> @certificate.CertificateNumber <br />
+                    </li>
+                }
+            </ul>
+            <br />
+            <a asp-controller="ManagerCustomer"
+               asp-action="GetCustomerCertificate"
+               asp-route-id="@customerId"
+               class="btn btn-primary">
+                View Certificate Details
+            </a>
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    @Html.ActionLink("Back", "GetAllCustomers", "ManagerCustomer", new { id = ManagerId }, new { @class = "btn btn-secondary" })
+</div>

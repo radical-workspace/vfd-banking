@@ -104,16 +104,17 @@ namespace BankingSystem.PL.Controllers
 
             if (UserToRegister is not null)
             {
+                ModelState.Remove("Salary");
                 if (ModelState.IsValid)
                 {
                     ApplicationUser appUser;
 
                     // Create the correct derived class based on role
-                    if (UserToRegister.Role == "Customer") appUser = _mapper.Map<MyCustomer>(UserToRegister);
+                    if (UserToRegister.Role == "Customer") appUser = _mapper.Map<Customer>(UserToRegister);
 
                     else if (UserToRegister.Role == "Admin") appUser = _mapper.Map<Admin>(UserToRegister);
                     
-                    else if (UserToRegister.Role == "Manager") appUser = _mapper.Map<MyManager>(UserToRegister);
+                    else if (UserToRegister.Role == "Manager") appUser = _mapper.Map<DAL.Models.Manager>(UserToRegister);
                     
                     else if (UserToRegister.Role == "Teller") appUser = _mapper.Map<Teller>(UserToRegister);
                     

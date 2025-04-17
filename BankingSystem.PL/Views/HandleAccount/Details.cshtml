@@ -1,66 +1,264 @@
-﻿@model BankingSystem.DAL.Models.Account
+﻿@using BankingSystem.DAL.Models
+@model Account
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Account Details";
+    var card = Model.Card;
 }
 
-<h1>Details</h1>
 
-<div>
-    <h4>Account</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Number)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Number)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Balance)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Balance)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AccountType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AccountType)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AccountStatus)
-        </dt>
-        <dd class = "col-sm-10">
+<style>
+    :root {
+    --primary-dark: #0a2d2e;
+    --primary-medium: #1c4e4f;
+    --primary-light: #436e6f;
+    --secondary-dark: #6a8e8f;
+    --secondary-light: #879693;
+    --neutral-1: #a49e97;
+    --accent-1: #deae9f;
+    --accent-2: #efd7cf;
+    --accent-3: #f7ebe7;
+    --white: #ffffff;
+    }
+
+    .btn-outline-primary {
+    border-color: var(--primary-medium);
+    color: var(--primary-medium);
+    }
+
+    .btn-outline-primary:hover {
+    background-color: var(--primary-medium);
+    color: var(--white);
+    }
+
+    .card-grid {
+    background: var(--accent-3);
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-custname {
+    top: 65%;
+    }
+
+    .card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-header {
+    background: var(--accent-2) !important;
+    color: var(--primary-dark);
+    font-weight: bold;
+    }
+
+    .summary-header {
+    border-bottom: 2px solid var(--accent-1);
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+    color: var(--primary-dark);
+    }
+
+    .text-primary {
+    color: var(--primary-dark) !important;
+    }
+
+    .bg-credit {
+    background: linear-gradient(90deg, var(--primary-dark), var(--primary-medium)) !important;
+    }
+
+    .bg-debit {
+    background-color: var(--secondary-dark) !important;
+    }
+</style>
+
+
+
+<div class="container card-grid my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="mb-4 summary-header">
+            <h1 class="fw-semibold">
+                <i class="fas fa-wallet me-2"></i> Account Details
+            </h1>
+        </div>
+
+        <span class="fs-5 badge rounded-pill
+                   @(Model.AccountStatus.ToString() == "Active" ? "bg-success" :
+                     Model.AccountStatus.ToString() == "Inactive" ? "bg-warning text-dark" : "bg-danger")">
             @Html.DisplayFor(model => model.AccountStatus)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Customer)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Customer.FirstName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Branch)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Branch.Name)
-        </dd>
-        @* <dt class = "col-sm-2"> *@
-        @*     @Html.DisplayNameFor(model => model.IsDeleted) *@
-        @* </dt> *@
-        @* <dd class = "col-sm-10"> *@
-        @*     @Html.DisplayFor(model => model.IsDeleted) *@
-        @* </dd> *@
-    </dl>
+        </span>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="fw-bold fs-5">@Html.DisplayFor(model => model.AccountType)</span>
+                    <span class="text-muted ms-2">•••• @Model.Number.ToString().Substring(Math.Max(0, Model.Number.ToString().Length - 4))</span>
+                </div>
+                <div class="text-end">
+                    <div class="fs-3 fw-bold">@Html.DisplayFor(model => model.Balance)</div>
+                    <div class="text-muted small">Current Balance</div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="text-muted small text-uppercase fw-bold">Account Holder</div>
+                    <div class="fs-5">@(Model.Customer.FirstName + " " + Model.Customer.LastName)</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="text-muted small text-uppercase fw-bold">Branch</div>
+                    <div class="fs-5">@Html.DisplayFor(model => model.Branch.Name)</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="text-muted small text-uppercase fw-bold">Opened On</div>
+                    <div class="fs-5">@Model.CreatedAt.ToString("MMMM dd, yyyy")</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2">
+        <a asp-action="Edit" asp-route-id="@Model?.Id" asp-route-returnUrl="@Context.Request.Path" class="btn btn-primary px-4">
+            <i class="fas fa-edit me-2"></i>Edit Account
+        </a>
+        <a href="javascript:history.back()" class="btn btn-outline-secondary px-4">
+            <i class="fas fa-arrow-left me-2"></i>Back
+        </a>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+
+
+<div class="container card-grid my-5">
+    <!-- Page Header -->
+    <div class="mb-4 summary-header">
+        <h3 class="fw-semibold">
+            <i class="bi bi-credit-card-fill me-2"></i>Visa Card linked to Account
+        </h3>
+    </div>
+
+
+    @if (card == null)
+    {
+        if (!Model.AccountStatus.ToString().Equals("Closed"))
+        {
+            <div class="d-flex justify-content-between">
+                <a asp-controller="HandleCard" asp-action="Create" asp-route-cid="@Context.Request.RouteValues["id"]" asp-route-accnum="@Model.Number" class="btn btn-outline-primary ms-auto mb-3 w-25">
+                    <i class="fas fa-plus-circle me-1"></i> Create New Card
+                </a>
+            </div>
+        }
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="bi bi-info-circle-fill text-warning fs-3 mb-2"></i>
+                <h5 class="text-muted">No visa cards found in the system.</h5>
+            </div>
+        </div>
+    }
+    else
+    {
+        var isCredit = card.CardType == BankingSystem.DAL.Models.TypeOfCard.Credit;
+        var cardClass = isCredit ? "bg-primary" : "bg-success";
+        var gradient = isCredit ? "bg-gradient" : "bg-gradient";
+        var last4 = card.Number?.Length >= 4 ? card.Number[^4..] : "****";
+
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">@card.CardType.ToString() Card</h4>
+                <span class="badge rounded-pill bg-@GetStatusColor(card.Account!.AccountStatus)">
+                    @card.Account.AccountStatus
+                </span>
+            </div>
+            <div class="card-body mt-2">
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <div class="position-relative rounded text-white p-4 shadow @cardClass @gradient" style="height: 250px;">
+                            <div class="position-absolute top-0 start-0 m-3 bg-white bg-opacity-25 rounded p-2">
+                                <i class="bi bi-credit-card-fill fs-4"></i>
+                            </div>
+                            <div class="position-absolute top-0 end-0 m-3 fs-5 fw-bold">SecureBank</div>
+                            <div class="position-absolute top-50 start-0 ms-3 translate-middle-y fs-5">
+                                **** **** **** @last4
+                            </div>
+
+                            <div class="card-custname position-absolute start-0 ms-3 translate-middle-y fs-5">
+                                @card.Account?.Customer?.FirstName @card.Account?.Customer?.LastName
+                            </div>
+
+                            <div class="position-absolute bottom-0 start-0 end-0 d-flex justify-content-between px-3 pb-3">
+                                <div class="text-white text-uppercase small">Exp: @card.ExpDate.ToString("MM/yy")</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 text-center">
+                        <h5 class="mb-3">Card Details</h5>
+
+                        <div class="mb-2 d-flex justify-content-between border-bottom pb-2">
+                            <span class="text-muted">Card Type</span>
+                            <span class="fw-semibold">@card.CardType</span>
+                        </div>
+
+                        <div class="mb-2 d-flex justify-content-between border-bottom pb-2">
+                            <span class="text-muted">Card Number</span>
+                            <span class="fw-semibold">**** **** **** @last4</span>
+                        </div>
+
+                        <div class="mb-2 d-flex justify-content-between border-bottom pb-2">
+                            <span class="text-muted">CVV</span>
+                            <span class="fw-semibold">***</span>
+                        </div>
+
+                        <div class="mb-2 d-flex justify-content-between border-bottom pb-2">
+                            <span class="text-muted">Account No.</span>
+                            <span class="fw-semibold">@card.Account?.Number</span>
+                        </div>
+
+                        <div class="mb-2 d-flex justify-content-between border-bottom pb-2">
+                            <span class="text-muted">Created On</span>
+                            <span class="fw-semibold">@card.CreationDate.ToShortDateString()</span>
+                        </div>
+
+                        <form asp-action="Delete" asp-controller="HandleCard" asp-route-id="@card.Id">
+                            <input type="hidden" name="returnUrl" value="@Url.Action("Details", "HandleAccount", new { id = @Context.Request.RouteValues["id"] })" />
+                            <button onclick="return confirmDelete()" class="mt-2 btn btn-danger border border-danger text-white hover-effect">
+                                <i class="fas fa-trash me-1"></i>Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <a href="javascript:history.back()" class="btn btn-outline-secondary w-25 mt-3">
+        <i class="fas fa-arrow-left me-2"></i>Back
+    </a>
 </div>
+
+@functions {
+    public string GetStatusColor(AccountStatus status)
+    {
+        return status switch
+        {
+            AccountStatus.Active => "success",
+            AccountStatus.Inactive => "warning",
+            AccountStatus.Closed => "danger",
+            _ => "secondary"
+        };
+    }
+}
+
+@section Scripts {
+    <script>
+        function confirmDelete() {
+            return confirm('Are you sure you want to delete this card? This action cannot be undone.');
+        }
+    </script>
+}
+

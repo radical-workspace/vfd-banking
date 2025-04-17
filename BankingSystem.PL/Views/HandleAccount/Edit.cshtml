@@ -4,66 +4,111 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<style>
+    :root {
+        --primary-dark: #0a2d2e;
+        --primary-medium: #1c4e4f;
+        --primary-light: #436e6f;
+        --secondary-dark: #6a8e8f;
+        --secondary-light: #879693;
+        --neutral-1: #a49e97;
+        --accent-1: #deae9f;
+        --accent-2: #efd7cf;
+        --accent-3: #f7ebe7;
+        --white: #ffffff;
+    }
 
-<h4>Account</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Number" class="control-label"></label>
-                <input asp-for="Number" class="form-control" />
-                <span asp-validation-for="Number" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Balance" class="control-label"></label>
-                <input asp-for="Balance" class="form-control" />
-                <span asp-validation-for="Balance" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
-                <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AccountType" class="control-label"></label>
-                <select asp-for="AccountType" class="form-control"></select>
-                <span asp-validation-for="AccountType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AccountStatus" class="control-label"></label>
-                <select asp-for="AccountStatus" class="form-control"></select>
-                <span asp-validation-for="AccountStatus" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CustomerId" class="control-label"></label>
-                <select asp-for="CustomerId" class="form-control" asp-items="ViewBag.CustomerId"></select>
-                <span asp-validation-for="CustomerId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BranchId" class="control-label"></label>
-                <select asp-for="BranchId" class="form-control" asp-items="ViewBag.BranchId"></select>
-                <span asp-validation-for="BranchId" class="text-danger"></span>
-            </div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary mt-3" />
-            </div>
-        </form>
+    .card-grid {
+        background: var(--accent-3);
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .summary-header {
+        border-bottom: 2px solid var(--accent-1);
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+        color: var(--primary-dark);
+    }
+
+    .text-primary {
+        color: var(--primary-dark) !important;
+    }
+
+    .btn-save {
+        background-color: var(--primary-dark);
+        border: none;
+        color: var(--white);
+    }
+
+        .btn-save:hover {
+            background-color: var(--primary-medium);
+        }
+
+    .btn-cancel {
+        border-color: var(--secondary-dark);
+        color: var(--secondary-dark);
+    }
+
+        .btn-cancel:hover {
+            background-color: var(--secondary-light);
+            color: var(--white);
+        }
+</style>
+
+<div class="container card-grid my-5">
+    <!-- Header -->
+    <div class="mb-1 summary-header text-center">
+        <h3 class="fw-semibold">
+            <i class="fas fa-pen me-2"></i>Edit Account
+        </h3>
+        <p class="text-muted mb-0">
+            <span class="fw-medium">@Model?.Customer?.FirstName @Model?.Customer?.LastName</span>
+            <small class="text-muted">→ CID: @Model?.CustomerId</small>
+        </p>
+    </div>
+
+    <!-- Form -->
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <form asp-action="Edit">
+                <div asp-validation-summary="All" class="text-danger mb-4"></div>
+
+                <partial name="_CreateEditPartial" model="@Model" view-data='new ViewDataDictionary(ViewData) { { "IsEditMode", true } }' />
+
+                <!-- Hidden Customer & Branch Info -->
+                <div hidden class="form-group">
+                    <label>Customer</label>
+                    <input class="form-control" value="@($"{Model?.Customer?.FirstName} {Model?.Customer?.LastName}")" />
+                    <input type="hidden" asp-for="CustomerId" value="@Model?.CustomerId" />
+                </div>
+
+                <div hidden class="form-group">
+                    <label>Branch</label>
+                    <input class="form-control" value="@Model?.Branch?.Name" />
+                    <input type="hidden" asp-for="BranchId" value="@Model?.BranchId" />
+                </div>
+
+
+                <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+
+                <!-- Buttons -->
+                <div class="mt-4 d-flex justify-content-center gap-3">
+                    <button type="submit" class="btn btn-save px-5 py-2 fs-5 rounded-3 shadow-sm">
+                        <i class="fas fa-save me-2"></i>Save
+                    </button>
+                    <a href="javascript:history.back()" class="btn btn-cancel px-5 py-2 fs-5 rounded-3 shadow-sm">
+                        <i class="fas fa-arrow-left me-2"></i>Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

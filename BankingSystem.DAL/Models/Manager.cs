@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.DAL.Models
 {
-    public class MyManager : ApplicationUser
+    public class Manager : ApplicationUser
     {
         public double Salary { get; set; }
+        public ICollection<Teller> Tellers { get; set; } = new List<Teller>();
 
         [ForeignKey(nameof(Branch))]
         public int? BranchId { get; set; }
         public Branch Branch { get; set; } = null!;
-        public ICollection<Teller> Tellers { get; set; } = new List<Teller>();
     }
 }

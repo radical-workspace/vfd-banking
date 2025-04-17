@@ -13,7 +13,7 @@ namespace BankingSystem.DAL.Models
 
         [ForeignKey(nameof(Manager))]
         public string? ManagerId{ get; set; }
-        public MyManager Manager { get; set; } = null!;
+        public Manager Manager { get; set; } = null!;
 
         [ForeignKey(nameof(Branch))]
         public int BranchId { get; set; }

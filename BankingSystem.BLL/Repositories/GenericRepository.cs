@@ -32,12 +32,12 @@ namespace BankingSystem.BLL.Repositories
             _dbContext.Remove(Entity);
         }
 
-        public T? Get(int id)
+        public T? Get(int id, long number = 0)
         {
             return _dbContext.Find<T>(id); 
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<T> GetAll(string? userID = "", int flag = 1)
         {
             //if (typeof(T) == typeof(Empolyee))
             //{
@@ -70,6 +70,14 @@ namespace BankingSystem.BLL.Repositories
             {
                 query = query.Include(include);
             }
+            //if (typeof(T) == typeof(Customer))
+            //{
+            //    query = (query as IQueryable<Customer>)!
+            //        .Include(c => c.Accounts)
+            //            .ThenInclude(a => a.Card)
+            //        as IQueryable<T>;
+
+            //}
             return query.FirstOrDefault(predicate);
         }
 

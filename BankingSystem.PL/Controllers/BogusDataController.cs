@@ -87,6 +87,17 @@ namespace BankingSystem.PL.Controllers
 
             return RedirectToAction("CreateBogusData");
         }
+        
+        
+        [HttpPost]
+        public async Task<IActionResult> CreateTickets()
+        {
+            var fakeBanks = Faker.GenerateFakeTickets(5);
+            _context.SupportTickets.AddRange(fakeBanks);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("CreateBogusData");
+        }
 
 
 

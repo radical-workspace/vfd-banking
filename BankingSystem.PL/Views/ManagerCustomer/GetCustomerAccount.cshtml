@@ -1,0 +1,182 @@
+﻿@model List<BankingSystem.PL.ViewModels.Manager.CustomerAccountViewModel>
+
+@{
+    ViewData["Title"] = "Customer Accounts";
+    var customerId = ViewBag.CustomerId as string;
+}
+
+<style>
+    :root {
+        --primary-dark: #0a2d2e;
+        --primary-medium: #1c4e4f;
+        --primary-light: #436e6f;
+        --secondary-dark: #6a8e8f;
+        --secondary-light: #879693;
+        --neutral-1: #a49e97;
+        --accent-1: #deae9f;
+        --accent-2: #efd7cf;
+        --accent-3: #f7ebe7;
+        --white: #ffffff;
+    }
+
+    .accounts-container {
+        background: var(--accent-3);
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+    }
+
+    .accounts-header {
+        color: var(--primary-dark);
+        border-bottom: 2px solid var(--accent-1);
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .account-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+        .account-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+    .account-card-header {
+        background: linear-gradient(90deg, var(--primary-dark), var(--primary-medium));
+        color: var(--white);
+        border-radius: 10px 10px 0 0 !important;
+        padding: 1rem 1.5rem;
+    }
+
+    .account-card-title {
+        font-weight: 600;
+        margin-bottom: 0;
+    }
+
+    .account-card-body {
+        padding: 1.5rem;
+    }
+
+    .account-label {
+        color: var(--primary-medium);
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .account-value {
+        color: var(--primary-dark);
+        font-weight: 500;
+    }
+
+    .no-accounts {
+        background: var(--accent-2);
+        border-left: 4px solid var(--accent-1);
+        color: var(--primary-dark);
+        padding: 1.5rem;
+        border-radius: 8px;
+    }
+
+    .back-btn {
+        background-color: var(--primary-light);
+        color: var(--white);
+        border: none;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+        .back-btn:hover {
+            background-color: var(--primary-medium);
+            transform: translateY(-2px);
+        }
+
+    .status-badge {
+        padding: 0.35rem 0.75rem;
+        border-radius: 50px;
+        font-weight: 500;
+        font-size: 0.85rem;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-xxl-10 col-12">
+            <div class="accounts-container">
+                <h1 class="accounts-header">
+                    <i class="fas fa-wallet me-2"></i>Customer Accounts
+                </h1>
+
+                @if (Model != null && Model.Any())
+                {
+                    <div class="row">
+                        @foreach (var account in Model)
+                        {
+                            <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
+                                <div class="card account-card">
+                                    <div class="card-header account-card-header">
+                                        <h5 class="account-card-title">
+                                            <i class="fas fa-@(account.AccountType == "Savings" ? "piggy-bank" : "money-bill-wave") me-2"></i>
+                                            Account #@account.Number
+                                        </h5>
+                                    </div>
+                                    <div class="card-body account-card-body">
+                                        <dl class="row">
+                                            <dt class="col-sm-5 account-label">
+                                                Balance
+                                            </dt>
+                                            <dd class="col-sm-7 account-value">
+                                                @account.Balance.ToString()
+                                            </dd>
+
+                                            <dt class="col-sm-5 account-label">
+                                                Created
+                                            </dt>
+                                            <dd class="col-sm-7 account-value">
+                                                @account.CreatedAt.ToString("dd MMM yyyy")
+                                            </dd>
+
+                                            <dt class="col-sm-5 account-label">
+                                                Type
+                                            </dt>
+                                            <dd class="col-sm-7 account-value">
+                                                @account.AccountType
+                                            </dd>
+
+                                            <dt class="col-sm-5 account-label">
+                                                Status
+                                            </dt>
+                                            <dd class="col-sm-7">
+                                                <span class="status-badge @(account.AccountStatus == "Active" ? "bg-success" : "bg-warning text-dark")">
+                                                    @account.AccountStatus
+                                                </span>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="no-accounts">
+                        <i class="fas fa-info-circle me-2"></i> No accounts found for this customer.
+                    </div>
+                }
+
+                <div class="text-center mt-4">
+                    <a asp-controller="ManagerCustomer"
+                       asp-action="GetCustomerDetails"
+                       asp-route-id="@customerId"
+                       class="btn back-btn">
+                        <i class="fas fa-arrow-left me-2"></i> Back to Customer Details
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

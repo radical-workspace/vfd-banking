@@ -12,7 +12,7 @@ namespace BankingSystem.DAL.Models
         Debit=1,
         Credit=2,
     }
-    public class Card:BaseEntity
+    public class VisaCard:BaseEntity
     {
         public string Number { get; set; } = null!;
 
@@ -25,13 +25,9 @@ namespace BankingSystem.DAL.Models
         public TypeOfCard CardType { get; set; }
 
         [ForeignKey(nameof(Account))]
-        public int AccountId { get; set; }
-        public Account Account { get; set; } = null!;
-
-        [ForeignKey(nameof(Customer))]
-        public string? CustomerId { get; set; }
-        public MyCustomer Customer { get; set; } = null!;
-
+        public int? AccountId { get; set; }
+        public Account? Account { get; set; } = null!;
+        public long AccountNumber { get; set; } 
 
 
 

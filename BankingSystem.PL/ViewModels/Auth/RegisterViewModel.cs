@@ -67,6 +67,9 @@ namespace BankingSystem.PL.ViewModels.Auth
         [Display(Name = "Select Role")]
         public string Role { get; set; } = null!;
 
+        [Required(ErrorMessage = "Enter Salary")]
+        [Range(15000, double.MaxValue, ErrorMessage = "Salary must be a more than 15000 EGP")]
+        public double Salary { get; set; }
         public List<SelectListItem>? AvailableRoles { get; set; }
     }
 }

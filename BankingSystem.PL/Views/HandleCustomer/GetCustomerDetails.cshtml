@@ -1,160 +1,435 @@
-﻿@model BankingSystem.PL.ViewModels.Teller.CustomerDetailsViewModel
+﻿<!--
+@* @model BankingSystem.PL.ViewModels.Teller.CustomerDetailsViewModel
+@using System.Security.Claims
 
 @{
     ViewData["Title"] = "Customer Details";
     var tellerId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 }
 
-<div class="container mt-4">
-    <h1 class="text-center bg-dark text-white p-3 rounded shadow-lg">Customer Details</h1>
+<!-- Bank Theme CSS -->
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-    <div class="card shadow-sm p-4 border-0">
-        <h4 class=" mb-3">Basic Information</h4>
-        <div class="table-responsive">
-            <table class="table table-borderless">
-                <tbody class="fw-medium">
-                    <tr>
-                        <td class="text-muted">Customer Name:</td>
-                        <td>@Model.FirstName @Model.LastName</td>
-                    </tr>
-                    <tr>
-                        <td class="text-muted">SSN:</td>
-                        <td>@Model.SSN</td>
-                    </tr>
-                    <tr>
-                        <td class="text-muted">Branch:</td>
-                        <td>@Model.Branch</td>
-                    </tr>
-                    <tr>
-                        <td class="text-muted">Address:</td>
-                        <td>@Model.Address</td>
-                    </tr>
-                    <tr>
-                        <td class="text-muted">Join Date:</td>
-                        <td>@Model.JoinDate.ToString("MM-dd-yyyy")</td>
-                    </tr>
-                    <tr>
-                        <td class="text-muted">Birth Date:</td>
-                        <td>@Model.BirthDate.ToString("MM-dd-yyyy")</td>
-                    </tr>
-                </tbody>
-            </table>
+    .bank-header {
+        background-color: #002244;
+        color: white;
+    }
+
+    .section-header {
+        background-color: #004080;
+        color: white;
+        padding: 10px 15px;
+        font-weight: 600;
+        border-top-left-radius: 0.5rem;
+        border-top-right-radius: 0.5rem;
+    }
+
+    .card-section {
+        border: none;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        margin-top: 2rem;
+    }
+
+    .table th {
+        background-color: #003366;
+        color: white;
+    }
+
+    .btn-bank {
+        background-color: #004080;
+        color: white;
+    }
+
+    .btn-bank:hover {
+        background-color: #002244;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h2 class="p-3 bank-header rounded shadow">Customer Details</h2>
+    </div>
+
+    <!-- Basic Info -->
+    <div class="card card-section">
+        <div class="section-header">Basic Information</div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6"><strong>Name:</strong> @Model.FirstName @Model.LastName</div>
+                <div class="col-md-6"><strong>SSN:</strong> @Model.SSN</div>
+                <div class="col-md-6"><strong>Branch:</strong> @Model.Branch</div>
+                <div class="col-md-6"><strong>Address:</strong> @Model.Address</div>
+                <div class="col-md-6"><strong>Join Date:</strong> @Model.JoinDate.ToString("MM-dd-yyyy")</div>
+                <div class="col-md-6"><strong>Birth Date:</strong> @Model.BirthDate.ToString("MM-dd-yyyy")</div>
+            </div>
         </div>
     </div>
 
-    @if (Model.AccountNumbers?.Any() == true)
-    {
-        <div class="card shadow-sm p-4 mt-4 border-0">
-            <h4 class="text-primary mb-3">Accounts</h4>
-            <table class="table table-striped table-hover text-center">
-                <thead class="table-dark">
-                    <tr><th>Account Number</th></tr>
-                </thead>
-                <tbody>
-                    @foreach (var acc in Model.AccountNumbers)
-                    {
-                        <tr><td>@acc</td></tr>
-                    }
-                </tbody>
-            </table>
+    <!-- Accounts -->
+    <div class="card card-section">
+        <div class="section-header">Accounts</div>
+        <div class="card-body">
+            @if (Model.Accounts?.Any() == true)
+            {
+                <div class="table-responsive">
+                    <table class="table table-bordered text-center">
+                        <thead>
+                            <tr>
+                                <th>Account Number</th>
+                                <th>Balance</th>
+                                <th>Visa Card</th>
+                                <th>Card Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var acc in Model.Accounts)
+                            {
+                                <tr>
+                                    <td>@acc.Number</td>
+                                    <td>@acc.Balance</td>
+                                    <td>
+                                        @if (acc.Card != null)
+                                        {
+                                            <span class="badge bg-success">@acc.Card.Number</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No Visa</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (acc.Card != null)
+                                        {
+                                            <span class="badge bg-info">@acc.Card.CardType</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">—</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">No accounts available for this customer.</div>
+            }
         </div>
-    }
-    else
-    {
-        <div style="font-weight:bold" class="alert alert-info mt-4 shadow-sm">No accounts for this customer.</div>
+    </div>
+
+    <!-- Loans -->
+    <div class="card card-section">
+        <div class="section-header">Loans</div>
+        <div class="card-body">
+            @if (Model.Loans?.Any() == true)
+            {
+                <ul class="list-group list-group-flush">
+                    @foreach (var loan in Model.Loans)
+                    {
+                        <li class="list-group-item">@loan.LoanType - @loan.LoanAmount.ToString("C")</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <div class="alert alert-info">No loans for this customer.</div>
+            }
+        </div>
+    </div>
+
+    <!-- Transactions -->
+    <div class="card card-section">
+        <div class="section-header">Transactions</div>
+        <div class="card-body">
+            @if (Model.Transactions?.Any() == true)
+            {
+                <ul class="list-group list-group-flush">
+                    @foreach (var t in Model.Transactions)
+                    {
+                        <li class="list-group-item">@t.DoneVia - Amount: @t.Payment.Amount.ToString("C") on @t.Status</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <div class="alert alert-info">No transactions for this customer.</div>
+            }
+        </div>
+    </div>
+
+    <!-- Support Tickets -->
+    <div class="card card-section">
+        <div class="section-header">Support Tickets</div>
+        <div class="card-body">
+            @if (Model.Tickets?.Any() == true)
+            {
+                <ul class="list-group list-group-flush">
+                    @foreach (var ticket in Model.Tickets)
+                    {
+                        <li class="list-group-item">@ticket.Description - <span class="text-uppercase">@ticket.Status</span></li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <div class="alert alert-info">No support tickets for this customer.</div>
+            }
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <div class="mt-4 text-end">
+        <a class="btn btn-bank btn-lg shadow" asp-action="GetAllCustomers" asp-route-id="@tellerId">
+            <i class="fas fa-arrow-left"></i> Back to Customer List
+        </a>
+    </div>
+</div>
+ *@
+-->
+@model BankingSystem.PL.ViewModels.Teller.CustomerDetailsViewModel
+@using System.Security.Claims
+
+@{
+    ViewData["Title"] = "Customer Details";
+    var tellerId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+}
+
+<style>
+    :root {
+        --primary-dark: #0a2d2e;
+        --primary-medium: #1c4e4f;
+        --primary-light: #436e6f;
+        --secondary-dark: #6a8e8f;
+        --secondary-light: #879693;
+        --neutral-1: #a49e97;
+        --accent-1: #deae9f;
+        --accent-2: #efd7cf;
+        --accent-3: #f7ebe7;
+        --white: #ffffff;
     }
 
-    @if (Model.LoanTypes?.Any() == true)
-    {
-        <div class="card shadow-sm p-4 mt-4 border-0">
-            <h4 class="text-primary mb-3">Loans</h4>
-            <table class="table table-striped table-hover text-center">
-                <thead class="table-dark">
-                    <tr><th>Loan Type</th></tr>
-                </thead>
-                <tbody>
-                    @foreach (var loan in Model.LoanTypes)
-                    {
-                        <tr><td>@loan</td></tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
-    else
-    {
-        <div style="font-weight:bold" class="alert alert-info mt-4 shadow-sm">No loans for this customer.</div>
+    body {
+        /* background-color: var(--accent-3); */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    @if (Model.CardTypes?.Any() == true)
-    {
-        <div class="card shadow-sm p-4 mt-4 border-0">
-            <h4 class="text-primary mb-3">Cards</h4>
-            <table class="table table-striped table-hover text-center">
-                <thead class="table-dark">
-                    <tr><th>Card Type</th></tr>
-                </thead>
-                <tbody>
-                    @foreach (var card in Model.CardTypes)
-                    {
-                        <tr><td>@card</td></tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
-    else
-    {
-        <div style="font-weight:bold" class="alert alert-info mt-4 shadow-sm">No cards for this customer.</div>
+    .card-grid {
+        background: var(--accent-3);
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
-    @if (Model.TransactionDescriptions?.Any() == true)
-    {
-        <div class="card shadow-sm p-4 mt-4 border-0">
-            <h4 class="text-primary mb-3">Transactions</h4>
-            <table class="table table-striped table-hover text-center">
-                <thead class="table-dark">
-                    <tr><th>Description</th></tr>
-                </thead>
-                <tbody>
-                    @foreach (var trans in Model.TransactionDescriptions)
-                    {
-                        <tr><td>@trans</td></tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
-    else
-    {
-        <div style="font-weight:bold" class="alert alert-info mt-4 shadow-sm">No transactions for this customer.</div>
+    .summary-header {
+        border-bottom: 2px solid var(--accent-1);
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+        color: var(--primary-dark);
     }
 
-    @if (Model.TicketSubjects?.Any() == true)
-    {
-        <div class="card shadow-sm p-4 mt-4 border-0">
-            <h4 class="text-primary mb-3">Support Tickets</h4>
-            <table class="table table-striped table-hover text-center">
-                <thead class="table-dark">
-                    <tr><th>Subject</th></tr>
-                </thead>
-                <tbody>
-                    @foreach (var ticket in Model.TicketSubjects)
-                    {
-                        <tr><td>@ticket</td></tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
-    else
-    {
-        <div style="font-weight:bold" class="alert alert-info mt-4 shadow-sm">No support tickets for this customer.</div>
+    .section-header {
+        background-color: var(--accent-2);
+        color: var(--primary-dark);
+        font-weight: 600;
+        padding: 10px 15px;
+        border-radius: 10px 10px 0 0;
     }
 
-    <div class="mt-4 d-flex justify-content-end">
-        <a class="btn btn-secondary btn-lg shadow" asp-action="GetAllCustomers" asp-route-id="@tellerId">
-            <i class="fas fa-arrow-left"></i> Back to List
+    .card-section {
+        border: none;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
+        border-radius: 15px;
+        margin-top: 2rem;
+        overflow: hidden;
+    }
+
+    .table th {
+        background-color: var(--primary-dark);
+        color: white;
+    }
+
+    .btn-bank {
+        background-color: var(--primary-medium);
+        color: white;
+        border: none;
+    }
+
+        .btn-bank:hover {
+            background-color: var(--primary-dark);
+        }
+
+    .btn-outline-primary {
+        border-color: var(--primary-medium);
+        color: var(--primary-medium);
+    }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary-medium);
+            color: var(--white);
+        }
+
+    .back {
+        color: white;
+    }
+
+    .badge {
+        font-size: 0.875rem;
+        padding: 0.5em 0.75em;
+    }
+</style>
+
+<div class="container my-5 card-grid">
+    <div class="text-center mb-5 summary-header">
+        <h2><i class="fas fa-user me-2"></i>Customer Details</h2>
+    </div>
+
+    <!-- Basic Info -->
+    <div class="card card-section">
+        <div class="section-header"><i class="fas fa-id-card me-2"></i>Basic Information</div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6"><strong>Name:</strong> @Model.FirstName @Model.LastName</div>
+                <div class="col-md-6"><strong>SSN:</strong> @Model.SSN</div>
+                <div class="col-md-6"><strong>Branch:</strong> @Model.Branch</div>
+                <div class="col-md-6"><strong>Address:</strong> @Model.Address</div>
+                <div class="col-md-6"><strong>Join Date:</strong> @Model.JoinDate.ToString("MM-dd-yyyy")</div>
+                <div class="col-md-6"><strong>Birth Date:</strong> @Model.BirthDate.ToString("MM-dd-yyyy")</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Accounts -->
+    <div class="card card-section">
+        <div class="section-header"><i class="fas fa-wallet me-2"></i>Accounts</div>
+        <div class="card-body">
+            @if (Model.Accounts?.Any() == true)
+            {
+                <div class="table-responsive">
+                    <table class="table table-bordered text-center">
+                        <thead>
+                            <tr>
+                                <th>Account Number</th>
+                                <th>Balance</th>
+                                <th>Visa Card</th>
+                                <th>Card Type</th>
+                                <th>Account Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var acc in Model.Accounts)
+                            {
+                                <tr>
+                                    <td>@acc.Number</td>
+                                    <td>@acc.Balance</td>
+                                    <td>
+                                        @if (acc.Card != null)
+                                        {
+                                            <span class="badge bg-success">@acc.Card.Number</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No Visa</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (acc.Card != null)
+                                        {
+                                            <span class="badge bg-info">@acc.Card.CardType</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">—</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a asp-action="Details" asp-controller="HandleAccount" asp-route-id="@acc.Id" class="btn btn-outline-primary btn-sm w-50" title="View Details">
+                                            <i class="fas fa-eye me-1"></i>View
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">No accounts available for this customer.</div>
+            }
+        </div>
+    </div>
+
+    <!-- Loans -->
+    <div class="card card-section">
+        <div class="section-header"><i class="fas fa-file-invoice-dollar me-2"></i>Loans</div>
+        <div class="card-body">
+            @if (Model.Loans?.Any() == true)
+            {
+                <ul class="list-group list-group-flush">
+                    @foreach (var loan in Model.Loans)
+                    {
+                        <li class="list-group-item">@loan.LoanType - @loan.LoanAmount.ToString("C")</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <div class="alert alert-info">No loans for this customer.</div>
+            }
+        </div>
+    </div>
+
+    <!-- Transactions -->
+    <div class="card card-section">
+        <div class="section-header"><i class="fas fa-money-check-alt me-2"></i>Transactions</div>
+        <div class="card-body">
+            @if (Model.Transactions?.Any() == true)
+            {
+                <ul class="list-group list-group-flush">
+                    @foreach (var t in Model.Transactions)
+                    {
+                        <li class="list-group-item">@t.DoneVia - Amount: @t.Payment.Amount.ToString("C") on @t.Status</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <div class="alert alert-info">No transactions for this customer.</div>
+            }
+        </div>
+    </div>
+
+    <!-- Support Tickets -->
+    <div class="card card-section">
+        <div class="section-header"><i class="fas fa-headset me-2"></i>Support Tickets</div>
+        <div class="card-body">
+            @if (Model.Tickets?.Any() == true)
+            {
+                <ul class="list-group list-group-flush">
+                    @foreach (var ticket in Model.Tickets)
+                    {
+                        <li class="list-group-item">@ticket.Description - <span class="text-uppercase">@ticket.Status</span></li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <div class="alert alert-info">No support tickets for this customer.</div>
+            }
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <div class="mt-4 text-end">
+        <a class="btn btn-bank btn-lg shadow" asp-action="GetAllCustomers" asp-route-id="@tellerId">
+            <i class="fas fa-arrow-left me-2"></i><span class="back">Back to Customer List</span>
         </a>
     </div>
 </div>

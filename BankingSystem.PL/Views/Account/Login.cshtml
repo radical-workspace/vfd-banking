@@ -5,50 +5,140 @@
     ViewData["Title"] = "Login";
 }
 
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 85vh;">
-    <div class="col-md-6">
-        <div class="card shadow rounded-4 border-0">
-            <div class="card-header bg-primary text-white text-center rounded-top-4">
-                <h3 class="mb-0">Banking System Login</h3>
-            </div>
-            <div class="card-body px-4 py-5">
-                <form asp-action="Login" asp-controller="Account" method="post">
+<!-- Font Awesome (optional for other icons) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+<style>
+    :root {
+        --primary-dark: #0a2d2e;
+        --primary-medium: #1c4e4f;
+        --primary-light: #436e6f;
+        --secondary-dark: #6a8e8f;
+        --secondary-light: #879693;
+        --neutral-1: #a49e97;
+        --accent-1: #deae9f;
+        --accent-2: #efd7cf;
+        --accent-3: #f7ebe7;
+        --white: #ffffff;
+    }
 
-                    <div class="form-group mb-3">
-                        <label asp-for="Email" class="form-label fw-semibold"></label>
-                        <input asp-for="Email" class="form-control rounded-3" placeholder="Enter your email" />
-                        <span asp-validation-for="Email" class="text-danger small"></span>
-                    </div>
+    .registration-wrapper {
+        background: var(--accent-3);
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
 
-                    <div class="form-group mb-3">
-                        <label asp-for="Password" class="form-label fw-semibold"></label>
-                        <input asp-for="Password" class="form-control rounded-3" placeholder="Enter your password" />
-                        <span asp-validation-for="Password" class="text-danger small"></span>
-                    </div>
+    .card-body {
+        padding: 2.5rem;
+    }
 
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <div class="form-check mb-0">
-                            <input asp-for="RememberMe" class="form-check-input" />
-                            <label asp-for="RememberMe" class="form-check-label"></label>
+    .form-header {
+        background: linear-gradient(90deg, var(--primary-dark), var(--primary-medium));
+        color: var(--white);
+        padding: 2rem;
+        text-align: center;
+    }
+
+        .form-header h2 {
+            margin-bottom: 0;
+        }
+
+        .form-header i {
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+        }
+
+    .google-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 0.65rem 1rem;
+        font-weight: 500;
+        color: #444;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+
+        .google-btn:hover {
+            background-color: #f5f5f5;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            text-decoration: none;
+            color: #222;
+        }
+
+    .google-icon {
+        height: 20px;
+        width: 20px;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="registration-wrapper">
+                <!-- Header Section -->
+                <div class="form-header">
+                    <h2 class="text-white">
+                        <i class="fas fa-sign-in-alt text-white"></i>
+                        Login to Your Account
+                    </h2>
+                </div>
+
+                <!-- Form Section -->
+                <div class="card-body px-5 py-4">
+                    <form asp-action="Login" asp-controller="Account" method="post">
+
+                        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Email" class="form-label fw-semibold"></label>
+                            <input asp-for="Email" class="form-control rounded-3" placeholder="Enter your email" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
                         </div>
-                        <a asp-controller="Account" asp-action="ForgotPassword" class="text-decoration-none text-primary fw-semibold">Forgot your password?</a>
-                    </div>
 
-                    <div class="d-grid mb-3">
-                        <button type="submit" class="btn btn-primary btn-lg rounded-3">
-                            Login
-                        </button>
-                    </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="Password" class="form-label fw-semibold"></label>
+                            <input asp-for="Password" class="form-control rounded-3" placeholder="Enter your password" />
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
 
-                </form>
-            </div>
-            <div class="card-footer text-center bg-light rounded-bottom-4">
-                <small>
-                    Don't have an account?
-                    <a asp-controller="Account" asp-action="Register" class="text-primary fw-bold">Register here</a>
-                </small>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check mb-0">
+                                <input asp-for="RememberMe" class="form-check-input" />
+                                <label asp-for="RememberMe" class="form-check-label"></label>
+                            </div>
+                            <a asp-controller="Account" asp-action="ForgotPassword" class="text-decoration-none text-primary fw-semibold">Forgot your password?</a>
+                        </div>
+
+                        <div class="d-grid mb-3 mt-5">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-3">
+                                Login
+                            </button>
+                        </div>
+
+                        <div class="d-grid mb-3">
+                            <a href="/Account/ExternalLogin?provider=Google" class="google-btn">
+                                <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="google-icon" alt="Google logo" />
+                                <span>Continue with Google</span>
+                            </a>
+                        </div>
+
+                    </form>
+                </div>
+
+                <!-- Footer Section -->
+                <div class="text-center py-3 bg-light">
+                    <small>
+                        Don't have an account?
+                        <a asp-controller="Account" asp-action="Register" class="text-primary fw-bold">Register here</a>
+                    </small>
+                </div>
             </div>
         </div>
     </div>

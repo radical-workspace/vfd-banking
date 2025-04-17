@@ -19,8 +19,6 @@ namespace BankingSystem.DAL.Models
         public string Discriminator { get; set; } = null!;
         public bool IsDeleted { get; set; }
 
-
-
     }
 
 

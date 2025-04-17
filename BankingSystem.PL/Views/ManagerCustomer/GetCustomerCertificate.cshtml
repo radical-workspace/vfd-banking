@@ -1,0 +1,227 @@
+﻿@model List<BankingSystem.PL.ViewModels.Manager.CertificateDetail>
+
+@{
+    ViewData["Title"] = "Customer Certificates";
+    var customerId = ViewBag.CustomerId as string;
+}
+
+<style>
+    :root {
+        --primary-dark: #0a2d2e;
+        --primary-medium: #1c4e4f;
+        --primary-light: #436e6f;
+        --secondary-dark: #6a8e8f;
+        --secondary-light: #879693;
+        --neutral-1: #a49e97;
+        --accent-1: #deae9f;
+        --accent-2: #efd7cf;
+        --accent-3: #f7ebe7;
+        --white: #ffffff;
+    }
+
+    .certificates-container {
+        background: var(--accent-3);
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+    }
+
+    .certificates-header {
+        color: var(--primary-dark);
+        border-bottom: 2px solid var(--accent-1);
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .certificate-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        height: 100%;
+        overflow: hidden;
+    }
+
+        .certificate-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+    .certificate-card-header {
+        background: linear-gradient(90deg, var(--primary-dark), var(--primary-medium));
+        color: var(--white);
+        padding: 1rem 1.5rem;
+        position: relative;
+    }
+
+        .certificate-card-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 60px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            transform: skewX(-20deg);
+        }
+
+    .certificate-card-title {
+        font-weight: 600;
+        margin-bottom: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .certificate-card-body {
+        padding: 1.5rem;
+        background: var(--white);
+    }
+
+    .certificate-label {
+        color: var(--primary-medium);
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+
+    .certificate-value {
+        color: var(--primary-dark);
+        font-weight: 500;
+    }
+
+    .certificate-number {
+        font-family: 'Courier New', monospace;
+        letter-spacing: 1px;
+    }
+
+    .no-certificates {
+        background: var(--accent-2);
+        border-left: 4px solid var(--accent-1);
+        color: var(--primary-dark);
+        padding: 1.5rem;
+        border-radius: 8px;
+    }
+
+    .back-btn {
+        background-color: var(--primary-light);
+        color: var(--white);
+        border: none;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s ease;
+        margin-top: 2rem;
+    }
+
+        .back-btn:hover {
+            background-color: var(--primary-medium);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+    .interest-rate-badge {
+        padding: 0.35rem 0.75rem;
+        border-radius: 50px;
+        font-weight: 500;
+        font-size: 0.85rem;
+        background-color: var(--accent-1);
+        color: var(--primary-dark);
+        display: inline-block;
+        margin-left: 0.5rem;
+    }
+
+    .amount-value {
+        font-weight: 600;
+        color: var(--primary-dark);
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-xxl-10 col-12">
+            <div class="certificates-container">
+                <h1 class="certificates-header">
+                    <i class="fas fa-certificate me-2"></i>Customer Certificates
+                </h1>
+
+                @if (Model != null && Model.Any())
+                {
+                    <div class="row">
+                        @foreach (var certificate in Model)
+                        {
+                            <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
+                                <div class="card certificate-card">
+                                    <div class="card-header certificate-card-header">
+                                        <h5 class="certificate-card-title">
+                                            <i class="fas fa-file-contract me-2"></i>
+                                            Certificate
+                                        </h5>
+                                    </div>
+                                    <div class="card-body certificate-card-body">
+                                        <dl class="row">
+                                            <dt class="col-sm-5 certificate-label">
+                                                Certificate #
+                                            </dt>
+                                            <dd class="col-sm-7 certificate-value certificate-number">
+                                                @certificate.CertificateNumber
+                                            </dd>
+
+                                            <dt class="col-sm-5 certificate-label">
+                                                Account #
+                                            </dt>
+                                            <dd class="col-sm-7 certificate-value">
+                                                @certificate.AccountNumber
+                                            </dd>
+
+                                            <dt class="col-sm-5 certificate-label">
+                                                Issue Date
+                                            </dt>
+                                            <dd class="col-sm-7 certificate-value">
+                                                @certificate.IssueDate.ToString("dd MMM yyyy")
+                                            </dd>
+
+                                            <dt class="col-sm-5 certificate-label">
+                                                Expiry Date
+                                            </dt>
+                                            <dd class="col-sm-7 certificate-value">
+                                                @certificate.ExpiryDate.ToString("dd MMM yyyy")
+                                            </dd>
+
+                                            <dt class="col-sm-5 certificate-label">
+                                                Amount
+                                            </dt>
+                                            <dd class="col-sm-7 certificate-value amount-value">
+                                                @certificate.Amount.ToString("C")
+                                            </dd>
+
+                                            <dt class="col-sm-5 certificate-label">
+                                                Interest Rate
+                                            </dt>
+                                            <dd class="col-sm-7">
+                                                <span class="interest-rate-badge">
+                                                    @certificate.InterestRate%
+                                                </span>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="no-certificates">
+                        <i class="fas fa-info-circle me-2"></i> No certificates found for this customer.
+                    </div>
+                }
+
+                <div class="text-center">
+                    <a asp-controller="ManagerCustomer"
+                       asp-action="GetCustomerDetails"
+                       asp-route-id="@customerId"
+                       class="btn back-btn">
+                        <i class="fas fa-arrow-left me-2"></i> Back to Customer Details
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -15,15 +15,15 @@ namespace BankingSystem.PL.ViewModels.Teller
         public DateTime CreatedAt { get; set; }
         public AccountType AccountType { get; set; }
         public AccountStatus AccountStatus { get; set; }
-        public List<MyTransaction>? AccountTransactions { get; set; }
+        public List<Transaction>? AccountTransactions { get; set; }
         public List<Certificate> Certificates { get; set; } = [];
 
         public List<Loan> Loans { get; set; } = [];
-        public List<Card> Cards { get; set; } = [];
+        public List<VisaCard> Cards { get; set; } = [];
 
         [ForeignKey(nameof(Customer))]
         public string? CustomerId { get; set; }
-        public MyCustomer Customer { get; set; } = null!;
+        public DAL.Models.Customer Customer { get; set; } = null!;
 
         [ForeignKey(nameof(Branch))]
         public int? BranchId { get; set; }
