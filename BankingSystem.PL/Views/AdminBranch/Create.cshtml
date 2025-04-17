@@ -1,0 +1,101 @@
+﻿@model BankingSystem.PL.ViewModels.BranchVM
+
+@{
+    ViewData["Title"] = "Create Branch";
+}
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-building me-2"></i>Create New Branch</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Name" class="form-label">Branch Address</label>
+                                    <input asp-for="Name" class="form-control" placeholder="123 Main St, City" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="BankId" class="form-label">Bank</label>
+                                    <select asp-for="BankId" class="form-select" asp-items="ViewBag.Banks">
+                                        <option value="">-- Select Bank --</option>
+                                    </select>
+                                    <span asp-validation-for="BankId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label asp-for="Location" class="form-label">Location</label>
+                                    <input asp-for="Location" class="form-control" placeholder="Long,Lat (30.159,33.785)" />
+                                    <span asp-validation-for="Location" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Opens" class="form-label">Opening Time</label>
+                                    <input asp-for="Opens" type="time" class="form-control" />
+                                    <span asp-validation-for="Opens" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Closes" class="form-label">Closing Time</label>
+                                    <input asp-for="Closes" type="time" class="form-control" />
+                                    <span asp-validation-for="Closes" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4" />
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Note:</strong> A default savings account will be created automatically for this branch.
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-1"></i> Back to List
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Create Branch
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function() {
+            // Set default opening/closing times
+            if (!$("#Opens").val()) {
+                $("#Opens").val("09:00");
+            }
+
+            if (!$("#Closes").val()) {
+                $("#Closes").val("17:00");
+            }
+        });
+    </script>
+}

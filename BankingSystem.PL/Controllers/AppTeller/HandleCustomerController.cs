@@ -381,6 +381,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
             return View(reservations);
         }
+        
         [Authorize(Roles = "Teller")]
         [HttpPost]
         public IActionResult UpdateReservationStatus(int id, ReservationStatus status)
