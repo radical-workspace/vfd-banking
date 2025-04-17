@@ -314,7 +314,7 @@
 
                             <div class="ticket-card-footer">
                                 <div>
-                                    <select class="form-select status-select" id="select-@item.Id" asp-for="@item.Status" name="Status"
+                                    <select disabled class="form-select status-select" id="select-@item.Id" asp-for="@item.Status" name="Status"
                                             asp-items="Html.GetEnumSelectList<SupportTicketStatus>()">
                                     </select>
                                 </div>
