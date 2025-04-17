@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using BankingSystem.PL.Validation;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
@@ -8,6 +9,7 @@ namespace BankingSystem.PL.ViewModels.Auth
     public class RegisterViewModel
     {
         // Personal Information
+        [UniqueSSN]
         [Required(ErrorMessage = "Enter Your SSN")]
         [RegularExpression(@"^\d{14}$", ErrorMessage = "SSN must be exactly 14 digits")]
         public long SSN { get; set; }
@@ -34,6 +36,7 @@ namespace BankingSystem.PL.ViewModels.Auth
         [Required(ErrorMessage = "Enter Phone Number")]
         [Display(Name = "Phone Number")]
         [RegularExpression(@"^\d{11}$", ErrorMessage = "Phone Number must be exactly 11 digits")]
+        [UniquePhoneNumber]
         public string PhoneNumber { get; set; } = null!;
 
         [Required(ErrorMessage = "Enter Your Email Address")]
