@@ -30,8 +30,6 @@ namespace BankingSystem.PL
                                                                        .AddInterceptors(new SoftDeleteInterceptor()));
 
 
-
-
             builder.Services.AddApplicationServices();
 
         
