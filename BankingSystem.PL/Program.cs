@@ -24,42 +24,18 @@ namespace BankingSystem.PL
             // Configure Entity Framework and Identity
             builder.Configuration.AddEnvironmentVariables();
             var DevelopmentconnectionString = builder.Configuration.GetConnectionString("MVCProjectDB");
-            var connectionString = Environment.GetEnvironmentVariable("MVCProjectDB", EnvironmentVariableTarget.User);
-
+           
             builder.Services.AddDbContext<BankingSystemContext>(options =>
                                                                 options.UseSqlServer(DevelopmentconnectionString)
                                                                        .AddInterceptors(new SoftDeleteInterceptor()));
 
 
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(op =>
-            {
-                op.Password.RequireUppercase = false;
-
-                op.Password.RequiredLength = 4;
-                op.Password.RequireNonAlphanumeric = false;
-            })
-                .AddEntityFrameworkStores<BankingSystemContext>()
-                .AddDefaultUI()
-                .AddDefaultTokenProviders();
 
 
+            builder.Services.AddApplicationServices();
 
-            // Register Unit of Work
-            builder.Services.AddScoped<IUnitOfWork ,UnitOfWork>();
-            builder.Services.AddScoped<IGenericRepository<Account>, MyAccountBL>();
-            builder.Services.AddScoped<IGenericRepository<Customer>, MyCustomerBL>();
-            builder.Services.AddScoped<IGenericRepository<VisaCard>, MyCardBL>();
-            builder.Services.AddScoped<IGenericRepository<SupportTicket>, MyTicketBL>();
-            builder.Services.AddScoped<HandleAccountTransferes>();
-            builder.Services.AddScoped<ISearchPaginationRepo<Account>, MyAccountBL>();
-            builder.Services.AddScoped<ISearchPaginationRepo<Customer>, MyCustomerBL>();
-            builder.Services.AddScoped<ISearchPaginationRepo<VisaCard>, MyCardBL>();
-            builder.Services.AddScoped<ISearchPaginationRepo<SupportTicket>, MyTicketBL>();
+        
 
-            builder.Services.AddScoped<FinancialDocumentService>();
-
-
-            builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfile()));
             #endregion
 
 
