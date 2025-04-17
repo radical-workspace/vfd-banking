@@ -25,6 +25,5 @@ namespace BankingSystem.PL.ViewModels.Customer
         public long Number { get; set; }
         public double Balance { get; set; }
         public AccountType AccountType { get; set; }
-
     }
 }

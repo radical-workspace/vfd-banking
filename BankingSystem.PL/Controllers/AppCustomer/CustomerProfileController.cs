@@ -27,7 +27,8 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                   c => c.Id == id,
                   q => q.Include(c => c.Accounts).ThenInclude(a => a.Certificates),
                   q => q.Include(c => c.Cards),
-                  q => q.Include(c => c.Loans)
+                  q => q.Include(c => c.Loans),
+                  q => q.Include(c => c.Transactions)
               );
 
 
