@@ -121,8 +121,6 @@ namespace BankingSystem.PL.Controllers.AppTeller
             return View(account);
         }
 
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id, string? returnUrl = null)
