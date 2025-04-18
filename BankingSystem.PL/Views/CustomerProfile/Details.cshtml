@@ -118,9 +118,30 @@
                     <h5 class="card-title">Current Balance</h5>
                     <h2 class="mb-3 text-primary">$ @Model.TotalBalance.ToString("N2")</h2>
                     <p class="card-text text-muted mb-3">Across all accounts</p>
-                    <a asp-action="CreateReservation" asp-controller="Reservation" class="btn btn-outline-primary w-100">
-                        <i  class="bi bi-plus-circle me-2"></i>Open New Account
-                    </a>
+                    @if(Model.AccountsCount < 2)
+                    {
+                        <a asp-action="CreateReservation" asp-controller="Reservation" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-plus-circle me-2"></i>Open New Account
+                        </a>
+                    }
+                    else
+                    {
+                        <button id="openAccountLimitSweet" type="button" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-plus-circle me-2"></i>Open New Account
+                        </button>
+                        <script>
+                            document.getElementById('openAccountLimitSweet').addEventListener('click', function (e) {
+                                e.preventDefault();
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Account Limit',
+                                    text: "Sorry, you can't open more than two accounts!",
+                                    confirmButtonText: 'OK'
+                                });
+                            });
+                        </script>
+                    }
+
                     <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="CustomerAccounts" asp-route-id="@Model.DesiredCustomer.Id">
                         <i class="bi bi-plus-circle me-2"></i>Accounts Details
                     </a>
@@ -137,9 +158,29 @@
                     <h5 class="card-title">Your Cards</h5>
                     <h2 class="mb-3 text-primary">@Model.CardsCount</h2>
                     <p class="card-text text-muted mb-3">@Model.CreditCardsCount Credit, @Model.DebitCardsCount Debit</p>
-                    <a asp-action="CreateReservation" asp-controller="Reservation" class="btn btn-outline-primary w-100">
-                        <i class="bi bi-plus-circle me-2"></i>Open New Card
-                    </a>
+                    @if (Model.CardsCount < 2)
+                    {
+                        <a asp-action="CreateReservation" asp-controller="Reservation" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-plus-circle me-2"></i>Open New Card
+                        </a>
+                    }
+                    else
+                    {
+                        <button id="openCardLimitSweet" type="button" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-plus-circle me-2"></i>Open New Card
+                        </button>
+                        <script>
+                            document.getElementById('openCardLimitSweet').addEventListener('click', function (e) {
+                                e.preventDefault();
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Cards Limit',
+                                    text: "Sorry, you can't open more than two cards!",
+                                    confirmButtonText: 'OK'
+                                });
+                            });
+                        </script>
+                    }
                     <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="CustomerCards" asp-route-id="@Model.DesiredCustomer.Id">
                         <i class="bi bi-plus-circle me-2"></i>Cards Details
                     </a>
