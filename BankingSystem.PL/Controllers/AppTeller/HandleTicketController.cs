@@ -22,14 +22,23 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
 
         // GET: HandleTicketController
-        public ActionResult Index(string? filter, int pageNumber = 1)
+        public ActionResult Index(string? filter, string? inBranch, int pageNumber = 1)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var tickets = _genericRepositoryTicket.GetAll();
 
-            if(filter != null)
+
+            if (inBranch == "on")
+                tickets = _genericRepositoryTicket.GetAll(userId, 2);
+
+
+            if (filter != null)
                 tickets = tickets.Where(t => t.Status.ToString() == filter).ToList();
 
+
+            ViewBag.InBranch = inBranch;
             ViewBag.Filter = filter;
+
             return View(tickets);
         }
 
