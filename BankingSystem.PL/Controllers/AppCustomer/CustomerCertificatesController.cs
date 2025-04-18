@@ -16,12 +16,6 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         private readonly IUnitOfWork _UnitOfWork;
         private readonly IMapper _mapper;
 
-        public CustomerCertificatesController(IUnitOfWork UnitOfWork, IMapper mapper)
-        {
-            _UnitOfWork = UnitOfWork;
-            _mapper = mapper;
-        }
-
         public IActionResult Details(string id)
         {
             var customer = _UnitOfWork.Repository<Customer>()
