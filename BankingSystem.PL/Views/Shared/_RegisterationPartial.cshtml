@@ -241,7 +241,7 @@
     }
     else
     {
-        ViewData["FixedRole"] = "Customer";
+       @*  ViewData["FixedRole"] = "Customer";
         <div class="col-md-6 mb-4">
             <label asp-for="Role" class="form-label">
                 <i class="fas fa-user-tag me-2"></i>Role
@@ -251,17 +251,17 @@
                        value="@ViewData["FixedRole"]" readonly />
                 <input type="hidden" asp-for="Role" value="@ViewData["FixedRole"]" />
             </div>
+        </div> *@
+        <div class="col-md-6 mb-4"> 
+            <label asp-for="Role" class="form-label"></label> 
+            <div class="input-group"> 
+                <select asp-for="Role" asp-items="Model.AvailableRoles" class="form-select"> 
+                    <option value="">-- Select Role --</option> 
+                </select> 
+                <i class="fas fa-user-tag input-icon"></i> 
+            </div> 
+            <span asp-validation-for="Role" class="text-danger"></span> 
         </div>
-        @* <div class="col-md-6 mb-4"> *@
-        @*     <label asp-for="Role" class="form-label"></label> *@
-        @*     <div class="input-group"> *@
-        @*         <select asp-for="Role" asp-items="Model.AvailableRoles" class="form-select"> *@
-        @*             <option value="">-- Select Role --</option> *@
-        @*         </select> *@
-        @*         <i class="fas fa-user-tag input-icon"></i> *@
-        @*     </div> *@
-        @*     <span asp-validation-for="Role" class="text-danger"></span> *@
-        @* </div> *@
     }
 </div>
 
