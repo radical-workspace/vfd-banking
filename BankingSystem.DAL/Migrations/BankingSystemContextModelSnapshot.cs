@@ -373,7 +373,8 @@ namespace BankingSystem.DAL.Migrations
 
                     b.Property<string>("ContentType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("CustomerId")
                         .IsRequired()
@@ -381,11 +382,13 @@ namespace BankingSystem.DAL.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("DocumentType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<byte[]>("FileData")
                         .IsRequired()
@@ -393,7 +396,8 @@ namespace BankingSystem.DAL.Migrations
 
                     b.Property<string>("FileName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<long>("FileSize")
                         .HasColumnType("bigint");
@@ -404,9 +408,14 @@ namespace BankingSystem.DAL.Migrations
                     b.Property<DateTime>("IssueDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("MyCustomerId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("MyCustomerId");
 
                     b.ToTable("FinancialDocument");
                 });
@@ -615,6 +624,9 @@ namespace BankingSystem.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("AccountId")
+                        .HasColumnType("int");
+
                     b.Property<string>("CustomerId")
                         .HasColumnType("nvarchar(450)");
 
@@ -654,6 +666,8 @@ namespace BankingSystem.DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
 
                     b.HasIndex("CustomerId");
 
@@ -940,10 +954,15 @@ namespace BankingSystem.DAL.Migrations
             modelBuilder.Entity("BankingSystem.DAL.Models.FinancialDocument", b =>
                 {
                     b.HasOne("BankingSystem.DAL.Models.MyCustomer", "Customer")
-                        .WithMany("FinancialDocuments")
+                        .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_FinancialDocument_Customer");
+
+                    b.HasOne("BankingSystem.DAL.Models.MyCustomer", null)
+                        .WithMany("FinancialDocuments")
+                        .HasForeignKey("MyCustomerId");
 
                     b.Navigation("Customer");
                 });
@@ -1018,6 +1037,10 @@ namespace BankingSystem.DAL.Migrations
 
             modelBuilder.Entity("BankingSystem.DAL.Models.SupportTicket", b =>
                 {
+                    b.HasOne("BankingSystem.DAL.Models.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId");
+
                     b.HasOne("BankingSystem.DAL.Models.MyCustomer", "Customer")
                         .WithMany("SupportTickets")
                         .HasForeignKey("CustomerId");
@@ -1025,6 +1048,8 @@ namespace BankingSystem.DAL.Migrations
                     b.HasOne("BankingSystem.DAL.Models.Teller", "Teller")
                         .WithMany()
                         .HasForeignKey("TellerId");
+
+                    b.Navigation("Account");
 
                     b.Navigation("Customer");
 

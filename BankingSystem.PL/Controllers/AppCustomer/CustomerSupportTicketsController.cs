@@ -44,12 +44,21 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         public IActionResult ApplyTicket(string id)
         {
             var customer = _UnitOfWork.Repository<MyCustomer>()
-                .GetSingleIncluding(c => c.Id == id);
-            if (customer != null)
+                            .GetSingleIncluding(c => c.Id == id, c => c.Accounts);
+           
+                if (customer != null)
             {
+                var accountSelectList = customer.Accounts
+                    .Select(a => new SelectListItem
+                    {
+                        Value = a.Id.ToString(), // assuming Id is the PK and is int/long
+                        Text = $"Account No: {a.Number} - {a.AccountType} - Balance: {a.Balance:C}"
+                    }).ToList();
+
                 var SupportTicketModel = new CustomerSupportTicket
                 {
                     CustomerId = customer.Id,
+                    Accounts = accountSelectList,
                     Date = DateTime.Now,
                     Status = SupportTicketStatus.Pending,
                     Type = SupportTicketType.Other
@@ -81,6 +90,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                     Status = SupportTicketStatus.Pending,
                     Type = model.Type,
                     CustomerId = model.CustomerId,
+                    AccountId = model.SelectedAccountId,
                     Response = null,
                     TellerId = null  
                 };
