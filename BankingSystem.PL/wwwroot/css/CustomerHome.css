@@ -1,4 +1,4 @@
-/*.profile-container {
+.profile-container {
     max-width: 1600px;
     margin: 0 auto;
     background-color: #fff;
@@ -173,7 +173,7 @@
     align-items: center;
     margin-bottom: 20px;
 }
-*/
+
 /* Color Variables */
 /* Color Variables */
 :root {
