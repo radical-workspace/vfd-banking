@@ -9,18 +9,13 @@ using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging.Signing;
 namespace BankingSystem.PL.Controllers.AppCustomer
 {
-    public class CustomerCertificatesController : Controller
+    public class CustomerCertificatesController(IUnitOfWork UnitOfWork) : Controller
     {
-        private readonly IUnitOfWork _UnitOfWork;
-        public CustomerCertificatesController(IUnitOfWork UnitOfWork)
-        {
-            _UnitOfWork = UnitOfWork;
-        }
+        private readonly IUnitOfWork _UnitOfWork = UnitOfWork;
 
         [HttpGet] 
         public IActionResult ApplyCertificate(string id)
         {
-            
             var allcertificates = _UnitOfWork.Repository<GeneralCertificate>().GetAll().ToList();
             var customer = _UnitOfWork.Repository<Customer>().
                 GetSingleIncluding(c => c.Id == id,c => c.Accounts);
@@ -105,8 +100,6 @@ namespace BankingSystem.PL.Controllers.AppCustomer
 
             return RedirectToAction("ThanksCertificate", new { number = newCertificate.CertificateNumber }); 
         }
-
-
 
         public IActionResult ThanksCertificate(string number)
         {
