@@ -1,4 +1,5 @@
-﻿using BankingSystem.BLL.Interfaces;
+﻿using AutoMapper;
+using BankingSystem.BLL.Interfaces;
 using BankingSystem.BLL.Services;
 using BankingSystem.DAL.Data;
 using BankingSystem.DAL.Models;
@@ -7,11 +8,40 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging.Signing;
+using System.Runtime.ConstrainedExecution;
 namespace BankingSystem.PL.Controllers.AppCustomer
 {
     public class CustomerCertificatesController(IUnitOfWork UnitOfWork) : Controller
     {
-        private readonly IUnitOfWork _UnitOfWork = UnitOfWork;
+        private readonly IUnitOfWork _UnitOfWork;
+        private readonly IMapper _mapper;
+
+        public CustomerCertificatesController(IUnitOfWork UnitOfWork, IMapper mapper)
+        {
+            _UnitOfWork = UnitOfWork;
+            _mapper = mapper;
+        }
+
+        public IActionResult Details(string id)
+        {
+            var customer = _UnitOfWork.Repository<Customer>()
+                         .GetSingleDeepIncluding( c => c.Id == id,
+                          q => q.Include(c => c.Accounts).ThenInclude(a => a.Certificates)
+                          .ThenInclude(c => c.GeneralCertificate));
+
+            if (customer != null)
+            {
+                var CertificatesModel = _mapper.Map<List<CustomerCertificatesViewModel>>(customer.Accounts?.SelectMany(acc => acc.Certificates) ?? Enumerable.Empty<Certificate>());
+                ViewBag.id = customer.Id;
+                return View(CertificatesModel);
+            }
+            else
+            {
+                return NotFound($"No Customer Exist for id : {id}");
+            }
+
+        }
+
 
         [HttpGet] 
         public IActionResult ApplyCertificate(string id)
@@ -112,6 +142,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
 
             var customerCertificateVM = new CustomerCertificateVM
             {
+                CustomerId = certificate.Account.CustomerId,
                 CustomerCertificateNumber = certificate.CertificateNumber,
                 Amount = certificate.Amount,
                 IssueDate = certificate.IssueDate,

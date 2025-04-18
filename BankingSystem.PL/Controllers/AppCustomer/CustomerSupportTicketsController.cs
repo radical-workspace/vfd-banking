@@ -31,14 +31,14 @@ namespace BankingSystem.PL.Controllers.AppCustomer
             var tickets = customer.SupportTickets?
                 .Where(s => s.Status == SelectedStatus).ToList() ?? new List<SupportTicket>();
 
-                    var SupportTicketModel = new CustomerSupportTicketsViewModel
-                    {
-                        Tickets = _mapper.Map<List<CustomerSupportTicket>>(tickets),
-                        SelectedStatus = SelectedStatus,
-                        Id = customer.Id
-                    };
-                    ViewBag.statusList = new SelectList(Enum.GetValues(typeof(SupportTicketStatus)) , SelectedStatus);
-                    return View(SupportTicketModel);
+            var SupportTicketModel = new CustomerSupportTicketsViewModel
+            {
+                Tickets = _mapper.Map<List<CustomerSupportTicket>>(tickets),
+                SelectedStatus = SelectedStatus,
+                Id = customer.Id
+            };
+            ViewBag.statusList = new SelectList(Enum.GetValues(typeof(SupportTicketStatus)) , SelectedStatus);
+            return View(SupportTicketModel);
         }
         [HttpGet]
         public IActionResult ApplyTicket(string id)

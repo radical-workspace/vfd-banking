@@ -10,6 +10,9 @@ namespace BankingSystem.PL.ViewModels.Customer
         // account property
         public List<AccountMinimal>? Account { get; set; }
 
+        // transaction property
+        public List<TransactionMinimal>? Transactions { get; set; }
+
         // counts properties
         public double TotalBalance { get; set; } = 0;
         public int AccountsCount { get; set; } = 0;
@@ -25,6 +28,15 @@ namespace BankingSystem.PL.ViewModels.Customer
         public long Number { get; set; }
         public double Balance { get; set; }
         public AccountType AccountType { get; set; }
+    }
 
+    public class TransactionMinimal
+    {
+        public TransactionStatus TransactionStatus { get; set; }
+        public TransactionType Type { get; set; }
+        public string DoneVia { get; set; } = string.Empty;
+        public long? AccountDistenationNumber { get; set; }
+        public double Amount { get; set; }
+        public DateTime PaymentDate { get; set; }
     }
 }
