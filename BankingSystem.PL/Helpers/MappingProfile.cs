@@ -159,8 +159,13 @@ namespace BankingSystem.PL.Helpers
                     .ReverseMap();
 
             CreateMap<Loan, LoanDetailsViewModel>()
-                    .ForMember(dest => dest.Loan, opt => opt.MapFrom(src => src))
-                    .ForMember(dest => dest.FinancialDocument, opt => opt.MapFrom(src => src.Customer.FinancialDocument));
+                .ForMember(dest => dest.Loan, opt => opt.MapFrom(src => src)) // Maps Loan to LoansViewModel
+                .ForMember(dest => dest.FinancialDocument, opt => opt.MapFrom(src => src.Customer.FinancialDocument)); // Assuming Customer has FinancialDocuments list
+
+            CreateMap<LoanDetailsViewModel, Loan>()
+                .ForMember(dest => dest.Customer, opt => opt.Ignore()) // Typically you wouldn't map this back
+                .ForMember(dest => dest.Payments, opt => opt.MapFrom(src => src.Payments));
+
 
             CreateMap<SupportTicket, TicketsViewModel>()
                     .ForMember(dest => dest.CustomerName, s => s.MapFrom(s => s.Customer.UserName))
@@ -170,8 +175,13 @@ namespace BankingSystem.PL.Helpers
 
             CreateMap<SupportTicket, TicketDetailsView>()
                     .ForMember(dest => dest.Ticket, opt => opt.MapFrom(src => src))
-                    .ForMember(dest => dest.Document, opt => opt.MapFrom(src => src.Customer.FinancialDocument))
+                    //.ForMember(dest => dest.Document, opt => opt.MapFrom(src => src.Customer.FinancialDocument)) // Or whatever logic you need
                     .ReverseMap();
+
+            //CreateMap<SupportTicket, TicketDetailsView>()
+            //        .ForMember(dest => dest.Ticket, opt => opt.MapFrom(src => src))
+            //        .ForMember(dest => dest.Document, opt => opt.MapFrom(src => src.Customer.FinancialDocument))
+            //        .ReverseMap();
 
             CreateMap<Account, AccountsViewModel>()
             .ForMember(dest => dest.SelectedAccountNumber, opt => opt.MapFrom(src => src.Number))

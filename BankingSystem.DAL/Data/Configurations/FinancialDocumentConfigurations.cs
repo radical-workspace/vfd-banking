@@ -13,7 +13,7 @@ namespace BankingSystem.DAL.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<FinancialDocument> builder)
         {
-           
+
             builder.Property(fd => fd.DocumentType)
                 .IsRequired()
                 .HasMaxLength(100);
@@ -29,18 +29,19 @@ namespace BankingSystem.DAL.Data.Configurations
                 .IsRequired()
                 .HasMaxLength(100);
 
-            
-
             // Foreign key without index creation
-            builder.HasOne(fd => fd.Customer)
-                .WithMany() // or .WithMany(c => c.FinancialDocuments) if you have a navigation in MyCustomer
-                .HasForeignKey(fd => fd.CustomerId)
-                .OnDelete(DeleteBehavior.Cascade) // or your desired behavior
-                .HasConstraintName("FK_FinancialDocument_Customer");
+            //builder.HasOne(fd => fd.Customer)
+            //    .WithMany(c => c.FinancialDocuments) //if you have a navigation in MyCustomer
+            //    .HasForeignKey(fd => fd.CustomerId)
+            //    .OnDelete(DeleteBehavior.Cascade); // or your desired behavior
+                                                   //.HasConstraintName("FK_FinancialDocument_Customer");
 
-            // Prevent automatic index on CustomerId
-            builder.HasIndex(fd => fd.CustomerId).IsUnique(false).IsDescending(false).IsClustered(false);
-            builder.Metadata.RemoveIndex(builder.Metadata.FindIndex(new[] { builder.Property(p => p.CustomerId).Metadata }));
+            //// Prevent automatic index on CustomerId
+            //builder.HasIndex(fd => fd.CustomerId).IsUnique(false).IsDescending(false).IsClustered(false);
+            //builder.Metadata.RemoveIndex(builder.Metadata.FindIndex(new[] { builder.Property(p => p.CustomerId).Metadata }));
+
+            builder.HasQueryFilter(P => !P.IsDeleted);
+
         }
     }
 }

@@ -4,6 +4,7 @@ using BankingSystem.DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankingSystem.DAL.Migrations
 {
     [DbContext(typeof(BankingSystemContext))]
-    partial class BankingSystemContextModelSnapshot : ModelSnapshot
+    [Migration("20250418111753_aaaa")]
+    partial class aaaa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -361,14 +364,9 @@ namespace BankingSystem.DAL.Migrations
                     b.Property<DateTime>("IssueDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("LoanId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("LoanId");
 
                     b.ToTable("FinancialDocument");
                 });
@@ -998,10 +996,6 @@ namespace BankingSystem.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BankingSystem.DAL.Models.Loan", null)
-                        .WithMany("FinancialDocument")
-                        .HasForeignKey("LoanId");
-
                     b.Navigation("Customer");
                 });
 
@@ -1288,8 +1282,6 @@ namespace BankingSystem.DAL.Migrations
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Loan", b =>
                 {
-                    b.Navigation("FinancialDocument");
-
                     b.Navigation("Payments");
                 });
 

@@ -4,6 +4,7 @@ using BankingSystem.DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankingSystem.DAL.Migrations
 {
     [DbContext(typeof(BankingSystemContext))]
-    partial class BankingSystemContextModelSnapshot : ModelSnapshot
+    [Migration("20250418104319_b")]
+    partial class b
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -333,6 +336,9 @@ namespace BankingSystem.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("CustomerId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1000)
@@ -361,14 +367,13 @@ namespace BankingSystem.DAL.Migrations
                     b.Property<DateTime>("IssueDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("LoanId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("LoanId");
+                    b.HasIndex("CustomerId1")
+                        .IsUnique()
+                        .HasFilter("[CustomerId1] IS NOT NULL");
 
                     b.ToTable("FinancialDocument");
                 });
@@ -993,14 +998,15 @@ namespace BankingSystem.DAL.Migrations
             modelBuilder.Entity("BankingSystem.DAL.Models.FinancialDocument", b =>
                 {
                     b.HasOne("BankingSystem.DAL.Models.Customer", "Customer")
-                        .WithMany("FinancialDocument")
+                        .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_FinancialDocument_Customer");
 
-                    b.HasOne("BankingSystem.DAL.Models.Loan", null)
-                        .WithMany("FinancialDocument")
-                        .HasForeignKey("LoanId");
+                    b.HasOne("BankingSystem.DAL.Models.Customer", null)
+                        .WithOne("FinancialDocument")
+                        .HasForeignKey("BankingSystem.DAL.Models.FinancialDocument", "CustomerId1");
 
                     b.Navigation("Customer");
                 });
@@ -1288,8 +1294,6 @@ namespace BankingSystem.DAL.Migrations
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Loan", b =>
                 {
-                    b.Navigation("FinancialDocument");
-
                     b.Navigation("Payments");
                 });
 

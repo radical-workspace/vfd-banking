@@ -187,11 +187,11 @@
         </div>
     </div>
 
-    <div class="actions-section">
+    <div class="actions-section mt-3">
         <div class="section-header">
             <h4 class="mb-0">Important Actions</h4>
         </div>
-        <div class="row g-3">
+        <div class="row g-3 d-flex justify-content-center mt-3">
             <!-- Deposit Action -->
             <div class="col-md-3">
                 <a asp-action="Deposit" asp-controller="Withdraw_Deposit" class="action-button text-decoration-none">
@@ -225,16 +225,6 @@
                 </a>
             </div>
 
-            <!-- Loan Payment Action -->
-            <div class="col-md-3">
-                <a asp-action="Deposit" asp-controller="Withdraw_Deposit" class="action-button text-decoration-none">
-                    <div class="action-icon">
-                        <i class="bi bi-cash-coin"></i>
-                    </div>
-                    <div class="action-title">Loan Payment</div>
-                    <div class="action-description">Pay your active loans</div>
-                </a>
-            </div>
         </div>
     </div>
 
@@ -334,7 +324,7 @@
                                             <i class="bi bi-wallet2"></i>
                                         </div>
                                         <h5>@acc.AccountType Account</h5>
-                                        <div class="account-balance text-primary">$@acc.Balance.ToString("N2")</div>
+                                        <div class="account-balance text-white">$@acc.Balance.ToString("N2")</div>
                                         <div class="account-number ">Account #: @acc.Number</div>
                                         <div class="account-actions">
                                         </div>
