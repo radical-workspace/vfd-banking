@@ -202,10 +202,14 @@ namespace BankingSystem.PL.Helpers
                 .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate))
                 .ReverseMap();
 
+            CreateMap<Transaction, TransactionMinimal>()
+                .ForMember(dest => dest.TransactionStatus, opt => opt.MapFrom(src => src.Status))
+                .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => src.Payment != null ? src.Payment.Amount : 0))
+                .ForMember(dest => dest.PaymentDate, opt => opt.MapFrom(src => src.Payment != null ? src.Payment.PaymentDate : DateTime.MinValue));
             CreateMap<Customer, CustomerProfileViewModel>()
-                .ForMember(dest => dest.DesiredCustomer, opt => opt.MapFrom(src => src))
-                .ForMember(dest => dest.Account, opt => opt.MapFrom(src => src.Accounts));
-
+    .ForMember(dest => dest.DesiredCustomer, opt => opt.MapFrom(src => src)) // This will use the Customer→CustomerViewModel mapping
+    .ForMember(dest => dest.Account, opt => opt.MapFrom(src => src.Accounts)) // This will use the Account→AccountMinimal mapping
+    .ForMember(dest => dest.Transactions, opt => opt.MapFrom(src => src.Transactions)); // This will use Transaction→TransactionMinimal
 
             CreateMap<VisaCard, CustomerCardsViewModel>()
                     .ReverseMap()
@@ -251,6 +255,7 @@ namespace BankingSystem.PL.Helpers
                     opt => opt.MapFrom(src => src.IssueDate))
                 .ForMember(dest => dest.ExpiryDate,
                     opt => opt.MapFrom(src => src.ExpiryDate));
+
         }
 
 

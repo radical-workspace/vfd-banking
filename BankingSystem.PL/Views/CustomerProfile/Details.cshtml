@@ -1,9 +1,11 @@
-﻿@using BankingSystem.PL.ViewModels.Customer
+﻿@using BankingSystem.DAL.Models
+@using BankingSystem.PL.ViewModels.Customer
 @model CustomerProfileViewModel
 @{
     ViewData["Title"] = "HomePage";
 }
 <link rel="stylesheet" href="/css/CustomerHome.css"/>
+
 <div class="profile-container">
     <!-- Welcome Section -->
     <div class="welcome-section">
@@ -116,9 +118,9 @@
                     <h5 class="card-title">Current Balance</h5>
                     <h2 class="mb-3 text-primary">$ @Model.TotalBalance.ToString("N2")</h2>
                     <p class="card-text text-muted mb-3">Across all accounts</p>
-@*                     <a class="btn btn-outline-primary w-100">
-                        <i asp-action="Apply" asp-controller="CustomerApply" asp-route-id="@Model.DesiredCustomer.Id" class="bi bi-plus-circle me-2"></i>Open New Account
-                    </a> *@
+                    <a asp-action="CreateReservation" asp-controller="Reservation" class="btn btn-outline-primary w-100">
+                        <i  class="bi bi-plus-circle me-2"></i>Open New Account
+                    </a>
                     <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="CustomerAccounts" asp-route-id="@Model.DesiredCustomer.Id">
                         <i class="bi bi-plus-circle me-2"></i>Accounts Details
                     </a>
@@ -135,9 +137,9 @@
                     <h5 class="card-title">Your Cards</h5>
                     <h2 class="mb-3 text-primary">@Model.CardsCount</h2>
                     <p class="card-text text-muted mb-3">@Model.CreditCardsCount Credit, @Model.DebitCardsCount Debit</p>
-@*                     <a asp-controller="CustomerLoans" asp-action="ApplyCard" asp-route-id="@Model.DesiredCustomer.Id" class="btn btn-outline-primary w-100">
-                        <i class="bi bi-plus-circle me-2"></i>Apply for New Card
-                    </a> *@
+                    <a asp-action="CreateReservation" asp-controller="Reservation" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-plus-circle me-2"></i>Open New Card
+                    </a>
                     <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="CustomerCards" asp-route-id="@Model.DesiredCustomer.Id">
                         <i class="bi bi-plus-circle me-2"></i>Cards Details
                     </a>
@@ -181,6 +183,133 @@
             </div>
         </div>
     </div>
+
+    <div class="actions-section">
+        <div class="section-header">
+            <h4 class="mb-0">Important Actions</h4>
+        </div>
+        <div class="row g-3">
+            <!-- Deposit Action -->
+            <div class="col-md-3">
+                <a asp-action="Deposit" asp-controller="Withdraw_Deposit" class="action-button text-decoration-none">
+                    <div class="action-icon">
+                        <i class="bi bi-arrow-down-circle"></i>
+                    </div>
+                    <div class="action-title">Deposit</div>
+                    <div class="action-description">Add funds to your account</div>
+                </a>
+            </div>
+
+            <!-- Withdraw Action -->
+            <div class="col-md-3">
+                <a asp-action="Withdraw" asp-controller="Withdraw_Deposit" class="action-button text-decoration-none">
+                    <div class="action-icon">
+                        <i class="bi bi-arrow-up-circle"></i>
+                    </div>
+                    <div class="action-title">Withdraw</div>
+                    <div class="action-description">Take out funds from your account</div>
+                </a>
+            </div>
+
+            <!-- Transfer Action -->
+            <div class="col-md-3">
+                <a asp-action="TransferMoney" asp-controller="CustomerTransfer" class="action-button text-decoration-none">
+                    <div class="action-icon">
+                        <i class="bi bi-arrow-left-right"></i>
+                    </div>
+                    <div class="action-title">Transfer</div>
+                    <div class="action-description">Move money between accounts</div>
+                </a>
+            </div>
+
+            <!-- Loan Payment Action -->
+            <div class="col-md-3">
+                <a asp-action="Deposit" asp-controller="Withdraw_Deposit" class="action-button text-decoration-none">
+                    <div class="action-icon">
+                        <i class="bi bi-cash-coin"></i>
+                    </div>
+                    <div class="action-title">Loan Payment</div>
+                    <div class="action-description">Pay your active loans</div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    @if(Model?.Transactions?.Any()?? false)
+    {
+        <div class="transactions-section">
+            <div class="section-header">
+                <h4 class="mb-0">Recent Transactions</h4>
+            </div>
+            @foreach (var transaction in Model.Transactions.Take(3))
+            {
+                <!-- Transaction 1 -->
+                <div class="transaction-row">
+                    @switch(transaction.Type)
+                    {
+                        case (TransactionType.Deposit):
+                            <div class="transaction-icon transaction-deposit">
+                                <i class="bi bi-arrow-down-circle"></i>
+                            </div>
+                            break;
+                        case (TransactionType.Transfer):
+                            <div class="transaction-icon transaction-transfer">
+                                <i class="bi bi-arrow-left-right"></i>
+                            </div>
+                            break;
+                        case (TransactionType.Withdraw):
+                            <div class="transaction-icon transaction-withdraw">
+                                <i class="bi bi-arrow-up-circle"></i>
+                            </div>
+                            break;
+                        case (TransactionType.LoanPayment):
+                            <div class="transaction-icon transaction-loan">
+                                <i class="bi bi-arrow-down-circle"></i>
+                            </div>
+                            break;
+                    }
+                    <div class="transaction-details">
+                        <div class="transaction-title">
+                            @transaction.Type
+                            <span class="status-badge status-@transaction.TransactionStatus">@transaction.TransactionStatus</span>
+                        </div>
+                        <div class="transaction-meta">
+                            <div class="transaction-meta-item">
+                                <i class="bi bi-calendar3"></i>
+                                <span>@transaction.PaymentDate</span>
+                            </div>
+                            <div class="transaction-meta-item">
+                                <i class="bi bi-credit-card"></i>
+                                <span>Done via: @transaction.DoneVia</span>
+                            </div>
+                            @if (transaction.AccountDistenationNumber != null)
+                            {
+                                <div class="transaction-meta-item">
+                                    <i class="bi bi-wallet2"></i>
+                                    <span>Account #: @transaction.AccountDistenationNumber</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="transaction-amount">
+                        $@transaction.Amount.ToString("N2")
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- View More Button -->
+        <a asp-action="Details" asp-controller="CustomerTransactions" asp-route-id="@Model.DesiredCustomer.Id" class="view-more-btn">
+            <i class="bi bi-list me-2"></i>
+            View All Transactions
+        </a>
+    }
+
+
+        
+
+
 
     @if (Model.AccountsCount > 0)
     {

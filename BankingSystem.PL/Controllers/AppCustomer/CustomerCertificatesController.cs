@@ -24,7 +24,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
 
         public IActionResult Details(string id)
         {
-            var customer = _UnitOfWork.Repository<MyCustomer>()
+            var customer = _UnitOfWork.Repository<Customer>()
                          .GetSingleDeepIncluding( c => c.Id == id,
                           q => q.Include(c => c.Accounts).ThenInclude(a => a.Certificates)
                           .ThenInclude(c => c.GeneralCertificate));

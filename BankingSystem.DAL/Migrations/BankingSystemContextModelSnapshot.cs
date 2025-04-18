@@ -66,7 +66,7 @@ namespace BankingSystem.DAL.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Accounts", (string)null);
+                    b.ToTable("Accounts");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.ApplicationUser", b =>
@@ -196,7 +196,7 @@ namespace BankingSystem.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Banks", (string)null);
+                    b.ToTable("Banks");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Branch", b =>
@@ -235,7 +235,7 @@ namespace BankingSystem.DAL.Migrations
 
                     b.HasIndex("BankId");
 
-                    b.ToTable("Branches", (string)null);
+                    b.ToTable("Branches");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Certificate", b =>
@@ -277,7 +277,7 @@ namespace BankingSystem.DAL.Migrations
 
                     b.HasIndex("GeneralCertificateId");
 
-                    b.ToTable("Certificates", (string)null);
+                    b.ToTable("Certificates");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Department", b =>
@@ -310,7 +310,7 @@ namespace BankingSystem.DAL.Migrations
 
                     b.HasIndex("ManagerId");
 
-                    b.ToTable("Departments", (string)null);
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.FinancialDocument", b =>
@@ -359,7 +359,7 @@ namespace BankingSystem.DAL.Migrations
                     b.HasIndex("CustomerId")
                         .IsUnique();
 
-                    b.ToTable("FinancialDocument", (string)null);
+                    b.ToTable("FinancialDocument");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.GeneralCertificate", b =>
@@ -388,7 +388,7 @@ namespace BankingSystem.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GeneralCertificates", (string)null);
+                    b.ToTable("GeneralCertificates");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Loan", b =>
@@ -446,7 +446,7 @@ namespace BankingSystem.DAL.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Loans", (string)null);
+                    b.ToTable("Loans");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Payment", b =>
@@ -483,7 +483,7 @@ namespace BankingSystem.DAL.Migrations
 
                     b.HasIndex("LoanId");
 
-                    b.ToTable("Payment", (string)null);
+                    b.ToTable("Payment");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Reservation", b =>
@@ -525,7 +525,7 @@ namespace BankingSystem.DAL.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Reservations", (string)null);
+                    b.ToTable("Reservations");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Savings", b =>
@@ -556,7 +556,7 @@ namespace BankingSystem.DAL.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("Savings", (string)null);
+                    b.ToTable("Savings");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.SupportTicket", b =>
@@ -616,7 +616,7 @@ namespace BankingSystem.DAL.Migrations
 
                     b.HasIndex("TellerId");
 
-                    b.ToTable("SupportTickets", (string)null);
+                    b.ToTable("SupportTickets");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Transaction", b =>
@@ -668,7 +668,7 @@ namespace BankingSystem.DAL.Migrations
 
                     b.HasIndex("PaymentId");
 
-                    b.ToTable("Transactions", (string)null);
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.VisaCard", b =>
@@ -718,7 +718,7 @@ namespace BankingSystem.DAL.Migrations
                         .IsUnique()
                         .HasFilter("[AccountId] IS NOT NULL");
 
-                    b.ToTable("Cards", (string)null);
+                    b.ToTable("Cards");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
