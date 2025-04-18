@@ -31,8 +31,14 @@ namespace BankingSystem.PL
 
 
             builder.Services.AddApplicationServices();
+            builder.Services.AddAuthentication().AddGoogle(op =>
+            {
+                op.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                op.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+            });
 
-        
+
+
 
             #endregion
 
