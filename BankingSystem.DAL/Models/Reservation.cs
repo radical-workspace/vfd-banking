@@ -30,7 +30,7 @@ namespace BankingSystem.DAL.Models
     {
         public DateTime ReservationDate { get; set; }
         public ServiceType ServiceType { get; set; }
-        public string Notes { get; set; }
+        public string Notes { get; set; } = string.Empty;
         [Required(ErrorMessage = "Status is Required")]
         public ReservationStatus Status { get; set; } = ReservationStatus.Pending;
         public DateTime CreatedAt { get; set; } = DateTime.Now;

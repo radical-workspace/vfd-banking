@@ -195,6 +195,7 @@
 -->
 @model BankingSystem.PL.ViewModels.Teller.CustomerDetailsViewModel
 @using System.Security.Claims
+@using BankingSystem.DAL.Models
 
 @{
     ViewData["Title"] = "Customer Details";
@@ -202,7 +203,47 @@
 }
 
 <style>
-    :root {
+    .btn-bank-alt {
+        background-color: var(--primary-dark);
+        color: white !important;
+    }
+
+        .btn-bank-alt:hover {
+            background-color: var(--primary-medium);
+        }
+
+    .hidden-items {
+        display: none;
+    }
+
+    .toggle-items {
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .toggle-items:hover {
+            transform: translateX(5px);
+        }
+    .toggle-icon {
+        transition: transform 0.3s ease;
+    }
+
+    .collapsed .toggle-icon {
+        transform: rotate(180deg);
+    }
+
+    .transaction-positive {
+        color: #28a745 !important;
+    }
+
+    .transaction-negative {
+        color: #dc3545 !important;
+    }
+
+    .hover-light:hover {
+        background-color: var(--accent-3);
+    }
+        :root {
         --primary-dark: #0a2d2e;
         --primary-medium: #1c4e4f;
         --primary-light: #436e6f;
@@ -367,17 +408,39 @@
     </div>
 
     <!-- Loans -->
+    <!-- Loans Section -->
     <div class="card card-section">
         <div class="section-header"><i class="fas fa-file-invoice-dollar me-2"></i>Loans</div>
         <div class="card-body">
             @if (Model.Loans?.Any() == true)
             {
+                var loanCount = Model.Loans.Count;
                 <ul class="list-group list-group-flush">
-                    @foreach (var loan in Model.Loans)
+                    @foreach (var (loan, index) in Model.Loans.Select((v, i) => (v, i)))
                     {
-                        <li class="list-group-item">@loan.LoanType - @loan.LoanAmount.ToString("C")</li>
+                        <li class="list-group-item loan-item @(index >= 2 ? "hidden-items" : "")">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="fw-bold">@loan.LoanType</span>
+                                    <span class="text-muted ms-2">@loan.LoanAmount.ToString("C")</span>
+                                </div>
+                                <span class="badge bg-primary rounded-pill">
+                                    @loan.StartDate.ToString("MM/dd/yyyy")
+                                </span>
+                            </div>
+                        </li>
                     }
                 </ul>
+
+                @if (loanCount > 2)
+                {
+                    <div class="text-center mt-3">
+                        <button class="btn btn-bank" onclick="toggleItems(this, 'loan', @loanCount)">
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                            <span>View @(loanCount - 2) More Loans</span>
+                        </button>
+                    </div>
+                }
             }
             else
             {
@@ -386,18 +449,43 @@
         </div>
     </div>
 
-    <!-- Transactions -->
     <div class="card card-section">
         <div class="section-header"><i class="fas fa-money-check-alt me-2"></i>Transactions</div>
         <div class="card-body">
             @if (Model.Transactions?.Any() == true)
             {
+                var transactionCount = Model.Transactions.Count;
                 <ul class="list-group list-group-flush">
-                    @foreach (var t in Model.Transactions)
+                    @foreach (var (t, index) in Model.Transactions.Select((v, i) => (v, i)))
                     {
-                        <li class="list-group-item">@t.DoneVia - Amount: @t.Payment.Amount.ToString("C") on @t.Status</li>
+                        <li class="list-group-item transaction-item @(index >= 2 ? "hidden-items" : "")">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="fw-bold">@t.DoneVia</span>
+                                    <span class="text-muted ms-2">@t.Status</span>
+                                </div>
+                                <div>
+                                    <span class="@(t.Payment.Amount > 0 ? "text-success" : "text-danger")">
+                                        @t.Payment.Amount.ToString("C")
+                                    </span>
+                                    <small class="text-muted ms-2">
+                                        @t.DoneVia
+                                    </small>
+                                </div>
+                            </div>
+                        </li>
                     }
                 </ul>
+
+                @if (transactionCount > 2)
+                {
+                    <div class="text-center mt-3">
+                        <button class="btn btn-bank" onclick="toggleItems(this, 'transaction', @transactionCount)">
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                            <span>View @(transactionCount - 2) More Transactions</span>
+                        </button>
+                    </div>
+                }
             }
             else
             {
@@ -406,18 +494,63 @@
         </div>
     </div>
 
-    <!-- Support Tickets -->
+
+    <!-- Support Tickets Section -->
     <div class="card card-section">
         <div class="section-header"><i class="fas fa-headset me-2"></i>Support Tickets</div>
         <div class="card-body">
             @if (Model.Tickets?.Any() == true)
             {
+                var ticketCount = Model.Tickets.Count;
                 <ul class="list-group list-group-flush">
-                    @foreach (var ticket in Model.Tickets)
+                    @foreach (var (ticket, index) in Model.Tickets.Select((v, i) => (v, i)))
                     {
-                        <li class="list-group-item">@ticket.Description - <span class="text-uppercase">@ticket.Status</span></li>
+                        <li class="list-group-item ticket-item @(index >= 2 ? "hidden-items" : "")">
+                            <div class="d-flex justify-content-between align-items-center py-3 px-4 hover-light">
+                                <!-- Existing ticket content -->
+                                <div class="d-flex flex-column">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="badge bg-accent-2 text-primary me-2">
+                                            <i class="fas fa-user-circle me-1"></i>Customer
+                                        </span>
+                                        <span class="fw-bold text-primary">@ticket.Customer.UserName</span>
+                                    </div>
+                                    <div class="d-flex align-items-start">
+                                        <span class="badge bg-accent-2 text-primary me-2 mt-1">
+                                            <i class="fas fa-align-left me-1"></i>Issue
+                                        </span>
+                                        <div>
+                                            <span class="text-dark">@ticket.Description</span>
+                                            <div class="text-muted small mt-1">
+                                                <i class="far fa-clock me-1"></i>
+                                                Created: @ticket.Date.ToString("MMM dd, yyyy h:mm tt")
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="badge rounded-pill px-3 py-2 d-flex align-items-center
+                                @(ticket.Status == SupportTicketStatus.Pending ? "bg-warning text-dark" :
+                                ticket.Status == SupportTicketStatus.Resolved ? "bg-success text-white" :
+                                "bg-secondary text-white")">
+                                    <i class="@(ticket.Status == SupportTicketStatus.Pending ? "fas fa-hourglass-half" :
+                                     ticket.Status == SupportTicketStatus.Resolved ? "fas fa-check-circle" :
+                                     "fas fa-question-circle") me-1"></i>
+                                    @ticket.Status
+                                </span>
+                            </div>
+                        </li>
                     }
                 </ul>
+
+                @if (ticketCount > 2)
+                {
+                    <div class="text-center mt-3">
+                        <button class="btn btn-bank" onclick="toggleItems(this, 'ticket', @ticketCount)">
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                            <span>View @(ticketCount - 2) More Tickets</span>
+                        </button>
+                    </div>
+                }
             }
             else
             {
@@ -433,3 +566,31 @@
         </a>
     </div>
 </div>
+<script>
+    function toggleItems(button, type, totalCount) {
+        const container = button.closest('.card-body');
+        const items = container.querySelectorAll(`.${type}-item`);
+        const hiddenItems = Array.from(items).slice(2);
+        const icon = button.querySelector('.toggle-icon');
+
+        // Toggle button state
+        button.classList.toggle('btn-bank-alt');
+        button.classList.toggle('collapsed');
+
+        // Toggle hidden items
+        hiddenItems.forEach(item => item.classList.toggle('hidden-items'));
+
+        // Update button text
+        const span = button.querySelector('span');
+        if (button.classList.contains('collapsed')) {
+            span.textContent = 'View Less';
+        } else {
+            span.textContent = `View ${totalCount - 2} More ${type.charAt(0).toUpperCase() + type.slice(1)}s`;
+        }
+
+        // Rotate icon
+        icon.style.transform = button.classList.contains('collapsed')
+            ? 'rotate(180deg)'
+            : 'rotate(0deg)';
+    }
+</script>

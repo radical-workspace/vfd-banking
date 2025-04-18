@@ -1,0 +1,223 @@
+﻿.page-header {
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 1rem;
+}
+
+.page-header h3 {
+    color: #0d6efd;
+    font-weight: 600;
+}
+
+.page-header p {
+    color: #6c757d;
+}
+
+
+.transaction-list {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.transaction-header {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.filter-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0;
+}
+
+.transaction-item {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+
+    .transaction-item:last-child {
+        border-bottom: none;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+
+    .transaction-item:hover {
+        background-color: rgba(0,0,0,0.01);
+    }
+
+.transaction-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.type-Deposit {
+    background-color: rgba(25, 135, 84, 0.1);
+    color: #198754;
+}
+
+.type-Withdraw {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+.type-Transfer {
+    background-color: rgba(13, 110, 253, 0.1);
+    color: #0d6efd;
+}
+
+.type-LoanPayment {
+    background-color: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+}
+
+.transaction-info {
+    flex-grow: 1;
+    min-width: 0; /* Prevents flex item from overflowing */
+}
+
+.transaction-primary {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 3px;
+}
+
+.transaction-secondary {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.transaction-id {
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.transaction-type {
+    font-weight: 500;
+}
+
+.transaction-details {
+    display: flex;
+    gap: 15px;
+}
+
+.transaction-detail {
+    white-space: nowrap;
+}
+
+.detail-label {
+    font-size: 0.75rem;
+    color: #6c757d;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.detail-value {
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.status-badge {
+    font-size: 0.7rem;
+    padding: 0.25em 0.6em;
+    font-weight: 500;
+    margin-left: 8px;
+}
+
+.amount {
+    color: seagreen;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #212529;
+}
+
+.header-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+    .transaction-details {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .transaction-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .transaction-icon {
+        margin-bottom: 10px;
+    }
+
+    .transaction-primary, .transaction-secondary {
+        width: 100%;
+    }
+
+    .transaction-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .filter-container {
+        width: 100%;
+    }
+
+    .form-select {
+        width: 100%;
+    }
+}
+.no-transaction {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.no-transaction-icon {
+    width: 100px;
+    height: 100px;
+    background-color: #e6f0ff; /* Changed to match the new theme */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 2rem;
+}
+
+    .no-transaction-icon i {
+        font-size: 3rem;
+        color: #0d6efd;
+    }

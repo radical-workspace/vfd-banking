@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pag
 using System.Security.Claims;
 
 
-namespace BankingSystem.PL.Controllers.Manager
+namespace BankingSystem.PL.Controllers
 {
     [Authorize(Roles = "Manager")]
     public class ManagerTellerController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager) : Controller

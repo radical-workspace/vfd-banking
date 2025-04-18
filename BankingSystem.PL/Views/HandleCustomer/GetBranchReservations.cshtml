@@ -33,7 +33,13 @@
 
                         <p class="mb-1"><strong>Service:</strong> @reservation.ServiceType</p>
                         <p class="mb-1"><strong>Date:</strong> @reservation.ReservationDate.ToString("dddd, dd MMMM yyyy hh:mm tt")</p>
-                        <p class="mb-3"><strong>Email:</strong> @reservation.Customer?.Email</p>
+
+
+                        <p class="mb-1">
+                            <strong>Email:</strong> @(reservation.Customer?.Email?.ToString() ?? "Client is not Registered Yet")
+                        </p>
+                        <p class="mb-1"><strong>Phone:</strong> @(reservation.Customer?.PhoneNumber?.ToString() ?? "No phone Registed")</p>
+
 
                         @if (reservation.Status == ReservationStatus.Pending)
                         {

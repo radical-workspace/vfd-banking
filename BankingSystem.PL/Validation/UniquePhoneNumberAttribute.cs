@@ -7,7 +7,7 @@ namespace BankingSystem.PL.Validation
 {
     public class UniquePhoneNumberAttribute : ValidationAttribute
     {
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             var phoneNumber = value as string;
             if (string.IsNullOrWhiteSpace(phoneNumber))
@@ -24,8 +24,7 @@ namespace BankingSystem.PL.Validation
             }
 
             var user = dbContext.Users.FirstOrDefault(u =>
-                u.PhoneNumber == phoneNumber &&
-                u.Id != currentUserId);
+                                                      u.PhoneNumber == phoneNumber && u.Id != currentUserId);
 
             if (user != null)
             {

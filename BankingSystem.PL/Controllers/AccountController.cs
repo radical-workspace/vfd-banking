@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace BankingSystem.PL.Controllers
 {
@@ -113,13 +114,13 @@ namespace BankingSystem.PL.Controllers
                     if (UserToRegister.Role == "Customer") appUser = _mapper.Map<Customer>(UserToRegister);
 
                     else if (UserToRegister.Role == "Admin") appUser = _mapper.Map<Admin>(UserToRegister);
-                    
-                    else if (UserToRegister.Role == "Manager") appUser = _mapper.Map<DAL.Models.Manager>(UserToRegister);
-                    
-                    else if (UserToRegister.Role == "Teller") appUser = _mapper.Map<Teller>(UserToRegister);
-                    
-                    else appUser = _mapper.Map<ApplicationUser>(UserToRegister);
 
+                    else if (UserToRegister.Role == "Manager") appUser = _mapper.Map<DAL.Models.Manager>(UserToRegister);
+
+                    else if (UserToRegister.Role == "Teller") appUser = _mapper.Map<Teller>(UserToRegister);
+
+                    else appUser = _mapper.Map<ApplicationUser>(UserToRegister);
+                    appUser.Id = Guid.NewGuid().ToString();
                     IdentityResult result = await _userManager.CreateAsync(appUser, UserToRegister.Password);
 
                     // Ensure the role is "Teller" when added by a manager
@@ -183,7 +184,7 @@ namespace BankingSystem.PL.Controllers
                             // if the role is Customer 
                             if (await _userManager.IsInRoleAsync(user, "Customer"))
                             {
-                                return RedirectToAction("Details", "CustomerProfile", new { id = user.Id }); 
+                                return RedirectToAction("Details", "CustomerProfile", new { id = user.Id });
                             }
                             return RedirectToAction("Index", "Home");
                         }
@@ -233,6 +234,101 @@ namespace BankingSystem.PL.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public IActionResult ExternalLogin(string provider, string returnUrl = null)
+        {
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { returnUrl });
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return Challenge(properties, provider);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
+        {
+            returnUrl ??= Url.Content("~/");
+
+            if (remoteError != null)
+            {
+                ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
+                return RedirectToAction(nameof(Login));
+            }
+
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+            if (result.Succeeded)
+            {
+                return LocalRedirect(returnUrl);
+            }
+            else
+            {
+                var email = info.Principal.FindFirstValue(System.Security.Claims.ClaimTypes.Email);
+                if (email != null)
+                {
+                    var user = await _userManager.FindByEmailAsync(email);
+                    if (user == null)
+                    {
+                        // Create ApplicationUser with "Customer" discriminator
+                        var customerUser = new Customer
+                        {
+                            UserName = email.Split('@')[0],
+                            Email = email,
+                            Discriminator = "Customer",
+                            Address = "",
+                            FirstName = email.Split('@')[0],
+                            LastName = email.Split('@')[0],
+                            SSN = 00000000000000,
+                            JoinDate = DateTime.Now,
+
+
+                        };
+
+                        var createResult = await _userManager.CreateAsync(customerUser);
+                        if (createResult.Succeeded)
+                        {
+                            // Link external login
+                            await _userManager.AddLoginAsync(customerUser, info);
+
+                            // Assign "Customer" role
+                            await _userManager.AddToRoleAsync(customerUser, "Customer");
+
+                            // Insert into Customers table
+                            _uniitOfWork.Repository<Customer>().Add(customerUser);
+                            //_uniitOfWork.Complete();
+
+                            // Sign in
+                            await _signInManager.SignInAsync(customerUser, isPersistent: false);
+                            return LocalRedirect(returnUrl);
+                        }
+                        else
+                        {
+                            foreach (var error in createResult.Errors)
+                            {
+                                ModelState.AddModelError(string.Empty, error.Description);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Add external login and sign in
+                        await _userManager.AddLoginAsync(user, info);
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect(returnUrl);
+                    }
+                }
+
+                ViewBag.ErrorTitle = "Email claim not received from: " + info.LoginProvider;
+                ViewBag.ErrorMessage = "Please contact support.";
+                return View("Error");
+            }
+        }
+
+
 
     }
 }

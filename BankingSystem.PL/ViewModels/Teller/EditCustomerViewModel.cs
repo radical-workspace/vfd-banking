@@ -5,6 +5,7 @@ namespace BankingSystem.PL.ViewModels.Teller
     public class EditCustomerViewModel
     {
         public string Id { get; set; }
+        [UniqueEmail]
         public string Email { get; set; } = null!;
         [UniqueSSN]
         public long SSN { get; set; }

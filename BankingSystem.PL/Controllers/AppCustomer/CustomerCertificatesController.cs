@@ -1,4 +1,5 @@
-﻿using BankingSystem.BLL.Interfaces;
+﻿using AutoMapper;
+using BankingSystem.BLL.Interfaces;
 using BankingSystem.BLL.Services;
 using BankingSystem.DAL.Data;
 using BankingSystem.DAL.Models;
@@ -7,20 +8,38 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging.Signing;
+using System.Runtime.ConstrainedExecution;
 namespace BankingSystem.PL.Controllers.AppCustomer
 {
-    public class CustomerCertificatesController : Controller
+    public class CustomerCertificatesController(IUnitOfWork UnitOfWork) : Controller
     {
         private readonly IUnitOfWork _UnitOfWork;
-        public CustomerCertificatesController(IUnitOfWork UnitOfWork)
+        private readonly IMapper _mapper;
+
+        public IActionResult Details(string id)
         {
-            _UnitOfWork = UnitOfWork;
+            var customer = _UnitOfWork.Repository<Customer>()
+                         .GetSingleDeepIncluding( c => c.Id == id,
+                          q => q.Include(c => c.Accounts).ThenInclude(a => a.Certificates)
+                          .ThenInclude(c => c.GeneralCertificate));
+
+            if (customer != null)
+            {
+                var CertificatesModel = _mapper.Map<List<CustomerCertificatesViewModel>>(customer.Accounts?.SelectMany(acc => acc.Certificates) ?? Enumerable.Empty<Certificate>());
+                ViewBag.id = customer.Id;
+                return View(CertificatesModel);
+            }
+            else
+            {
+                return NotFound($"No Customer Exist for id : {id}");
+            }
+
         }
+
 
         [HttpGet] 
         public IActionResult ApplyCertificate(string id)
         {
-            
             var allcertificates = _UnitOfWork.Repository<GeneralCertificate>().GetAll().ToList();
             var customer = _UnitOfWork.Repository<Customer>().
                 GetSingleIncluding(c => c.Id == id,c => c.Accounts);
@@ -106,8 +125,6 @@ namespace BankingSystem.PL.Controllers.AppCustomer
             return RedirectToAction("ThanksCertificate", new { number = newCertificate.CertificateNumber }); 
         }
 
-
-
         public IActionResult ThanksCertificate(string number)
         {
             var certificate = _UnitOfWork.Repository<Certificate>().GetSingleIncluding(c => c.CertificateNumber == number, c => c.GeneralCertificate, c => c.Account);
@@ -119,6 +136,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
 
             var customerCertificateVM = new CustomerCertificateVM
             {
+                CustomerId= certificate.Account.CustomerId,
                 CustomerCertificateNumber = certificate.CertificateNumber,
                 Amount = certificate.Amount,
                 IssueDate = certificate.IssueDate,
