@@ -9,7 +9,7 @@ namespace BankingSystem.PL.ViewModels.Manager
         public TicketsViewModel Ticket { get; set; } = null!;
         public string Description { get; set; } = null!;
         public string? Response { get; set; }
-        public FinancialDocument? Document { get; set; } = null!;
+        //public FinancialDocument? Document { get; set; } = null!;
 
     }
 }

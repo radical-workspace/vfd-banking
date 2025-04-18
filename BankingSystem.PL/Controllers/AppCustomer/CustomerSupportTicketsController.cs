@@ -17,8 +17,8 @@ namespace BankingSystem.PL.Controllers.AppCustomer
             _UnitOfWork = UnitOfWork;
             _mapper = mapper;
         }
-        [HttpPost , HttpGet]
-        public IActionResult Details(string id , SupportTicketStatus SelectedStatus = SupportTicketStatus.Pending)
+        [HttpPost, HttpGet]
+        public IActionResult Details(string id, SupportTicketStatus SelectedStatus = SupportTicketStatus.Pending)
         {
             var customer = _UnitOfWork.Repository<Customer>()
                                   .GetSingleIncluding(c => c.Id == id, c => c.SupportTickets);
@@ -31,25 +31,34 @@ namespace BankingSystem.PL.Controllers.AppCustomer
             var tickets = customer.SupportTickets?
                 .Where(s => s.Status == SelectedStatus).ToList() ?? new List<SupportTicket>();
 
-                    var SupportTicketModel = new CustomerSupportTicketsViewModel
-                    {
-                        Tickets = _mapper.Map<List<CustomerSupportTicket>>(tickets),
-                        SelectedStatus = SelectedStatus,
-                        Id = customer.Id
-                    };
-                    ViewBag.statusList = new SelectList(Enum.GetValues(typeof(SupportTicketStatus)) , SelectedStatus);
-                    return View(SupportTicketModel);
+            var SupportTicketModel = new CustomerSupportTicketsViewModel
+            {
+                Tickets = _mapper.Map<List<CustomerSupportTicket>>(tickets),
+                SelectedStatus = SelectedStatus,
+                Id = customer.Id
+            };
+            ViewBag.statusList = new SelectList(Enum.GetValues(typeof(SupportTicketStatus)), SelectedStatus);
+            return View(SupportTicketModel);
         }
         [HttpGet]
         public IActionResult ApplyTicket(string id)
         {
             var customer = _UnitOfWork.Repository<Customer>()
-                .GetSingleIncluding(c => c.Id == id);
+                            .GetSingleIncluding(c => c.Id == id, c => c.Accounts);
+
             if (customer != null)
             {
+                var accountSelectList = customer.Accounts
+                    .Select(a => new SelectListItem
+                    {
+                        Value = a.Id.ToString(), // assuming Id is the PK and is int/long
+                        Text = $"Account No: {a.Number} - {a.AccountType} - Balance: {a.Balance:C}"
+                    }).ToList();
+
                 var SupportTicketModel = new CustomerSupportTicket
                 {
                     CustomerId = customer.Id,
+                    Accounts = accountSelectList,
                     Date = DateTime.Now,
                     Status = SupportTicketStatus.Pending,
                     Type = SupportTicketType.Other
@@ -77,12 +86,13 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                 {
                     Title = model.Title,
                     Description = model.Description,
-                    Date = DateTime.Now, 
+                    Date = DateTime.Now,
                     Status = SupportTicketStatus.Pending,
                     Type = model.Type,
                     CustomerId = model.CustomerId,
+                    AccountId = model.SelectedAccountId,
                     Response = null,
-                    TellerId = null  
+                    TellerId = null
                 };
 
                 _UnitOfWork.Repository<SupportTicket>().Add(supportTicket);

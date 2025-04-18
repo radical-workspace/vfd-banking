@@ -43,5 +43,6 @@ namespace BankingSystem.DAL.Models
         [ForeignKey(nameof(Account))]
         public int? AccountId { get; set; }
         public Account? Account { get; set; }
+
     }
 }

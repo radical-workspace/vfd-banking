@@ -22,17 +22,11 @@ namespace BankingSystem.PL.Controllers.AppCustomer
             var customer = _UnitOfWork.Repository<Customer>()
                                   .GetSingleIncluding(c => c.Id == id, c => c.Accounts);
 
-            if (customer != null)
+            if (customer != null && (customer.Accounts?.Any() ?? false))
             {
-                if (customer.Accounts.Any())
-                {
-                    var AccountsModel = _mapper.Map<List<CustomerAccountsViewModel>>(customer.Accounts);
-                    return View(AccountsModel);
-                }
-                else
-                {
-                    return RedirectToAction("Details", "CustomerProfile", new { id = customer?.Id });
-                }
+                var AccountsModel = _mapper.Map<List<CustomerAccountsViewModel>>(customer.Accounts);
+                ViewBag.id = customer.Id;
+                return View(AccountsModel);
             }
             else
             {

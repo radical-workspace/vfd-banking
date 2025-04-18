@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankingSystem.DAL.Migrations
 {
     [DbContext(typeof(BankingSystemContext))]
-    [Migration("20250415232646_Test")]
-    partial class Test
+    [Migration("20250418111753_aaaa")]
+    partial class aaaa
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -216,6 +216,9 @@ namespace BankingSystem.DAL.Migrations
                     b.Property<TimeSpan>("Closes")
                         .HasColumnType("time");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -326,7 +329,8 @@ namespace BankingSystem.DAL.Migrations
 
                     b.Property<string>("ContentType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("CustomerId")
                         .IsRequired()
@@ -334,11 +338,13 @@ namespace BankingSystem.DAL.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("DocumentType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<byte[]>("FileData")
                         .IsRequired()
@@ -346,7 +352,8 @@ namespace BankingSystem.DAL.Migrations
 
                     b.Property<string>("FileName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<long>("FileSize")
                         .HasColumnType("bigint");
@@ -359,8 +366,7 @@ namespace BankingSystem.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId")
-                        .IsUnique();
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("FinancialDocument");
                 });
@@ -985,8 +991,8 @@ namespace BankingSystem.DAL.Migrations
             modelBuilder.Entity("BankingSystem.DAL.Models.FinancialDocument", b =>
                 {
                     b.HasOne("BankingSystem.DAL.Models.Customer", "Customer")
-                        .WithOne("FinancialDocument")
-                        .HasForeignKey("BankingSystem.DAL.Models.FinancialDocument", "CustomerId")
+                        .WithMany("FinancialDocument")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

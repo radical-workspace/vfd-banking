@@ -3,6 +3,8 @@
     color: #212529;
 }
 
+
+
 .cards-container {
     max-width: 1200px;
     margin: 2rem auto;
@@ -46,7 +48,29 @@
 .card-body {
     padding: 1.5rem;
 }
+.no-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    padding: 4rem 2rem;
+    text-align: center;
+}
 
+.no-card-icon {
+    width: 100px;
+    height: 100px;
+    background-color: #e6f0ff; /* Changed to match the new theme */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 2rem;
+}
+
+    .no-card-icon i {
+        font-size: 3rem;
+        color: #0d6efd;
+    }
 .badge {
     padding: 0.5rem 1rem;
     font-weight: 500;

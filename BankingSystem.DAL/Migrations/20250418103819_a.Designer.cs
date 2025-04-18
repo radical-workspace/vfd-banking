@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankingSystem.DAL.Migrations
 {
     [DbContext(typeof(BankingSystemContext))]
-    [Migration("20250417112646_asdf")]
-    partial class asdf
+    [Migration("20250418103819_a")]
+    partial class a
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -329,19 +329,25 @@ namespace BankingSystem.DAL.Migrations
 
                     b.Property<string>("ContentType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("CustomerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("CustomerId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("DocumentType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<byte[]>("FileData")
                         .IsRequired()
@@ -349,7 +355,8 @@ namespace BankingSystem.DAL.Migrations
 
                     b.Property<string>("FileName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<long>("FileSize")
                         .HasColumnType("bigint");
@@ -362,8 +369,11 @@ namespace BankingSystem.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId")
-                        .IsUnique();
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("CustomerId1")
+                        .IsUnique()
+                        .HasFilter("[CustomerId1] IS NOT NULL");
 
                     b.ToTable("FinancialDocument");
                 });
@@ -988,10 +998,15 @@ namespace BankingSystem.DAL.Migrations
             modelBuilder.Entity("BankingSystem.DAL.Models.FinancialDocument", b =>
                 {
                     b.HasOne("BankingSystem.DAL.Models.Customer", "Customer")
-                        .WithOne("FinancialDocument")
-                        .HasForeignKey("BankingSystem.DAL.Models.FinancialDocument", "CustomerId")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_FinancialDocument_Customer");
+
+                    b.HasOne("BankingSystem.DAL.Models.Customer", null)
+                        .WithOne("FinancialDocument")
+                        .HasForeignKey("BankingSystem.DAL.Models.FinancialDocument", "CustomerId1");
 
                     b.Navigation("Customer");
                 });

@@ -244,7 +244,7 @@
                                 <a class="nav-link" asp-area="" asp-controller="HandleTicket" asp-action="Index">Tickets</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="HandleCustomer" asp-action="GetBranchReservations">Reservations</a>
+                                <a class="nav-link" asp-area="" asp-controller="HandleReservation" asp-action="GetBranchReservations">Reservations</a>
                             </li>
                         }
 
@@ -270,6 +270,9 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="CustomerCertificates" asp-action="Details" asp-route-id="@userId">Certificates</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="CustomerTransactions" asp-action="Details" asp-route-id="@userId">Transactions</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="CustomerSupportTickets" asp-action="Details" asp-route-id="@userId">Support Tickets</a>

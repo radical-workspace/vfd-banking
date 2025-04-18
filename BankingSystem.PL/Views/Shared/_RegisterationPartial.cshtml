@@ -1,3 +1,4 @@
+﻿@using BankingSystem.DAL.Models
 ﻿@using BankingSystem.PL.ViewModels.Auth
 @model RegisterViewModel
 
@@ -211,34 +212,22 @@
     <!-- Role Selection -->
     @if (ViewData["FixedRole"] != null)
     {
+        var fixedRole = ViewData["FixedRole"].ToString();
 
-        <div class="col-md-6 mb-4">
-            <label asp-for="Salary" class="form-label"></label>
-            <div class="input-group">
-                <input asp-for="Salary" type="number" class="form-control" placeholder="Add Salary" />
-                <i class="fas fa-lock input-icon"></i>
+        if (fixedRole != "Customer")
+        {
+            <div class="col-md-6 mb-4">
+                <label asp-for="Salary" class="form-label"></label>
+                <div class="input-group">
+                    <input asp-for="Salary" type="number" class="form-control" placeholder="Add Salary" />
+                    <i class="fas fa-lock input-icon"></i>
+                </div>
+                <span asp-validation-for="Salary" class="text-danger"></span>
             </div>
-            <span asp-validation-for="Salary" class="text-danger"></span>
-        </div>
+        }
 
-        @* <div class="row justify-content-center"> *@
-        @*     <!-- Added row with centering --> *@
-        @*     <div class="col-md-6 mb-4 mx-auto"> *@
-        @*         <!-- Added mx-auto for horizontal centering --> *@
-        @*         <label asp-for="Role" class="form-label text-center d-block"> *@
-        @*             <!-- Centered label --> *@
-        @*             <i class="fas fa-user-tag me-2"></i>Role  *@
-        @*         </label> *@
-        @*         <div class="input-group justify-content-center"> *@
-        @*             <!-- Centered input group --> *@
-        @*             <input type="text" class="form-control text-center" value="@ViewData["FixedRole"]" readonly style="max-width: 200px;" /> *@
-        @*             <input type="hidden" asp-for="Role" value="@ViewData["FixedRole"]" /> *@
-        @*         </div> *@
-        @*     </div> *@
-        @* </div> *@
-    }
-    else
-    { @*      ViewData["FixedRole"] = "Customer";
+        @* <input type="hidden" asp-for="Role" value="@fixedRole" /> *@
+
         <div class="col-md-6 mb-4">
             <label asp-for="Role" class="form-label">
                 <i class="fas fa-user-tag me-2"></i>Role
@@ -248,22 +237,36 @@
                        value="@ViewData["FixedRole"]" readonly />
                 <input type="hidden" asp-for="Role" value="@ViewData["FixedRole"]" />
             </div>
-        </div> *@
-        <div class="col-md-6 mb-4">
-            <label asp-for="Role" class="form-label"></label>
-            <div class="input-group">
-                <select asp-for="Role" asp-items="Model.AvailableRoles" class="form-select">
-                    <option value="">-- Select Role --</option>
-                </select>
-                <i class="fas fa-user-tag input-icon"></i>
-            </div>
-            <span asp-validation-for="Role" class="text-danger"></span>
         </div>
+    }
+    else
+    {
+        ViewData["FixedRole"] = "Customer";
+        <div class="col-md-6 mb-4">
+            <label asp-for="Role" class="form-label">
+                <i class="fas fa-user-tag me-2"></i>Role
+            </label>
+            <div class="input-group">
+                <input type="text" class="form-control"
+                       value="@ViewData["FixedRole"]" readonly />
+                <input type="hidden" asp-for="Role" value="@ViewData["FixedRole"]" />
+            </div>
+        </div>
+        @* <div class="col-md-6 mb-4"> *@
+        @*     <label asp-for="Role" class="form-label"></label> *@
+        @*     <div class="input-group"> *@
+        @*         <select asp-for="Role" asp-items="Model.AvailableRoles" class="form-select"> *@
+        @*             <option value="">-- Select Role --</option> *@
+        @*         </select> *@
+        @*         <i class="fas fa-user-tag input-icon"></i> *@
+        @*     </div> *@
+        @*     <span asp-validation-for="Role" class="text-danger"></span> *@
+        @* </div> *@
     }
 </div>
 
 <div class="text-center">
     <button type="submit" class="btn submit-btn text-white">
-        <i class="fas fa-user-plus me-2"></i>Register
+        <i class="fas fa-user-plus me-1"></i>Register
     </button>
 </div>
