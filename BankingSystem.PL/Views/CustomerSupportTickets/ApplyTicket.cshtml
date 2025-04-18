@@ -37,6 +37,18 @@
 
                     <div class="row">
                         <div class="col-md-8 mx-auto">
+                            <!-- Account Selection -->
+                            <div class="mb-4">
+                                <div class="detail-label">Related Account</div>
+                                <div class="form-group">
+                                    <select asp-for="SelectedAccountId" asp-items="Model.Accounts" class="form-control">
+                                        <option value="">-- Select Account --</option>
+                                    </select>
+                                    <span asp-validation-for="SelectedAccountId" class="text-danger"></span>
+                                </div>
+                                <div class="form-text">Select the account related to this issue</div>
+                            </div>
+
                             <!-- Ticket Type -->
                             <div class="mb-4">
                                 <div class="detail-label">Ticket Type</div>
@@ -69,7 +81,6 @@
                                     <i class="bi bi-send me-2"></i>Submit Ticket
                                 </button>
                             </div>
-
                         </div>
                     </div>
                 </form>
@@ -151,65 +162,48 @@
 </div>
 
 @section Scripts {
-        <script>
-        //     / Add any client-side validation or enhancements here
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     Handle form submission
-        //     document.getElementById('submitTicketBtn').addEventListener('click', function() {
-        //         Optional: Add custom validation here
+    <script>
+        // Add any client-side validation or enhancements here
+        document.addEventListener('DOMContentLoaded', function() {
+            // Example: Add character counter for description
+            const descriptionField = document.querySelector('textarea[name="Description"]');
+            const maxChars = 1000; // Set your max character limit
 
-        //         Submit the form
-        //         document.querySelector('form').submit();
-        //     });
+            if (descriptionField) {
+                // Create counter element
+                const counter = document.createElement('div');
+                counter.className = 'text-muted small mt-1';
+                counter.innerHTML = `0/${maxChars} characters`;
+                descriptionField.parentNode.insertBefore(counter, descriptionField.nextSibling);
 
-        //     Rest of your existing script...
-        //     const descriptionField = document.querySelector('textarea[name="Description"]');
-        //     const maxChars = 1000; Set your max character limit
+                // Update counter on input
+                descriptionField.addEventListener('input', function() {
+                    const remaining = this.value.length;
+                    counter.innerHTML = `${remaining}/${maxChars} characters`;
 
-        //     ... (rest of your character counter code)
-        // });
+                    // Optional: Add visual indicator when approaching limit
+                    if (remaining > maxChars * 0.8) {
+                        counter.classList.add('text-warning');
+                    } else {
+                        counter.classList.remove('text-warning');
+                    }
 
-            // Add any client-side validation or enhancements here
-            document.addEventListener('DOMContentLoaded', function() {
-                // Example: Add character counter for description
-                const descriptionField = document.querySelector('textarea[name="Description"]');
-                const maxChars = 1000; // Set your max character limit
-
-                if (descriptionField) {
-                    // Create counter element
-                    const counter = document.createElement('div');
-                    counter.className = 'text-muted small mt-1';
-                    counter.innerHTML = `0/${maxChars} characters`;
-                    descriptionField.parentNode.insertBefore(counter, descriptionField.nextSibling);
-
-                    // Update counter on input
-                    descriptionField.addEventListener('input', function() {
-                        const remaining = this.value.length;
-                        counter.innerHTML = `${remaining}/${maxChars} characters`;
-
-                        // Optional: Add visual indicator when approaching limit
-                        if (remaining > maxChars * 0.8) {
-                            counter.classList.add('text-warning');
-                        } else {
-                            counter.classList.remove('text-warning');
-                        }
-
-                        // Optional: Limit input to maxChars
-                        if (remaining > maxChars) {
-                            this.value = this.value.substring(0, maxChars);
-                            counter.innerHTML = `${maxChars}/${maxChars} characters`;
-                            counter.classList.add('text-danger');
-                        } else {
-                            counter.classList.remove('text-danger');
-                        }
-                    });
-                }
-            });
-        </script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/dist/jquery.validate.unobtrusive.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                    // Optional: Limit input to maxChars
+                    if (remaining > maxChars) {
+                        this.value = this.value.substring(0, maxChars);
+                        counter.innerHTML = `${maxChars}/${maxChars} characters`;
+                        counter.classList.add('text-danger');
+                    } else {
+                        counter.classList.remove('text-danger');
+                    }
+                });
+            }
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 }
 
 <style>
