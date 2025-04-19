@@ -27,15 +27,12 @@ public class AdminManagerController(IUnitOfWork unitOfWork, IMapper mapper) : Co
                                                                     m => m.Branch,
                                                                     m => m.Tellers)
                                                                     .ToList();
-
-        }
-        // GET: AdminManagerController
-        public ActionResult GetAllManagers()
-        {
-            var Managers = _unitOfWork.Repository<Manager>().GetAllIncluding(M => M.Branch).ToList();
-
         return View(Managers);
+
     }
+        // GET: AdminManagerController
+     
+    
 
     // GET: Manager/Create
     public IActionResult Create()
