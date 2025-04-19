@@ -54,3 +54,4 @@ delete from SupportTickets
 
 select len(106727542162)
 
+select * from Transactions

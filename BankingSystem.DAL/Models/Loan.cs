@@ -34,6 +34,8 @@ namespace BankingSystem.DAL.Models
         public LoanType LoanType { get; set; }
         public DateTime StartDate { get; set; }
         public List<Payment> Payments { get; set; } = null!;
+        public List<FinancialDocument>? FinancialDocument { get; set; } // This will be used to store the financial documents of the customer
+
 
         #region RelationShips
 

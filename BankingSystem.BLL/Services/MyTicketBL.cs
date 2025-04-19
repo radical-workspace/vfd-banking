@@ -2,6 +2,7 @@
 using BankingSystem.DAL.Data;
 using BankingSystem.DAL.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -134,6 +135,16 @@ namespace BankingSystem.BLL.Services
 
         
         public IEnumerable<SupportTicket> GetAllByPagination(string? ID, string? filter, out int totalRecords, out int totalPages, int pageNumber = 1)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> ExistsAsync(Expression<Func<SupportTicket, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public SupportTicket? GetSingleDeepIncluding(Expression<Func<SupportTicket, bool>> predicate, params Func<IQueryable<SupportTicket>, IIncludableQueryable<SupportTicket, object>>[] includes)
         {
             throw new NotImplementedException();
         }

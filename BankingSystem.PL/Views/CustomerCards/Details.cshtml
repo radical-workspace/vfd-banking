@@ -1,0 +1,149 @@
+﻿﻿@using BankingSystem.DAL.Models
+@using BankingSystem.PL.ViewModels.Customer
+@model List<CustomerCardsViewModel>
+@{
+    ViewData["Title"] = "Cards Details";
+}
+<link rel="stylesheet" href="/css/CustomerCards.css" />
+
+<div class="cards-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h3><i class="bi bi-credit-card-fill me-2"></i>Your Bank Cards</h3>
+        <p>View and manage your credit and debit cards</p>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <!-- No Cards View -->
+        <div id="no-card-view">
+            <div class="no-card">
+                <div class="no-card-icon">
+                    <i class="bi bi-credit-card-fill"></i>
+                </div>
+                <h3 class="empty-state-title">No card Found</h3>
+                <p class="empty-state-text">You don't have any card at the moment. </p>
+                <a asp-action="CreateReservation" asp-controller="Reservation" class="btn-add-card">
+                    <i class="bi bi-plus-circle"></i>
+                    <span>Apply for Your First Card</span>
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Cards Summary -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4>Cards Summary</h4>
+                <a class="btn-add-card" asp-action="CreateReservation" asp-controller="Reservation">
+                    <i class="bi bi-plus-circle"></i>
+                    <span>Request New Card</span>
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 text-center mb-3">
+                        <div class="h1 text-primary mb-2">@Model.Count()</div>
+                        <div class="text-muted-block fw-bold">Total Cards</div>
+                    </div>
+                    <div class="col-md-4 text-center mb-3">
+                        <div class="h1 text-primary mb-2">@Model.Count(card => card.CardType == TypeOfCard.Credit)</div>
+                        <div class="text-muted fw-bold">Credit Cards</div>
+                    </div>
+                    <div class="col-md-4 text-center mb-3">
+                        <div class="h1 text-primary mb-2">@Model.Count(card => card.CardType == TypeOfCard.Debit)</div>
+                        <div class="text-muted fw-bold">Debit Cards</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @foreach (var card in Model)
+        {
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    @if (card.CardType == TypeOfCard.Credit)
+                    {
+                        <h4>Credit Card</h4>
+                    }
+                    else
+                    {
+                        <h4>Debit Card</h4>
+                    }
+                    <span class="badge bg-primary">Primary</span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+
+                            @if (card.CardType == TypeOfCard.Credit)
+                            {
+                                <!-- Credit card -->
+                                <div class="bank-card credit">
+                                    <div class="bank-card-pattern"></div>
+                                    <div class="bank-card-icon">
+                                        <i class="bi bi-credit-card-fill"></i>
+                                    </div>
+                                    <div class="bank-card-chip"></div>
+                                    <div class="bank-card-logo">SecureBank</div>
+                                    <div class="bank-card-number">**** **** **** @card.Number.ToString().Substring(12)</div>
+                                    <div class="bank-card-details">
+                                        <div class="bank-card-expiry">@card.ExpDate.ToShortDateString()</div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="bank-card debit">
+                                    <div class="bank-card-pattern"></div>
+                                    <div class="bank-card-icon">
+                                        <i class="bi bi-credit-card-fill"></i>
+                                    </div>
+                                    <div class="bank-card-chip"></div>
+                                    <div class="bank-card-logo">SecureBank</div>
+                                    <div class="bank-card-number">**** **** **** @card.Number.ToString().Substring(12)</div>
+                                    <div class="bank-card-details">
+                                        <div class="bank-card-expiry">@card.ExpDate.ToShortDateString()</div>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+
+                        <div class="col-lg-6">
+                            <!-- Card Details -->
+                            <h5 class="mb-3">Card Details</h5>
+
+                            <div class="card-details-row">
+                                <div class="card-details-label">Card Type</div>
+                                <div class="card-details-value">@card.CardType</div>
+                            </div>
+
+                            <div class="card-details-row">
+                                <div class="card-details-label">Card Number</div>
+                                <div class="card-details-value">**** **** **** @card.Number.ToString().Substring(12)</div>
+                            </div>
+
+                            <div class="card-details-row">
+                                <div class="card-details-label">Creation Date</div>
+                                <div class="card-details-value">@card.CreationDate.ToShortDateString()</div>
+                            </div>
+
+                            <div class="card-details-row">
+                                <div class="card-details-label">Expiration Date</div>
+                                <div class="card-details-value">@card.ExpDate.ToShortDateString()</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+    }
+
+    <!-- Footer -->
+    <div class="footer">
+        <small>&copy; 2025 SecureBank. All rights reserved.</small>
+    </div>
+</div>

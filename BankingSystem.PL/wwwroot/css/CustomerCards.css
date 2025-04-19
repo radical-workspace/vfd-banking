@@ -1,0 +1,218 @@
+﻿body {
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+
+
+.cards-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.page-header {
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 1rem;
+}
+
+    .page-header h3 {
+        color: #0d6efd;
+        font-weight: 600;
+    }
+
+    .page-header p {
+        color: #6c757d;
+    }
+
+.card {
+    border: none;
+    border-radius: 0.75rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    padding: 1.25rem 1.5rem;
+}
+
+    .card-header h4 {
+        margin-bottom: 0;
+        font-weight: 600;
+    }
+
+.card-body {
+    padding: 1.5rem;
+}
+.no-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.no-card-icon {
+    width: 100px;
+    height: 100px;
+    background-color: #e6f0ff; /* Changed to match the new theme */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 2rem;
+}
+
+    .no-card-icon i {
+        font-size: 3rem;
+        color: #0d6efd;
+    }
+.badge {
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    border-radius: 2rem;
+}
+
+.bank-card {
+    position: relative;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    color: white;
+    overflow: hidden;
+    box-shadow: 0 0.5rem 1rem rgba(13, 110, 253, 0.2);
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+    height: 200px;
+}
+
+    .bank-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 1rem 2rem rgba(13, 110, 253, 0.3);
+    }
+
+    .bank-card.credit {
+        background: linear-gradient(135deg, #0d6efd, #0a58ca);
+    }
+
+    .bank-card.debit {
+        background: linear-gradient(135deg, #198754, #157347);
+    }
+
+.bank-card-icon {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    width: 50px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+    .bank-card-icon i {
+        font-size: 1.5rem;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+.bank-card-logo {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.bank-card-number {
+    position: absolute;
+    top: 50%;
+    left: 1.5rem;
+    font-size: 1.25rem;
+    letter-spacing: 2px;
+}
+
+.bank-card-details {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bank-card-name {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.bank-card-expiry {
+    font-size: 0.9rem;
+}
+
+.bank-card-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.1;
+    background-image: radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.3) 0%, transparent 20%), radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.3) 0%, transparent 20%);
+}
+
+.card-details-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+    .card-details-row:last-child {
+        border-bottom: none;
+    }
+
+.card-details-label {
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.card-details-value {
+    font-weight: 600;
+}
+
+.btn-add-card {
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+    .btn-add-card:hover {
+        background-color: #0a58ca;
+        transform: translateY(-2px);
+        box-shadow: 0 0.5rem 1rem rgba(13, 110, 253, 0.15);
+    }
+
+.footer {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e9ecef;
+    text-align: center;
+    color: #6c757d;
+}
+
+.text-muted-block {
+    color: #6c757d;
+}

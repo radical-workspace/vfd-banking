@@ -21,7 +21,8 @@ namespace BankingSystem.PL.Controllers.AppCustomer
             var branches = _unitOfWork.Repository<Branch>().GetAll();
             ViewBag.Branches = branches;
 
-            var locations = branches.Select(b => new {
+            var locations = branches.Select(b => new
+            {
                 lat = b.Location.Split(',')[0],
                 lng = b.Location.Split(',')[1],
                 title = b.Name,
@@ -40,7 +41,8 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                 var branches = _unitOfWork.Repository<Branch>().GetAll();
                 ViewBag.Branches = branches;
 
-                var locations = branches.Select(b => new {
+                var locations = branches.Select(b => new
+                {
                     lat = b.Location.Split(',')[0],
                     lng = b.Location.Split(',')[1],
                     title = b.Name,
@@ -73,7 +75,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                 ServiceType = reservationView.ServiceType,
                 Notes = reservationView.Notes,
                 CreatedAt = DateTime.Now,
-                Status = userId == null || reservationView.ServiceType == ServiceType.OpenAccount
+                Status = userId == null && reservationView.ServiceType == ServiceType.OpenAccount
                     ? ReservationStatus.Approved
                     : ReservationStatus.Pending
             };
@@ -120,7 +122,9 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                     ViewBag.QrCodeImage = Convert.ToBase64String(qrImageBytes);
                 }
             }
+            //return User.Identity?.IsAuthenticated == true ? View(reservation) : RedirectToAction("Index", "Home");
             return View(reservation);
+
         }
         [HttpGet]
         public IActionResult DownloadQrCode(int reservationId)
@@ -150,6 +154,14 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                     return File(qrImageBytes, "image/png", "ReservationQRCode.png");
                 }
             }
+        }
+        [HttpGet]
+        public IActionResult GetCustomerAllReservations()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var reservations = _unitOfWork.Repository<Reservation>().GetAllIncluding(r => r.Branch).Where(r => r.CustomerId == userId)
+                .OrderByDescending(r => r.ReservationDate).ToList();
+            return View(reservations);
         }
 
     }

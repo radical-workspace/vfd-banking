@@ -17,7 +17,7 @@ namespace BankingSystem.PL.Controllers.AppManager
             var ManagerID = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (ManagerID == null) return NotFound();
 
-            var branch = _unitOfWork.Repository<Branch>().GetSingleIncluding(b => b.MyManager.Id == ManagerID);
+            var branch = _unitOfWork.Repository<Branch>().GetSingleIncluding(b => b.MyManager.Id == ManagerID, b => b.MyManager);
             if (branch == null) return NotFound();
 
             var Loans = _unitOfWork.Repository<Loan>()

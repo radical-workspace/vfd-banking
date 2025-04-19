@@ -1,3 +1,25 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+
+
+@if (User.IsInRole("Admin") && User.Identity?.IsAuthenticated == true)
+{
+    <partial name="~/Views/Admin/Index.cshtml" />
+}
+
+
+@* @if (User.IsInRole("Manager") && User.Identity?.IsAuthenticated == true) *@
+@* { *@
+@*     <partial name="" /> *@
+@* } *@
+
+@* @if (User.IsInRole("Teller") && User.Identity?.IsAuthenticated == true) *@
+@* { *@
+@*     <partial name="" /> *@
+@* } *@
+
+@* @if (User.IsInRole("Customer") && User.Identity?.IsAuthenticated == true) *@
+@* { *@
+@*     <partial name="" /> *@
+@* } *@

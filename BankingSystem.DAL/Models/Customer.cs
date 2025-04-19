@@ -26,34 +26,9 @@ namespace BankingSystem.DAL.Models
 
         //[ForeignKey(nameof(FinancialDocument))]
         //public int FinancialDocumentID { get; set; }
-        public FinancialDocument? FinancialDocument { get; set; } // This will be used to store the financial documents of the customer
+        public List<FinancialDocument> FinancialDocument { get; set; } = null!;
+        //public FinancialDocument? FinancialDocument { get; set; } // This will be used to store the financial documents of the customer
     }
 
-    public class IncomeSource : BaseEntity
-    {
-        public string Type { get; set; } = string.Empty; // "Rental", "Bonus", etc.        
-        public double MonthlyAmount { get; set; }
-    }
-
-    public class Asset : BaseEntity
-    {
-        public string Type { get; set; } = string.Empty;  // "Property", "Vehicle", etc.
-        public double EstimatedValue { get; set; }
-    }
-
-    public class FinancialDocument : BaseEntity
-    {
-        public string DocumentType { get; set; } = string.Empty; // "IncomeStatement", "AssetDeclaration", "TaxReturn"
-        public string Description { get; set; } = string.Empty;
-        public DateTime IssueDate { get; set; }
-        public byte[] FileData { get; set; } = null!; // PDF content
-        public string FileName { get; set; } = string.Empty;
-        public string ContentType { get; set; } = "application/pdf";
-        public long FileSize { get; set; }
-
-        [ForeignKey(nameof(Customer))]
-        public string CustomerId { get; set; } = string.Empty;
-        public Customer Customer { get; set; } = null!;
-    }
 
 }

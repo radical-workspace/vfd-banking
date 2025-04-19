@@ -2,6 +2,7 @@
 using BankingSystem.DAL.Data;
 using BankingSystem.DAL.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -92,5 +93,14 @@ namespace BankingSystem.BLL.Services
             throw new NotImplementedException();
         }
 
+        public Task<bool> ExistsAsync(Expression<Func<Customer, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Customer? GetSingleDeepIncluding(Expression<Func<Customer, bool>> predicate, params Func<IQueryable<Customer>, IIncludableQueryable<Customer, object>>[] includes)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

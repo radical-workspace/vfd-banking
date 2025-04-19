@@ -1,0 +1,362 @@
+﻿@using BankingSystem.DAL.Models
+@using BankingSystem.PL.ViewModels.Customer
+@model CustomerProfileViewModel
+@{
+    ViewData["Title"] = "HomePage";
+}
+<link rel="stylesheet" href="/css/CustomerHome.css"/>
+
+<div class="profile-container">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <h2 class="mb-2">Welcome back, @Model.DesiredCustomer.FirstName @Model.DesiredCustomer.LastName !</h2>
+        <p class="mb-0">We're glad to see you again.</p>
+    </div>
+
+    <!-- Customer Details -->
+    <div class="customer-details">
+        <div class="card shadow-sm">
+            <div class="card-body p-3">
+                <!-- Profile Header -->
+                <div class="profile-header">
+                    <h4 class="mb-0">Personal Information</h4>
+                    @* <button class="btn btn-danger" asp-action="EditCustomer" asp-controller="////" asp-route-id="@Model.DesiredCustomer.Id"> *@
+                    @*     <i class="bi bi-pencil me-2"></i>Edit Profile *@
+                    @* </button> *@
+                </div>
+
+                <!-- Details Grid -->
+                <div class="row g-3">
+                    <!-- Full Name -->
+                    <div class="col-md-4">
+                        <div class="detail-card d-flex align-items-center">
+                            <div class="detail-icon">
+                                <i class="bi bi-person"></i>
+                            </div>
+                            <div class="detail-content">
+                                <div class="detail-label">Full Name</div>
+                                <div class="detail-value">@Model.DesiredCustomer.FirstName @Model.DesiredCustomer.LastName</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="col-md-4">
+                        <div class="detail-card d-flex align-items-center">
+                            <div class="detail-icon">
+                                <i class="bi bi-envelope"></i>
+                            </div>
+                            <div class="detail-content">
+                                <div class="detail-label">Email Address</div>
+                                <div class="detail-value">@Model.DesiredCustomer.Email</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="col-md-4">
+                        <div class="detail-card d-flex align-items-center">
+                            <div class="detail-icon">
+                                <i class="bi bi-telephone"></i>
+                            </div>
+                            <div class="detail-content">
+                                <div class="detail-label">Phone Number</div>
+                                <div class="detail-value">@Model.DesiredCustomer.PhoneNumber</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="col-md-4">
+                        <div class="detail-card d-flex align-items-center">
+                            <div class="detail-icon">
+                                <i class="bi bi-geo-alt"></i>
+                            </div>
+                            <div class="detail-content">
+                                <div class="detail-label">Address</div>
+                                <div class="detail-value">@Model.DesiredCustomer.Address</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Birth Date -->
+                    <div class="col-md-4">
+                        <div class="detail-card d-flex align-items-center">
+                            <div class="detail-icon">
+                                <i class="bi bi-calendar-date"></i>
+                            </div>
+                            <div class="detail-content">
+                                <div class="detail-label">Birth Date</div>
+                                <div class="detail-value">@Model.DesiredCustomer.BirthDate.ToShortDateString()</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Join Date -->
+                    <div class="col-md-4">
+                        <div class="detail-card d-flex align-items-center">
+                            <div class="detail-icon">
+                                <i class="bi bi-calendar-check"></i>
+                            </div>
+                            <div class="detail-content">
+                                <div class="detail-label">Join Date</div>
+                                <div class="detail-value">@Model.DesiredCustomer.JoinDate.ToShortDateString()</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="row g-4">
+
+
+        <!-- Balance Card -->
+        <div class="col-md-3">
+            <div class="card info-card shadow-sm">
+                <div class="card-body text-center w-auto">
+                    <i class="bi bi-wallet2 card-icon mb-3 "></i>
+                    <h5 class="card-title">Current Balance</h5>
+                    <h2 class="mb-3 text-primary">$ @Model.TotalBalance.ToString("N2")</h2>
+                    <p class="card-text text-muted mb-3">Across all accounts</p>
+                    <a asp-action="CreateReservation" asp-controller="Reservation" class="btn btn-outline-primary w-100">
+                        <i  class="bi bi-plus-circle me-2"></i>Open New Account
+                    </a>
+                    <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="CustomerAccounts" asp-route-id="@Model.DesiredCustomer.Id">
+                        <i class="bi bi-plus-circle me-2"></i>Accounts Details
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Cards Card -->
+        <div class="col-md-3">
+            <div class="card info-card shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-credit-card card-icon mb-3"></i>
+                    <h5 class="card-title">Your Cards</h5>
+                    <h2 class="mb-3 text-primary">@Model.CardsCount</h2>
+                    <p class="card-text text-muted mb-3">@Model.CreditCardsCount Credit, @Model.DebitCardsCount Debit</p>
+                    <a asp-action="CreateReservation" asp-controller="Reservation" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-plus-circle me-2"></i>Open New Card
+                    </a>
+                    <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="CustomerCards" asp-route-id="@Model.DesiredCustomer.Id">
+                        <i class="bi bi-plus-circle me-2"></i>Cards Details
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loans Card -->
+        <div class="col-md-3">
+            <div class="card info-card shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-cash-coin card-icon mb-3"></i>
+                    <h5 class="card-title">Active Loans</h5>
+                    <h2 class="mb-3 text-primary">@Model.LoansCount</h2>
+                    <p class="card-text text-muted mb-3"> <br /></p>
+                    <a asp-controller="CustomerLoans" asp-action="ApplyLoan" asp-route-id="@Model.DesiredCustomer.Id" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-plus-circle me-2"></i>Apply for New Loan
+                    </a>
+                    <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="CustomerLoans" asp-route-id="@Model.DesiredCustomer.Id">
+                        <i class="bi bi-plus-circle me-2"></i>Loans Details
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Certificates -->
+        <div class="col-md-3">
+            <div class="card info-card shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-credit-card card-icon mb-3"></i>
+                    <h5 class="card-title">Certificates</h5>
+                    <h2 class="mb-3 text-primary">@Model.CertificatesCount</h2>
+                    <p class="card-text text-muted mb-3">  <br /> </p>
+                    <a asp-controller="CustomerCertificates" asp-action="ApplyCertificate" asp-route-id="@Model.DesiredCustomer.Id" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-plus-circle me-2"></i>Apply for New Certificate
+                    </a>
+                    <a class="btn btn-outline-primary w-100" asp-action="Details" asp-controller="CustomerCertificates" asp-route-id ="@Model.DesiredCustomer.Id">
+                        <i class="bi bi-plus-circle me-2"></i>Certificates Details
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="actions-section mt-3">
+        <div class="section-header">
+            <h4 class="mb-0">Important Actions</h4>
+        </div>
+        <div class="row g-3 d-flex justify-content-center mt-3">
+            <!-- Deposit Action -->
+            <div class="col-md-3">
+                <a asp-action="Deposit" asp-controller="Withdraw_Deposit" class="action-button text-decoration-none">
+                    <div class="action-icon">
+                        <i class="bi bi-arrow-down-circle"></i>
+                    </div>
+                    <div class="action-title">Deposit</div>
+                    <div class="action-description">Add funds to your account</div>
+                </a>
+            </div>
+
+            <!-- Withdraw Action -->
+            <div class="col-md-3">
+                <a asp-action="Withdraw" asp-controller="Withdraw_Deposit" class="action-button text-decoration-none">
+                    <div class="action-icon">
+                        <i class="bi bi-arrow-up-circle"></i>
+                    </div>
+                    <div class="action-title">Withdraw</div>
+                    <div class="action-description">Take out funds from your account</div>
+                </a>
+            </div>
+
+            <!-- Transfer Action -->
+            <div class="col-md-3">
+                <a asp-action="TransferMoney" asp-controller="CustomerTransfer" class="action-button text-decoration-none">
+                    <div class="action-icon">
+                        <i class="bi bi-arrow-left-right"></i>
+                    </div>
+                    <div class="action-title">Transfer</div>
+                    <div class="action-description">Move money between accounts</div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    @if(Model?.Transactions?.Any()?? false)
+    {
+        <div class="transactions-section">
+            <div class="section-header">
+                <h4 class="mb-0">Recent Transactions</h4>
+            </div>
+            @foreach (var transaction in Model.Transactions.Take(3))
+            {
+                <!-- Transaction 1 -->
+                <div class="transaction-row">
+                    @switch(transaction.Type)
+                    {
+                        case (TransactionType.Deposit):
+                            <div class="transaction-icon transaction-deposit">
+                                <i class="bi bi-arrow-down-circle"></i>
+                            </div>
+                            break;
+                        case (TransactionType.Transfer):
+                            <div class="transaction-icon transaction-transfer">
+                                <i class="bi bi-arrow-left-right"></i>
+                            </div>
+                            break;
+                        case (TransactionType.Withdraw):
+                            <div class="transaction-icon transaction-withdraw">
+                                <i class="bi bi-arrow-up-circle"></i>
+                            </div>
+                            break;
+                        case (TransactionType.LoanPayment):
+                            <div class="transaction-icon transaction-loan">
+                                <i class="bi bi-arrow-down-circle"></i>
+                            </div>
+                            break;
+                    }
+                    <div class="transaction-details">
+                        <div class="transaction-title">
+                            @transaction.Type
+                            <span class="status-badge status-@transaction.TransactionStatus">@transaction.TransactionStatus</span>
+                        </div>
+                        <div class="transaction-meta">
+                            <div class="transaction-meta-item">
+                                <i class="bi bi-calendar3"></i>
+                                <span>@transaction.PaymentDate</span>
+                            </div>
+                            <div class="transaction-meta-item">
+                                <i class="bi bi-credit-card"></i>
+                                <span>Done via: @transaction.DoneVia</span>
+                            </div>
+                            @if (transaction.AccountDistenationNumber != null)
+                            {
+                                <div class="transaction-meta-item">
+                                    <i class="bi bi-wallet2"></i>
+                                    <span>Account #: @transaction.AccountDistenationNumber</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="transaction-amount">
+                        $@transaction.Amount.ToString("N2")
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- View More Button -->
+        <a asp-action="Details" asp-controller="CustomerTransactions" asp-route-id="@Model.DesiredCustomer.Id" class="view-more-btn">
+            <i class="bi bi-list me-2"></i>
+            View All Transactions
+        </a>
+    }
+
+
+        
+
+
+
+    @if (Model.AccountsCount > 0)
+    {
+        <!-- Account Summary - Modernized -->
+        <div class="mt-4">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <div class="section-header">
+                        <h4 class="mb-0">Account Summary</h4>
+                    </div>
+
+                    <div class="row g-4">
+                        @foreach (var acc in Model.Account)
+                        {
+                            <div class="col-md-6">
+                                <div class="account-card">
+                                    <div class="account-details">
+                                        <div class="account-icon">
+                                            <i class="bi bi-wallet2"></i>
+                                        </div>
+                                        <h5>@acc.AccountType Account</h5>
+                                        <div class="account-balance text-white">$@acc.Balance.ToString("N2")</div>
+                                        <div class="account-number ">Account #: @acc.Number</div>
+                                        <div class="account-actions">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Support Section -->
+    <div class="support-section mt-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center py-4">
+                <i class="bi bi-headset card-icon mb-3"></i>
+                <h4 class="mb-3">Need Help?</h4>
+                <p class="text-muted mb-4">Our support team is ready to assist you with any questions or issues you may have.</p>
+                <a asp-action="ApplyTicket" asp-controller="CustomerSupportTickets" asp-route-id="@Model.DesiredCustomer.Id" class="btn btn-primary px-4 py-2">
+                    <i class="bi bi-ticket-detailed me-2"></i>Get Help
+                </a>
+                <a asp-action="Details" asp-controller="CustomerSupportTickets" asp-route-id="@Model.DesiredCustomer.Id" class="btn btn-primary px-4 py-2">
+                    <i class="bi bi-ticket-detailed me-2"></i>View Support Tickets
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="mt-4 pt-3 border-top text-center text-muted">
+        <small>&copy; 2025 SecureBank. All rights reserved.</small>
+    </div>
+</div>

@@ -1,45 +1,59 @@
 ﻿using BankingSystem.DAL.Models;
+using BankingSystem.PL.Validation;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace BankingSystem.PL.ViewModels.Customer
 {
     public class AccountsViewModel
     {
         public int Id { get; set; }
-        public double? Amount { get; set; }
-        public long AccountNumber { get; set; }
+        // Common fields
+        [Required(ErrorMessage = "Amount is required")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Amount must be greater than 0")]
+        public double Amount { get; set; }
 
-        /*
-          Structure of an IBAN:
-            An IBAN consists of:
-            Country Code: A two-letter code representing the country (e.g., EG for Egypt).
-            Check Digits: Two numbers that help validate the accuracy of the IBAN.
-            Bank Code: Identifies the specific bank.
-            Branch Code (optional in some countries): Specifies the branch of the bank.
-            Account Number: The unique identifier for your account.
-            How It’s Generated:
-            Banks generate IBANs based on the following:
-            They take the existing domestic account details.
-            The country's standard IBAN format is applied.
-            The bank adds the country code, check digits, and other required details according to the rules of the international banking system.
-            Each country has its own IBAN length and format. For example, the IBAN format in Egypt is 27 characters long, starting with “EG.”
-            example
-            Here's an example of an IBAN for Egypt:
-            EG38 1234 5678 9012 3456 7890 1234
-            Here’s how the parts break down:
-            EG: Country code for Egypt.
-            38: Check digits used to validate the IBAN.
-            1234: Bank code identifying the specific bank.
-            5678 9012: Branch or region code.
-            3456 7890 1234: Your unique account number.
-         */
+        [RequiredWhen(nameof(SelectedDestination), true, ErrorMessage = "Destination IBAN is required")]
+        [StringLength(34, MinimumLength = 15, ErrorMessage = "IBAN must be between 15-34 characters")]
+        public string? DestinationIban { get; set; }
 
-        public string DestinationIban { get; set; } = null!;
+        // Account transfer fields
+        [RequiredWhen(nameof(ShowAccounts), true, ErrorMessage = "Please select an account")]
+        public long? SelectedAccountNumber { get; set; }
+        public List<SelectListItem> UserAccounts { get; set; } = new();
 
-        public string? VisaNumber { get; set; } 
+        // For card selection
+        [Display(Name = "Card")]
+        [RequiredWhen(nameof(ShowAccounts), false, ErrorMessage = "Please select a card")]
+        [CreditCard(ErrorMessage = "Invalid card number")]
+        public string? SelectedCardNumber { get; set; }
 
-        public string? VisaCVV { get; set; } 
+        // Add this property
+        public List<SelectListItem> UserVisaCards { get; set; } = new List<SelectListItem>();
 
-        public DateTime VisaExpDate { get; set; }
+        [RequiredWhen(nameof(ShowAccounts), false, ErrorMessage = "CVV is required")]
+        [StringLength(4, MinimumLength = 3, ErrorMessage = "CVV must be 3-4 digits")]
+        [RegularExpression(@"^\d{3,4}$", ErrorMessage = "CVV must be numeric")]
+        public string? VisaCVV { get; set; }
 
+        [RequiredWhen(nameof(ShowAccounts), false, ErrorMessage = "Expiration date is required")]
+        //[FutureDate(ErrorMessage = "Card must not be expired")]
+        public DateTime? VisaExpDate { get; set; }
+
+        // UI state
+        public bool ShowAccounts { get; set; } = true;
+
+        // Loan payment fields (if needed)
+        public DepositDestination SelectedDestination { get; set; }
+        public int? SelectedLoanId { get; set; }
+        public IEnumerable<SelectListItem> AvailableLoans { get; set; } = new List<SelectListItem>();
+
+        public enum DepositDestination
+        {
+            [Display(Name = "Account")]
+            Account,
+            [Display(Name = "Loan")]
+            Loan
+        }
     }
 }

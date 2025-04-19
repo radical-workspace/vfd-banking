@@ -24,40 +24,16 @@ namespace BankingSystem.PL
             // Configure Entity Framework and Identity
             builder.Configuration.AddEnvironmentVariables();
             var DevelopmentconnectionString = builder.Configuration.GetConnectionString("MVCProjectDB");
-            var connectionString = Environment.GetEnvironmentVariable("MVCProjectDB", EnvironmentVariableTarget.User);
-
+           
             builder.Services.AddDbContext<BankingSystemContext>(options =>
                                                                 options.UseSqlServer(DevelopmentconnectionString)
                                                                        .AddInterceptors(new SoftDeleteInterceptor()));
 
 
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(op =>
-            {
-                op.Password.RequireUppercase = false;
+            builder.Services.AddApplicationServices();
 
-                op.Password.RequiredLength = 4;
-                op.Password.RequireNonAlphanumeric = false;
-            })
-                .AddEntityFrameworkStores<BankingSystemContext>()
-                .AddDefaultUI()
-                .AddDefaultTokenProviders();
+        
 
-
-
-            // Register Unit of Work
-            builder.Services.AddScoped<IUnitOfWork ,UnitOfWork>();
-            builder.Services.AddScoped<IGenericRepository<Account>, MyAccountBL>();
-            builder.Services.AddScoped<IGenericRepository<Customer>, MyCustomerBL>();
-            builder.Services.AddScoped<IGenericRepository<VisaCard>, MyCardBL>();
-            builder.Services.AddScoped<IGenericRepository<SupportTicket>, MyTicketBL>();
-            builder.Services.AddScoped<TransferFromAccountToAnother>();
-            builder.Services.AddScoped<ISearchPaginationRepo<Account>, MyAccountBL>();
-            builder.Services.AddScoped<ISearchPaginationRepo<Customer>, MyCustomerBL>();
-            builder.Services.AddScoped<ISearchPaginationRepo<VisaCard>, MyCardBL>();
-            builder.Services.AddScoped<ISearchPaginationRepo<SupportTicket>, MyTicketBL>();
-
-
-            builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfile()));
             #endregion
 
 
@@ -108,31 +84,32 @@ namespace BankingSystem.PL
                 }
             }
 
+
             // Create a default admin user
-            var adminUser = new ApplicationUser
-            {
-                UserName = "admin@admin.com",
-                Email = "admin@admin.com",
-                FirstName = "Admin",
-                LastName = "User",
-                SSN = 123456789,
-                Address = "Admin Address",
-                JoinDate = DateTime.UtcNow,
-                BirthDate = DateTime.UtcNow.AddYears(-30),
-                IsDeleted = false
-            };
+            //var adminUser = new ApplicationUser
+            //{
+            //    UserName = "admin@admin.com",
+            //    Email = "admin@admin.com",
+            //    FirstName = "Admin",
+            //    LastName = "User",
+            //    SSN = 123456789,
+            //    Address = "Admin Address",
+            //    JoinDate = DateTime.UtcNow,
+            //    BirthDate = DateTime.UtcNow.AddYears(-30),
+            //    IsDeleted = false
+            //};
 
-            string adminPassword = "Admin@123";
-            var user = await userManager.FindByEmailAsync(adminUser.Email);
+            //string adminPassword = "Admin@123";
+            //var user = await userManager.FindByEmailAsync(adminUser.Email);
 
-            if (user == null)
-            {
-                var createAdminUser = await userManager.CreateAsync(adminUser, adminPassword);
-                if (createAdminUser.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(adminUser, "Admin");
-                }
-            }
+            //if (user == null)
+            //{
+            //    var createAdminUser = await userManager.CreateAsync(adminUser, adminPassword);
+            //    if (createAdminUser.Succeeded)
+            //    {
+            //        await userManager.AddToRoleAsync(adminUser, "Admin");
+            //    }
+            //}
         }
     }
 }

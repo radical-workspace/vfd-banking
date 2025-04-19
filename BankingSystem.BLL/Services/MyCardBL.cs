@@ -2,6 +2,7 @@
 using BankingSystem.DAL.Data;
 using BankingSystem.DAL.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -124,6 +125,16 @@ namespace BankingSystem.BLL.Services
         }
 
         public void Update(VisaCard Entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> ExistsAsync(Expression<Func<VisaCard, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public VisaCard? GetSingleDeepIncluding(Expression<Func<VisaCard, bool>> predicate, params Func<IQueryable<VisaCard>, IIncludableQueryable<VisaCard, object>>[] includes)
         {
             throw new NotImplementedException();
         }

@@ -9,12 +9,54 @@ namespace BankingSystem.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<Customer> builder)
         {
-
             builder
-           .HasOne(c => c.Branch)
-           .WithMany(b => b.Customers) // Assuming Branch has many Customers
-           .HasForeignKey(c => c.BranchId) // Explicit FK
-           .OnDelete(DeleteBehavior.SetNull); // Or Cascade
+            .HasOne(c => c.Branch)
+            .WithMany(b => b.Customers)
+            .HasForeignKey(c => c.BranchId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            // Transactions
+            builder
+                .HasMany(c => c.Transactions)
+                .WithOne(t => t.Customer)
+                .HasForeignKey(t => t.CustomerID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Loans
+            builder
+                .HasMany(c => c.Loans)
+                .WithOne(l => l.Customer)
+                .HasForeignKey(l => l.CustomerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Accounts
+            builder
+                .HasMany(c => c.Accounts)
+                .WithOne(a => a.Customer)
+                .HasForeignKey(a => a.CustomerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            // SupportTickets
+            builder
+                .HasMany(c => c.SupportTickets)
+                .WithOne(s => s.Customer)
+                .HasForeignKey(s => s.CustomerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Reservations
+            builder
+                .HasMany(c => c.Reservations)
+                .WithOne(r => r.Customer)
+                .HasForeignKey(r => r.CustomerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // FinancialDocuments
+            builder
+                .HasMany(c => c.FinancialDocument)
+                .WithOne(f => f.Customer)
+                .HasForeignKey(f => f.CustomerId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
