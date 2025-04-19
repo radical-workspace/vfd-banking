@@ -10,7 +10,7 @@ namespace BankingSystem.PL.ViewModels.Manager
         //public List<IncomeSource>? AdditionalIncomeSources { get; set; }
         //public List<Asset>? Assets { get; set; }
 
-        public FinancialDocument? FinancialDocument { get; set; } // This will be used to store the financial documents of the customer
+        public List<FinancialDocument>? FinancialDocument { get; set; } // This will be used to store the financial documents of the customer
 
     }
 

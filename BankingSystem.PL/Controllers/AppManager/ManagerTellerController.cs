@@ -84,7 +84,10 @@ namespace BankingSystem.PL.Controllers
 
             if (UserToRegister != null && ModelState.IsValid)
             {
+                UserToRegister.Id = Guid.NewGuid().ToString();
                 var teller = _mapper.Map<Teller>(UserToRegister);
+                teller.Id = UserToRegister.Id;
+
                 teller.BranchId = manager.BranchId;
                 teller.ManagerId = manager.Id;
 

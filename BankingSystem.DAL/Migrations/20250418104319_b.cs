@@ -5,7 +5,7 @@
 namespace BankingSystem.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class ttttt : Migration
+    public partial class b : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

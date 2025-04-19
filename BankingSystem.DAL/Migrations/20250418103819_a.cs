@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BankingSystem.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class initialCreate : Migration
+    public partial class a : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -230,6 +230,7 @@ namespace BankingSystem.DAL.Migrations
                     Location = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Opens = table.Column<TimeSpan>(type: "time", nullable: false),
                     Closes = table.Column<TimeSpan>(type: "time", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     BankId = table.Column<int>(type: "int", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
@@ -349,25 +350,31 @@ namespace BankingSystem.DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DocumentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DocumentType = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     IssueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FileData = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ContentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    ContentType = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     FileSize = table.Column<long>(type: "bigint", nullable: false),
                     CustomerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CustomerId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_FinancialDocument", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FinancialDocument_Customers_CustomerId",
+                        name: "FK_FinancialDocument_Customer",
                         column: x => x.CustomerId,
                         principalTable: "Customers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FinancialDocument_Customers_CustomerId1",
+                        column: x => x.CustomerId1,
+                        principalTable: "Customers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -758,8 +765,14 @@ namespace BankingSystem.DAL.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_FinancialDocument_CustomerId",
                 table: "FinancialDocument",
-                column: "CustomerId",
-                unique: true);
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FinancialDocument_CustomerId1",
+                table: "FinancialDocument",
+                column: "CustomerId1",
+                unique: true,
+                filter: "[CustomerId1] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Loans_AccountId",

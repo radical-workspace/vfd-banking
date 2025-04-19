@@ -30,7 +30,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
         private readonly IGenericRepository<VisaCard> _genericRepositoryCard;
         private readonly ISearchPaginationRepo<Customer> _searchPaginationRepo;
 
-        public HandleCustomerController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IMapper mapper, 
+        public HandleCustomerController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IMapper mapper,
             IGenericRepository<Account> genericRepository, IGenericRepository<VisaCard> genericRepositoryCard, ISearchPaginationRepo<Customer> searchPaginationRepo)
         {
             _unitOfWork = unitOfWork;
@@ -57,7 +57,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
 
                 .ToList();
-                
+
 
 
             if (filter != null)
@@ -74,12 +74,6 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
         public ActionResult GetCustomerDetails(string id)
         {
-
-            //Different Logic By Me
-            //var Customerr = _unitOfWork.Repository<Customer>()
-            //   .GetSingleIncluding(C => C.Id == id, C => C.Branch, C => C.Loans, C => C.Transactions, C => C.SupportTickets, C => C.Accounts);
-
-            //Different Logic By Hady meen ya علق 
 
             var Customerr = _unitOfWork.Repository<Customer>()
             .GetAllIncluding(
@@ -113,74 +107,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
             return View("~/Views/Account/Register.cshtml");
         }
 
-
         [HttpPost]
-
-        // public async Task<ActionResult> CreateCustomer(RegisterViewModel UserToRegister)
-        // {
-        //     ViewData["FixedRole"] = "Customer";
-        //     var TellerHandleCustomer = _unitOfWork.Repository<Teller>().GetSingleIncluding(T => T.Id == User.FindFirst(ClaimTypes.NameIdentifier).Value);
-        //
-        //     // Load roles again in case of return to the view
-        //
-        //     if (UserToRegister is not null)
-        //     {
-        //         if (ModelState.IsValid)
-        //         {
-        //             ApplicationUser appUser;
-        //             Customer customer = new Customer();
-        //
-        //             // Create the correct derived class based on role
-        //             if (UserToRegister.Role == "Customer")
-        //             {
-        //                 appUser = _mapper.Map<Customer>(UserToRegister);
-        //
-        //
-        //                 customer.FirstName = appUser.FirstName;
-        //                 customer.LastName = appUser.LastName;
-        //                 customer.UserName = appUser.UserName;
-        //                 customer.Email = appUser.Email;
-        //                 customer.SSN = appUser.SSN;
-        //                 customer.Address = appUser.Address;
-        //                 customer.BirthDate = appUser.BirthDate;
-        //                 customer.JoinDate = appUser.JoinDate;
-        //                 customer.IsDeleted = appUser.IsDeleted;
-        //                 customer.BranchId = TellerHandleCustomer.BranchId;
-        //
-        //
-        //
-        //             }
-        //
-        //             // How Cast From Applicaton User To Customer To Add BranchId
-        //
-        //             else appUser = _mapper.Map<ApplicationUser>(UserToRegister);
-        //
-        //             IdentityResult result = await _userManager.CreateAsync(customer, UserToRegister.Password);
-        //
-        //
-        //
-        //             // Check if the user was created successfully
-        //             if (result.Succeeded)
-        //             {
-        //                 // Assign role
-        //                 await _userManager.AddToRoleAsync(appUser, UserToRegister.Role);
-        //
-        //                 // Optional: Sign in
-        //                 // await _signInManager.SignInAsync(appUser, false);
-        //
-        //                 return RedirectToAction("GetAllCustomers", new { id = User.FindFirst(ClaimTypes.NameIdentifier).Value });
-        //             }
-        //             else
-        //             {
-        //                 foreach (var error in result.Errors)
-        //                 {
-        //                     ModelState.AddModelError("", error.Description);
-        //                 }
-        //             }
-        //         }
-        //     }
-        //     return View("Register",UserToRegister);
-        // }
         public async Task<ActionResult> CreateCustomer(RegisterViewModel UserToRegister)
         {
             ViewData["FixedRole"] = "Customer";
@@ -199,7 +126,9 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
                     if (UserToRegister.Role == "Customer")
                     {
+                        UserToRegister.Id = Guid.NewGuid().ToString();
                         var customer = _mapper.Map<Customer>(UserToRegister);
+                        customer.Id = UserToRegister.Id;
 
                         customer.BranchId = TellerHandleCustomer.BranchId;
 
@@ -230,8 +159,6 @@ namespace BankingSystem.PL.Controllers.AppTeller
             return View(nameof(Register), UserToRegister);
         }
 
-
-
         public ActionResult EditCustomer(string id)
         {
             if (string.IsNullOrEmpty(id)) return NotFound();
@@ -242,7 +169,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
             var model = new EditCustomerViewModel
             {
                 Id = customer.Id,
-                
+
                 Email = customer.Email,
                 SSN = customer.SSN,
                 FirstName = customer.FirstName,
@@ -250,7 +177,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
                 Address = customer.Address,
                 BirthDate = customer.BirthDate,
                 JoinDate = customer.JoinDate,
-               
+
             };
 
             return View(model);
@@ -259,7 +186,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
         // POST: HandleCustomerController/Edit/5
         [HttpPost]
-     
+
         public async Task<ActionResult> EditCustomer(string id, EditCustomerViewModel model)
         {
             if (id != model.Id) return NotFound();
@@ -269,7 +196,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
                 var customer = _userManager.Users.OfType<Customer>().FirstOrDefault(c => c.Id == id);
                 if (customer == null) return NotFound();
 
-              
+
                 customer.Email = model.Email;
                 customer.SSN = model.SSN;
                 customer.FirstName = model.FirstName;
@@ -277,7 +204,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
                 customer.Address = model.Address;
                 customer.BirthDate = model.BirthDate;
                 customer.JoinDate = model.JoinDate;
-             
+
 
                 var result = await _userManager.UpdateAsync(customer);
                 if (result.Succeeded)
@@ -295,7 +222,6 @@ namespace BankingSystem.PL.Controllers.AppTeller
         }
 
 
-
         public ActionResult DeleteCustomer(string id)
         {
             var Customer = _unitOfWork.Repository<Customer>()
@@ -306,7 +232,6 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
             return View(mappedCustomerToDeleted);
         }
-
 
         [HttpPost]
         public ActionResult DeleteCustomer(CustomerDetailsViewModel customerDetailsViewModel)
@@ -328,15 +253,12 @@ namespace BankingSystem.PL.Controllers.AppTeller
             return View(customerDetailsViewModel);
         }
 
-
-
-
         public IActionResult ShowAccounts(string id)
         {
             return View(_genericRepositoryAcc.GetAll(id, flag: 2));
         }
 
-        
+
         public IActionResult ShowCards(string id)
         {
             return View(_genericRepositoryCard.GetAll(id));
@@ -357,44 +279,8 @@ namespace BankingSystem.PL.Controllers.AppTeller
             return View("GetAllCustomers", cutomerstoView);
         }
 
-        [HttpGet]
-        public IActionResult GetBranchReservations()
-        {
-            var tellerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (tellerId == null)
-                return NotFound();
 
-            var teller = _unitOfWork.Repository<Teller>()
-                .GetSingleIncluding(t => t.Id == tellerId);
-
-            if (teller == null || teller.BranchId == null)
-                return NotFound("Teller or branch not found.");
-
-            var branchId = teller.BranchId;
-
-            var reservations = _unitOfWork.Repository<Reservation>()
-                .GetAllIncluding(r => r.Customer)
-                .Where(r => r.BranchId == branchId)
-                .OrderByDescending(r => r.ReservationDate)
-                .ToList();
-
-            return View(reservations);
-        }
-        
-        [Authorize(Roles = "Teller")]
-        [HttpPost]
-        public IActionResult UpdateReservationStatus(int id, ReservationStatus status)
-        {
-            var reservation = _unitOfWork.Repository<Reservation>().Get(id);
-            if (reservation == null)
-                return NotFound();
-
-            reservation.Status = status;
-            _unitOfWork.Complete();
-
-            return RedirectToAction("GetBranchReservations");
-        }
 
 
     }
