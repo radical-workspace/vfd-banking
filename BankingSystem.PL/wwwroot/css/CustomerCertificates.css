@@ -1,5 +1,5 @@
 ﻿body {
-    background-color: #e6f2ff; 
+    background-color: white; /* light blue */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -9,19 +9,21 @@
     padding-bottom: 1rem;
 }
 
-.page-header h3 {
- color: #0d6efd;
- font-weight: 600;
-}
+    .page-header h3 {
+        color: #0d6efd; /* blue */
+        font-weight: 600;
+    }
 
     .page-header p {
         color: #6c757d;
     }
+
 .certificates-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
 }
+
 
 .section-header {
     display: flex;
@@ -94,7 +96,7 @@
 .certificate-amount {
     font-size: 2rem;
     font-weight: 700;
-    color: #0d6efd;
+    color: #0d6efd; /* blue */
 }
 
 .certificate-meta {
@@ -131,7 +133,7 @@
 }
 
 .btn-add-certificate {
-    background-color: #0d6efd;
+    background-color: #0d6efd; /* blue */
     color: white;
     border: none;
     border-radius: 0.5rem;
@@ -150,7 +152,7 @@
     }
 
 .summary-card {
-    background: white;
+    background: #f8f9fa;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     padding: 1.5rem;
@@ -197,8 +199,7 @@
 }
 
 .detail-badge {
-    /* Changed from gray to a light blue that matches the button color */
-    background-color: #e6f0ff;
+    background-color: rgb(238, 244, 255); /* light blue */
     border-radius: 8px;
     padding: 0.75rem;
     display: flex;
@@ -208,7 +209,7 @@
 
 .detail-label {
     font-size: 0.8rem;
-    color: #0d6efd; /* Changed to match button color */
+    color: #0d6efd; /* blue */
     margin-bottom: 0.25rem;
     font-weight: 500;
 }
@@ -229,7 +230,7 @@
 .no-certificates-icon {
     width: 100px;
     height: 100px;
-    background-color: #e6f0ff; /* Changed to match the new theme */
+    background-color: rgb(238, 244, 255); /* light blue */
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -239,7 +240,7 @@
 
     .no-certificates-icon i {
         font-size: 3rem;
-        color: #0d6efd; 
+        color: #0d6efd; /* blue */
     }
 
 .empty-state-title {

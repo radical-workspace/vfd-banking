@@ -36,10 +36,29 @@
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h4>Cards Summary</h4>
-                <a class="btn-add-card" asp-action="CreateReservation" asp-controller="Reservation">
-                    <i class="bi bi-plus-circle"></i>
-                    <span>Request New Card</span>
-                </a>
+                @if (Model.Count() < 2)
+                {
+                    <a asp-action="CreateReservation" asp-controller="Reservation" class="btn btn-primary">
+                        <i class="bi bi-plus-circle me-2"></i>Open New Card
+                    </a>
+                }
+                else
+                {
+                    <button id="openCardLimitSweet" type="button" class="btn btn-btn-primary">
+                        <i class="bi bi-plus-circle me-2"></i>Open New Card
+                    </button>
+                    <script>
+                        document.getElementById('openCardLimitSweet').addEventListener('click', function (e) {
+                            e.preventDefault();
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Cards Limit',
+                                text: "Sorry, you can't open more than two cards!",
+                                confirmButtonText: 'OK'
+                            });
+                        });
+                    </script>
+                }
             </div>
             <div class="card-body">
                 <div class="row">

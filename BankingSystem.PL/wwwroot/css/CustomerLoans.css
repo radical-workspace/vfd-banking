@@ -65,7 +65,6 @@
         font-size: 3rem;
         color: #0d6efd;
     }
-
 .badge {
     padding: 0.5rem 1rem;
     font-weight: 500;
@@ -181,6 +180,7 @@
     align-items: center;
     gap: 0.5rem;
     transition: all 0.3s ease;
+    text-decoration: none;
 }
 
     .btn-apply-loan:hover {

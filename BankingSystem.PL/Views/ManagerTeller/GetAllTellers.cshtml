@@ -5,16 +5,16 @@
 }
 <style>
     :root {
-        --primary-dark: #0a2d2e;
-        --primary-medium: #1c4e4f;
-        --primary-light: #436e6f;
-        --secondary-dark: #6a8e8f;
-        --secondary-light: #879693;
-        --neutral-1: #a49e97;
-        --accent-1: #deae9f;
-        --accent-2: #efd7cf;
-        --accent-3: #f7ebe7;
-        --white: #ffffff;
+        --primary-dark: rgb(63, 114, 175); /* new primary dark */
+        --primary-medium: rgb(157, 178, 191); /* new primary medium */
+        --primary-light: rgb(219, 226, 239); /* new primary light */
+        --secondary-dark: rgb(63, 114, 175); /* mapped to primary-dark because no exact secondary */
+        --secondary-light: rgb(219, 226, 239); /* mapped to primary-light */
+        --neutral-1: rgb(157, 178, 191); /* mapped to text-light */
+        --accent-1: rgb(63, 114, 175); /* mapped to primary-dark */
+        --accent-2: rgb(221, 230, 237); /* primary-lightest */
+        --accent-3: rgb(238, 244, 255); /* soft background you used */
+        --white: #ffffff; /* stays same */
     }
 
     .tellers-container {
@@ -105,7 +105,7 @@
                     <i class="fas fa-user-tie me-2"></i>Teller Details
                 </h2>
 
-                <a class="btn add-teller-btn text-white" asp-action="CreateTeller">
+                <a class="btn btn-primary add-teller-btn text-white" asp-action="CreateTeller">
                     <i class="fas fa-plus-circle me-2"></i>Add New Teller
                 </a>
 
@@ -134,7 +134,7 @@
                                            asp-route-id="@teller.Id">
                                             <i class="fas fa-info-circle me-1"></i>Details
                                         </a>
-                                        <a class="btn btn-update text-white action-btn"
+                                        <a class="btn btn-primary btn-update text-white action-btn"
                                            asp-action="EditTeller"
                                            asp-route-id="@teller.Id">
                                             <i class="fas fa-edit me-1"></i>Update
