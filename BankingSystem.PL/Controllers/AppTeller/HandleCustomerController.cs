@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.Operations;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using System.Globalization;
 using System.Security.Claims;
@@ -243,6 +244,21 @@ namespace BankingSystem.PL.Controllers.AppTeller
                   .GetSingleIncluding(C => C.Id == customerDetailsViewModel.Id,
                   C => C.Branch, C => C.Loans, C => C.Transactions, /*C => C.Cards,*/
                   C => C.SupportTickets, C => C.Accounts);
+
+
+
+                if (customerToBeDeleted != null)
+                    if (customerToBeDeleted.Accounts != null)
+                    {
+                        var accs = _unitOfWork.Repository<Account>().GetAllIncluding(a => a.Card)
+                                 .Where(a => a.CustomerId == customerToBeDeleted.Id)
+                                 .ToList();
+
+                        foreach (var acc in accs)
+                            _unitOfWork.Repository<Account>().Delete(acc);
+                    }
+
+
 
                 _unitOfWork.Repository<Customer>().Delete(customerToBeDeleted);
                 _unitOfWork.Complete();
