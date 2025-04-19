@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using BankingSystem.BLL.Interfaces;
+using BankingSystem.DAL.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -24,9 +27,12 @@ public class AdminManagerController(IUnitOfWork unitOfWork, IMapper mapper) : Co
                                                                     m => m.Branch,
                                                                     m => m.Tellers)
                                                                     .ToList();
-
         return View(Managers);
+
     }
+        // GET: AdminManagerController
+     
+    
 
     // GET: Manager/Create
     public IActionResult Create()
@@ -102,6 +108,7 @@ public class AdminManagerController(IUnitOfWork unitOfWork, IMapper mapper) : Co
         return View(manager);
     }
 
+        // POST: AdminManagerController/Edit/5
     [HttpPost]
     public IActionResult Edit(Manager manager, int? newBranchId)
     {

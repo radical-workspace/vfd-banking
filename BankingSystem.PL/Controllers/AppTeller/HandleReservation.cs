@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace BankingSystem.PL.Controllers.AppTeller
 {
-    public class HandleReservationController (IUnitOfWork unitOfWork,IMapper mapper): Controller
+    public class HandleReservation (IUnitOfWork unitOfWork,IMapper mapper): Controller
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
@@ -18,8 +18,14 @@ namespace BankingSystem.PL.Controllers.AppTeller
         {
             var tellerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
+            if (tellerId == null)
+                return NotFound();
+
             var teller = _unitOfWork.Repository<Teller>()
                 .GetSingleIncluding(t => t.Id == tellerId);
+
+            if (teller == null || teller.BranchId == null)
+                return NotFound("Teller or branch not found.");
 
             var branchId = teller.BranchId;
 
@@ -29,7 +35,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
                 .OrderByDescending(r => r.ReservationDate)
                 .ToList();
 
-            return View(nameof(GetBranchReservations),reservations);
+            return View(reservations);
         }
 
         [Authorize(Roles = "Teller")]

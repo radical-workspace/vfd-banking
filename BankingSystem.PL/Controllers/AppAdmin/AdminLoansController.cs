@@ -28,6 +28,15 @@ namespace BankingSystem.PL.Controllers.AppAdmin
             ViewBag.TotalPaid = allPaid;
             ViewBag.TotalDept = allDept;
 
+            var allAmount = Loans.Sum(l => l.LoanAmount);
+            var allDept = Loans.Sum(l => l.CurrentDebt);
+            var allPaid = allAmount - allDept;
+
+            ViewBag.TotalLoans = Loans.Count;
+            ViewBag.TotalAmount = allAmount;
+            ViewBag.TotalPaid = allPaid;
+            ViewBag.TotalDept = allDept;
+
             var loansViewModel = _mapper.Map<List<LoansViewModel>>(Loans);
             return View(nameof(GetAllLoans), loansViewModel);
         }
