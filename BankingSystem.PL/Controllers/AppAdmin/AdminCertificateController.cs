@@ -2,6 +2,7 @@
 using BankingSystem.BLL.Interfaces;
 using BankingSystem.DAL.Models;
 using BankingSystem.PL.ViewModels.Admin;
+using BankingSystem.PL.ViewModels.Admin;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -101,9 +102,9 @@ namespace BankingSystem.PL.Controllers.AppAdmin
 
             var result = new List<CertificateSummaryViewModel>
             {
-                new CertificateSummaryViewModel { Type = "Gold", Count = countGold, Sum = sumGold },
-                new CertificateSummaryViewModel { Type = "Silver", Count = countSilver, Sum = sumSilver },
-                new CertificateSummaryViewModel { Type = "Bronze", Count = countBronze, Sum = sumBronze }
+                new() { Type = "Gold", Count = countGold, Sum = sumGold },
+                new() { Type = "Silver", Count = countSilver, Sum = sumSilver },
+                new() { Type = "Bronze", Count = countBronze, Sum = sumBronze }
             };
 
             return View(result);

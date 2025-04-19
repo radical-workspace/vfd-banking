@@ -17,32 +17,38 @@
 
     <style>
         :root {
-            --primary-dark: #0a2d2e;
-            --primary-medium: #1c4e4f;
-            --primary-light: #436e6f;
-            --secondary-dark: #6a8e8f;
-            --secondary-light: #879693;
-            --neutral-1: #a49e97;
-            --accent-1: #deae9f;
-            --accent-2: #efd7cf;
-            --accent-3: #f7ebe7;
+            /* Main colors - using your blue palette */
+            --primary-dark: rgb(63, 114, 175);
+            --primary-medium: rgb(157, 178, 191);
+            --primary-light: rgb(219, 226, 239);
+            --primary-lightest: rgb(221, 230, 237);
+            --secondary-dark: rgb(63, 114, 175);
+            --secondary-light: rgb(157, 178, 191);
+            --neutral-1: #2c3e50;
+            --accent-1: rgb(63, 114, 175); /* Blue accent */
+            --accent-2: rgb(157, 178, 191); /* Lighter blue */
+            --accent-3: rgb(238, 244, 255); /* Very light blue */
             --white: #ffffff;
+            --shadow: rgba(63, 114, 175, 0.1);
+            /* New hover colors */
+            --nav-hover-bg: rgba(221, 230, 237, 0.3); /* Lighter background for nav hover */
+            --btn-hover-bg: rgb(93, 144, 205); /* Lighter blue for button hover */
         }
 
         header {
-            background: linear-gradient(90deg, var(--primary-dark) 0%, var(--primary-medium) 100%) !important;
-            border-bottom: 3px solid var(--accent-1) !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+            background: linear-gradient(90deg, #003366 0%, #005580 100%) !important;
+            border-bottom: 3px solid var(--primary-medium) !important;
+            box-shadow: 0 4px 12px var(--shadow) !important;
         }
 
         .qr-code {
-            max-width: 150px;
-            max-height: 150px;
-            margin-bottom: 20px;
+        max-width: 150px;
+        max-height: 150px;
+        margin-bottom: 20px;
         }
 
         .navbar-brand {
-            color: var(--accent-3) !important;
+            color: var(--white) !important;
             font-weight: 700;
             font-size: 1.5rem;
             letter-spacing: 0.5px;
@@ -50,21 +56,21 @@
         }
 
             .navbar-brand:hover {
-                color: var(--accent-1) !important;
+                color: var(--primary-lightest) !important;
                 transform: scale(1.02);
             }
 
         .navbar-toggler {
-            border-color: var(--accent-2) !important;
-            color: var(--accent-3) !important;
+            border-color: var(--primary-light) !important;
+            color: var(--white) !important;
         }
 
         .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28247, 235, 231, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
         }
 
         .nav-link {
-            color: var(--accent-3) !important;
+            color: var(--white) !important;
             font-weight: 500;
             padding: 0.5rem 1rem !important;
             margin: 0 0.25rem;
@@ -75,7 +81,9 @@
 
             .nav-link:hover {
                 color: var(--white) !important;
-                background-color: rgba(222, 174, 159, 0.2);
+                background-color: var(--nav-hover-bg);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             }
 
             .nav-link::after {
@@ -85,87 +93,110 @@
                 left: 50%;
                 width: 0;
                 height: 2px;
-                background: var(--accent-1);
+                background: var(--primary-light);
                 transition: all 0.3s ease;
                 transform: translateX(-50%);
             }
 
-            .nav-link:hover::after {
-                width: 70%;
-            }
+        .nav-link:hover::after {
+        width: 70%;
+        }
 
         .nav-item.active .nav-link {
-            background-color: rgba(222, 174, 159, 0.3);
+            background-color: rgba(157, 178, 191, 0.3);
             font-weight: 600;
         }
 
-            .nav-item.active .nav-link::after {
-                width: 70%;
-            }
-
-        .uname {
-            text-decoration: none;
+        .nav-item.active .nav-link::after {
+        width: 70%;
         }
 
-            .uname:hover {
-                cursor: default;
-            }
+        .uname {
+        text-decoration: none;
+        }
+
+        .uname:hover {
+        cursor: default;
+        }
 
         .btn-primary {
-            background-color: var(--accent-1) !important;
-            border-color: var(--accent-1) !important;
-            color: var(--primary-dark) !important;
+            background-color: var(--primary-dark) !important;
+            border-color: var(--primary-dark) !important;
+            color: var(--white) !important;
             font-weight: 600;
             transition: all 0.3s ease;
         }
 
             .btn-primary:hover {
-                background-color: var(--accent-2) !important;
+                background-color: var(--btn-hover-bg) !important;
+                border-color: var(--btn-hover-bg) !important;
                 transform: translateY(-2px);
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                box-shadow: 0 4px 8px var(--shadow);
+            }
+
+        /* Specific styling for logout button */
+        .btn-logout {
+            background-color: var(--primary-dark) !important;
+            border-color: var(--primary-dark) !important;
+        }
+
+            .btn-logout:hover {
+                background-color: var(--btn-hover-bg) !important;
+                border-color: var(--primary-light) !important;
+                color: var(--white) !important;
+                box-shadow: 0 4px 12px rgba(63, 114, 175, 0.2);
             }
 
         .navbar-nav .btn-primary {
-            padding: 0.375rem 1rem;
+        padding: 0.375rem 1rem;
         }
 
-
         .bogus:hover {
-            background-color: rgba(239, 215, 207, 0.4) !important;
+            background-color: var(--nav-hover-bg) !important;
         }
 
         /* User greeting styles */
         .nav-link span {
-            color: var(--accent-3);
+            color: var(--primary-lightest);
         }
 
             .nav-link span strong {
-                color: var(--accent-1);
+                color: var(--primary-light);
             }
 
-            .nav-link span u {
-                text-decoration: none;
-                color: var(--white);
-                font-weight: 500;
-            }
+        .nav-link span u {
+        text-decoration: none;
+        color: var(--white);
+        font-weight: 500;
+        }
 
         /* Mobile menu styles */
         @@media (max-width: 991.98px) {
-            .navbar-collapse {
-                background: linear-gradient(135deg, var(--primary-medium) 0%, var(--primary-dark) 100%);
-                padding: 1rem;
-                border-radius: 0.5rem;
-                margin-top: 0.5rem;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            }
+            .navbar-collapse
 
-            .nav-item {
-                margin-bottom: 0.5rem;
-            }
+        {
+            background: linear-gradient(135deg, #005580 0%, #003366 100%);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link:hover {
+            background-color: var(--nav-hover-bg);
+        }
+
         }
     </style>
 </head>
+
 <body>
+    @if (!User.IsInRole("Admin"))
+    { 
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container-fluid">
@@ -330,7 +361,9 @@
             </div>
         </nav>
     </header>
+    }
 
+    
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -343,6 +376,8 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
     @await RenderSectionAsync("Scripts", required: false)
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">

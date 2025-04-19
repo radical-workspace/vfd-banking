@@ -4,16 +4,17 @@
 
 <style>
     :root {
-        --primary-dark: #0a2d2e;
-        --primary-medium: #1c4e4f;
-        --primary-light: #436e6f;
-        --secondary-dark: #6a8e8f;
-        --secondary-light: #879693;
-        --neutral-1: #a49e97;
-        --accent-1: #deae9f;
-        --accent-2: #efd7cf;
-        --accent-3: #f7ebe7;
-        --white: #ffffff;
+        --primary-dark: rgb(63, 114, 175); /* new primary dark */
+        --primary-medium: rgb(157, 178, 191); /* new primary medium */
+        --primary-light: rgb(219, 226, 239); /* new primary light */
+        --secondary-dark: rgb(63, 114, 175); /* mapped to primary-dark because no exact secondary */
+        --secondary-light: rgb(219, 226, 239); /* mapped to primary-light */
+        --neutral-1: rgb(157, 178, 191); /* mapped to text-light */
+        --accent-1: rgb(63, 114, 175); /* mapped to primary-dark */
+        --accent-2: rgb(221, 230, 237); /* primary-lightest */
+        --accent-3: rgb(238, 244, 255); /* soft background you used */
+        --white: #ffffff; /* stays same */
+        --danger:darkred;
     }
 
     .register-container {
@@ -32,7 +33,7 @@
     }
 
     .form-label {
-        color: var(--primary-medium);
+        color: black;
         font-weight: 600;
         margin-bottom: 0.5rem;
     }
@@ -61,7 +62,7 @@
     }
 
     .text-danger {
-        color: var(--accent-1) !important;
+        color: var(--danger) !important;
         font-size: 0.875rem;
         margin-top: 0.25rem;
         display: block;
@@ -95,8 +96,10 @@
         color: var(--primary-light);
     }
 </style>
-
-<div asp-validation-summary="All" class="alert alert-danger validation-summary"></div>
+@if (!ViewData.ModelState.IsValid)
+{
+    <div asp-validation-summary="All" class="alert alert-danger validation-summary"></div>
+}
 
 <div class="row">
     <!-- First Name -->
@@ -241,8 +244,8 @@
     }
     else
     {
-       @*  ViewData["FixedRole"] = "Customer";
-        <div class="col-md-6 mb-4">
+        ViewData["FixedRole"] = "Customer";
+@*         <div class="col-md-6 mb-4">
             <label asp-for="Role" class="form-label">
                 <i class="fas fa-user-tag me-2"></i>Role
             </label>
@@ -251,13 +254,13 @@
                        value="@ViewData["FixedRole"]" readonly />
                 <input type="hidden" asp-for="Role" value="@ViewData["FixedRole"]" />
             </div>
-        </div> *@
+        </div> *@ 
         <div class="col-md-6 mb-4"> 
             <label asp-for="Role" class="form-label"></label> 
             <div class="input-group"> 
                 <select asp-for="Role" asp-items="Model.AvailableRoles" class="form-select"> 
                     <option value="">-- Select Role --</option> 
-                </select> 
+                </select>
                 <i class="fas fa-user-tag input-icon"></i> 
             </div> 
             <span asp-validation-for="Role" class="text-danger"></span> 
@@ -266,7 +269,7 @@
 </div>
 
 <div class="text-center">
-    <button type="submit" class="btn submit-btn text-white">
+    <button type="submit" class="btn btn-primary submit-btn text-white">
         <i class="fas fa-user-plus me-1"></i>Register
     </button>
 </div>

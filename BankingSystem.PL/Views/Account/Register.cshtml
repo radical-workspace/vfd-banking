@@ -1,32 +1,33 @@
 ﻿@using BankingSystem.PL.ViewModels.Auth
 @model RegisterViewModel
 <style>
-    :root {
-        --primary-dark: #0a2d2e;
-        --primary-medium: #1c4e4f;
-        --primary-light: #436e6f;
-        --secondary-dark: #6a8e8f;
-        --secondary-light: #879693;
-        --neutral-1: #a49e97;
-        --accent-1: #deae9f;
-        --accent-2: #efd7cf;
-        --accent-3: #f7ebe7;
-        --white: #ffffff;
-    }
+:root {
+    --primary-dark: rgb(35, 78, 140); /* stronger and more elegant dark blue */
+    --primary-medium: rgb(97, 140, 185); /* smooth medium blue */
+    --primary-light: rgb(210, 225, 245); /* much lighter blue */
+    --secondary-dark: rgb(56, 104, 160); /* balanced secondary dark */
+    --secondary-light: rgb(230, 240, 250); /* very soft blue */
+    --neutral-1: rgb(120, 140, 160); /* nice muted gray-blue for neutral elements */
+    --accent-1: rgb(45, 95, 150); /* slightly richer than primary-dark */
+    --accent-2: rgb(200, 220, 240); /* light accent for cards, backgrounds */
+    --accent-3: rgb(245, 250, 255); /* super light, almost white-blue background */
+    --white: #ffffff; /* pure white */
+}
 
     .registration-wrapper {
-        background: var(--accent-3);
+        background: var(--primary-light);
         border-radius: 15px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         overflow: hidden;
     }
 
     .card-body {
+        background-color: var(--primary-light);
         padding: 2.5rem;
     }
 
     .form-header {
-        background: linear-gradient(90deg, var(--primary-dark), var(--primary-medium));
+        background: linear-gradient(90deg, var(--primary-dark), var(--accent-1));
         color: var(--white);
         padding: 2rem;
         text-align: center;
@@ -42,8 +43,8 @@
         }
 
     .role-badge {
-        background-color: var(--accent-1);
-        color: var(--primary-dark);
+        background-color: var(--primary-light);
+        color: var(--accent-1);
         font-weight: 600;
         padding: 0.5rem 1rem;
         border-radius: 50px;
@@ -91,7 +92,14 @@
                             <partial name="_RegisterationPartial" />
                         </form>
                     }
+
                 </div>
+                    <div class="text-center py-3 bg-light">
+                        <small>
+                            You already have an account?
+                            <a asp-controller="Account" asp-action="Login" class="text-primary fw-bold">Login</a>
+                        </small>
+                    </div>
             </div>
         </div>
     </div>

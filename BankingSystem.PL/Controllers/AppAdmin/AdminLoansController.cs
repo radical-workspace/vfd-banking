@@ -15,22 +15,22 @@ namespace BankingSystem.PL.Controllers.AppAdmin
 
         public IActionResult GetAllLoans()
         {
+            //var ManagerID = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //if (ManagerID == null) return NotFound();
+
+            //var branch = _unitOfWork.Repository<Branch>().GetSingleIncluding(b => b.MyManager.Id == ManagerID, b => b.MyManager);
+            //if (branch == null) return NotFound();
+
             var Loans = _unitOfWork.Repository<Loan>()
                 .GetAllIncluding(c => c.Customer, a => a.Account)
+                //.Where(b => b.BranchId == branch.Id)
                 .ToList();
-
-            var allAmount = Loans.Sum(l => l.LoanAmount);
-            var allDept = Loans.Sum(l => l.CurrentDebt);
-            var allPaid = allAmount - allDept;
-
-            ViewBag.TotalLoans = Loans.Count;
-            ViewBag.TotalAmount = allAmount;
-            ViewBag.TotalPaid = allPaid;
-            ViewBag.TotalDept = allDept;
+            //if (Loans == null) return NotFound();
 
             var loansViewModel = _mapper.Map<List<LoansViewModel>>(Loans);
             return View(nameof(GetAllLoans),loansViewModel);
         }
+
         public IActionResult PreviewLoan(int LoanId)
         {
             var Loan = _unitOfWork.Repository<Loan>().GetSingleIncluding(l => l.Id == LoanId,
@@ -43,5 +43,7 @@ namespace BankingSystem.PL.Controllers.AppAdmin
 
             return View(LoanDetails);
         }
+
+
     }
 }

@@ -25,6 +25,7 @@ namespace BankingSystem.PL
             builder.Configuration.AddEnvironmentVariables();
             var DevelopmentconnectionString = builder.Configuration.GetConnectionString("MVCProjectDB");
            
+           
             builder.Services.AddDbContext<BankingSystemContext>(options =>
                                                                 options.UseSqlServer(DevelopmentconnectionString)
                                                                        .AddInterceptors(new SoftDeleteInterceptor()));
@@ -90,31 +91,32 @@ namespace BankingSystem.PL
                 }
             }
 
+
             // Create a default admin user
-            var adminUser = new ApplicationUser
-            {
-                UserName = "admin@admin.com",
-                Email = "admin@admin.com",
-                FirstName = "Admin",
-                LastName = "User",
-                SSN = 123456789,
-                Address = "Admin Address",
-                JoinDate = DateTime.UtcNow,
-                BirthDate = DateTime.UtcNow.AddYears(-30),
-                IsDeleted = false
-            };
+            //var adminUser = new ApplicationUser
+            //{
+            //    UserName = "admin@admin.com",
+            //    Email = "admin@admin.com",
+            //    FirstName = "Admin",
+            //    LastName = "User",
+            //    SSN = 123456789,
+            //    Address = "Admin Address",
+            //    JoinDate = DateTime.UtcNow,
+            //    BirthDate = DateTime.UtcNow.AddYears(-30),
+            //    IsDeleted = false
+            //};
 
-            string adminPassword = "Admin@123";
-            var user = await userManager.FindByEmailAsync(adminUser.Email);
+            //string adminPassword = "Admin@123";
+            //var user = await userManager.FindByEmailAsync(adminUser.Email);
 
-            if (user == null)
-            {
-                var createAdminUser = await userManager.CreateAsync(adminUser, adminPassword);
-                if (createAdminUser.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(adminUser, "Admin");
-                }
-            }
+            //if (user == null)
+            //{
+            //    var createAdminUser = await userManager.CreateAsync(adminUser, adminPassword);
+            //    if (createAdminUser.Succeeded)
+            //    {
+            //        await userManager.AddToRoleAsync(adminUser, "Admin");
+            //    }
+            //}
         }
     }
 }

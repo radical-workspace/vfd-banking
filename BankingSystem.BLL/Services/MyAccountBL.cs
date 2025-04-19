@@ -165,11 +165,11 @@ namespace BankingSystem.BLL.Services
 
                     if (account.Card != null)
                         account.Card.IsDeleted = true;
-
+                    
                     _context.SaveChanges();
+                    }
                 }
             }
-        }
 
 
 

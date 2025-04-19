@@ -1,4 +1,6 @@
-﻿namespace BankingSystem.PL.ViewModels.Admin
+using System.ComponentModel.DataAnnotations;
+
+namespace BankingSystem.PL.ViewModels.Admin
 {
 
     // ViewModel for creating/editing managers
