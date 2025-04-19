@@ -18,7 +18,7 @@
         <form asp-action="Details" asp-route-id="@Model.Id" method="post" class="ms-auto">
             <label class="form-label me-2 fw-bold">Filter by Status:</label>
             <select asp-for="SelectedStatus" asp-items="ViewBag.statusList"
-            class="btn btn-warning dropdown-toggle" onchange="this.form.submit()">
+            class="btn btn-primary dropdown-toggle" onchange="this.form.submit()">
             </select>
         </form>
     </div>

@@ -28,13 +28,13 @@
                 <h4 class="mb-0">Account Summary</h4>
                 @if (Model.Count() < 2)
                 {
-                    <a asp-action="CreateReservation" asp-controller="Reservation" class="btn btn-outline-primary">
+                    <a asp-action="CreateReservation" asp-controller="Reservation" class="btn btn-primary">
                         <i class="bi bi-plus-circle me-2"></i>Open New Account
                     </a>
                 }
                 else
                 {
-                    <button id="openAccountLimitSweet" type="button" class="btn btn-outline-primary">
+                    <button id="openAccountLimitSweet" type="button" class="btn btn btn-primary">
                         <i class="bi bi-plus-circle me-2"></i>Open New Account
                     </button>
                     <script>
