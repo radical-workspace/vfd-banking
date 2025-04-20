@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using BankingSystem.BLL.Interfaces;
 using BankingSystem.DAL.Models;
+using BankingSystem.PL.ViewModels.Admin;
+using BankingSystem.PL.ViewModels.Admin;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -89,6 +91,31 @@ namespace BankingSystem.PL.Controllers.AppAdmin
 
             _unitOfWork.Complete();
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public IActionResult GetAllCertificatesBranches()
+        {
+            var (countGold, sumGold) = getCertificateCountSum("Gold");
+            var (countSilver, sumSilver) = getCertificateCountSum("Silver");
+            var (countBronze, sumBronze) = getCertificateCountSum("Bronze");
+
+            var result = new List<CertificateSummaryViewModel>
+            {
+                new() { Type = "Gold", Count = countGold, Sum = sumGold },
+                new() { Type = "Silver", Count = countSilver, Sum = sumSilver },
+                new() { Type = "Bronze", Count = countBronze, Sum = sumBronze }
+            };
+
+            return View(result);
+        }
+        private (int count, double? sum) getCertificateCountSum(string Name)
+        {
+            var Certificates = _unitOfWork.Repository<Certificate>().GetAllIncluding(c => c.GeneralCertificate).Where(c => c.GeneralCertificate.Name == Name);
+            var countCertificate = Certificates.Count();
+            var sumAmount = Certificates.Sum(c => c.Amount);
+
+            return (countCertificate, sumAmount);
         }
     }
 }

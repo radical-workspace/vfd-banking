@@ -17,7 +17,7 @@
         <div class="col-12">
             <div class="card branch-card d-flex flex-row" style="min-height: 80vh;">
                 <!-- Left Section (30%) -->
-                <div class="card-header d-flex flex-column align-items-center justify-content-center p-4" style="width: 30%; min-width: 300px; background: linear-gradient(180deg, #0a2d2e 0%, #1c4e4f 100%);">
+                <div class="card-header d-flex flex-column align-items-center justify-content-center p-4" style="width: 30%; min-width: 300px; background-color:steelblue;">
                     <h3 class="text-white mb-4">
                         <i class="bi bi-piggy-bank-fill me-2"></i>Savings Accounts
                     </h3>
@@ -34,7 +34,7 @@
                 <div class="card-body p-4" style="width: 70%; overflow-y: auto;">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle" id="savingsTable">
-                            <thead class="table-light">
+                            <thead class="table-light" style="background-color:slategray">
                                 <tr>
                                     <th style="width: 40%;">Currency</th>
                                     <th style="width: 40%;">Balance</th>
@@ -70,13 +70,14 @@
                                     </td>
                                 </tr>
                             </tbody>
-
+                        </table>
                             <!-- Add this form outside the table -->
-                            <form id="addForm" asp-action="AddSaving" method="post" class="d-none">
-                                <input type="hidden" id="formCurrency" name="Currency" />
-                                <input type="hidden" id="formBalance" name="Balance" />
-                                @Html.AntiForgeryToken()
-                            </form>
+                        <form id="updateForm" asp-action="UpdateSaving" method="post" class="d-none">
+                            <input type="hidden" id="savingId" name="Id" />
+                            <input type="hidden" id="savingCurrency" name="Currency" />
+                            <input type="hidden" id="savingBalance" name="Balance" />
+                            @Html.AntiForgeryToken()
+                        </form>
                     </div>
                 </div>
             </div>

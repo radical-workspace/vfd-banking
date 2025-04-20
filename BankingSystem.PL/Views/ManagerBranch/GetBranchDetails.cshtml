@@ -7,16 +7,16 @@
 }
 <style>
     :root {
-        --primary-dark: #0a2d2e;
-        --primary-medium: #1c4e4f;
-        --primary-light: #436e6f;
-        --secondary-dark: #6a8e8f;
-        --secondary-light: #879693;
-        --neutral-1: #a49e97;
-        --accent-1: #deae9f;
-        --accent-2: #efd7cf;
-        --accent-3: #f7ebe7;
-        --white: #ffffff;
+        --primary-dark: rgb(63, 114, 175); /* new primary dark */
+        --primary-medium: rgb(157, 178, 191); /* new primary medium */
+        --primary-light: rgb(219, 226, 239); /* new primary light */
+        --secondary-dark: rgb(63, 114, 175); /* mapped to primary-dark because no exact secondary */
+        --secondary-light: rgb(219, 226, 239); /* mapped to primary-light */
+        --neutral-1: rgb(157, 178, 191); /* mapped to text-light */
+        --accent-1: rgb(63, 114, 175); /* mapped to primary-dark */
+        --accent-2: rgb(221, 230, 237); /* primary-lightest */
+        --accent-3: rgb(238, 244, 255); /* soft background you used */
+        --white: #ffffff; /* stays same */
     }
 
     .branch-card {
@@ -39,14 +39,14 @@
     }
 
     .section-heading {
-        color: var(--primary-medium);
+        color: black;
         border-bottom: 2px solid var(--accent-1);
         padding-bottom: 0.5rem;
         margin-bottom: 1.5rem;
     }
 
     .form-label {
-        color: var(--primary-medium);
+        color: black;
         font-weight: 600;
     }
 
@@ -64,7 +64,7 @@
 
     .edit-btn {
         background: var(--accent-1);
-        color: var(--primary-dark);
+        color: black;
         border: 2px solid var(--accent-1);
         transition: all 0.3s ease;
     }
@@ -211,10 +211,9 @@
 
                         <!-- Edit Business Hours Button -->
                         <div class="col-12 text-center mt-2">
-
                             <button type="button" class="btn btn-outline-primary rounded-pill px-4 edit-btn">
                                 <i class="bi bi-pencil-square me-2"></i>
-                                <span class="btn-text">Edit Business Hours</span>
+                                <span class="btn-text" style="color:white">Edit Business Hours</span>
                             </button>
                         </div>
                     </form>
@@ -249,7 +248,7 @@
                                             }
                                         </ul>
                                         <div class="text-end mt-2">
-                                            <a asp-controller="ManagerLoan" asp-action="GetAllLoans" class="btn btn-sm btn-outline-primary">View All (@Model.Loans.Count)</a>
+                                            <a asp-controller="ManagerLoan" asp-action="GetAllLoans" class="btn btn-sm btn-primary">View All (@Model.Loans.Count)</a>
                                         </div>
 
                                     }
@@ -281,7 +280,7 @@
                                             }
                                         </ul>
                                         <div class="text-end mt-2">
-                                            <a asp-controller="ManagerCustomer" asp-action="GetAllCustomers" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value" class="btn btn-sm btn-outline-primary">View All (@Model.Customers.Count)</a>
+                                            <a asp-controller="ManagerCustomer" asp-action="GetAllCustomers" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value" class="btn btn-sm btn-primary">View All (@Model.Customers.Count)</a>
                                         </div>
 
                                     }
@@ -314,7 +313,7 @@
                                         </ul>
 
                                         <div class="text-end mt-2">
-                                            <a class="btn btn-sm btn-outline-primary" asp-controller="ManagerTeller" asp-action="GetAllTellers" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value">View All (@Model.Tellers.Count)</a>
+                                            <a class="btn btn-sm btn-primary" asp-controller="ManagerTeller" asp-action="GetAllTellers" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value">View All (@Model.Tellers.Count)</a>
                                         </div>
                                     }
                                     else
@@ -354,7 +353,7 @@
                                                 </tbody>
                                             </table>
                                             <div class="text-end mt-2">
-                                                <a asp-controller="ManagerSavings" asp-action="GetAllSavings" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value" class="btn btn-sm btn-outline-primary">
+                                                <a asp-controller="ManagerSavings" asp-action="GetAllSavings" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value" class="btn btn-sm btn-primary">
                                                     View All (@Model.Savings.Count)
                                                 </a>
                                             </div>

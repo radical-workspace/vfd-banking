@@ -25,14 +25,21 @@ namespace BankingSystem.PL
             builder.Configuration.AddEnvironmentVariables();
             var DevelopmentconnectionString = builder.Configuration.GetConnectionString("MVCProjectDB");
            
+           
             builder.Services.AddDbContext<BankingSystemContext>(options =>
                                                                 options.UseSqlServer(DevelopmentconnectionString)
                                                                        .AddInterceptors(new SoftDeleteInterceptor()));
 
 
             builder.Services.AddApplicationServices();
+            builder.Services.AddAuthentication().AddGoogle(op =>
+            {
+                op.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                op.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+            });
 
-        
+
+
 
             #endregion
 

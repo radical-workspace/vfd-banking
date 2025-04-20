@@ -1,4 +1,10 @@
-﻿.ticket-card {
+﻿.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.ticket-card {
     margin-bottom: 20px;
     transition: transform 0.2s;
 }
