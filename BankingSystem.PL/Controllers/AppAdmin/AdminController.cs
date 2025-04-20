@@ -1,4 +1,5 @@
-﻿using BankingSystem.BLL.Interfaces;
+﻿using BankingSystem.BLL;
+using BankingSystem.BLL.Interfaces;
 using BankingSystem.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,11 +10,13 @@ namespace BankingSystem.PL.Controllers.AppAdmin
     {
         private readonly IGenericRepository<Admin> _genericRepositoryAdmin;
         private readonly ISearchPaginationRepo<Admin> _searchPaginationAdmin;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public AdminController(IGenericRepository<Admin> genericRepositoryAdmin, ISearchPaginationRepo<Admin> searchPaginationAdmin)
+        public AdminController(IGenericRepository<Admin> genericRepositoryAdmin, ISearchPaginationRepo<Admin> searchPaginationAdmin, IUnitOfWork unitOfWork)
         {
             _genericRepositoryAdmin = genericRepositoryAdmin;
             _searchPaginationAdmin = searchPaginationAdmin;
+            _unitOfWork = unitOfWork;
         }
 
 
@@ -25,8 +28,16 @@ namespace BankingSystem.PL.Controllers.AppAdmin
         
         public ActionResult Dashboard()
         {
-            return View();
+            var transactions = _unitOfWork.Repository<Transaction>()
+                .GetAllIncluding(t => t.Account, t => t.Payment, t => t.Customer)
+                    .Where(t => t.Type == TransactionType.Withdraw || t.Type == TransactionType.Deposit || t.Type == TransactionType.LoanPayment)
+                    .OrderByDescending(t => t.Payment.PaymentDate)
+                    .Take(5)
+                    .ToList();
+
+            return View(transactions);
         }
+
 
 
         // GET: AdminController/Details/5

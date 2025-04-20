@@ -22,7 +22,9 @@ namespace BankingSystem.PL.Controllers.AppAdmin
                         b => b.Branches
                     ).FirstOrDefault();
 
-
+            ViewBag.accountsNumber = _unitOfWork.Repository<Account>().GetAll().Count();
+            ViewBag.tellersNumber = _unitOfWork.Repository<Teller>().GetAll().Count();
+            ViewBag.customersNumber = _unitOfWork.Repository<Customer>().GetAll().Count();
             return View(Bank);
         }
 

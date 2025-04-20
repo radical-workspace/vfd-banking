@@ -1,4 +1,12 @@
-﻿<style>
+﻿@using BankingSystem.DAL.Models;
+@model IEnumerable<Transaction>
+
+@{
+ViewData["Title"] = "Dashboard";
+}
+
+
+<style>
     :root {
         --primary-dark: #1a1a1a !important;
         --sidebar-dark: #252525 !important;
@@ -145,11 +153,50 @@
 
     @@media (max-width: 768px) {
         .stat-card .stat-value
-
-    {
-        font-size: 1.5rem;
+        {
+            font-size: 1.5rem;
+        }
     }
 
+
+
+    .rounded-table {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .rounded-table table {
+        margin: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .rounded-top-left {
+        border-top-left-radius: 10px;
+    }
+
+    .rounded-top-right {
+        border-top-right-radius: 10px;
+    }
+
+    /* If you want rounded corners at the bottom as well */
+    .rounded-table tbody tr:last-child td:first-child {
+        border-bottom-left-radius: 10px;
+    }
+
+    .rounded-table tbody tr:last-child td:last-child {
+        border-bottom-right-radius: 10px;
+    }
+
+    /* Optional: Add background to table headers to make rounded corners more visible */
+    .rounded-table thead th {
+        background-color: #f8f9fa;
+        border-bottom: none;
+    }
+
+    /* Optional: Add border to table */
+    .rounded-table table {
+        border: 1px solid #dee2e6;
     }
 </style>
 
@@ -218,67 +265,70 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0" style="color:white; font-weight: bold;">Recent Transactions</h5>
-                    <a href="#" class="btn btn-sm btn-outline-primary">View All</a>
+                    <a href="#" class="btn btn-sm btn-outline-light">View All</a>
                 </div>
 
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
+                    <div class="table-responsive rounded-table">
+                        <table class="table transaction-table text-center" id="transactionsTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Account</th>
+                                    <th class="rounded-top-left">Transaction ID</th>
                                     <th>Type</th>
                                     <th>Amount</th>
+                                    <th>Account</th>
+                                    <th>Customer</th>
                                     <th>Status</th>
-                                    <th>Date</th>
+                                    <th class="rounded-top-right">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>#TXN-7845</td>
-                                    <td>AC-4592-7845</td>
-                                    <td>Deposit</td>
-                                    <td>$1,250.00</td>
-                                    <td><span class="badge bg-success">Completed</span></td>
-                                    <td>10:45 AM</td>
-                                </tr>
-                                <tr>
-                                    <td>#TXN-7844</td>
-                                    <td>AC-1254-9632</td>
-                                    <td>Withdrawal</td>
-                                    <td>$500.00</td>
-                                    <td><span class="badge bg-success">Completed</span></td>
-                                    <td>10:32 AM</td>
-                                </tr>
-                                <tr>
-                                    <td>#TXN-7843</td>
-                                    <td>AC-7854-1258</td>
-                                    <td>Transfer</td>
-                                    <td>$2,000.00</td>
-                                    <td><span class="badge bg-warning text-dark">Pending</span></td>
-                                    <td>09:15 AM</td>
-                                </tr>
-                                <tr>
-                                    <td>#TXN-7842</td>
-                                    <td>AC-9632-5412</td>
-                                    <td>Deposit</td>
-                                    <td>$3,750.00</td>
-                                    <td><span class="badge bg-success">Completed</span></td>
-                                    <td>09:02 AM</td>
-                                </tr>
-                                <tr>
-                                    <td>#TXN-7841</td>
-                                    <td>AC-3254-7854</td>
-                                    <td>Payment</td>
-                                    <td>$150.00</td>
-                                    <td><span class="badge bg-danger">Failed</span></td>
-                                    <td>08:45 AM</td>
-                                </tr>
+                                @foreach (var transaction in Model)
+                                {
+                                    <tr>
+                                        <td>@transaction.Id</td>
+                                        <td>
+                                            <span class="badge-transaction
+                                                @(transaction.Type == TransactionType.Deposit ? "badge-deposit" :
+                                                  transaction.Type == TransactionType.Withdraw ? "badge-withdraw" :
+                                                  transaction.Type == TransactionType.Transfer ? "badge-transfer" : "badge-loan")">@transaction.Type
+                                            </span>
+                                        </td>
+                                        <td class="@(transaction.Type == TransactionType.Deposit || transaction.Type == TransactionType.LoanPayment ? "amount-positive" : "amount-negative")">
+                                            @(transaction.Type == TransactionType.Deposit || transaction.Type == TransactionType.LoanPayment ? "+" : "-") @transaction.Payment.Amount.ToString("C")
+                                        </td>
+                                        <td>
+                                            @transaction.Account.Number<br>
+                                            <small class="text-muted">@transaction.Account.AccountType</small>
+                                        </td>
+                                        <td>
+                                            @transaction.Customer.FirstName @transaction.Customer.LastName<br>
+                                            <small class="text-muted">@transaction.Customer.SSN</small>
+                                        </td>
+                                        <td>
+                                            <span class="badge-transaction
+                        @(transaction.Status == TransactionStatus.Accepted ? "badge-accepted" :
+                          transaction.Status == TransactionStatus.Denied ? "badge-denied" : "badge-pending")">
+                                                @transaction.Status
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <button class="btn btn-warning btn-sm details-btn" data-id="@transaction.Id" title="Details">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn btn-secondary btn-sm receipt-btn" data-id="@transaction.Id" title="Receipt">
+                                                    <i class="fas fa-receipt"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
                 </div>
+
             </div>
         </div>
 
@@ -293,7 +343,5 @@
             </div>
         </div>
 
-
     </div>
-
 </div>

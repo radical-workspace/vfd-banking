@@ -456,29 +456,31 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link load-content" data-url="/AdminTeller/GetAllTellers">
+                    <a href="#" class="nav-link load-content" data-url="/AdminUsers/GetAllTellers">
                         <i class="bi bi-person"></i> <span>Tellers</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link load-content" data-url="/AdminCustomer/GetAllCustomers">
+                    <a href="#" class="nav-link load-content" data-url="/AdminUsers/GetAllCustomers">
                         <i class="bi bi-people"></i> <span>Customers</span>
                     </a>
                 </li>
 
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link load-content" data-url="/Account/Index">
-                        <i class="bi bi-bank"></i> <span>Accounts</span>
+                    <a href="#" class="nav-link load-content" data-url="/AdminUsers/GetAllAccounts">
+                        <i class="bi bi-credit-card"></i></i> <span>Accounts</span>
                     </a>
                 </li>
+
+                @* <li class="nav-item"> *@
+                @*     <a href="#" class="nav-link load-content" data-url="/Card/Index"> *@
+                @*         <i class="bi bi-credit-card"></i> <span>Cards</span> *@
+                @*     </a> *@
+                @* </li> *@
+
                 <li class="nav-item">
-                    <a href="#" class="nav-link load-content" data-url="/Card/Index">
-                        <i class="bi bi-credit-card"></i> <span>Cards</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link load-content" data-url="/Transaction/Index">
+                    <a href="#" class="nav-link load-content" data-url="/AdminTransactions/GetAllTransactionsBranches">
                         <i class="bi bi-cash-stack"></i> <span>Transactions</span>
                     </a>
                 </li>
@@ -497,13 +499,16 @@
                 @* </li> *@
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link load-content" data-url="/Settings/Index">
+                    <a href="#" class="nav-link load-content" data-url="/Admin/Edit">
                         <i class="bi bi-gear"></i> <span>Settings</span>
                     </a>
                 </li>
             </ul>
         </div>
 
+        <a href="#" class="nav-link load-content" data-url="/BogusData/CreateBogusData">
+                    <i class="fa-solid fa-database"></i> <span>Create Bogus Data</span>
+                </a>
 
         <div class="logout-btn">
             <form asp-controller="Account" asp-action="Logout" method="post" class="d-block">
@@ -515,11 +520,10 @@
         </div>
     </div>
 
+
     <!-- Main Content -->
-    <div class="main-content" id="main-content">
-        <!-- Dashboard Content -->
-        
-    </div>
+    <div class="main-content" id="main-content"></div>
+
 </div>
 
 
@@ -585,4 +589,3 @@
         }
     });
 </script>
-

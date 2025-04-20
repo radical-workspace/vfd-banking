@@ -10,14 +10,17 @@ namespace BankingSystem.PL.Controllers.AppAdmin
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IMapper _mapper = mapper;
 
+
         [HttpGet]
         public IActionResult GetAllTransactionsBranches()
         {
-            var transactions = _unitOfWork.Repository<Transaction>().GetAll()
+            var transactions = _unitOfWork.Repository<Transaction>().GetAllIncluding(t => t.Account, t => t.Payment, t => t.Customer)
                 .Where(t => t.Type == TransactionType.Withdraw || t.Type == TransactionType.Deposit || t.Type == TransactionType.LoanPayment);
+            
             return View(transactions);
-
         }
+
+
         [HttpGet]
         public IActionResult GetLastTransactionsForBranch(int id)
         {

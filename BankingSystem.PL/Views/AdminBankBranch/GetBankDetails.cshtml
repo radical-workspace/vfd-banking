@@ -8,6 +8,7 @@
     .bank-detail-card {
         border: none;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        background-color: #c3c3c3;
     }
 
     .bank-logo {
@@ -19,6 +20,10 @@
         background-color: var(--accent-hover);
         color: white;
         border-radius: 50%;
+    }
+
+    .card-body {
+        background-color: #ededed;
     }
 
     .detail-section {
@@ -125,7 +130,15 @@
     }
 
     .my-logo {
-        color: white;
+        color: black;
+    }
+
+    .logo2 {
+        background-color: transparent;
+    }
+
+    .my-card {
+        background-color: #e3e3e3;
     }
 
     /* #v-bran:hover { */
@@ -143,9 +156,9 @@
             </h2>
 
         </div>
-        <a asp-action="Index" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left me-2"></i>Back to List
-        </a>
+        @* <a asp-action="Index" class="btn btn-outline-secondary"> *@
+        @*     <i class="fas fa-arrow-left me-2"></i>Back to List *@
+        @* </a> *@
     </div>
 
     <!-- Main Card -->
@@ -173,15 +186,15 @@
                         <h5 class="section-title text-text-secondary mb-4">
                             <i class="fas fa-info-circle me-2"></i>Basic Information
                         </h5>
-                        <div class="row g-3">
-                            <div class="col-md-6">
+                        <div class="row g-3n my-card">
+                            <div class="col-md-6 stat-card p-3">
                                 <div class="bg-secondary-dark rounded h-100">
                                     <small class="text-text-secondary fw-bold">Bank Name</small>
                                     <p>@Model.Name</p>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="bg-secondary-dark rounded h-100">
+                                <div class="bg-secondary-dark rounded h-100 stat-card p-3">
                                     <small class="text-text-secondary fw-bold">Status</small>
                                     <p>
                                         <span class="badge @(Model.IsDeleted ? "bg-danger" : "bg-success")">
@@ -190,8 +203,8 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="col-12 my-mr">
-                                <div class="bg-secondary-dark rounded h-100">
+                            <div class="col-12 my-mr stat-card p-3 mt-0">
+                                <div class="bg-secondary-dark">
                                     <small class="text-text-secondary fw-bold">Headquarters Address</small>
                                     <p>@Model.CentralAddress</p>
                                 </div>
@@ -206,7 +219,7 @@
                             <h5 class="section-title text-text-secondary mb-4">
                                 <i class="fas fa-user-shield me-2"></i>Bank Administrator
                             </h5>
-                            <div class="admin-card p-3 bg-secondary-dark rounded stat-card p-3 bg-secondary-dark rounded h-100">
+                            <div class="admin-card my-card p-3 bg-secondary-dark rounded stat-card p-3 bg-secondary-dark rounded h-100">
                                 <div class="d-flex align-items-center">
                                     <div class="admin-avatar me-3">
                                         <i class="fas fa-user-circle text-accent-1 fs-1"></i>
@@ -234,9 +247,9 @@
                         </h5>
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <div class="stat-card p-3 bg-secondary-dark rounded h-100">
+                                <div class="stat-card p-3 bg-secondary-dark rounded h-100 my-card">
                                     <div class="d-flex align-items-center">
-                                        <div class="stat-icon me-3">
+                                        <div class="stat-icon me-3 logo2">
                                             <i class="fas fa-code-branch text-accent-1 fs-3 my-logo"></i>
                                         </div>
                                         <div>
@@ -247,42 +260,40 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="stat-card p-3 bg-secondary-dark rounded h-100">
+                                <div class="stat-card p-3 bg-secondary-dark rounded h-100 my-card">
                                     <div class="d-flex align-items-center">
-                                        <div class="stat-icon me-3">
+                                        <div class="stat-icon me-3 logo2">
                                             <i class="fas fa-users text-accent-1 fs-3 my-logo"></i>
                                         </div>
                                         <div>
                                             <small class="text-text-secondary">Total Employees</small>
-                                            <h3 class="mb-0">@(Model.Branches?.Sum(b => b.Tellers?.Count) ?? 0)</h3>
+                                            <h3 class="mb-0">@ViewBag.tellersNumber</h3>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="stat-card p-3 bg-secondary-dark rounded h-100">
+                                <div class="stat-card p-3 bg-secondary-dark rounded h-100 my-card">
                                     <div class="d-flex align-items-center">
-                                        <div class="stat-icon me-3">
+                                        <div class="stat-icon me-3 logo2">
                                             <i class="fas fa-user-friends text-accent-1 fs-3 my-logo"></i>
                                         </div>
                                         <div>
                                             <small class="text-text-secondary">Total Customers</small>
-                                            <h3 class="mb-0">
-                                                @(Model.Branches?.Sum(b => b.Customers?.Count ?? 0) ?? 0)
-                                            </h3>
+                                            <h3 class="mb-0">@ViewBag.customersNumber</h3>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="stat-card p-3 bg-secondary-dark rounded h-100">
+                                <div class="stat-card p-3 bg-secondary-dark rounded h-100 my-card">
                                     <div class="d-flex align-items-center">
-                                        <div class="stat-icon me-3">
+                                        <div class="stat-icon me-3 logo2">
                                             <i class="fas fa-hand-holding-usd text-accent-1 fs-3 my-logo"></i>
                                         </div>
                                         <div>
                                             <small class="text-text-secondary">Total Accounts</small>
-                                            <h3 class="mb-0">0</h3>
+                                            <h3 class="mb-0">@ViewBag.accountsNumber</h3>
                                         </div>
                                     </div>
                                 </div>
@@ -300,8 +311,8 @@
                             {
                                 foreach (var branch in Model.Branches)
                                 {
-                                    <div class="branch-item p-3 bg-secondary-dark rounded mb-2">
-                                        <div class="d-flex justify-content-between align-items-center">
+                                    <div class="rounded mb-2">
+                                        <div class="d-flex justify-content-between align-items-center stat-card p-3 my-card rounded h-100">
                                             <div>
                                                 <h6 class="mb-0">@branch.Name</h6>
                                                 <small class="text-text-secondary">
@@ -324,6 +335,7 @@
                         </div>
                     </div>
                 </div>
+            
             </div>
         </div>
 
@@ -334,7 +346,7 @@
                     <i class="fas fa-edit me-2"></i>Edit Bank
                 </a>
                 <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                    <i class="fas fa-trash-alt me-2"></i>Delete Bank
+                    <i class="fas fa-trash-alt me-2"></i> <span class="fw-bold">Delete Bank</span>
                 </button>
             </div>
         </div>
