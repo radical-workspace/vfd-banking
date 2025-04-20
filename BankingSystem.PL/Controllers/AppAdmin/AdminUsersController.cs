@@ -25,18 +25,40 @@ namespace BankingSystem.PL.Controllers.AppAdmin
 
         public ActionResult GetAllCustomers()
         {
-            var customers = _unitOfWork.Repository<Customer>()
-                .GetAllIncluding(c => c.Branch).ToList();
+            //var customers = _unitOfWork.Repository<Customer>()
+            //    .GetAllIncluding(c => c.Branch).ToList();
+
+
+
+            var customer = _unitOfWork.Repository<Customer>().GetAllIncluding(c => c.Accounts,
+                                                                         t => t.Accounts.Select(a => a.AccountTransactions),
+                                                                         t => t.Accounts.Select(a => a.SupportTickets),
+                                                                         t => t.Accounts.Select(a => a.Loans),
+                                                                         t => t.Accounts.Select(a => a.Certificates)
+                                                                         );
+
+            var customerAccounts = customer.SelectMany(c => c.Accounts).ToList();
+
+
+            ViewBag.TransactionsCount = customerAccounts.SelectMany(a => a.AccountTransactions).Count();
+            ViewBag.SupportTicketsCount = customerAccounts.SelectMany(a => a.SupportTickets).Count();
+            ViewBag.LoansCount = customerAccounts.SelectMany(a => a.Loans).Count();
+            ViewBag.CertificatesCount = customerAccounts.SelectMany(a => a.Certificates).Count();
+
 
             var customerView = _mapper.Map<List<Customer>, List<CustomerDetailsViewModel>>(customers);
             return View(customerView);
         }
         
 
-        public ActionResult GetAllAccounts()
+        public ActionResult GetAllAccounts(string customerId)
         {
             var accounts = _unitOfWork.Repository<Account>()
                 .GetAllIncluding(a => a.Customer, c => c.Branch, a => a.Branch).ToList();
+
+
+            
+
 
             return View(accounts);
         }

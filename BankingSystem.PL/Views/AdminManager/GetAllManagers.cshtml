@@ -1,5 +1,5 @@
-@* @using BankingSystem.PL.ViewModels.Admin *@
-@* @model IEnumerable<ManagerVM> *@
+@using BankingSystem.DAL.Models
+@model IEnumerable<Manager>
 
 @{
     ViewData["Title"] = "Managers";
@@ -22,6 +22,10 @@
         background-color: var(--accent-hover);
         color: var(--text-primary);
     }
+
+    .add-btn {
+        margin-left: 20px;
+    }
 </style>
 
 
@@ -34,7 +38,7 @@
                 <p class="mb-0">View and manage all bank managers in the system</p>
             </div>
             <div>
-                <a asp-action="Create" class="btn btn-light">
+                <a asp-action="Create" class="btn btn-light add-btn">
                     <i class="bi bi-plus-circle me-2"></i>Add New Manager
                 </a>
             </div>
@@ -76,15 +80,22 @@
                                             <span class="badge bg-success">Active</span>
                                         </div>
                                         <div class="d-flex justify-content-center">
-                                            <a href="#" class="btn btn-sm btn-outline-primary me-2" data-bs-toggle="tooltip" title="Edit">
+                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary me-2" title="Edit">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
                                             <a href="#" class="btn btn-sm btn-outline-warning me-2" data-bs-toggle="tooltip" title="Details">
                                                 <i class="bi bi-eye"></i>
                                             </a>
-                                            <a href="#" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" title="Delete">
-                                                <i class="bi bi-trash"></i>
-                                            </a>
+
+                                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirmDelete()" class="d-inline">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+
+                                            @* <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" title="Delete"> *@
+                                            @*     <i class="bi bi-trash"></i> *@
+                                            @* </a> *@
                                         </div>
                                     </div>
                                     <div class="card-footer bg-transparent border-top">
@@ -118,6 +129,9 @@
     
 </div>
 
-@section Scripts {
-    
-}
+
+<script>
+    function confirmDelete() {
+        return confirm('Are you sure you want to delete this manager? This action cannot be undone.');
+    }
+</script>

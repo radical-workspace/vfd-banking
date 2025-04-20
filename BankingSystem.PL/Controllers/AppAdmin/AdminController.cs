@@ -44,6 +44,14 @@ namespace BankingSystem.PL.Controllers.AppAdmin
                                                                             .Where(t => t.Payment.PaymentDate.Date.Day == DateTime.Now.Date.Day)
                                                                             .ToList().Count;
 
+
+            ViewBag.TodayTransactions = TodayTransactions;
+            ViewBag.Branches = Branches;
+            ViewBag.ActiveAccounts = ActiveAccounts;
+            ViewBag.Holdings = holdings;
+
+            return View(transactions);
+
             var model = new MainDashboardFourCards()
             {
                 TodayTransactions = TodayTransactions,
@@ -54,6 +62,7 @@ namespace BankingSystem.PL.Controllers.AppAdmin
             };
 
             return View(model);
+
         }
 
         public IActionResult First_Four_Cards()
@@ -104,7 +113,7 @@ namespace BankingSystem.PL.Controllers.AppAdmin
         }
 
         // GET: AdminController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             return View();
         }
@@ -112,7 +121,7 @@ namespace BankingSystem.PL.Controllers.AppAdmin
         // POST: AdminController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Admin admin)
         {
             try
             {

@@ -32,6 +32,65 @@ namespace BankingSystem.PL.Controllers.AppAdmin
             return View(Managers);
         }
 
+
+    // GET: Manager/Create
+    public IActionResult Create()
+    {
+        // Populate branches dropdown
+        ViewBag.Branches = new SelectList(_unitOfWork.Repository<Branch>().GetAll(), "Id", "Name");
+        return View();
+    }
+
+    // POST: Manager/Create
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Create(ManagerVM model)
+    {
+        try
+        {
+            // Create Manager entity from view model
+            var manager = new Manager
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Address = model.Address,
+                SSN = model.SSN,
+                JoinDate = DateTime.Now,
+                BirthDate = model.BirthDate,
+                Salary = model.Salary,
+                BranchId = model.BranchId,
+                UserName = model.Email,
+                Email = model.Email,
+                PhoneNumber = model.PhoneNumber,
+                PasswordHash = "Test@123"
+            };
+
+            // Add manager to repository
+            _unitOfWork.Repository<Manager>().Add(manager);
+
+            // Save changes
+            _unitOfWork.Complete();
+            TempData["SuccessMessage"] = $"Manager '{manager.FirstName} {manager.LastName}' created successfully.";
+            ViewBag.Branches = new SelectList(_unitOfWork.Repository<Branch>().GetAll(), "Id", "Name", model.BranchId);
+                
+            return RedirectToAction("Index", "Admin");
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError(string.Empty, $"Error creating manager: {ex.Message}");
+        }
+
+        // If we got this far, something failed, redisplay form
+        ViewBag.Branches = new SelectList(_unitOfWork.Repository<Branch>().GetAll(), "Id", "Name", model.BranchId);
+        return View(model);
+    }
+
+
+    [HttpGet]
+    public IActionResult Edit(string id)
+    {
+        var manager = _unitOfWork.Repository<Manager>().GetSingleIncluding(m => m.Id == id, m => m.Branch!, m => m.Tellers!);
+
         // GET: Manager/Create
         public IActionResult Create()
         {
@@ -80,6 +139,7 @@ namespace BankingSystem.PL.Controllers.AppAdmin
                 }
             }
 
+
             // If we got this far, something failed, redisplay form
             ViewBag.Branches = new SelectList(_unitOfWork.Repository<Branch>().GetAll(), "Id", "Name", model.BranchId);
             return View(model);
@@ -90,8 +150,34 @@ namespace BankingSystem.PL.Controllers.AppAdmin
         {
             var manager = _unitOfWork.Repository<Manager>().GetSingleIncluding(m => m.Id == id, m => m.Branch!, m => m.Tellers!);
 
+
+        ManagerVM managerVM = new ManagerVM
+        {
+            //Id = manager.Id,
+            FirstName = manager.FirstName,
+            LastName = manager.LastName,
+            Address = manager.Address,
+            SSN = manager.SSN,
+            //JoinDate = manager.JoinDate,
+            BirthDate = manager.BirthDate,
+            Salary = manager.Salary,
+            PhoneNumber = manager.PhoneNumber,
+            Email = manager.Email,
+            BranchId = manager.BranchId
+        };
+
+        return View(managerVM);
+    }
+
+    [HttpPost]
+    public IActionResult Edit(Manager manager, int? newBranchId)
+    {
+        // Fetch the existing manager from the database
+        var existingManager = _unitOfWork.Repository<Manager>().GetSingleIncluding(m => m.Id == manager.Id, m => m.Branch!, m => m.Tellers!);
+
             if (manager == null)
                 return NotFound();
+
 
             // Get available branches
             var branches = _unitOfWork.Repository<Branch>().GetAll().ToList();
@@ -194,8 +280,26 @@ namespace BankingSystem.PL.Controllers.AppAdmin
             _unitOfWork.Repository<Manager>().Update(existingManager);
             _unitOfWork.Complete();
 
+
+
+    [HttpPost]
+    public IActionResult Delete(string id)
+    {
+        // Get the manager to be deleted
+        var manager = _unitOfWork.Repository<Manager>().GetSingleIncluding(
+            m => m.Id == id,
+            m => m.Branch,
+            m => m.Tellers
+        );
+
+        // Check if manager exists
+        if (manager == null)
+        {
+            return NotFound();
+
             TempData["SuccessMessage"] = "Manager updated successfully.";
             return RedirectToAction(nameof(Details), new { id = existingManager.Id });
+
         }
 
         public IActionResult Delete(string id)
@@ -241,8 +345,13 @@ namespace BankingSystem.PL.Controllers.AppAdmin
                 // Log the error
                 // _logger.LogError(ex, "Error deleting manager with ID {Id}", id);
 
+
+        return RedirectToAction("Index", "Admin");
+    }
+
                 TempData["ErrorMessage"] = $"An error occurred while trying to delete the manager: {ex.Message}";
             }
+
 
             return RedirectToAction("Index");
         }
