@@ -1,6 +1,7 @@
 ﻿using BankingSystem.BLL;
 using BankingSystem.BLL.Interfaces;
 using BankingSystem.DAL.Models;
+using BankingSystem.PL.ViewModels.Admin;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +26,7 @@ namespace BankingSystem.PL.Controllers.AppAdmin
         {
             return View();
         }
-        
+
         public ActionResult Dashboard()
         {
             var transactions = _unitOfWork.Repository<Transaction>()
@@ -35,10 +36,45 @@ namespace BankingSystem.PL.Controllers.AppAdmin
                     .Take(5)
                     .ToList();
 
-            return View(transactions);
+
+            var Branches = _unitOfWork.Repository<Branch>().GetAll().ToList().Count;
+            var ActiveAccounts = _unitOfWork.Repository<Account>().GetAll().Where(a => a.AccountStatus == AccountStatus.Active).ToList().Count;
+            var holdings = _unitOfWork.Repository<Savings>().GetAll().ToList().Count;
+            var TodayTransactions = _unitOfWork.Repository<Transaction>().GetAllIncluding(p => p.Payment)
+                                                                            .Where(t => t.Payment.PaymentDate.Date.Day == DateTime.Now.Date.Day)
+                                                                            .ToList().Count;
+
+            var model = new MainDashboardFourCards()
+            {
+                TodayTransactions = TodayTransactions,
+                Branches = Branches,
+                ActiveAccounts = ActiveAccounts,
+                Holdings = holdings,
+                Transactions = transactions
+            };
+
+            return View(model);
         }
 
+        public IActionResult First_Four_Cards()
+        {
 
+            var Branches = _unitOfWork.Repository<Branch>().GetAll().ToList().Count;
+            var ActiveAccounts = _unitOfWork.Repository<Account>().GetAll().Where(a => a.AccountStatus == AccountStatus.Active).ToList().Count;
+            var holdings = _unitOfWork.Repository<Savings>().GetAll().ToList().Count;
+            var TodayTransactions = _unitOfWork.Repository<Transaction>().GetAllIncluding(p => p.Payment)
+                                                                            .Where(t => t.Payment.PaymentDate.Date.Day == DateTime.Now.Date.Day)
+                                                                            .ToList().Count;
+
+            var model = new MainDashboardFourCards()
+            {
+                TodayTransactions = TodayTransactions,
+                Branches = Branches,
+                ActiveAccounts = ActiveAccounts,
+                Holdings = holdings
+            };
+            return View(model);
+        }
 
         // GET: AdminController/Details/5
         public ActionResult Details(int id)
