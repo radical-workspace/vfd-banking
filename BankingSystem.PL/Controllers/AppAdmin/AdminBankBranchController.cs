@@ -9,10 +9,9 @@ using System.Security.Claims;
 
 namespace BankingSystem.PL.Controllers.AppAdmin
 {
-    public class AdminBankBranchController(IUnitOfWork unitOfWork, IMapper mapper) : Controller
+    public class AdminBankBranchController(IUnitOfWork unitOfWork) : Controller
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        private readonly IMapper _mapper = mapper;
 
 
         public IActionResult GetBankDetails(string id)
@@ -39,10 +38,9 @@ namespace BankingSystem.PL.Controllers.AppAdmin
                                                                             b => b.Departments,
                                                                             b => b.Savings,
                                                                             b => b.Reservations).ToList();
-
             return View(Branches);
         }
-        
+
 
         // GET: Branch/Create
         public IActionResult Create()
