@@ -7,6 +7,9 @@ select * from [AspNetUsers] a inner join Tellers t on a.Id = t.Id
 select * from [AspNetUsers] a inner join Customers c on a.Id = c.Id
 
 
+--delete from Managers
+
+
 select * from AspNetUsers 
 select * from [dbo].[AspNetRoles]
 
@@ -52,6 +55,11 @@ delete from SupportTickets
 -- commit
 -- rollback
 
-select len(106727542162)
+select len(17733955482855)
 
 select * from Transactions
+
+
+begin tran
+delete from Customers where BranchId is null
+delete from Transactions

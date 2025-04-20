@@ -1,0 +1,523 @@
+﻿@using BankingSystem.DAL.Models;
+@model IEnumerable<Transaction>
+
+@{
+    ViewData["Title"] = "Transaction Management";
+}
+
+
+<style>
+    /* :root { */
+    /*     --primary-color: #4e73df; */
+    /*     --success-color: #1cc88a; */
+    /*     --warning-color: #f6c23e; */
+    /*     --danger-color: #e74a3b; */
+    /*     --info-color: #36b9cc; */
+    /*     --secondary-color: #858796; */
+    /*     --light-color: #f8f9fc; */
+    /*     --dark-color: #5a5c69; */
+    /* } */
+
+    .transaction-card {
+        border-radius: 0.35rem;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+        margin-bottom: 1.5rem;
+    }
+
+    .card-header {
+        background-color: #f8f9fc;
+        border-bottom: 1px solid #e3e6f0;
+        padding: 1rem 1.35rem;
+    }
+
+    .transaction-table {
+        margin-bottom: 0;
+    }
+
+        .transaction-table thead th {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        .transaction-table tbody td {
+            padding: 1rem;
+            vertical-align: middle;
+            border-top: 1px solid #e3e6f0;
+        }
+
+        .transaction-table tbody tr:hover {
+            background-color: rgba(78, 115, 223, 0.05);
+        }
+
+    .badge-transaction {
+        padding: 0.35em 0.65em;
+        font-size: 0.75em;
+        font-weight: 700;
+        border-radius: 0.25rem;
+    }
+
+    .badge-deposit {
+        background-color: rgba(28, 200, 138, 0.1);
+        color: var(--success-color);
+    }
+
+    .badge-withdraw {
+        background-color: rgba(231, 74, 59, 0.1);
+        color: var(--danger-color);
+    }
+
+    .badge-transfer {
+        background-color: rgba(54, 185, 204, 0.1);
+        color: var(--info-color);
+    }
+
+    .badge-loan {
+        background-color: rgba(246, 194, 62, 0.1);
+        color: var(--warning-color);
+    }
+
+    .badge-pending {
+        background-color: rgba(133, 135, 150, 0.1);
+        color: var(--secondary-color);
+    }
+
+    .badge-accepted {
+        background-color: rgba(28, 200, 138, 0.1);
+        color: var(--success-color);
+    }
+
+    .badge-denied {
+        background-color: rgba(231, 74, 59, 0.1);
+        color: var(--danger-color);
+    }
+
+    .amount-positive {
+        color: var(--success-color);
+        font-weight: 600;
+    }
+
+    .amount-negative {
+        color: var(--danger-color);
+        font-weight: 600;
+    }
+
+    .filter-section {
+        background-color: #f8f9fc;
+        padding: 1rem;
+        border-radius: 0.35rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .filter-label {
+        font-weight: 600;
+        color: black;
+        margin-bottom: 0.5rem;
+    }
+
+    .transaction-details {
+        background-color: #f8f9fc;
+        border-radius: 0.35rem;
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+
+    .details-label {
+        font-weight: 600;
+        color: var(--dark-color);
+    }
+
+    .details-value {
+        color: var(--secondary-color);
+    }
+
+    .page-link {
+        background-color: var(--secondary-dark);
+        border-color: var(--table-border);
+        color: var(--text-primary);
+    }
+
+    .page-item.active .page-link {
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
+    }
+
+    .page-item:not(.active) .page-link:hover {
+        background-color: var(--accent-hover);
+        color: var(--text-primary);
+    }
+
+
+
+    .rounded-table {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .rounded-table thead th:first-child {
+        border-top-left-radius: 15px;
+    }
+
+    .rounded-table thead th:last-child {
+        border-top-right-radius: 15px;
+    }
+
+    .rounded-table tbody tr:last-child td:first-child {
+        border-bottom-left-radius: 15px;
+    }
+
+    .rounded-table tbody tr:last-child td:last-child {
+        border-bottom-right-radius: 15px;
+    }
+</style>
+
+
+<div class="container-fluid mt-4">
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Transactions Management</h1>
+        <div>
+            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                <i class="fas fa-download fa-sm"></i> Generate Report
+            </a>
+            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm ml-2">
+                <i class="fas fa-file-export fa-sm"></i> Export Data
+            </a>
+        </div>
+    </div>
+
+
+    <!-- Filters Section 
+    <div class="filter-section">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="filter-label">Transaction Type</label>
+                    <select class="form-control">
+                        <option value="">All Types</option>
+                        <option value="Deposit">Deposit</option>
+                        <option value="Withdraw">Withdraw</option>
+                        <option value="Transfer">Transfer</option>
+                        <option value="LoanPayment">Loan Payment</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="filter-label">Status</label>
+                    <select class="form-control">
+                        <option value="">All Statuses</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Accepted">Accepted</option>
+                        <option value="Denied">Denied</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="filter-label">Date From</label>
+                    <input type="date" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="filter-label">Date To</label>
+                    <input type="date" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-12 text-right">
+                <button class="btn btn-primary">Apply Filters</button>
+                <button class="btn btn-secondary ml-2">Reset</button>
+            </div>
+        </div>
+    </div>
+    -->
+
+
+    <!-- Transactions Card -->
+    <div class="card transaction-card mb-2">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Recent Transactions</h6>
+            <div class="input-group" style="width: 300px;">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search transactions...">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="button" id="searchButton">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card-body">
+        <div class="table-responsive rounded-table">
+            <table class="table transaction-table text-center" id="transactionsTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Account</th>
+                        <th>Customer</th>
+                        <th>Status</th>
+                        @* <th>Date</th> *@
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var transaction in Model)
+                    {
+                        <tr>
+                            <td>@transaction.Id</td>
+                            <td>
+                                <span class="badge-transaction
+                                @(transaction.Type == TransactionType.Deposit ? "badge-deposit" :
+                                  transaction.Type == TransactionType.Withdraw ? "badge-withdraw" :
+                                  transaction.Type == TransactionType.Transfer ? "badge-transfer" : "badge-loan")">
+                                    @transaction.Type
+                                </span>
+                            </td>
+                            <td class="@(transaction.Type == TransactionType.Deposit || transaction.Type == TransactionType.LoanPayment ? "amount-positive" : "amount-negative")">
+                                @(transaction.Type == TransactionType.Deposit || transaction.Type == TransactionType.LoanPayment ? "+" : "-") @transaction.Payment.Amount.ToString("C")
+                            </td>
+                            <td>
+                                @transaction.Account.Number<br>
+                                <small class="text-muted">@transaction.Account.AccountType</small>
+                            </td>
+                            <td>
+                                @transaction.Customer.FirstName @transaction.Customer.LastName<br>
+                                <small class="text-muted">@transaction.Customer.SSN</small>
+                            </td>
+                            <td>
+                                <span class="badge-transaction
+                                @(transaction.Status == TransactionStatus.Accepted ? "badge-accepted" :
+                                  transaction.Status == TransactionStatus.Denied ? "badge-denied" : "badge-pending")">
+                                    @transaction.Status
+                                </span>
+                            </td>
+                            @* <td>@transaction.CreatedAt.ToString("MM/dd/yyyy hh:mm tt")</td> *@
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-warning btn-sm details-btn" data-id="@transaction.Id" title="Details">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+
+                                    @* @if (transaction.Status == TransactionStatus.Pending) *@
+                                    @* { *@
+                                    @*     <button class="btn btn-success btn-sm approve-btn" data-id="@transaction.Id" title="Approve"> *@
+                                    @*         <i class="fas fa-check"></i> *@
+                                    @*     </button> *@
+                                    @*     <button class="btn btn-danger btn-sm deny-btn" data-id="@transaction.Id" title="Deny"> *@
+                                    @*         <i class="fas fa-times"></i> *@
+                                    @*     </button> *@
+                                    @* } *@
+
+                                    <button class="btn btn-secondary btn-sm receipt-btn" data-id="@transaction.Id" title="Receipt">
+                                        <i class="fas fa-receipt"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <!-- Pagination -->
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+            </li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<!-- Transaction Details Modal -->
+<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailsModalLabel">Transaction Details</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="transaction-details">
+                            <h6 class="font-weight-bold mb-3">Transaction Information</h6>
+                            <div class="row mb-2">
+                                <div class="col-md-5 details-label">Transaction ID:</div>
+                                <div class="col-md-7 details-value" id="detail-id"></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-5 details-label">Type:</div>
+                                <div class="col-md-7 details-value" id="detail-type"></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-5 details-label">Amount:</div>
+                                <div class="col-md-7 details-value" id="detail-amount"></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-5 details-label">Status:</div>
+                                <div class="col-md-7 details-value" id="detail-status"></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-5 details-label">Date & Time:</div>
+                                <div class="col-md-7 details-value" id="detail-date"></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-5 details-label">Method:</div>
+                                <div class="col-md-7 details-value" id="detail-method"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="transaction-details">
+                            <h6 class="font-weight-bold mb-3">Account Information</h6>
+                            <div class="row mb-2">
+                                <div class="col-md-5 details-label">Account Number:</div>
+                                <div class="col-md-7 details-value" id="detail-account"></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-5 details-label">Account Type:</div>
+                                <div class="col-md-7 details-value" id="detail-account-type"></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-5 details-label">Customer:</div>
+                                <div class="col-md-7 details-value" id="detail-customer"></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-5 details-label">SSN:</div>
+                                <div class="col-md-7 details-value" id="detail-ssn"></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-5 details-label">Branch:</div>
+                                <div class="col-md-7 details-value" id="detail-branch"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="transaction-details mt-3">
+                    <h6 class="font-weight-bold mb-3">Additional Information</h6>
+                    <div class="row mb-2">
+                        <div class="col-md-3 details-label">Destination Account:</div>
+                        <div class="col-md-9 details-value" id="detail-destination"></div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-3 details-label">Description:</div>
+                        <div class="col-md-9 details-value" id="detail-description"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary" id="print-receipt">
+                    <i class="fas fa-print mr-2"></i>Print Receipt
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Status Change Modal -->
+<div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="statusModalTitle">Confirm Action</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body" id="statusModalBody">
+                Are you sure you want to change the status of this transaction?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <form id="statusForm" method="post">
+                    <button class="btn" id="statusModalButton" type="submit"></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Search functionality
+            $('#searchButton').click(function() {
+                const searchText = $('#searchInput').val().toLowerCase();
+                $('tbody tr').each(function() {
+                    const rowText = $(this).text().toLowerCase();
+                    $(this).toggle(rowText.includes(searchText));
+                });
+            });
+
+            // Details button click
+            $('.details-btn').click(function() {
+                const transactionId = $(this).data('id');
+                // In a real app, you would fetch the transaction details via AJAX
+                // For demo purposes, we'll just show the modal
+                $('#detailsModal').modal('show');
+            });
+
+            // Approve button click
+            $('.approve-btn').click(function() {
+                const transactionId = $(this).data('id');
+                $('#statusModalTitle').text('Approve Transaction');
+                $('#statusModalBody').html('<p>Are you sure you want to approve this transaction?</p>' +
+                    '<div class="alert alert-success"><i class="fas fa-check-circle mr-2"></i>This will process the transaction and update the account balance.</div>');
+                $('#statusModalButton').removeClass().addClass('btn btn-success').text('Approve');
+                $('#statusForm').attr('action', '/Transaction/Approve/' + transactionId);
+                $('#statusModal').modal('show');
+            });
+
+            // Deny button click
+            $('.deny-btn').click(function() {
+                const transactionId = $(this).data('id');
+                $('#statusModalTitle').text('Deny Transaction');
+                $('#statusModalBody').html('<p>Are you sure you want to deny this transaction?</p>' +
+                    '<div class="alert alert-danger"><i class="fas fa-exclamation-circle mr-2"></i>This will reject the transaction and notify the customer.</div>');
+                $('#statusModalButton').removeClass().addClass('btn btn-danger').text('Deny');
+                $('#statusForm').attr('action', '/Transaction/Deny/' + transactionId);
+                $('#statusModal').modal('show');
+            });
+
+            // Receipt button click
+            $('.receipt-btn').click(function() {
+                const transactionId = $(this).data('id');
+                window.open('/Transaction/Receipt/' + transactionId, '_blank');
+            });
+
+            // Print receipt button in details modal
+            $('#print-receipt').click(function() {
+                window.print();
+            });
+
+            // Enable tooltips
+            $('[title]').tooltip();
+        });
+    </script>
+}

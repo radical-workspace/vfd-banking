@@ -9,10 +9,9 @@ using System.Security.Claims;
 
 namespace BankingSystem.PL.Controllers.AppAdmin
 {
-    public class AdminBankBranchController(IUnitOfWork unitOfWork, IMapper mapper) : Controller
+    public class AdminBankBranchController(IUnitOfWork unitOfWork) : Controller
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        private readonly IMapper _mapper = mapper;
 
 
         public IActionResult GetBankDetails(string id)
@@ -22,7 +21,9 @@ namespace BankingSystem.PL.Controllers.AppAdmin
                         b => b.Branches
                     ).FirstOrDefault();
 
-
+            ViewBag.accountsNumber = _unitOfWork.Repository<Account>().GetAll().Count();
+            ViewBag.tellersNumber = _unitOfWork.Repository<Teller>().GetAll().Count();
+            ViewBag.customersNumber = _unitOfWork.Repository<Customer>().GetAll().Count();
             return View(Bank);
         }
 
@@ -37,17 +38,16 @@ namespace BankingSystem.PL.Controllers.AppAdmin
                                                                             b => b.Departments,
                                                                             b => b.Savings,
                                                                             b => b.Reservations).ToList();
-
             return View(Branches);
         }
-        
+
 
         // GET: Branch/Create
         public IActionResult Create()
         {
             // Populate banks dropdown
             ViewBag.Banks = new SelectList(_unitOfWork.Repository<Bank>().GetAll(), "Id", "Name");
-            return View(new BranchVM());
+            return View();
         }
 
         // POST: Branch/Create
@@ -87,7 +87,7 @@ namespace BankingSystem.PL.Controllers.AppAdmin
                     _unitOfWork.Complete();
 
                     TempData["SuccessMessage"] = $"Branch '{branch.Name}' created successfully.";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index", "Admin");
                 }
                 catch (Exception ex)
                 {
@@ -184,6 +184,8 @@ namespace BankingSystem.PL.Controllers.AppAdmin
             return RedirectToAction(nameof(Details), new { id = existingBranch.Id });
         }
 
+
+        [HttpPost]
         public IActionResult Delete(int id)
         {
             // Get the branch to be deleted
@@ -210,7 +212,7 @@ namespace BankingSystem.PL.Controllers.AppAdmin
                 if (branch.Customers.Any() || branch.Loans.Any() || branch.Savings.Any())
                 {
                     TempData["ErrorMessage"] = "Cannot delete branch because it has associated customers, loans, savings accounts.";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index", "Admin");
                 }
 
                 // Handle the branch manager relationship first
@@ -243,7 +245,7 @@ namespace BankingSystem.PL.Controllers.AppAdmin
                 TempData["ErrorMessage"] = $"An error occurred while trying to delete the branch: {ex.Message}";
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Admin");
         }
     }
 }

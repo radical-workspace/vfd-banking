@@ -70,13 +70,14 @@
                                     </td>
                                 </tr>
                             </tbody>
-
+                        </table>
                             <!-- Add this form outside the table -->
-                            <form id="addForm" asp-action="AddSaving" method="post" class="d-none">
-                                <input type="hidden" id="formCurrency" name="Currency" />
-                                <input type="hidden" id="formBalance" name="Balance" />
-                                @Html.AntiForgeryToken()
-                            </form>
+                        <form id="updateForm" asp-action="UpdateSaving" method="post" class="d-none">
+                            <input type="hidden" id="savingId" name="Id" />
+                            <input type="hidden" id="savingCurrency" name="Currency" />
+                            <input type="hidden" id="savingBalance" name="Balance" />
+                            @Html.AntiForgeryToken()
+                        </form>
                     </div>
                 </div>
             </div>

@@ -2,7 +2,50 @@
 
 @{
     ViewData["Title"] = "Bank Branches";
+    var tempData = TempData["ErrorMessage"];
 }
+
+
+<style>
+    .branch-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    }
+
+    .branch-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .stat-item {
+    transition: background-color 0.3s ease;
+    }
+
+    .stat-item:hover {
+    background-color: rgba(108, 117, 125, 0.3) !important;
+    }
+
+    .page-link {
+    background-color: var(--secondary-dark);
+    border-color: var(--table-border);
+    color: var(--text-primary);
+    }
+
+    .page-item.active .page-link {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    }
+
+    .page-item:not(.active) .page-link:hover {
+    background-color: var(--accent-hover);
+    color: var(--text-primary);
+    }
+
+    .vr {
+    background-color: var(--table-border);
+    }
+</style>
+
 
 <div class="container-fluid px-4">
     <!-- Header with Create Button -->
@@ -12,11 +55,13 @@
                 <i class="fas fa-building me-2 bnk-logo"></i>Bank Branches
             </h2>
             <p class="text-text-secondary">Manage all bank branch locations and operations</p>
+            <p class="fw-bold">Total Branches → @Model.Count()</p>
         </div>
         <a asp-action="Create" class="btn btn-light">
             <i class="fas fa-plus me-2"></i>Add New Branch
         </a>
     </div>
+
 
     <!-- Branch Cards Grid -->
     <div class="row g-4">
@@ -28,7 +73,7 @@
                         <div class="d-flex align-items-center">
                             <i class="fas fa-university me-3 text-accent-1 fs-4"></i>
                             <div>
-                                <h5 class="mb-0 text-white">@branch.Name</h5>
+                                <h5 class="mb-2">@branch.Name</h5>
                                 <small class="text-text-secondary">
                                     <i class="fas fa-map-marker-alt me-1"></i>@branch.Location
                                 </small>
@@ -43,7 +88,7 @@
                             <h6 class="text-text-secondary mb-2">
                                 <i class="fas fa-clock me-2"></i>Operating Hours
                             </h6>
-                            <div class="d-flex justify-content-between align-items-center bg-secondary-dark p-3 rounded">
+                            <div class="stat-item p-2 bg-secondary-dark rounded d-flex justify-content-between align-items-center bg-secondary-dark p-3 rounded">
                                 <div>
                                     <small class="text-text-secondary">Opens</small>
                                     <p class="mb-0">@branch.Opens.ToString(@"hh\:mm")</p>
@@ -90,9 +135,24 @@
                             <a asp-action="Edit" asp-route-id="@branch.Id" class="btn btn-sm btn-outline-warning me-2">
                                 <i class="fas fa-edit me-1"></i>Edit
                             </a>
-                            <a asp-action="Delete" asp-route-id="@branch.Id" class="btn btn-sm btn-outline-danger">
-                                <i class="fas fa-trash-alt me-1"></i>Delete
-                            </a>
+
+
+                            @if(tempData != null)
+                            {
+                                <form asp-action="Delete" asp-route-id="@branch.Id" method="post" onsubmit="return confirmDelete()" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                        <i class="fas fa-trash-alt me-1"></i>Delete
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <p>Error</p>
+                            }
+
+                            @* <a asp-action="Delete" asp-route-id="@branch.Id" class="btn btn-sm btn-outline-danger"> *@
+                            @*     <i class="fas fa-trash-alt me-1"></i>Delete *@
+                            @* </a> *@
                         </div>
                     </div>
                 </div>
@@ -116,42 +176,9 @@
     </nav>
 </div>
 
-<style>
-    .branch-card {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        border: none;
+
+<script>
+    function confirmDelete() {
+        return confirm('Are you sure you want to delete this manager? This action cannot be undone.');
     }
-
-        .branch-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }
-
-    .stat-item {
-        transition: background-color 0.3s ease;
-    }
-
-        .stat-item:hover {
-            background-color: rgba(108, 117, 125, 0.3) !important;
-        }
-
-    .page-link {
-        background-color: var(--secondary-dark);
-        border-color: var(--table-border);
-        color: var(--text-primary);
-    }
-
-    .page-item.active .page-link {
-        background-color: var(--accent-color);
-        border-color: var(--accent-color);
-    }
-
-    .page-item:not(.active) .page-link:hover {
-        background-color: var(--accent-hover);
-        color: var(--text-primary);
-    }
-
-    .vr {
-        background-color: var(--table-border);
-    }
-</style>
+</script>
