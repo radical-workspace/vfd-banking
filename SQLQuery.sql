@@ -55,3 +55,8 @@ delete from SupportTickets
 select len(106727542162)
 
 select * from Transactions
+
+
+begin tran
+delete from Customers where BranchId is null
+delete from Transactions
