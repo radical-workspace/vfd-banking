@@ -155,16 +155,16 @@
                         <td>
                             <div class="d-flex flex-wrap gap-2 auto">
                                 <span class="badge badge-pill saving-badge">
-                                    Transactions: @(account.AccountTransactions?.Count ?? 0)
+                                    Transactions: @(ViewBag.TransactionsCount ?? 0)
                                 </span>
                                 <span class="badge badge-pill current-badge">
-                                    Loans: @(account.Loans?.Count ?? 0)
+                                    Loans: @(ViewBag.LoansCount ?? 0)
                                 </span>
                                 <span class="badge badge-pill inactive-badge">
-                                    Tickets: @(account.SupportTickets?.Count ?? 0)
+                                    Tickets: @(ViewBag.SupportTicketsCount ?? 0)
                                 </span>
                                 <span class="badge badge-pill active-badge w-75 mx-auto">
-                                    Certificates: @(account.Certificates?.Count ?? 0)
+                                    Certificates: @(ViewBag.CertificatesCount ?? 0) 
                                 </span>
                             </div>
                         </td>

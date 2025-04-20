@@ -216,10 +216,10 @@ ViewData["Title"] = "Dashboard";
     <div class="stats-grid">
         <div class="card stat-card">
             <div class="card-body">
-                <div class="stat-value">$4.2M</div>
+                <div class="stat-value">$@(ViewBag.Holdings)M</div>
                 <div class="stat-label">Total Deposits</div>
                 <div class="trend-indicator trend-up">
-                    <i class="bi bi-arrow-up"></i> 12.5% from last month
+                    <i class="bi bi-arrow-up"></i> Savings
                 </div>
             </div>
         </div>
@@ -227,10 +227,10 @@ ViewData["Title"] = "Dashboard";
 
         <div class="card stat-card">
             <div class="card-body">
-                <div class="stat-value">1,284</div>
-                <div class="stat-label">Active Customers</div>
+                <div class="stat-value">@ViewBag.ActiveAccounts</div>
+                <div class="stat-label">Active Accounts</div>
                 <div class="trend-indicator trend-up">
-                    <i class="bi bi-arrow-up"></i> 8.3% from last quarter
+                    <i class="bi bi-arrow-up"></i> Accounts
                 </div>
             </div>
         </div>
@@ -238,10 +238,10 @@ ViewData["Title"] = "Dashboard";
 
         <div class="card stat-card">
             <div class="card-body">
-                <div class="stat-value">342</div>
+                <div class="stat-value">@ViewBag.TodayTransactions</div>
                 <div class="stat-label">Transactions Today</div>
                 <div class="trend-indicator trend-down">
-                    <i class="bi bi-arrow-down"></i> 2.1% from yesterday
+                    <i class="bi bi-arrow-down"></i> Transactions
                 </div>
             </div>
         </div>
@@ -249,10 +249,10 @@ ViewData["Title"] = "Dashboard";
 
         <div class="card stat-card">
             <div class="card-body">
-                <div class="stat-value">15</div>
+                <div class="stat-value">@ViewBag.Branches</div>
                 <div class="stat-label">Branches</div>
                 <div class="trend-indicator trend-up">
-                    <i class="bi bi-arrow-up"></i> 1 new this month
+                    <i class="bi bi-arrow-up"></i> Branches
                 </div>
             </div>
         </div>

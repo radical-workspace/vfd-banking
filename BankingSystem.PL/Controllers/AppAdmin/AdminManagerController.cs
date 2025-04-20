@@ -35,7 +35,7 @@ public class AdminManagerController(IUnitOfWork unitOfWork, IMapper mapper) : Co
     {
         // Populate branches dropdown
         ViewBag.Branches = new SelectList(_unitOfWork.Repository<Branch>().GetAll(), "Id", "Name");
-        return View(new ManagerVM());
+        return View();
     }
 
     // POST: Manager/Create
@@ -43,45 +43,45 @@ public class AdminManagerController(IUnitOfWork unitOfWork, IMapper mapper) : Co
     [ValidateAntiForgeryToken]
     public IActionResult Create(ManagerVM model)
     {
-        if (ModelState.IsValid)
+        try
         {
-            try
+            // Create Manager entity from view model
+            var manager = new Manager
             {
-                // Create Manager entity from view model
-                var manager = new Manager
-                {
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    Address = model.Address,
-                    SSN = model.SSN,
-                    JoinDate = DateTime.Now,
-                    BirthDate = model.BirthDate,
-                    Salary = model.Salary,
-                    BranchId = model.BranchId,
-                    UserName = model.Email,
-                    Email = model.Email,
-                    PhoneNumber = model.PhoneNumber
-                };
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Address = model.Address,
+                SSN = model.SSN,
+                JoinDate = DateTime.Now,
+                BirthDate = model.BirthDate,
+                Salary = model.Salary,
+                BranchId = model.BranchId,
+                UserName = model.Email,
+                Email = model.Email,
+                PhoneNumber = model.PhoneNumber,
+                PasswordHash = "Test@123"
+            };
 
-                // Add manager to repository
-                _unitOfWork.Repository<Manager>().Add(manager);
+            // Add manager to repository
+            _unitOfWork.Repository<Manager>().Add(manager);
 
-                // Save changes
-                _unitOfWork.Complete();
-
-                TempData["SuccessMessage"] = $"Manager '{manager.FirstName} {manager.LastName}' created successfully.";
-                return RedirectToAction("Index");
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError(string.Empty, $"Error creating manager: {ex.Message}");
-            }
+            // Save changes
+            _unitOfWork.Complete();
+            TempData["SuccessMessage"] = $"Manager '{manager.FirstName} {manager.LastName}' created successfully.";
+            ViewBag.Branches = new SelectList(_unitOfWork.Repository<Branch>().GetAll(), "Id", "Name", model.BranchId);
+                
+            return RedirectToAction("Index", "Admin");
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError(string.Empty, $"Error creating manager: {ex.Message}");
         }
 
         // If we got this far, something failed, redisplay form
         ViewBag.Branches = new SelectList(_unitOfWork.Repository<Branch>().GetAll(), "Id", "Name", model.BranchId);
         return View(model);
     }
+
 
     [HttpGet]
     public IActionResult Edit(string id)
@@ -101,7 +101,22 @@ public class AdminManagerController(IUnitOfWork unitOfWork, IMapper mapper) : Co
             Selected = manager.Branch != null && b.Id == manager.Branch.Id
         });
 
-        return View(manager);
+        ManagerVM managerVM = new ManagerVM
+        {
+            //Id = manager.Id,
+            FirstName = manager.FirstName,
+            LastName = manager.LastName,
+            Address = manager.Address,
+            SSN = manager.SSN,
+            //JoinDate = manager.JoinDate,
+            BirthDate = manager.BirthDate,
+            Salary = manager.Salary,
+            PhoneNumber = manager.PhoneNumber,
+            Email = manager.Email,
+            BranchId = manager.BranchId
+        };
+
+        return View(managerVM);
     }
 
     [HttpPost]
@@ -196,6 +211,8 @@ public class AdminManagerController(IUnitOfWork unitOfWork, IMapper mapper) : Co
         return RedirectToAction(nameof(Details), new { id = existingManager.Id });
     }
 
+
+    [HttpPost]
     public IActionResult Delete(string id)
     {
         // Get the manager to be deleted
@@ -242,7 +259,7 @@ public class AdminManagerController(IUnitOfWork unitOfWork, IMapper mapper) : Co
             TempData["ErrorMessage"] = $"An error occurred while trying to delete the manager: {ex.Message}";
         }
 
-        return RedirectToAction("Index");
+        return RedirectToAction("Index", "Admin");
     }
 
     public IActionResult Details(string id)
