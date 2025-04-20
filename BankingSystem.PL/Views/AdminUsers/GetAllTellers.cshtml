@@ -51,9 +51,9 @@
     <h2>Tellers Management</h2>
 
     <div class="d-flex justify-content-between mb-3">
-        <a asp-action="Create" class="btn btn-light mt-2">
-            <i class="fas fa-plus me-2"></i>Add New Teller
-        </a>
+        @* <a asp-action="Create" class="btn btn-light mt-2"> *@
+        @*     <i class="fas fa-plus me-2"></i>Add New Teller *@
+        @* </a> *@
         <div class="input-group" style="width: 300px;">
             <input type="text" id="searchInput" class="form-control" placeholder="Search tellers...">
             <button class="btn btn-outline-secondary" type="button" id="searchButton">
@@ -71,7 +71,7 @@
                     <th>Phone</th>
                     <th>Branch</th>
                     <th>Salary</th>
-                    <th>Actions</th>
+                    @* <th>Actions</th> *@
                 </tr>
             </thead>
             <tbody class="text-center">
@@ -84,10 +84,10 @@
                         <td>@teller.BranchName</td>
                         <td>@teller.Salary.ToString("C")</td>
                         <td>
-                            <div class="btn-group" role="group">
-                                <a asp-action="Details" asp-route-id="@teller.Id" class="btn btn-sm btn-warning">
-                                    <i class="bi bi-eye"></i> <span class="fw-bold">Details</span>
-                                </a>
+                            @* <div class="btn-group" role="group"> *@
+                            @*     <a asp-action="Details" asp-route-id="@teller.Id" class="btn btn-sm btn-warning"> *@
+                            @*         <i class="bi bi-eye"></i> <span class="fw-bold">Details</span> *@
+                            @*     </a> *@
 
                                 @* <a asp-action="Edit" asp-route-id="@teller.Id" class="btn btn-sm btn-warning"> *@
                                 @*     <i class="bi bi-pencil"></i> Edit *@
@@ -95,7 +95,7 @@
                                 @* <button class="btn btn-sm btn-danger delete-btn" data-id="@teller.Id"> *@
                                 @*     <i class="bi bi-trash"></i> Delete *@
                                 @* </button> *@
-                            </div>
+                            @* </div> *@
                         </td>
                     </tr>
                 }

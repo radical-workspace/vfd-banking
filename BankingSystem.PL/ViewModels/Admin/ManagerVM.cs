@@ -6,7 +6,7 @@ namespace BankingSystem.PL.ViewModels.Admin
     // ViewModel for creating/editing managers
     public class ManagerVM
     {
-        //public string Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         public string FirstName { get; set; } = null!;

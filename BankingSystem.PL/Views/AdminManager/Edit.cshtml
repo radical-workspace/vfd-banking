@@ -103,7 +103,7 @@
                     <div class="mb-3">
                         <label asp-for="BranchId" class="form-label">Branch</label>
 
-                        <select asp-for="BranchId" asp-items="@(ViewBag.Branches as SelectList)" class="form-select">
+                        <select asp-for="BranchId" asp-items="@(ViewBag.Branches as SelectList ?? new SelectList(Enumerable.Empty<SelectListItem>()))" class="form-select">
                             <option value="">Select Branch</option>
                         </select>
 

@@ -57,7 +57,7 @@ namespace BankingSystem.BLL.Services
         }
 
 
-        public IEnumerable<Account> GetAll(string? ID, int flag = 1)
+        public IQueryable<Account> GetAll(string? ID, int flag = 1)
         {
             if (flag == 1)
                 return _context.Accounts
@@ -65,7 +65,7 @@ namespace BankingSystem.BLL.Services
                         .ThenInclude(c => c.Branch)
                     .Include(a => a.Branch)
                     //.Where(a => a.Customer!.Branch.Tellers.Any(teller => teller.Id == ID))
-                    .ToList();
+                    ;
 
             else
                 return _context.Accounts
@@ -73,7 +73,7 @@ namespace BankingSystem.BLL.Services
                         .ThenInclude(c => c.Branch)
                     .Include(a => a.Branch)
                     .Where(a => a.Customer!.Id == ID)
-                    .ToList();
+                    ;
         }
 
 
@@ -90,7 +90,7 @@ namespace BankingSystem.BLL.Services
 
             if (!query.Any())
                 query = GetAll(tellerID)
-                        .Where(a => (a.Customer?.FirstName + " " + a.Customer?.LastName).ToLower().Trim()
+                        .Where(a => (a.Customer.FirstName + " " + a.Customer.LastName).ToLower().Trim()
                             .Contains(ISearchPaginationRepo<Account>.MyRegex().Replace(search.ToLower().Trim(), " ")));
 
             return query;
@@ -165,11 +165,11 @@ namespace BankingSystem.BLL.Services
 
                     if (account.Card != null)
                         account.Card.IsDeleted = true;
-                    
+
                     _context.SaveChanges();
-                    }
                 }
             }
+        }
 
 
 

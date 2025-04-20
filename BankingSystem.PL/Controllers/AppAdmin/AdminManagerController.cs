@@ -94,12 +94,8 @@ public class AdminManagerController(IUnitOfWork unitOfWork, IMapper mapper) : Co
         // Get available branches
         var branches = _unitOfWork.Repository<Branch>().GetAll().ToList();
 
-        ViewBag.Branches = branches.Select(b => new SelectListItem
-        {
-            Value = b.Id.ToString(),
-            Text = b.Name,
-            Selected = manager.Branch != null && b.Id == manager.Branch.Id
-        });
+
+        ViewBag.Branches = new SelectList(branches, "Id", "Name", manager.BranchId);
 
         ManagerVM managerVM = new ManagerVM
         {
@@ -120,44 +116,39 @@ public class AdminManagerController(IUnitOfWork unitOfWork, IMapper mapper) : Co
     }
 
     [HttpPost]
-    public IActionResult Edit(Manager manager, int? newBranchId)
+    public IActionResult Edit(ManagerVM managerVM)
     {
         // Fetch the existing manager from the database
-        var existingManager = _unitOfWork.Repository<Manager>().GetSingleIncluding(m => m.Id == manager.Id, m => m.Branch!, m => m.Tellers!);
+        var existingManager = _unitOfWork.Repository<Manager>().GetSingleIncluding(m => m.Id == managerVM.Id, m => m.Branch!, m => m.Tellers!);
 
         if (existingManager == null)
             return NotFound();
 
         // Update manager properties
-        existingManager.FirstName = manager.FirstName;
-        existingManager.LastName = manager.LastName;
-        existingManager.Address = manager.Address;
-        existingManager.Salary = manager.Salary;
-        existingManager.PhoneNumber = manager.PhoneNumber;
+        existingManager.FirstName = managerVM.FirstName;
+        existingManager.LastName = managerVM.LastName;
+        existingManager.Address = managerVM.Address;
+        existingManager.Salary = managerVM.Salary;
+        existingManager.PhoneNumber = managerVM.PhoneNumber;
 
         // Only update email if changed (may require additional identity management)
-        if (existingManager.Email != manager.Email)
+        if (existingManager.Email != managerVM.Email)
         {
-            existingManager.Email = manager.Email;
-            existingManager.UserName = manager.Email;
+            existingManager.Email = managerVM.Email;
+            existingManager.UserName = managerVM.Email;
         }
 
         // Get all branches for the dropdown
         var branches = _unitOfWork.Repository<Branch>().GetAll();
 
-        // Prepare branches for view if we need to return to it
-        ViewBag.Branches = branches.Select(b => new SelectListItem
-        {
-            Value = b.Id.ToString(),
-            Text = b.Name,
-            Selected = existingManager.Branch != null && b.Id == existingManager.Branch.Id
-        });
+        ViewBag.Branches = new SelectList(branches, "Id", "Name", managerVM.BranchId);
+
 
         // Process branch change if a new branch is selected
-        if (newBranchId.HasValue)
+        if (managerVM.BranchId.HasValue)
         {
             // Get the selected branch
-            var newBranch = _unitOfWork.Repository<Branch>().GetSingleIncluding(b => b.Id == newBranchId);
+            var newBranch = _unitOfWork.Repository<Branch>().GetSingleIncluding(b => b.Id == managerVM.BranchId);
 
             if (newBranch == null)
             {
@@ -166,7 +157,7 @@ public class AdminManagerController(IUnitOfWork unitOfWork, IMapper mapper) : Co
             }
 
             // If manager was assigned to another branch before
-            if (existingManager.BranchId.HasValue && existingManager.BranchId != newBranchId)
+            if (existingManager.BranchId.HasValue && existingManager.BranchId != managerVM.BranchId)
             {
                 var previousBranch = _unitOfWork.Repository<Branch>().GetSingleIncluding(b => b.Id == existingManager.BranchId);
                 if (previousBranch != null && previousBranch.MyManager?.Id == existingManager.Id)
@@ -178,7 +169,7 @@ public class AdminManagerController(IUnitOfWork unitOfWork, IMapper mapper) : Co
             }
 
             // Assign manager to new branch
-            existingManager.BranchId = newBranchId;
+            existingManager.BranchId = managerVM.BranchId;
             existingManager.Branch = newBranch;
 
             // Update branch's manager reference
@@ -208,7 +199,7 @@ public class AdminManagerController(IUnitOfWork unitOfWork, IMapper mapper) : Co
         _unitOfWork.Complete();
 
         TempData["SuccessMessage"] = "Manager updated successfully.";
-        return RedirectToAction(nameof(Details), new { id = existingManager.Id });
+        return RedirectToAction(nameof(Index), nameof(Admin));
     }
 
 
@@ -261,7 +252,7 @@ public class AdminManagerController(IUnitOfWork unitOfWork, IMapper mapper) : Co
 
         return RedirectToAction("Index", "Admin");
     }
-    
+
     public IActionResult Details(string id)
     {
         var manager = _unitOfWork.Repository<Manager>().GetSingleIncluding(

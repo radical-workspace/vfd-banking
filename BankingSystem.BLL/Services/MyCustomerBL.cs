@@ -32,7 +32,7 @@ namespace BankingSystem.BLL.Services
         }
 
 
-        public IEnumerable<Customer> GetAll(string? userID = "", int flag = 1)
+        public IQueryable<Customer> GetAll(string? userID = "", int flag = 1)
         {
             return _context.Customers
                 .Include(c => c.Branch)
