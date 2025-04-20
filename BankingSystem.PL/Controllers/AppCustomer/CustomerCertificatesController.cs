@@ -126,7 +126,10 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                 Amount = amount
             };
 
+            // Update the account balance
+            account.Balance -= amount;
             _UnitOfWork.Repository<Certificate>().Add(newCertificate);
+            _UnitOfWork.Repository<Account>().Update(account);
             _UnitOfWork.Complete();
 
             return RedirectToAction("ThanksCertificate", new { number = newCertificate.CertificateNumber });

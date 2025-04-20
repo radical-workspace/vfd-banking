@@ -1,8 +1,9 @@
 ﻿@using BankingSystem.DAL.Models;
-@model IEnumerable<Transaction>
+@using BankingSystem.PL.ViewModels.Admin
+@model MainDashboardFourCards
 
 @{
-ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = "Dashboard";
 }
 
 
@@ -152,8 +153,7 @@ ViewData["Title"] = "Dashboard";
     }
 
     @@media (max-width: 768px) {
-        .stat-card .stat-value
-        {
+        .stat-card .stat-value {
             font-size: 1.5rem;
         }
     }
@@ -165,11 +165,11 @@ ViewData["Title"] = "Dashboard";
         overflow: hidden;
     }
 
-    .rounded-table table {
-        margin: 0;
-        border-collapse: separate;
-        border-spacing: 0;
-    }
+        .rounded-table table {
+            margin: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
 
     .rounded-top-left {
         border-top-left-radius: 10px;
@@ -216,8 +216,13 @@ ViewData["Title"] = "Dashboard";
     <div class="stats-grid">
         <div class="card stat-card">
             <div class="card-body">
+
                 <div class="stat-value">$@(ViewBag.Holdings)M</div>
                 <div class="stat-label">Total Deposits</div>
+
+                <div class="stat-value">$@Model.Holdings</div>
+                <div class="stat-label">Total Holdings</div>
+
                 <div class="trend-indicator trend-up">
                     <i class="bi bi-arrow-up"></i> Savings
                 </div>
@@ -227,8 +232,13 @@ ViewData["Title"] = "Dashboard";
 
         <div class="card stat-card">
             <div class="card-body">
+
                 <div class="stat-value">@ViewBag.ActiveAccounts</div>
                 <div class="stat-label">Active Accounts</div>
+
+                <div class="stat-value">@Model.ActiveAccounts</div>
+                <div class="stat-label">Active Customers</div>
+
                 <div class="trend-indicator trend-up">
                     <i class="bi bi-arrow-up"></i> Accounts
                 </div>
@@ -238,7 +248,11 @@ ViewData["Title"] = "Dashboard";
 
         <div class="card stat-card">
             <div class="card-body">
+
                 <div class="stat-value">@ViewBag.TodayTransactions</div>
+
+                <div class="stat-value">@Model.TodayTransactions</div>
+
                 <div class="stat-label">Transactions Today</div>
                 <div class="trend-indicator trend-down">
                     <i class="bi bi-arrow-down"></i> Transactions
@@ -249,7 +263,11 @@ ViewData["Title"] = "Dashboard";
 
         <div class="card stat-card">
             <div class="card-body">
+
                 <div class="stat-value">@ViewBag.Branches</div>
+
+                <div class="stat-value">@Model.Branches</div>
+
                 <div class="stat-label">Branches</div>
                 <div class="trend-indicator trend-up">
                     <i class="bi bi-arrow-up"></i> Branches
@@ -283,7 +301,7 @@ ViewData["Title"] = "Dashboard";
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var transaction in Model)
+                                @foreach (var transaction in Model.Transactions)
                                 {
                                     <tr>
                                         <td>@transaction.Id</td>
@@ -291,7 +309,8 @@ ViewData["Title"] = "Dashboard";
                                             <span class="badge-transaction
                                                 @(transaction.Type == TransactionType.Deposit ? "badge-deposit" :
                                                   transaction.Type == TransactionType.Withdraw ? "badge-withdraw" :
-                                                  transaction.Type == TransactionType.Transfer ? "badge-transfer" : "badge-loan")">@transaction.Type
+                                                  transaction.Type == TransactionType.Transfer ? "badge-transfer" : "badge-loan")">
+                                                @transaction.Type
                                             </span>
                                         </td>
                                         <td class="@(transaction.Type == TransactionType.Deposit || transaction.Type == TransactionType.LoanPayment ? "amount-positive" : "amount-negative")">

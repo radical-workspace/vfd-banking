@@ -5,10 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BankingSystem.PL.Controllers.AppAdmin
 {
-    public class AdminTransactionsController(IUnitOfWork unitOfWork, IMapper mapper) : Controller
+    public class AdminTransactionsController(IUnitOfWork unitOfWork) : Controller
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        private readonly IMapper _mapper = mapper;
 
 
         [HttpGet]
