@@ -431,7 +431,7 @@
     <div class="sidebar" id="sidebar">
         <div class="logo">
             <div class="d-flex align-items-center">
-                <a class="my-head" href="" onclick="location.reload(); return false;">
+                <a class="my-head" href="" onclick="location.reload();">
                     <i class="bi bi-bank2 me-2 bnk-logo"></i>
                     <span class="logo-text">BankAdmin</span>
                 </a>
@@ -606,5 +606,53 @@
             icon.classList.remove('bi-chevron-double-right');
             icon.classList.add('bi-chevron-double-left');
         }
+    });
+
+
+    // Handle View All Transactions button click
+    document.addEventListener('click', function(e) {
+        if (e.target && e.target.id === 'viewAllTransactions') {
+            e.preventDefault();
+            const transactionsLink = document.querySelector('a[data-url="/AdminTransactions/GetAllTransactionsBranches"]');
+            if (transactionsLink) {
+                // Remove active class from all links
+                document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                // Add active class to transactions link
+                transactionsLink.classList.add('active');
+                // Trigger click on transactions link
+                transactionsLink.click();
+            }
+        }
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Check for active section parameter
+        const urlParams = new URLSearchParams(window.location.search);
+
+        if (urlParams.get('activeSection') === 'branches') {
+            // Clean the URL
+            history.replaceState(null, '', window.location.pathname);
+
+            // Find branches link and trigger content load
+            const branchesLink = document.querySelector('a[data-url="/AdminBankBranch/GetAllBranches"]');
+            if (branchesLink) {
+                // Add slight delay to ensure DOM is ready
+                setTimeout(() => {
+                    // Update active state
+                    document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                    branchesLink.classList.add('active');
+
+                    // Trigger content load
+                    branchesLink.click();
+                }, 50);
+            }
+        }
+
+        // Existing navigation code
+        const contentArea = document.getElementById("main-content");
+        // ... rest of your existing navigation script ...
     });
 </script>
