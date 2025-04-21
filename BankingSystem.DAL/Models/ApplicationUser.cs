@@ -21,8 +21,4 @@ namespace BankingSystem.DAL.Models
 
     }
 
-
-
-
-
 }

@@ -42,7 +42,7 @@ namespace BankingSystem.BLL.Services
         }
 
 
-        public SupportTicket? Get(int id, long number = 0)
+        public SupportTicket? Get(int id, string? UID = "", long number = 0)
         {
             return _context.SupportTickets
                 .Include(t => t.Teller)
