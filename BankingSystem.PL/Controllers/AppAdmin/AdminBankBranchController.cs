@@ -164,7 +164,7 @@ namespace BankingSystem.PL.Controllers.AppAdmin
                     // Remove current manager if exists
                     if (currentManagerId != null)
                     {
-                        var previousManager = _unitOfWork.Repository<Manager>().GetAll().Where(b=>b.Id== currentManagerId).FirstOrDefault();
+                        var previousManager = _unitOfWork.Repository<Manager>().GetAll().Where(b => b.Id == currentManagerId).FirstOrDefault();
                         if (previousManager != null)
                         {
                             previousManager.BranchId = null;
