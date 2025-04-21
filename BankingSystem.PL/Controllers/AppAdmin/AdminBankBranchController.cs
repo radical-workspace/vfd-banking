@@ -169,10 +169,8 @@ namespace BankingSystem.PL.Controllers.AppAdmin
                 {
                     if (!string.IsNullOrEmpty(currentManagerId))
                     {
-
                         var previousManager = _unitOfWork.Repository<Manager>().GetAll()
                             .FirstOrDefault(m => m.Id == currentManagerId);
-
 
                         if (previousManager != null)
                         {
@@ -203,7 +201,7 @@ namespace BankingSystem.PL.Controllers.AppAdmin
                         existingBranch.MyManager = null;
                     }
                 }
-                
+
                 _unitOfWork.Repository<Branch>().Update(existingBranch);
                 _unitOfWork.Complete();
 

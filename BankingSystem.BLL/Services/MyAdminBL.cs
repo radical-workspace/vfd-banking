@@ -28,7 +28,7 @@ namespace BankingSystem.BLL.Services
         }
 
 
-        public void Update(Admin Entity)
+        public void Update(Admin Entity, string? TellerId = "")
         {
             if (Entity != null)
             {

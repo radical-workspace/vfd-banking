@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace BankingSystem.BLL.Interfaces
 {
 
-    public interface IGenericRepository <T> where T : class
+    public interface IGenericRepository<T> where T : class
     {
         IQueryable<T> GetAll(string? userID = "", int flag = 1);
         //public IQueryable<T> GetQueryable();
@@ -20,10 +20,10 @@ namespace BankingSystem.BLL.Interfaces
 
         void Add(T Entity);
 
-        void Update(T Entity);
+        void Update(T Entity, string? ID = "");
 
         void Delete(T Entity);
-    
+
 
         IEnumerable<T> GetAllIncluding(params Expression<Func<T, object>>[] includes);
         T? GetSingleIncluding(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BankingSystem.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class Create : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -370,7 +370,7 @@ namespace BankingSystem.DAL.Migrations
                         column: x => x.BranchId,
                         principalTable: "Branches",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Reservations_Customers_CustomerId",
                         column: x => x.CustomerId,
@@ -488,7 +488,7 @@ namespace BankingSystem.DAL.Migrations
                         column: x => x.AccountId,
                         principalTable: "Accounts",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Loans_Branches_BranchId",
                         column: x => x.BranchId,
@@ -620,7 +620,7 @@ namespace BankingSystem.DAL.Migrations
                         column: x => x.AccountId,
                         principalTable: "Accounts",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SupportTickets_Customers_CustomerId",
                         column: x => x.CustomerId,

@@ -62,9 +62,9 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                     BranchId = customer.BranchId,
                     FinancialDocuments = new List<FinancialDocumentVM>
                     {
-                        new FinancialDocumentVM(), // For Income Statement
-                        new FinancialDocumentVM(), // For Asset Declaration
-                        new FinancialDocumentVM()  // For Tax Return
+                        new (), // For Income Statement
+                        new (), // For Asset Declaration
+                        new ()  // For Tax Return
                     }
                 };
                 return View(customerloanvm);
@@ -103,7 +103,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                 BranchId = model.BranchId.GetValueOrDefault(),
                 StartDate = model.StartDate,
                 LoanAmount = model.LoanAmount.GetValueOrDefault(),
-                CurrentDebt = model.CurrentDebt,
+                CurrentDebt = model.LoanAmount.GetValueOrDefault(),
                 InterestRate = model.InterestRate,
                 DurationInMonth = model.DurationInMonth,
                 LoanStatus = model.LoanStatus,

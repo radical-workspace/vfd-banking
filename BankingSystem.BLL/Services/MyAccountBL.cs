@@ -141,7 +141,7 @@ namespace BankingSystem.BLL.Services
         }
 
 
-        public void Update(Account Entity)
+        public void Update(Account Entity, string? TellerId = "")
         {
             if (Entity != null)
             {

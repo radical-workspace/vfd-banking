@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankingSystem.DAL.Migrations
 {
     [DbContext(typeof(BankingSystemContext))]
-    [Migration("20250421073302_End")]
-    partial class End
+    [Migration("20250421201316_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -228,6 +228,9 @@ namespace BankingSystem.DAL.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ManagerId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -957,9 +960,11 @@ namespace BankingSystem.DAL.Migrations
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Branch", b =>
                 {
-                    b.HasOne("BankingSystem.DAL.Models.Bank", null)
+                    b.HasOne("BankingSystem.DAL.Models.Bank", "Bank")
                         .WithMany("Branches")
                         .HasForeignKey("BankId");
+
+                    b.Navigation("Bank");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Certificate", b =>
@@ -1220,7 +1225,8 @@ namespace BankingSystem.DAL.Migrations
                 {
                     b.HasOne("BankingSystem.DAL.Models.Branch", "Branch")
                         .WithOne("MyManager")
-                        .HasForeignKey("BankingSystem.DAL.Models.Manager", "BranchId");
+                        .HasForeignKey("BankingSystem.DAL.Models.Manager", "BranchId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("BankingSystem.DAL.Models.ApplicationUser", null)
                         .WithOne()

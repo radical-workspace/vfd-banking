@@ -29,7 +29,7 @@ namespace BankingSystem.PL.ViewModels.Customer
         public string? SelectedCardNumber { get; set; }
 
         // Add this property
-        public List<SelectListItem> UserVisaCards { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem>? UserVisaCards { get; set; } = new List<SelectListItem>();
 
         [RequiredWhen(nameof(ShowAccounts), false, ErrorMessage = "CVV is required")]
         [StringLength(4, MinimumLength = 3, ErrorMessage = "CVV must be 3-4 digits")]

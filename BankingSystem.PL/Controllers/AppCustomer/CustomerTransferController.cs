@@ -35,10 +35,13 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                     Value = a.Number.ToString(),
                     Text = $"Account: {a.Number} - Balance: {a.Balance:C}"
                 })],
-                UserVisaCards = [.. accounts.Select(c=> new SelectListItem {
-                    Value = c.Card!.Number.ToString(),
-                    Text = $"Card : {c.Card.Number} - Balance: {c.Balance:C}"
-                })],
+
+                UserVisaCards = accounts.Where(a => a.Card != null)
+                                    .Select(c => new SelectListItem
+                                    {
+                                        Value = c.Card.Number.ToString() ?? "",
+                                        Text = $"Card : {c.Card.Number} - Balance: {c.Balance:C}"
+                                    }).ToList(),
                 ShowAccounts = true
             };
 
@@ -48,30 +51,30 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         [HttpPost]
         public IActionResult TransferMoney(AccountsViewModel transferMoneyVM)
         {
-            if (!ModelState.IsValid)
-            {
+            //if (!ModelState.IsValid)
+            //{
                 // Repopulate dropdowns
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                var accounts = _unitOfWork.Repository<Account>()
-                    .GetAllIncluding(c => c.Customer!, a => a.Card)
-                    .Where(c => c.CustomerId == userId)
-                    .ToList();
+                //var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                //var accounts = _unitOfWork.Repository<Account>()
+                //    .GetAllIncluding(c => c.Customer!, a => a.Card)
+                //    .Where(c => c.CustomerId == userId)
+                //    .ToList();
 
-                transferMoneyVM.UserAccounts = accounts.Select(a => new SelectListItem
-                {
-                    Value = a.Number.ToString(),
-                    Text = $"Account: {a.Number} - Balance: {a.Balance:C}"
-                }).ToList();
+                //transferMoneyVM.UserAccounts = accounts.Select(a => new SelectListItem
+                //{
+                //    Value = a.Number.ToString(),
+                //    Text = $"Account: {a.Number} - Balance: {a.Balance:C}"
+                //}).ToList();
 
-                transferMoneyVM.UserVisaCards = accounts.Where(a => a.Card != null)
-                    .Select(c => new SelectListItem
-                    {
-                        Value = c.Card!.Number,
-                        Text = $"Card: {c.Card.Number}"
-                    }).ToList();
+                //transferMoneyVM.UserVisaCards = accounts.Where(a => a.Card != null)
+                //    .Select(c => new SelectListItem
+                //    {
+                //        Value = c.Card!.Number,
+                //        Text = $"Card: {c.Card.Number}"
+                //    }).ToList();
 
-                return View(transferMoneyVM);
-            }
+                //return View(transferMoneyVM);
+            //}
             // Initialize transaction
             var transaction = _transfereHelper.CreatePendingTransaction(transferMoneyVM, User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
 

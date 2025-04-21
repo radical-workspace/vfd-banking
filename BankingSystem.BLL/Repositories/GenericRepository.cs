@@ -49,7 +49,7 @@ namespace BankingSystem.BLL.Repositories
         }
 
 
-        public void Update(T Entity)
+        public void Update(T Entity, string? TellerId = "")
         {
             _dbContext.Update(Entity);
         }

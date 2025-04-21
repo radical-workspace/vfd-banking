@@ -20,14 +20,18 @@ namespace BankingSystem.PL.Controllers.AppManager
 
             var branch = _unitOfWork.Repository<Branch>().GetSingleIncluding(b => b.MyManager.Id == ManagerID);
 
-            if (branch == null) return NotFound();
-
             var Ticket = _unitOfWork.Repository<SupportTicket>()
                 .GetAllIncluding(c => c.Customer!, t => t.Teller, a => a.Account)
                 .Where(b => b.Account.BranchId == branch.Id)
                 .ToList();
 
             if (Ticket == null) return NotFound();
+            
+            foreach (var ticket in Ticket)
+            {
+                ticket.Teller = _unitOfWork.Repository<Teller>().GetSingleIncluding(t => t.Id == ticket.TellerId);
+            }
+
 
             var TicketsViewModel = _mapper.Map<List<TicketsViewModel>>(Ticket);
             return View(TicketsViewModel);

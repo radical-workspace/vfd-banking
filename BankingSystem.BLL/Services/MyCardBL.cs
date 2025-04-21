@@ -124,7 +124,7 @@ namespace BankingSystem.BLL.Services
             throw new NotImplementedException();
         }
 
-        public void Update(VisaCard Entity)
+        public void Update(VisaCard Entity, string? TellerId = "")
         {
             throw new NotImplementedException();
         }

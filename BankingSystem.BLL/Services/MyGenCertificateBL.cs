@@ -44,7 +44,7 @@ namespace BankingSystem.BLL.Services
         }
 
 
-        public void Update(GeneralCertificate Entity)
+        public void Update(GeneralCertificate Entity, string? TellerId = "")
         {
             if (Entity != null)
             {

@@ -32,7 +32,7 @@ namespace BankingSystem.PL
            
            
             builder.Services.AddDbContext<BankingSystemContext>(options =>
-                                                                options.UseSqlServer(DeploymentConnectionString)
+                                                                options.UseSqlServer(DevelopmentConnectionString)
                                                                        .AddInterceptors(new SoftDeleteInterceptor()));
 
 

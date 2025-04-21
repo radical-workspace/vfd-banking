@@ -88,7 +88,7 @@ namespace BankingSystem.BLL.Services
             throw new NotImplementedException();
         }
 
-        public void Update(Customer Entity)
+        public void Update(Customer Entity, string? TellerId = "")
         {
             throw new NotImplementedException();
         }

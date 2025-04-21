@@ -15,12 +15,12 @@
             <form asp-action="Details" asp-route-id="@Model.Id" method="post" class="ms-auto">
                 <label class="form-label me-2 fw-bold">Filter by Status:</label>
                 <select asp-for="SelectedStatus" asp-items="ViewBag.statusList"
-                class="btn btn-primary dropdown-toggle" onchange="this.form.submit()">
+                        class="btn btn-primary dropdown-toggle" onchange="this.form.submit()">
                 </select>
             </form>
         </div>
     </div>
-    @if(Model == null || !Model.Tickets.Any())
+    @if (Model == null || !Model.Tickets.Any())
     {
         <!-- No Tickets Available Box -->
         <div class="card text-center my-5 py-5">
@@ -51,7 +51,7 @@
                             <p class="card-text">@ticket.Description</p>
 
                             <div class="ticket-response">
-                                @if(ticket.Response != null)
+                                @if (ticket.Response != null)
                                 {
                                     <p class="mb-0"><strong>Support Response:</strong> @ticket.Response</p>
                                 }
@@ -70,3 +70,45 @@
     }
 
 </div>
+@section Scripts {
+    <script>
+                // Wait for the DOM to be fully loaded before executing
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the status filter dropdown element
+            const statusFilter = document.getElementById('SelectedStatus');
+
+            // Check if the element exists to prevent errors
+            if (statusFilter) {
+                // Add an event listener for the change event
+                statusFilter.addEventListener('change', function() {
+                    // Show loading indicator or feedback if needed
+                    // This could be a spinner, message, etc.
+                    // Example: document.getElementById('loadingSpinner').classList.remove('d-none');
+
+                    // Submit the form
+                    this.form.submit();
+                });
+            }
+
+            // Optional: Add animation for ticket cards
+            const ticketCards = document.querySelectorAll('.ticket-card');
+            ticketCards.forEach((card, index) => {
+                // Add a slight delay for each card to create a cascade effect
+                setTimeout(() => {
+                    card.classList.add('show');
+                }, 100 * index);
+            });
+
+            // Optional: Add click event to expand/collapse ticket details
+            ticketCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // Toggle a class to expand/collapse more details
+                    this.classList.toggle('expanded');
+                });
+            });
+        });
+
+    </script>
+
+@* <script src="~/js/CustomerSupportTickets.js"></script> *@
+}

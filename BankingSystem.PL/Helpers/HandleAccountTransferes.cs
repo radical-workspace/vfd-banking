@@ -3,6 +3,7 @@ using BankingSystem.DAL.Models;
 using BankingSystem.PL.ViewModels.Customer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using NuGet.Protocol.Plugins;
 using System.Security.Claims;
 
@@ -116,7 +117,7 @@ namespace BankingSystem.PL.Helpers
                 _unitOfWork.Repository<Transaction>().Add(transaction);
                 _unitOfWork.Complete();
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Details", "CustomerProfile", new RouteValueDictionary(new { id = sender.CustomerId }));
             }
             catch
             {
@@ -232,7 +233,7 @@ namespace BankingSystem.PL.Helpers
                 _unitOfWork.Repository<Transaction>().Add(transaction);
                 _unitOfWork.Complete();
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Details", "CustomerProfile", new RouteValueDictionary(new { id = MyAccount.CustomerId }));
             }
             catch
             {
@@ -259,7 +260,7 @@ namespace BankingSystem.PL.Helpers
 
                     // known that the loan is already Validated
                     transaction.Payment.LoanId = model.SelectedLoanId.Value;
-                    
+
                     if (model.Amount > loan.CurrentDebt)
                         return FailTransfer(transaction, "Deposit failed", "Amount exceeds loan debt");
 
@@ -292,7 +293,7 @@ namespace BankingSystem.PL.Helpers
                 _unitOfWork.Repository<Transaction>().Add(transaction);
                 _unitOfWork.Complete();
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Details", "CustomerProfile", new RouteValueDictionary(new { id = MyAccount.CustomerId }));
             }
             catch
             {
