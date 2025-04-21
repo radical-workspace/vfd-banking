@@ -57,6 +57,7 @@ public class AdminManagerController(IUnitOfWork unitOfWork, IMapper mapper, User
                 BranchId = model.BranchId,
                 UserName = model.Email,
                 Email = model.Email,
+                Discriminator = "Manager",
                 PhoneNumber = model.PhoneNumber
 
                 
@@ -224,7 +225,8 @@ public class AdminManagerController(IUnitOfWork unitOfWork, IMapper mapper, User
             if (manager.Tellers.Any())
             {
                 TempData["ErrorMessage"] = "Cannot delete manager because they are supervising tellers. Please reassign the tellers first.";
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Admin");
+
             }
 
             // Handle the branch relationship first
