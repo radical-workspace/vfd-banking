@@ -25,6 +25,10 @@ namespace BankingSystem.DAL.Data.Configurations
             //.OnDelete(DeleteBehavior.Cascade);
 
             builder.HasQueryFilter(P => !P.IsDeleted);
+
+            builder.HasOne(b => b.MyManager)
+              .WithOne(m => m.Branch)
+              .HasForeignKey<Manager>(m => m.BranchId);
         }
 
 

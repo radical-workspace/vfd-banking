@@ -226,6 +226,9 @@ namespace BankingSystem.DAL.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("ManagerId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -944,7 +947,8 @@ namespace BankingSystem.DAL.Migrations
 
                     b.HasOne("BankingSystem.DAL.Models.Customer", "Customer")
                         .WithMany("Accounts")
-                        .HasForeignKey("CustomerId");
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Branch");
 
@@ -953,16 +957,19 @@ namespace BankingSystem.DAL.Migrations
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Branch", b =>
                 {
-                    b.HasOne("BankingSystem.DAL.Models.Bank", null)
+                    b.HasOne("BankingSystem.DAL.Models.Bank", "Bank")
                         .WithMany("Branches")
                         .HasForeignKey("BankId");
+
+                    b.Navigation("Bank");
                 });
 
             modelBuilder.Entity("BankingSystem.DAL.Models.Certificate", b =>
                 {
                     b.HasOne("BankingSystem.DAL.Models.Account", "Account")
                         .WithMany("Certificates")
-                        .HasForeignKey("AccountId");
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("BankingSystem.DAL.Models.GeneralCertificate", "GeneralCertificate")
                         .WithMany()
@@ -1021,7 +1028,8 @@ namespace BankingSystem.DAL.Migrations
 
                     b.HasOne("BankingSystem.DAL.Models.Customer", "Customer")
                         .WithMany("Loans")
-                        .HasForeignKey("CustomerId");
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Account");
 
@@ -1049,7 +1057,8 @@ namespace BankingSystem.DAL.Migrations
 
                     b.HasOne("BankingSystem.DAL.Models.Customer", "Customer")
                         .WithMany("Reservations")
-                        .HasForeignKey("CustomerId");
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Branch");
 
@@ -1071,11 +1080,13 @@ namespace BankingSystem.DAL.Migrations
                 {
                     b.HasOne("BankingSystem.DAL.Models.Account", "Account")
                         .WithMany("SupportTickets")
-                        .HasForeignKey("AccountId");
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("BankingSystem.DAL.Models.Customer", "Customer")
                         .WithMany("SupportTickets")
-                        .HasForeignKey("CustomerId");
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("BankingSystem.DAL.Models.Teller", "Teller")
                         .WithMany()
@@ -1119,7 +1130,8 @@ namespace BankingSystem.DAL.Migrations
                 {
                     b.HasOne("BankingSystem.DAL.Models.Account", "Account")
                         .WithOne("Card")
-                        .HasForeignKey("BankingSystem.DAL.Models.VisaCard", "AccountId");
+                        .HasForeignKey("BankingSystem.DAL.Models.VisaCard", "AccountId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Account");
                 });
@@ -1195,7 +1207,7 @@ namespace BankingSystem.DAL.Migrations
                     b.HasOne("BankingSystem.DAL.Models.Branch", "Branch")
                         .WithMany("Customers")
                         .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("BankingSystem.DAL.Models.ApplicationUser", null)
                         .WithOne()
@@ -1210,7 +1222,8 @@ namespace BankingSystem.DAL.Migrations
                 {
                     b.HasOne("BankingSystem.DAL.Models.Branch", "Branch")
                         .WithOne("MyManager")
-                        .HasForeignKey("BankingSystem.DAL.Models.Manager", "BranchId");
+                        .HasForeignKey("BankingSystem.DAL.Models.Manager", "BranchId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("BankingSystem.DAL.Models.ApplicationUser", null)
                         .WithOne()
