@@ -3,6 +3,7 @@ using BankingSystem.BLL.Interfaces;
 using BankingSystem.DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BankingSystem.PL.Controllers.AppAdmin
 {
@@ -52,6 +53,40 @@ namespace BankingSystem.PL.Controllers.AppAdmin
         }
 
 
+        // GET: AdminController/Edit/5
+        public IActionResult Edit(/* string id */)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            ViewBag.userId = userId;
+
+            return View(_genericRepositoryAdmin.Get(-1, userId));
+        }
+
+
+        // POST: HandleAccountController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Admin admin, string? userId)
+        {
+            var exsiting = _genericRepositoryAdmin.Get(-1, userId);
+            try
+            {
+                exsiting.FirstName = admin.FirstName;
+                exsiting.LastName = admin.LastName;
+                exsiting.Email = admin.Email;
+                exsiting.BirthDate = admin.BirthDate;
+                exsiting.Address = admin.Address;
+
+                _genericRepositoryAdmin.Update(exsiting);
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View(admin);
+            }
+        }
+
+
 
         // GET: AdminController/Details/5
         public ActionResult Details(int id)
@@ -59,11 +94,13 @@ namespace BankingSystem.PL.Controllers.AppAdmin
             return View();
         }
 
+
         // GET: AdminController/Create
         public ActionResult Create()
         {
             return View();
         }
+
 
         // POST: AdminController/Create
         [HttpPost]
@@ -80,26 +117,7 @@ namespace BankingSystem.PL.Controllers.AppAdmin
             }
         }
 
-        // GET: AdminController/Edit/5
-        public ActionResult Edit(string id)
-        {
-            return View();
-        }
 
-        // POST: AdminController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(Admin admin)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
 
         // GET: AdminController/Delete/5
         public ActionResult Delete(int id)

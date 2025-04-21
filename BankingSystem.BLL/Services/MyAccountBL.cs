@@ -98,7 +98,7 @@ namespace BankingSystem.BLL.Services
 
 
 
-        public Account? Get(int id, long number)
+        public Account? Get(int id, string? UID = "", long number = 0)
         {
             return _context.Accounts
                 //.IgnoreQueryFilters()

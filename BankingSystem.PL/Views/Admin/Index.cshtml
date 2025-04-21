@@ -499,6 +499,12 @@
                 @* </li> *@
 
                 <li class="nav-item">
+                    <a href="#" class="nav-link load-content" data-url="/AdminGenCertifications/GetAllCertifications">
+                        <i class="fa-solid fa-file-zipper"></i> <span>Certifications</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
                     <a href="#" class="nav-link load-content" data-url="/Admin/Edit">
                         <i class="bi bi-gear"></i> <span>Settings</span>
                     </a>
@@ -520,9 +526,11 @@
         </div>
     </div>
 
+    @* <h1>@(User.FindFirst(ClaimTypes.NameIdentifier)?.Value)</h1> *@
 
     <!-- Main Content -->
-    <div class="main-content" id="main-content"></div>
+    <div class="main-content" id="main-content">
+    </div>
 
 </div>
 

@@ -21,6 +21,23 @@ namespace BankingSystem.BLL.Services
         }
 
 
+        public Admin? Get(int id, string? UID = "", long number = 0)
+        {
+            return _context.Admins
+                .FirstOrDefault(a => a.Id == UID);
+        }
+
+
+        public void Update(Admin Entity)
+        {
+            if (Entity != null)
+            {
+                _context.Admins.Update(Entity);
+                _context.SaveChanges();
+            }
+        }
+
+
 
         public void Add(Admin Entity)
         {
@@ -37,10 +54,6 @@ namespace BankingSystem.BLL.Services
             throw new NotImplementedException();
         }
 
-        public Admin? Get(int id, long number = 0)
-        {
-            throw new NotImplementedException();
-        }
 
         public IEnumerable<Admin> GetAll(string? userID = "", int flag = 1)
         {
@@ -78,9 +91,5 @@ namespace BankingSystem.BLL.Services
             throw new NotImplementedException();
         }
 
-        public void Update(Admin Entity)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

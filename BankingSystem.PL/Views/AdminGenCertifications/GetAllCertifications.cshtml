@@ -1,0 +1,294 @@
+﻿@using BankingSystem.DAL.Models;
+@model IEnumerable<GeneralCertificate>
+
+@{
+    ViewData["Title"] = "Certificate Management";
+}
+
+<style>
+    .certificate-card {
+        border-radius: 0.35rem;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+        margin-bottom: 1.5rem;
+    }
+
+    .certificate-table {
+        margin-bottom: 0;
+    }
+
+        .certificate-table thead th {
+            background-color: #2d2d2d;
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        .certificate-table tbody td {
+            padding: 1rem;
+            vertical-align: middle;
+            border-top: 1px solid #e3e6f0;
+        }
+
+        .certificate-table tbody tr:hover {
+            background-color: rgba(78, 115, 223, 0.05);
+        }
+
+    .badge-certificate {
+        padding: 0.35em 0.65em;
+        font-size: 0.75em;
+        font-weight: 700;
+        border-radius: 0.25rem;
+    }
+
+    .badge-gold {
+        background-color: rgba(255, 215, 0, 0.1);
+        color: #b8860b;
+    }
+
+    .badge-silver {
+        background-color: rgba(192, 192, 192, 0.1);
+        color: #808080;
+    }
+
+    .badge-bronze {
+        background-color: rgba(205, 127, 50, 0.1);
+        color: #8B4513;
+    }
+
+    .badge-active {
+        background-color: rgba(28, 200, 138, 0.1);
+        color: #1cc88a;
+    }
+
+    .badge-inactive {
+        background-color: rgba(231, 74, 59, 0.1);
+        color: #e74a3b;
+    }
+
+    .interest-rate {
+        font-weight: 600;
+        color: #36b9cc;
+    }
+
+    .amount-positive {
+        font-weight: 600;
+        color: #1cc88a;
+    }
+
+    .rounded-table {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+        .rounded-table thead th:first-child {
+            border-top-left-radius: 15px;
+        }
+
+        .rounded-table thead th:last-child {
+            border-top-right-radius: 15px;
+        }
+
+        .rounded-table tbody tr:last-child td:first-child {
+            border-bottom-left-radius: 15px;
+        }
+
+        .rounded-table tbody tr:last-child td:last-child {
+            border-bottom-right-radius: 15px;
+        }
+
+    /* Tier Cards */
+    .gold-tier {
+        border-left: 4px solid #FFD700 !important;
+        background: linear-gradient(to right, rgba(255, 215, 0, 0.1), transparent);
+    }
+
+    .silver-tier {
+        border-left: 4px solid #C0C0C0 !important;
+        background: linear-gradient(to right, rgba(192, 192, 192, 0.1), transparent);
+    }
+
+    .bronze-tier {
+        border-left: 4px solid #CD7F32 !important;
+        background: linear-gradient(to right, rgba(205, 127, 50, 0.1), transparent);
+    }
+</style>
+
+
+<div class="container-fluid mt-4">
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Certificate Management</h1>
+        <a asp-action="Create" asp-controller="AdminGenCertifications" class="d-none d-sm-inline-block btn btn-sm btn-light shadow-sm">
+            <i class="fas fa-plus-circle fa-sm pe-1"></i> Create New Certificate
+        </a>
+    </div>
+
+    <!-- Certificate Tier Cards -->
+    <div class="row mb-4">
+        <!-- Gold Card -->
+        <div class="col-xl-4 col-md-4 mb-1">
+            <div class="card border-left-warning shadow h-100 py-2 gold-tier">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-uppercase text-white mb-1 fs-3">
+                                Gold
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-white">
+                                @(Model.FirstOrDefault(c => c.Name.Contains("Gold"))?.Amount.ToString("C") ?? "N/A")
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-medal fa-2x text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Silver Card -->
+        <div class="col-xl-4 col-md-6 mb-1">
+            <div class="card border-left-secondary shadow h-100 py-2 silver-tier">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-uppercase text-white mb-1 fs-3">
+                                Silver
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-white">
+                                @(Model.FirstOrDefault(c => c.Name.Contains("Silver"))?.Amount.ToString("C") ?? "N/A")
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-medal fa-2x text-secondary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bronze Card -->
+        <div class="col-xl-4 col-md-6 mb-1">
+            <div class="card border-left-danger shadow h-100 py-2 bronze-tier">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-uppercase text-white mb-1 fs-3">
+                                Bronze
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-white">
+                                @(Model.FirstOrDefault(c => c.Name.Contains("Bronze"))?.Amount.ToString("C") ?? "N/A")
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-medal fa-2x text-danger"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Certificate Table -->
+    <div class="card-body">
+        <div class="table-responsive rounded-table">
+            <table class="table certificate-table text-center" id="certificatesTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Certificate</th>
+                        <th>Tier</th>
+                        <th>Duration</th>
+                        <th>Interest Rate</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>
+                                @if (item.Name.Contains("Gold"))
+                                {
+                                    <span class="badge-certificate badge-gold">
+                                        <i class="fas fa-medal mr-1"></i> Gold
+                                    </span>
+                                }
+                                else if (item.Name.Contains("Silver"))
+                                {
+                                    <span class="badge-certificate badge-silver">
+                                        <i class="fas fa-medal mr-1"></i> Silver
+                                    </span>
+                                }
+                                else if (item.Name.Contains("Bronze"))
+                                {
+                                    <span class="badge-certificate badge-bronze">
+                                        <i class="fas fa-medal mr-1"></i> Bronze
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge-certificate">
+                                        Standard
+                                    </span>
+                                }
+                            </td>
+                            <td>@item.Duration days</td>
+                            <td class="interest-rate">@item.InterestRate%</td>
+                            <td class="amount-positive">@item.Amount.ToString("C")</td>
+                            <td>
+                                @if (item.IsDeleted)
+                                {
+                                    <span class="badge-certificate badge-inactive">
+                                        <i class="fas fa-times-circle mr-1"></i> Inactive
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge-certificate badge-active">
+                                        <i class="fas fa-check-circle mr-1"></i> Active
+                                    </span>
+                                }
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a asp-action="Edit" asp-controller="AdminGenCertifications" asp-route-id="@item.Id" class="btn btn-primary btn-sm" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+
+                                    <a asp-action="Details" asp-controller="AdminGenCertifications" asp-route-id="@item.Id" class="btn btn-info btn-sm" title="Details">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirmDelete()" class="d-inline">
+                                        <button type="submit" class="btn btn-danger btn-sm" title="Delete" title="Delete">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+
+                                    @* <a asp-action="Delete" asp-controller="AdminGenCertifications" asp-route-id="@item.Id" class="btn btn-danger btn-sm" title="Delete"> *@
+                                    @*     <i class="fas fa-trash-alt"></i> *@
+                                    @* </a> *@
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function confirmDelete() {
+        return confirm('Are you sure you want to delete this manager? This action cannot be undone.');
+    }
+</script>

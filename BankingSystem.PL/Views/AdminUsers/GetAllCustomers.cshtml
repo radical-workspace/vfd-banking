@@ -69,12 +69,14 @@
 
 
 <div class="container mt-4">
-    <h2>Customers Management</h2>
+    <h2 class="mb-4">Customers Management</h2>
 
     <div class="d-flex justify-content-between mb-3">
-        <a asp-action="Create" class="btn btn-light mt-2">
-            <i class="fas fa-plus me-2"></i>Add New Customer
+
+        <a hidden asp-action="Create" class="btn btn-light mt-2">
+            Add New Customer <i class="fas fa-plus me-2"></i>
         </a>
+
         <div class="input-group" style="width: 300px;">
             <input type="text" id="searchInput" class="form-control" placeholder="Search customers...">
             <button class="btn btn-outline-secondary" type="button" id="searchButton">
@@ -92,7 +94,7 @@
                     <th>Branch</th>
                     <th>Member Since</th>
                     <th>Relationships</th>
-                    <th>Actions</th>
+                    @* <th>Actions</th> *@
                 </tr>
             </thead>
             <tbody class="text-center">
@@ -125,11 +127,11 @@
                                 </span>
                             </div>
                         </td>
-                        <td>
-                            <div class="btn-group" role="group">
-                                <a asp-action="Details" asp-route-id="@customer.Id" class="btn btn-sm btn-outline-dark">
-                                    <i class="bi bi-eye"></i> Details
-                                </a>
+                        @* <td> *@
+                            @* <div class="btn-group" role="group"> *@
+                                @* <a asp-action="Details" asp-route-id="@customer.Id" class="btn btn-sm btn-outline-dark"> *@
+                                @*     <i class="bi bi-eye"></i> Details *@
+                                @* </a> *@
 
                                 @* <a asp-action="Edit" asp-route-id="@customer.Id" class="btn btn-sm btn-warning"> *@
                                 @*     <i class="bi bi-pencil"></i> Edit *@
@@ -137,8 +139,8 @@
                                 @* <button class="btn btn-sm btn-danger delete-btn" data-id="@customer.Id"> *@
                                 @*     <i class="bi bi-trash"></i> Delete *@
                                 @* </button> *@
-                            </div>
-                        </td>
+                            @* </div> *@
+                        @* </td> *@
                     </tr>
                 }
             </tbody>
