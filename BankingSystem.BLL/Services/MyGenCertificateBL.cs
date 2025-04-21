@@ -21,9 +21,9 @@ namespace BankingSystem.BLL.Services
         }
 
 
-        public IEnumerable<GeneralCertificate> GetAll(string? userID = "", int flag = 1)
+        public IQueryable<GeneralCertificate> GetAll(string? userID = "", int flag = 1)
         {
-            return _context.GeneralCertificates.ToList();
+            return _context.GeneralCertificates;
         }
 
 
