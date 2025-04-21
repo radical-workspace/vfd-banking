@@ -52,6 +52,7 @@ namespace BankingSystem.PL.Controllers.AppAdmin
 
             return View(transactions);
 
+
         }
 
         public IActionResult First_Four_Cards()
