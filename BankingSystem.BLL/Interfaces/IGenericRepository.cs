@@ -16,7 +16,7 @@ namespace BankingSystem.BLL.Interfaces
         IQueryable<T> GetAll(string? userID = "", int flag = 1);
         //public IQueryable<T> GetQueryable();
 
-        T? Get(int id, long number = 0);
+        T? Get(int id, string? id2 = "", long number = 0);
 
         void Add(T Entity);
 

@@ -11,12 +11,13 @@ using AutoMapper;
 using BankingSystem.BLL.Interfaces;
 using BankingSystem.DAL.Models;
 using BankingSystem.PL.ViewModels.Admin;
+using Microsoft.AspNetCore.Identity;
 
-public class AdminManagerController(IUnitOfWork unitOfWork, IMapper mapper) : Controller
+public class AdminManagerController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager) : Controller
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IMapper _mapper = mapper;
-
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
 
 
     public IActionResult GetAllManagers()
@@ -40,8 +41,7 @@ public class AdminManagerController(IUnitOfWork unitOfWork, IMapper mapper) : Co
 
     // POST: Manager/Create
     [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Create(ManagerVM model)
+    public async Task<IActionResult> Create(ManagerVM model)
     {
         try
         {
@@ -58,19 +58,35 @@ public class AdminManagerController(IUnitOfWork unitOfWork, IMapper mapper) : Co
                 BranchId = model.BranchId,
                 UserName = model.Email,
                 Email = model.Email,
-                PhoneNumber = model.PhoneNumber,
-                PasswordHash = "Test@123"
+                PhoneNumber = model.PhoneNumber
+                // PasswordHash is set via UserManager
             };
 
-            // Add manager to repository
-            _unitOfWork.Repository<Manager>().Add(manager);
+            // Use UserManager to create the Manager with hashed password
+            var result = await _userManager.CreateAsync(manager, model.Password);
 
-            // Save changes
-            _unitOfWork.Complete();
-            TempData["SuccessMessage"] = $"Manager '{manager.FirstName} {manager.LastName}' created successfully.";
+            if (result.Succeeded)
+            {
+                // Add the Manager to the "Manager" role
+                await _userManager.AddToRoleAsync(manager, "Manager");
+
+                TempData["SuccessMessage"] = $"Manager '{manager.FirstName} {manager.LastName}' created successfully.";
+                ViewBag.Branches = new SelectList(_unitOfWork.Repository<Branch>().GetAll(), "Id", "Name", model.BranchId);
+
+                return RedirectToAction("Index", "Admin");
+            }
+            else
+            {
+                // Add errors to ModelState
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+
+            // Repopulate branches if returning to the form
             ViewBag.Branches = new SelectList(_unitOfWork.Repository<Branch>().GetAll(), "Id", "Name", model.BranchId);
-
-            return RedirectToAction("Index", "Admin");
+            return View(model);
         }
         catch (Exception ex)
         {

@@ -1,0 +1,158 @@
+﻿@using BankingSystem.DAL.Models;
+@model Manager
+
+@{
+    ViewData["Title"] = "Manager Details";
+}
+
+<style>
+    body {
+        background-color: #1a1a1a !important;
+    }
+
+    .container {
+        margin-top: 1.5%;
+    }
+
+    .details-card {
+        background: rgba(255, 255, 255, 0.07);
+        border-radius: 1rem;
+        box-shadow: 0 8px 32px 0 rgba(255, 250, 250, 0.2);
+        backdrop-filter: blur(6.5px);
+        -webkit-backdrop-filter: blur(6.5px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        color: #fff;
+        max-width: 850px;
+        margin: auto;
+        padding: 2rem 2.5rem;
+    }
+
+    .details-header {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        text-align: center;
+        color: #f5f5f5;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #444;
+        padding: 1rem 0;
+    }
+
+    .detail-label {
+        font-weight: 500;
+        font-size: 0.95rem;
+        color: #ccc;
+        flex-basis: 30%;
+    }
+
+    .detail-value {
+        font-size: 1rem;
+        font-weight: 400;
+        flex-basis: 65%;
+        text-align: right;
+        color: #eee;
+    }
+
+    .action-buttons {
+        margin-top: 2rem;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .btn-custom {
+        border-radius: 0.5rem;
+        padding: 0.5rem 1.2rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+    }
+
+    .btn-back {
+        background-color: transparent;
+        border: 1px solid #aaa;
+        color: #aaa;
+        transition: all 0.2s;
+    }
+
+        .btn-back:hover {
+            background-color: #444;
+            color: white;
+        }
+
+    .btn-edit {
+        background-color: #333;
+        color: white;
+        border: none;
+    }
+
+        .btn-edit:hover {
+            background-color: #555;
+        }
+
+    i {
+        font-size: 0.9rem;
+    }
+</style>
+
+<div class="container">
+    <div class="details-card">
+        <div class="details-header">
+            <i class="fas fa-user-tie me-2 fs-3"></i> Manager Details
+        </div>
+
+        <div class="detail-row">
+            <div class="fw-bold">@Html.DisplayNameFor(m => m.FirstName)</div>
+            <div class="fw-bold">@Html.DisplayFor(m => m.FirstName)</div>
+        </div>
+
+        <div class="detail-row">
+            <div class="fw-bold">@Html.DisplayNameFor(m => m.LastName)</div>
+            <div class="fw-bold">@Html.DisplayFor(m => m.LastName)</div>
+        </div>
+
+        <div class="detail-row">
+            <div class="fw-bold">Email</div>
+            <div class="fw-bold">@Html.DisplayFor(m => m.Email)</div>
+        </div>
+
+        <div class="detail-row">
+            <div class="fw-bold">@Html.DisplayNameFor(m => m.Salary)</div>
+            <div class="fw-bold">@Html.DisplayFor(m => m.Salary)</div>
+        </div>
+
+        <div class="detail-row">
+            <div class="fw-bold">Branch</div>
+            <div class="fw-bold">@Html.DisplayFor(m => m.Branch.Name)</div>
+        </div>
+        
+        <div class="detail-row">
+            <div class="fw-bold">Addrees</div>
+            <div class="fw-bold">@Html.DisplayFor(m => m.Address)</div>
+        </div>
+        
+        <div class="detail-row">
+            <div class="fw-bold">BirthDate</div>
+            <div class="fw-bold">@Html.DisplayFor(m => m.BirthDate)</div>
+        </div>
+        
+        <div class="detail-row">
+            <div class="fw-bold">BirthDate</div>
+            <div class="fw-bold">@Html.DisplayFor(m => m.JoinDate)</div>
+        </div>
+
+
+        <div class="action-buttons">
+            <a asp-action="Index" asp-controller="Admin" class="btn-custom btn-back">
+                <i class="fas fa-arrow-left"></i> <span class="fw-bold">Back</span>
+            </a>
+        </div>
+    </div>
+</div>

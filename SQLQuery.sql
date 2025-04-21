@@ -7,7 +7,7 @@ select * from [AspNetUsers] a inner join Tellers t on a.Id = t.Id
 select * from [AspNetUsers] a inner join Customers c on a.Id = c.Id
 
 
---delete from Managers
+-- delete from Managers
 
 
 select * from AspNetUsers 
@@ -25,6 +25,7 @@ select * from Cards
 select * from Branches
 select * from Banks
 select * from SupportTickets
+select * from GeneralCertificates
 
 
 select u.UserName [Teller Name], t.Id [Teller ID], u.Email, c.Id [CID], b.Name [Branch], a.*
