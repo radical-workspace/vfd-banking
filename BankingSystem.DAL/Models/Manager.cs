@@ -15,5 +15,7 @@ namespace BankingSystem.DAL.Models
         [ForeignKey(nameof(Branch))]
         public int? BranchId { get; set; }
         public Branch Branch { get; set; } = null!;
+        [NotMapped]
+        public string FullName => $"{FirstName} {LastName}";
     }
 }

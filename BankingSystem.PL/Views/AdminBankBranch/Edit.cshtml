@@ -3,137 +3,216 @@
 
 @{
     ViewData["Title"] = "Edit Branch Manager";
-    var managers = ViewBag.Managers as List<Manager> ?? new List<Manager>();
 }
 
 <style>
-    body {
-        background-color: #1a1a1a !important;
+    :root {
+        --primary-color: #4e73df;
+        --secondary-color: #858796;
+        --success-color: #1cc88a;
+        --info-color: #36b9cc;
+        --warning-color: #f6c23e;
+        --danger-color: #e74a3b;
+        --light-color: #f8f9fc;
+        --dark-color: #5a5c69;
     }
 
-    .card-body {
-        background-color: #ededed !important;
+    body {
+        background-color: #f8f9fc;
+        font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .edit-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .card {
+        border: none;
+        border-radius: 0.5rem;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
     }
 
     .card-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #224abe 100%);
+        color: white;
         border-radius: 0.5rem 0.5rem 0 0 !important;
-        background-color: #bebebe !important;
+        padding: 1.25rem 1.5rem;
     }
 
-    .container-fluid {
-        margin-top: 7%;
+    .card-body {
+        padding: 2rem;
     }
 
-    h4 {
-        color: black;
+    .manager-card {
+        background-color: white;
+        border-radius: 0.35rem;
+        padding: 1.5rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        margin-bottom: 1.5rem;
+    }
+
+    .manager-avatar {
+        width: 60px;
+        height: 60px;
+        background-color: var(--light-color);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: var(--primary-color);
+    }
+
+    .form-select {
+        height: calc(2.5em + 0.75rem + 2px);
+        border-radius: 0.35rem;
+        border: 1px solid #d1d3e2;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+        .btn-primary:hover {
+            background-color: #2e59d9;
+            border-color: #2653d4;
+        }
+
+    .btn-outline-secondary {
+        color: var(--secondary-color);
+        border-color: var(--secondary-color);
+    }
+
+        .btn-outline-secondary:hover {
+            color: white;
+            background-color: var(--secondary-color);
+        }
+
+    .info-badge {
+        font-size: 0.85rem;
+        padding: 0.35em 0.65em;
+        border-radius: 0.25rem;
+    }
+
+    .divider {
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        margin: 1.5rem 0;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Select2 customization */
+    .select2-container--bootstrap-5 .select2-selection {
+        height: calc(2.5em + 0.75rem + 2px);
+        border-radius: 0.35rem;
+        border: 1px solid #d1d3e2;
+        padding: 0.375rem 0.75rem;
     }
 </style>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-8 mx-auto">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0"><i class="fas fa-edit me-2"></i>Edit Branch Manager</h4>
-                </div>
-                <div class="card-body">
-                    @* @if (TempData["SuccessMessage"] != null)
-                    {
-                        <div class="alert alert-success mb-4">
-                            <i class="fas fa-check-circle me-2"></i>
-                            @TempData["SuccessMessage"]
-                        </div>
-                    } *@
+<div class="edit-container">
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">
+                    <i class="fas fa-user-tie me-2"></i>Edit Branch Manager
+                </h4>
+                <a asp-action="Index" class="btn btn-sm btn-outline-light">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Branches
+                </a>
+            </div>
+        </div>
 
-                    <!-- Current Information -->
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <h5 class="mb-3">Branch Information</h5>
-                            <ul class="list-unstyled">
-                                <li class="mb-2"><strong>Name:</strong> @Model.Name</li>
-                                <li class="mb-2"><strong>Location:</strong> @Model.Location</li>
-                                <li class="mb-2"><strong>Hours:</strong> @Model.Opens.ToString(@"hh\:mm") - @Model.Closes.ToString(@"hh\:mm")</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <h5 class="mb-3">Current Manager</h5>
-                            @if (Model.MyManager != null)
-                            {
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-primary text-white rounded-circle p-3 me-3">
-                                        <i class="fas fa-user-tie fa-lg"></i>
-                                    </div>
-                                    <div>
-                                        <div>@Model.MyManager.FirstName @Model.MyManager.LastName</div>
-                                        <div class="text-muted">@Model.MyManager.Email</div>
-                                    </div>
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="alert alert-warning mb-0">
-                                    <i class="fas fa-exclamation-circle me-2"></i>
-                                    No manager currently assigned
-                                </div>
-                            }
-                        </div>
+        <div class="card-body">
+            <!-- Branch Info Section -->
+            <div class="manager-card">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h5 class="mb-1">@Model.Name</h5>
+                        <p class="text-muted mb-2">
+                            <i class="fas fa-map-marker-alt me-2"></i>@Model.Location
+                        </p>
+                        <span class="info-badge bg-light text-dark">
+                            <i class="fas fa-clock me-1"></i>
+                            @Model.Opens.ToString(@"hh\:mm") - @Model.Closes.ToString(@"hh\:mm")
+                        </span>
                     </div>
-
-                    <hr class="my-4" />
-
-                    <!-- Edit Form -->
-                    <form asp-action="Edit" method="post">
-                        <input type="hidden" name="id" value="@Model.Id" />
-
-                        <div class="row mb-4">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label class="form-label fw-bold">Assign New Manager</label>
-                                    
-                                    <select name="ManagerID" class="form-control">
-                                        <option value="">Select Manager</option>
-                                        @foreach (var item in managers)
-                                        {
-                                            <option value="@item.Id">@item.FirstName @item.LastName</option>
-                                        }
-                                    </select>
-
-                                    @* <span asp-validation-for="ManagerID" class="text-danger"></span> *@
-
-                                    @*<select name="newManagerId" class="form-select">
-                                        <option value="">-- No Change --</option>
-                                        @foreach (var manager in managers)
-                                        {
-                                            <option value="@manager.Id" selected="@(Model.MyManager?.Id == manager.Id)">
-                                                @manager.FirstName (@manager.Email)
-                                            </option>
-                                        }
-                                    </select>*@
-
-
-                                    @if (ViewData.ModelState["Manager"]?.Errors.Count > 0)
-                                    {
-                                        <span class="text-danger">
-                                            <i class="fas fa-exclamation-circle me-1"></i>
-                                            @ViewData.ModelState["Manager"].Errors.First().ErrorMessage
-                                        </span>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="d-flex justify-content-between mt-5">
-                            <a asp-action="Index" asp-controller="Admin" asp-route-id="@Model.Id" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left me-1"></i> Back to Branches
-                            </a>
-
-                            <button type="submit" class="btn btn-dark">
-                                <i class="fas fa-save me-1"></i> Save Changes
-                            </button>
-                        </div>
-                    </form>
+                    <div class="col-md-4 text-md-end">
+                        <span class="info-badge @(Model.IsDeleted ? "bg-danger" : "bg-success")">
+                            @(Model.IsDeleted ? "Inactive" : "Active")
+                        </span>
+                    </div>
                 </div>
             </div>
+
+            <!-- Current Manager Section -->
+            <div class="manager-card">
+                <h6 class="mb-3">Current Manager</h6>
+                @if (Model.MyManager != null)
+                {
+                    <div class="d-flex align-items-center">
+                        <div class="manager-avatar me-3">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-0">@Model.MyManager.FirstName @Model.MyManager.LastName</h6>
+                            <p class="text-muted mb-0">@Model.MyManager.Email</p>
+                            <small class="text-muted">SSN: @Model.MyManager.SSN</small>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning mb-0">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        No manager currently assigned to this branch
+                    </div>
+                }
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Manager Assignment Form -->
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="Id" />
+
+                <div class="mb-4">
+                    <h6 class="mb-3">Assign New Manager</h6>
+                    <div class="form-group">
+                        <select asp-for="MyManager.Id"
+                                asp-items="@(ViewBag.Managers as SelectList)"
+                                class="form-select select2">
+                            <option value="">Select a manager...</option>
+                        </select>
+                        <small class="form-text text-muted">Only unassigned managers are shown</small>
+                        @if (ViewData.ModelState["ManagerId"]?.Errors.Count > 0)
+                        {
+                            <div class="invalid-feedback d-block">
+                                @ViewData.ModelState["ManagerId"].Errors.First().ErrorMessage
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="fas fa-save me-2"></i> Save Changes
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -141,13 +220,15 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@@ttskch/select2-bootstrap4-theme@1.5.2/dist/select2-bootstrap4.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('select[name="newManagerId"]').select2({
+            $('.select2').select2({
+                theme: 'bootstrap4',
+                width: '100%',
                 placeholder: "Select a manager",
-                allowClear: true,
-                theme: 'bootstrap-5'
+                allowClear: true
             });
         });
     </script>

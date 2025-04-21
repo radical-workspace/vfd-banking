@@ -45,12 +45,25 @@ namespace BankingSystem.PL.Helpers
 
             CreateMap<Customer, CustomersViewModel>()
                     .ForMember(dest => dest.Branch, s => s.MapFrom(s => s.Branch.Name));
+
             CreateMap<Customer, CustomerDetailsViewModel>()
                 .ForMember(dest => dest.Branch, opt => opt.MapFrom(src => src.Branch.Name))
                 .ForMember(dest => dest.Accounts, opt => opt.MapFrom(src => src.Accounts))
                 .ForMember(dest => dest.Loans, opt => opt.MapFrom(src => src.Loans))
                 .ForMember(dest => dest.Transactions, opt => opt.MapFrom(src => src.Transactions))
-                .ForMember(dest => dest.Tickets, opt => opt.MapFrom(src => src.SupportTickets));
+                .ForMember(dest => dest.Tickets, opt => opt.MapFrom(src => src.SupportTickets))
+                .ForMember(dest => dest.TransactionsCount, opt => opt.MapFrom(src =>
+                    src.Accounts != null ?
+                    src.Accounts.Sum(a => a.AccountTransactions != null ? a.AccountTransactions.Count : 0) : 0))
+                .ForMember(dest => dest.SupportTicketsCount, opt => opt.MapFrom(src =>
+                    src.Accounts != null ?
+                    src.Accounts.Sum(a => a.SupportTickets != null ? a.SupportTickets.Count : 0) : 0))
+                .ForMember(dest => dest.LoansCount, opt => opt.MapFrom(src =>
+                    src.Accounts != null ?
+                    src.Accounts.Sum(a => a.Loans != null ? a.Loans.Count : 0) : 0))
+                .ForMember(dest => dest.CertificatesCount, opt => opt.MapFrom(src =>
+                    src.Accounts != null ?
+                    src.Accounts.Sum(a => a.Certificates != null ? a.Certificates.Count : 0) : 0));
 
 
             CreateMap<Customer, ManagerCustomerDetailsViewModel>()

@@ -42,7 +42,7 @@ namespace BankingSystem.BLL.Services
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Admin> GetAll(string? userID = "", int flag = 1)
+        public IQueryable<Admin> GetAll(string? userID = "", int flag = 1)
         {
             throw new NotImplementedException();
         }

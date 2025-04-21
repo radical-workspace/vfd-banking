@@ -52,16 +52,6 @@ namespace BankingSystem.PL.Controllers.AppAdmin
 
             return View(transactions);
 
-            //var model = new MainDashboardFourCards()
-            //{
-            //    TodayTransactions = TodayTransactions,
-            //    Branches = Branches,
-            //    ActiveAccounts = ActiveAccounts,
-            //    Holdings = holdings,
-            //    Transactions = transactions
-            //};
-
-            //return View(model);
 
         }
 

@@ -33,7 +33,7 @@ namespace BankingSystem.PL.Controllers.AppTeller
 
 
             if (filter != null)
-                tickets = tickets.Where(t => t.Status.ToString() == filter).ToList();
+                tickets = tickets.Where(t => t.Status.ToString() == filter);
 
 
             ViewBag.InBranch = inBranch;

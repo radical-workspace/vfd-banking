@@ -28,5 +28,7 @@ namespace BankingSystem.PL.ViewModels
         [Display(Name = "Closes At")]
         [DataType(DataType.Time)]
         public TimeSpan Closes { get; set; }
+
+        public string? ManagerId { get; set; }
     }
 }

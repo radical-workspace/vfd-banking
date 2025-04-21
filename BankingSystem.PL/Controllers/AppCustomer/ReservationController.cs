@@ -18,7 +18,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         [HttpGet]
         public IActionResult CreateReservation()
         {
-            var branches = _unitOfWork.Repository<Branch>().GetAll();
+            var branches = _unitOfWork.Repository<Branch>().GetAll().ToList();
             ViewBag.Branches = branches;
 
             var locations = branches.Select(b => new
@@ -38,7 +38,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         {
             if (!ModelState.IsValid)
             {
-                var branches = _unitOfWork.Repository<Branch>().GetAll();
+                var branches = _unitOfWork.Repository<Branch>().GetAll().ToList();
                 ViewBag.Branches = branches;
 
                 var locations = branches.Select(b => new
@@ -48,7 +48,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                     title = b.Name,
                     branchId = b.Id,
                     branchName = b.Name
-                }).ToList();
+                });
 
                 ViewBag.Locations = locations;
 

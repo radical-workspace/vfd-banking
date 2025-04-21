@@ -2,7 +2,7 @@
 @model IEnumerable<Transaction>
 
 @{
-    ViewData["Title"] = "Dashboard";
+ViewData["Title"] = "Dashboard";
 }
 
 
@@ -152,7 +152,8 @@
     }
 
     @@media (max-width: 768px) {
-        .stat-card .stat-value {
+        .stat-card .stat-value
+        {
             font-size: 1.5rem;
         }
     }
@@ -164,11 +165,11 @@
         overflow: hidden;
     }
 
-        .rounded-table table {
-            margin: 0;
-            border-collapse: separate;
-            border-spacing: 0;
-        }
+    .rounded-table table {
+        margin: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
 
     .rounded-top-left {
         border-top-left-radius: 10px;
@@ -290,8 +291,7 @@
                                             <span class="badge-transaction
                                                 @(transaction.Type == TransactionType.Deposit ? "badge-deposit" :
                                                   transaction.Type == TransactionType.Withdraw ? "badge-withdraw" :
-                                                  transaction.Type == TransactionType.Transfer ? "badge-transfer" : "badge-loan")">
-                                                @transaction.Type
+                                                  transaction.Type == TransactionType.Transfer ? "badge-transfer" : "badge-loan")">@transaction.Type
                                             </span>
                                         </td>
                                         <td class="@(transaction.Type == TransactionType.Deposit || transaction.Type == TransactionType.LoanPayment ? "amount-positive" : "amount-negative")">
