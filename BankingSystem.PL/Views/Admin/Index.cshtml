@@ -414,6 +414,15 @@
     #main-content.fade-out {
         opacity: 0;
     }
+
+    .my-head {
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+    .my-head:hover {
+        font-size: 1.57rem;
+    }
 </style>
 
 
@@ -422,8 +431,10 @@
     <div class="sidebar" id="sidebar">
         <div class="logo">
             <div class="d-flex align-items-center">
-                <i class="bi bi-bank2 me-2 bnk-logo"></i>
-                <span class="logo-text">BankAdmin</span>
+                <a class="my-head" href="" onclick="location.reload(); return false;">
+                    <i class="bi bi-bank2 me-2 bnk-logo"></i>
+                    <span class="logo-text">BankAdmin</span>
+                </a>
             </div>
             <button class="sidebar-toggle" id="sidebarToggle">
                 <i class="bi bi-chevron-double-left sidebar-collapse-icon"></i>
