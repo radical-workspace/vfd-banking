@@ -163,9 +163,14 @@ namespace BankingSystem.BogusFakers
         {
             var branchFaker = new Faker<Branch>()
                 .RuleFor(b => b.Name, f => $"Branch {f.Address.City()}")
-                .RuleFor(b => b.Location, f => f.Address.FullAddress())
+                .RuleFor(b => b.Location, f =>
+                {
+                    var address = f.Address.FullAddress();
+                    return address.Length > 100 ? address.Substring(0, 100) : address;
+                })
                 .RuleFor(b => b.Opens, f => TimeSpan.FromHours(f.Random.Double(8, 9)))     // Opens between 8:00 and 9:00
                 .RuleFor(b => b.Closes, f => TimeSpan.FromHours(f.Random.Double(17, 18)))  // Closes between 17:00 and 18:00
+                .RuleFor(b => b.BankId,f=> null)
                 .RuleFor(b => b.IsDeleted, f => false);
 
             return branchFaker.Generate(count);

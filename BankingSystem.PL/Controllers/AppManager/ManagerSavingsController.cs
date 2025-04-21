@@ -71,18 +71,17 @@ namespace BankingSystem.PL.Controllers.AppManager
             return RedirectToAction(nameof(GetAllSavings), new { id = User.FindFirst(ClaimTypes.NameIdentifier)!.Value });
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult AddSaving(SavingsViewModel model)
         {
             var managerId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
             var manager = _unitOfWork.Repository<DAL.Models.Manager>().GetSingleIncluding(b => b.Id == managerId);
             if (!ModelState.IsValid)
             {
-                // Return to view with errors
                 TempData["Error"] = "Invalid data";
                 return RedirectToAction(nameof(GetAllSavings), new { id = User.FindFirst(ClaimTypes.NameIdentifier)!.Value });
             }
-
-            var savings = _unitOfWork.Repository<Savings>().GetAllIncluding(b => b.Branch);
 
             Savings newSaving = new()
             {

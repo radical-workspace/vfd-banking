@@ -26,7 +26,7 @@ namespace BankingSystem.PL.ViewModels.Admin
         [Required]
         public double Salary { get; set; }
 
-        [Required]
+        //[Required]
         public int? BranchId { get; set; }
 
         [Required]

@@ -54,30 +54,8 @@
                                         </td>
                                     </tr>
                                 }
-
-                                <!-- Add Form Row - Simplified structure -->
-                                <tr id="addFormRow" class="d-none">
-                                    <td>
-                                        <input type="text" id="addCurrency" class="form-control form-control-sm" placeholder="Currency" required />
-                                    </td>
-                                    <td>
-                                        <input type="number" id="addBalance" class="form-control form-control-sm" placeholder="0.00" step="0.01" required />
-                                    </td>
-                                    <td>
-                                        <button type="button" id="saveNewBtn" class="btn btn-sm btn-success">
-                                            <i class="bi bi-check-circle"></i> Save
-                                        </button>
-                                    </td>
-                                </tr>
                             </tbody>
                         </table>
-                            <!-- Add this form outside the table -->
-                        <form id="updateForm" asp-action="UpdateSaving" method="post" class="d-none">
-                            <input type="hidden" id="savingId" name="Id" />
-                            <input type="hidden" id="savingCurrency" name="Currency" />
-                            <input type="hidden" id="savingBalance" name="Balance" />
-                            @Html.AntiForgeryToken()
-                        </form>
                     </div>
                 </div>
             </div>
@@ -85,6 +63,14 @@
     </div>
 </div>
 
+<!-- Update Form (Hidden) -->
+<form id="updateForm" action="@Url.Action("UpdateSaving", "ManagerSavings")" method="post" class="d-none">
+    <input type="hidden" id="savingId" name="Id" />
+    <input type="hidden" id="savingCurrency" name="Currency" />
+    <input type="hidden" id="savingBalance" name="Balance" />
+    @Html.AntiForgeryToken()
+</form>
+
 @section Scripts {
     <script src="~/js/ManagerSaving.js"></script>
-    }
+}

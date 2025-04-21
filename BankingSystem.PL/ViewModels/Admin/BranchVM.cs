@@ -18,6 +18,7 @@ namespace BankingSystem.PL.ViewModels
 
         [Required(ErrorMessage = "Bank ID is required")]
         public int BankId { get; set; }
+        public bool IsDeleted { get; set; }
 
         [Required(ErrorMessage = "Opening time is required")]
         [Display(Name = "Opens At")]
@@ -30,5 +31,9 @@ namespace BankingSystem.PL.ViewModels
         public TimeSpan Closes { get; set; }
 
         public string? ManagerId { get; set; }
+        public string? ManagerFirstName { get; set; }
+        public string? ManagerLastName { get; set; }
+        public string? ManagerEmail { get; set; }
+        public long? ManagerSSN { get; set; }
     }
 }
