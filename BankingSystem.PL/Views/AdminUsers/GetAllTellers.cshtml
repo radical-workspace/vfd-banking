@@ -71,7 +71,7 @@
                     <th>Phone</th>
                     <th>Branch</th>
                     <th>Salary</th>
-                    @* <th>Actions</th> *@
+                    <th>Actions</th>
                     @* <th>Actions</th> *@
                 </tr>
             </thead>
@@ -85,10 +85,11 @@
                         <td>@teller.BranchName</td>
                         <td>@teller.Salary.ToString("C")</td>
                         <td>
-                            @* <div class="btn-group" role="group"> *@
-                            @*     <a asp-action="Details" asp-route-id="@teller.Id" class="btn btn-sm btn-warning"> *@
-                            @*         <i class="bi bi-eye"></i> <span class="fw-bold">Details</span> *@
-                            @*     </a> *@
+                            <div class="btn-group" role="group">
+                                <a asp-action="TellersDetails" asp-route-id="@teller.Id" class="btn btn-sm btn-dark">
+                                    <i class="bi bi-eye"></i> <span class="fw-bold">Details</span>
+                                </a>
+                            </div>
 
                                 @* <a asp-action="Edit" asp-route-id="@teller.Id" class="btn btn-sm btn-warning"> *@
                                 @*     <i class="bi bi-pencil"></i> Edit *@

@@ -1,49 +1,43 @@
 ﻿@using BankingSystem.PL.ViewModels.Admin
 @model BranchVM
 
-
 @{
     ViewData["Title"] = "Edit Branch Manager";
 }
 
-<style>
-    :root {
-        --primary-color: #4e73df;
-        --secondary-color: #858796;
-        --success-color: #1cc88a;
-        --info-color: #36b9cc;
-        --warning-color: #f6c23e;
-        --danger-color: #e74a3b;
-        --light-color: #f8f9fc;
-        --dark-color: #5a5c69;
-    }
 
+<style>
     body {
-        background-color: #f8f9fc;
-        font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+        background-color: #1a1a1a !important;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     .edit-container {
         max-width: 800px;
-        margin: 2rem auto;
-        animation: fadeIn 0.3s ease-in-out;
+        margin: 3% auto;
     }
 
     .card {
         border: none;
-        border-radius: 0.5rem;
-        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        border-radius: 1rem;
+        box-shadow: 0 0.15rem 1.75rem rgba(0, 0, 0, 0.15);
     }
 
     .card-header {
-        background: linear-gradient(135deg, var(--primary-color) 0%, #224abe 100%);
-        color: white;
+        background-color: #bebebe !important;
         border-radius: 0.5rem 0.5rem 0 0 !important;
         padding: 1.25rem 1.5rem;
     }
 
     .card-body {
+        background-color: #ededed !important;
         padding: 2rem;
+        padding-bottom: 1.2rem;
+        border-radius: 0 0 0.5rem 0.5rem !important;
+    }
+
+    h4, h5, h6 {
+        color: black;
     }
 
     .manager-card {
@@ -57,40 +51,14 @@
     .manager-avatar {
         width: 60px;
         height: 60px;
-        background-color: var(--light-color);
+        background-color: #f8f9fc;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 1.5rem;
-        color: var(--primary-color);
+        color: #4e73df;
     }
-
-    .form-select {
-        height: calc(2.5em + 0.75rem + 2px);
-        border-radius: 0.35rem;
-        border: 1px solid #d1d3e2;
-    }
-
-    .btn-primary {
-        background-color: var(--primary-color);
-        border-color: var(--primary-color);
-    }
-
-        .btn-primary:hover {
-            background-color: #2e59d9;
-            border-color: #2653d4;
-        }
-
-    .btn-outline-secondary {
-        color: var(--secondary-color);
-        border-color: var(--secondary-color);
-    }
-
-        .btn-outline-secondary:hover {
-            color: white;
-            background-color: var(--secondary-color);
-        }
 
     .info-badge {
         font-size: 0.85rem;
@@ -103,19 +71,32 @@
         margin: 1.5rem 0;
     }
 
-    @@keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .form-select {
+        height: calc(2.5em + 0.75rem + 2px);
+        border-radius: 0.35rem;
+        border: 1px solid #d1d3e2;
     }
 
-    /* Select2 customization */
+    .btn-dark {
+        background-color: #1a1a1a;
+        border-color: #1a1a1a;
+    }
+
+        .btn-dark:hover {
+            background-color: #000;
+            border-color: #000;
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
     .select2-container--bootstrap-5 .select2-selection {
         height: calc(2.5em + 0.75rem + 2px);
         border-radius: 0.35rem;
@@ -124,6 +105,7 @@
     }
 </style>
 
+
 <div class="edit-container">
     <div class="card">
         <div class="card-header">
@@ -131,9 +113,6 @@
                 <h4 class="mb-0">
                     <i class="fas fa-user-tie me-2"></i>Edit Branch Manager
                 </h4>
-                <a asp-action="Index" asp-controller="Admin" class="btn btn-sm btn-outline-light">
-                    <i class="fas fa-arrow-left me-1"></i> Back to Branches
-                </a>
             </div>
         </div>
 
@@ -151,7 +130,7 @@
                             @Model.Opens.ToString(@"hh\:mm") - @Model.Closes.ToString(@"hh\:mm")
                         </span>
                     </div>
-                    <div class="col-md-4 text-md-end">
+                    <div class="col-md-4 text-md-end text-white">
                         <span class="info-badge @(Model.IsDeleted ? "bg-danger" : "bg-success")">
                             @(Model.IsDeleted ? "Inactive" : "Active")
                         </span>
@@ -218,11 +197,23 @@
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-end mt-4">
-                    <button type="submit" class="btn btn-primary px-4">
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-action="Index" asp-controller="Admin" class="btn btn-secondary" id="back-branch">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Branches
+                    </a>
+
+                    @* <a asp-action="Index" asp-controller="Admin" *@
+                    @*    asp-route-activeSection="branches" *@
+                    @*    class="btn btn-secondary" *@
+                    @*    id="back-branch"> *@
+                    @*     <i class="fas fa-arrow-left me-1"></i> Back to Branches *@
+                    @* </a> *@
+
+                    <button type="submit" class="btn btn-dark px-4">
                         <i class="fas fa-save me-2"></i> Save Changes
                     </button>
                 </div>
+
             </form>
         </div>
     </div>
