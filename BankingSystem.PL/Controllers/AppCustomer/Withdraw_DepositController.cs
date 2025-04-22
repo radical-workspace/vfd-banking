@@ -112,7 +112,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         [HttpPost]
         public IActionResult Deposit(AccountsViewModel model, bool IsUsingVisa)
         {
-            if (!ModelState.IsValid) return View(model);
+            //if (!ModelState.IsValid) return View(model);
             var transaction = _transference.CreatePendingTransaction(model, User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
             // Get the selected account
             var (MyAccount, ValidationResult) = _transference.GetAndValidateCurrentAccount(model, transaction, User.FindFirst(ClaimTypes.NameIdentifier)?.Value!, IsUsingVisa);
