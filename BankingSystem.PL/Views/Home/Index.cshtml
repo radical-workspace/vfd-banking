@@ -19,7 +19,13 @@
 @*     <partial name="" /> *@
 @* } *@
 
-@* @if (User.IsInRole("Customer") && User.Identity?.IsAuthenticated == true) *@
+@* @if (User.IsInRole("Customer") && User.Identity?.IsAuthenticated == true)  *@
+@*  { *@
+@*     <partial name="~\Views\CustomerAccounts\Index.cshtml" /> *@
+@*  } *@
+
+@* else *@
 @* { *@
-@*     <partial name="" /> *@
+@*     <partial name="~\Views\CustomerAccounts\Index.cshtml" /> *@
 @* } *@
+<partial name="~/Views/CustomerAccounts/Index.cshtml" />

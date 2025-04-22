@@ -1,0 +1,337 @@
+﻿@{
+    ViewData["Title"] = "Welcome to Your Banking Portal";
+}
+
+<style>
+    :root {
+        --primary-dark: rgb(63, 114, 175);
+        --primary-medium: rgb(157, 178, 191);
+        --primary-light: rgb(219, 226, 239);
+        --secondary-dark: rgb(63, 114, 175);
+        --secondary-light: rgb(219, 226, 239);
+        --neutral-1: rgb(157, 178, 191);
+        --accent-1: rgb(63, 114, 175);
+        --accent-2: rgb(221, 230, 237);
+        --accent-3: rgb(238, 244, 255);
+        --white: #ffffff;
+        --border-radius: 8px;
+        --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+    }
+
+    body {
+        background: var(--accent-3);
+        min-height: 100vh;
+    }
+
+    .welcome-container {
+        max-width: 1400px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .welcome-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        color: var(--primary-dark);
+        position: relative;
+        padding-bottom: 1rem;
+    }
+
+        .welcome-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--accent-1);
+            border-radius: 2px;
+        }
+
+        .welcome-header h1 {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .welcome-header p {
+            color: var(--primary-medium);
+            font-size: 1.1rem;
+        }
+
+    .feature-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        margin-bottom: 1.5rem;
+        border: none;
+        overflow: hidden;
+        transition: var(--transition);
+        backdrop-filter: blur(10px);
+        height: 100%;
+    }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .feature-card .card-header {
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-medium));
+            color: var(--white);
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .feature-card .card-header::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 80px;
+                height: 100%;
+                background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1));
+                transform: skewX(-20deg);
+            }
+
+            .feature-card .card-header h3 {
+                margin: 0;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                position: relative;
+                z-index: 1;
+            }
+
+        .feature-card .card-body {
+            padding: 1.5rem;
+            background: transparent;
+        }
+
+    .feature-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        .feature-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--accent-2);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+            .feature-list li:last-child {
+                border-bottom: none;
+            }
+
+        .feature-list i {
+            color: var(--primary-dark);
+            font-size: 1.1rem;
+        }
+
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .action-button {
+        background: var(--primary-dark);
+        color: var(--white);
+        border: none;
+        padding: 1rem;
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+        text-align: center;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+        .action-button:hover {
+            background: var(--primary-medium);
+            transform: translateY(-2px);
+            color: var(--white);
+            text-decoration: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+    .announcement-banner {
+        background: linear-gradient(90deg, var(--primary-dark), var(--primary-medium));
+        color: var(--white);
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+        .announcement-banner i {
+            font-size: 2rem;
+        }
+
+    .announcement-content h3 {
+        margin: 0 0 0.5rem 0;
+        font-weight: 600;
+    }
+
+    .announcement-content p {
+        margin: 0;
+        opacity: 0.9;
+    }
+</style>
+
+<div class="welcome-container">
+    <div class="welcome-header">
+        <h1>Welcome to Your Banking Portal</h1>
+        <p>Your one-stop destination for all banking needs</p>
+    </div>
+
+    <!-- Announcement Banner -->
+    <div class="announcement-banner">
+        <i class="fas fa-bullhorn"></i>
+        <div class="announcement-content">
+            <h3>New Features Available!</h3>
+            <p>Check out our enhanced mobile banking app and new investment options.</p>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <a href="@Url.Action("CreateReservation", "Reservation")" class="action-button">
+            <i class="fas fa-wallet"></i>
+            <span>My Accounts</span>
+        </a>
+        <a href="@Url.Action("CreateReservation", "Reservation")" class="action-button">
+            <i class="fas fa-exchange-alt"></i>
+            <span>Transfer Money</span>
+        </a>
+        <a href="@Url.Action("CreateReservation", "Reservation")" class="action-button">
+            <i class="fas fa-hand-holding-usd"></i>
+            <span>Loans</span>
+        </a>
+        <a href="@Url.Action("CreateReservation", "Reservation")" class="action-button">
+            <i class="fas fa-headset"></i>
+            <span>Support</span>
+        </a>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="row mt-4">
+        <!-- Accounts & Cards -->
+        <div class="col-md-6 mb-4">
+            <div class="feature-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-credit-card"></i>Accounts & Cards</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="feature-list">
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Manage multiple accounts in one place</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>View and manage your debit/credit cards</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Set up automatic payments and transfers</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Track your spending with detailed analytics</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loans & Investments -->
+        <div class="col-md-6 mb-4">
+            <div class="feature-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-chart-line"></i>Loans & Investments</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="feature-list">
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Apply for personal and business loans</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>View and manage your investment portfolio</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Access certificates of deposit</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security & Support -->
+        <div class="col-md-6 mb-4">
+            <div class="feature-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-shield-alt"></i>Security & Support</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="feature-list">
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>24/7 customer support</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Services -->
+        <div class="col-md-6 mb-4">
+            <div class="feature-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-cogs"></i>Additional Services</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="feature-list">
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Bill payments and scheduling</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Mobile check deposit</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Account statements and tax documents</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Branch locator and appointment scheduling</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+}
