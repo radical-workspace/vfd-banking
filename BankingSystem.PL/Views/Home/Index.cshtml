@@ -11,7 +11,7 @@
 
 @* @if (User.IsInRole("Manager") && User.Identity?.IsAuthenticated == true) *@
 @* { *@
-@*     <partial name="" /> *@
+@*     <partial name="~/Views/ManagerBranch/GetBranchDetails.cshtml" /> *@
 @* } *@
 
 
@@ -25,8 +25,8 @@
 @*     <partial name="~\Views\CustomerAccounts\Index.cshtml" /> *@
 @*  } *@
 
-@* else *@
-@* { *@
-@*     <partial name="~\Views\CustomerAccounts\Index.cshtml" /> *@
-@* } *@
-<partial name="~/Views/CustomerAccounts/Index.cshtml" />
+@if (User.Identity?.IsAuthenticated == false)
+{
+
+    <partial name="~/Views/CustomerAccounts/Index.cshtml" />
+}

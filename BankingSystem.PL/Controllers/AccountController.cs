@@ -168,7 +168,6 @@ namespace BankingSystem.PL.Controllers
             if (UserToLogin is not null)
             {
 
-
                 if (ModelState.IsValid)
                 {
                     // Check User Is Found Or Not
@@ -186,14 +185,28 @@ namespace BankingSystem.PL.Controllers
                             {
                                 return RedirectToAction("Details", "CustomerProfile", new { id = user.Id });
                             }
-                            return RedirectToAction("Index", "Home");
-                        }
-                    }
-                }
-                ModelState.AddModelError(string.Empty, "Wrong Email Or Password");
-                return View(UserToLogin);
-            }
+                            else if (await _userManager.IsInRoleAsync(user, "Manager"))
+                            {
+                                return RedirectToAction("GetBranchDetails", "ManagerBranch", new { id = user.Id });
+                            }
+                            else if (await _userManager.IsInRoleAsync(user, "Teller"))
+                            {
+                                return RedirectToAction("GetAllCustomers", "HandleCustomer", new { id = user.Id });
+                            }
 
+                            // Default redirect for other roles
+                            // You can customize this as needed
+                            // return RedirectToAction("Index", "Home");
+                            // or
+
+                        }
+                        return RedirectToAction("Index", "Home");
+                    }
+                    ModelState.AddModelError(string.Empty, "Wrong Email Or Password");
+                    return View(UserToLogin);
+                }
+
+            }
             return View(UserToLogin);
         }
         [HttpPost]

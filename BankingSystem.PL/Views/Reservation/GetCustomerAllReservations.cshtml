@@ -6,75 +6,251 @@
 }
 
 <style>
+    :root {
+        --primary-dark: rgb(63, 114, 175);
+        --primary-medium: rgb(157, 178, 191);
+        --primary-light: rgb(219, 226, 239);
+        --secondary-dark: rgb(63, 114, 175);
+        --secondary-light: rgb(219, 226, 239);
+        --neutral-1: rgb(157, 178, 191);
+        --accent-1: rgb(63, 114, 175);
+        --accent-2: rgb(221, 230, 237);
+        --accent-3: rgb(238, 244, 255);
+        --white: #ffffff;
+        --border-radius: 8px;
+        --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+    }
+
     body {
         background-color: #3E5879;
+        min-height: 100vh;
+    }
+
+    .reservation-container {
+        max-width: 1400px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .new-reservation-card {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        transition: var(--transition);
+    }
+
+    .new-reservation-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .reservation-card {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        padding: 1.5rem;
+        height: 100%;
+        transition: var(--transition);
+        border: 1px solid var(--accent-2);
+    }
+
+    .reservation-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .reservation-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--accent-2);
+    }
+
+    .reservation-title {
+        color: var(--primary-dark);
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .status-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 0.875rem;
+    }
+
+    .status-approved {
+        background: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+    }
+
+    .status-pending {
+        background: rgba(255, 193, 7, 0.1);
+        color: #ffc107;
+    }
+
+    .status-rejected {
+        background: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+    }
+
+    .reservation-details {
+        margin-bottom: 1.5rem;
+    }
+
+    .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+        color: var(--primary-dark);
+    }
+
+    .detail-item i {
+        color: var(--primary-medium);
+        width: 20px;
+    }
+
+    .action-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--border-radius);
+        text-decoration: none;
+        transition: var(--transition);
+        font-weight: 500;
+    }
+
+    .action-button-primary {
+        background: var(--primary-dark);
+        color: var(--white);
+    }
+
+    .action-button-primary:hover {
+        background: var(--primary-medium);
+        color: var(--white);
+        text-decoration: none;
+    }
+
+    .action-button-outline {
+        border: 1px solid var(--primary-dark);
+        color: var(--primary-dark);
+    }
+
+    .action-button-outline:hover {
+        background: var(--primary-dark);
+        color: var(--white);
+        text-decoration: none;
+    }
+
+    .no-reservations-card {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        padding: 2rem;
+        text-align: center;
+        margin: 2rem auto;
+        max-width: 600px;
+    }
+
+    .section-title {
+        color: var(--primary-dark);
+        text-align: center;
+        margin-bottom: 2rem;
+        position: relative;
+        padding-bottom: 1rem;
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 3px;
+        background: var(--accent-1);
+        border-radius: 2px;
     }
 </style>
 
-
-<div class="container mt-5">
-
-    <!-- Start: Make Reservation Card -->
-    <div class="d-flex justify-content-center mb-5">
-        <div class="card shadow-lg border-0 rounded-4 p-4 w-100" style="max-width: 600px; background-color: #fdfdfd;">
-            <h4 class="text-center mb-3">Make a New Reservation</h4>
-            <p class="text-center text-muted mb-4">Book your appointment easily at the branch of your choice.</p>
-
-            <div class="text-center">
-                <a class="btn btn-primary px-4 py-2 fw-semibold" asp-area="" asp-controller="Reservation" asp-action="CreateReservation">
-                    <i class="bi bi-calendar-plus me-2"></i>Make a Reservation
-                </a>
-            </div>
-        </div>
+<div class="reservation-container">
+    <!-- New Reservation Card -->
+    <div class="new-reservation-card">
+        <h3 class="mb-3">Make a New Reservation</h3>
+        <p class="text-muted mb-4">Book your appointment easily at the branch of your choice.</p>
+        <a asp-controller="Reservation" asp-action="CreateReservation" class="action-button action-button-primary">
+            <i class="fas fa-calendar-plus"></i>
+            Make a Reservation
+        </a>
     </div>
-    <!-- End: Make Reservation Card -->
+
     @if (!Model.Any())
     {
         <!-- No Reservations -->
-        <div class="d-flex justify-content-center">
-            <div class="card shadow-lg border-0 rounded-4 p-4 w-100 text-center" style="max-width: 600px; background-color: #f9f9f9;">
-                <h5 class="text-muted mb-3">You don't have any reservations yet.</h5>
-                <p class="text-secondary">Use the button above to make your first reservation.</p>
-            </div>
+        <div class="no-reservations-card">
+            <i class="fas fa-calendar-times mb-3" style="font-size: 3rem; color: var(--primary-medium);"></i>
+            <h4 class="text-muted mb-3">No Reservations Yet</h4>
+            <p class="text-secondary">Use the button above to make your first reservation.</p>
         </div>
     }
     else
     {
-        <h2 class="mb-4 text-primary fw-bold text-center">Your Reservations</h2>
+        <h2 class="section-title text-white">Your Reservations</h2>
 
         <!-- List of Reservations -->
-        <div class="row">
+        <div class="row g-4">
             @foreach (var reservation in Model)
             {
                 bool isFuture = reservation.ReservationDate > DateTime.Now;
                 bool isApproved = reservation.Status == ReservationStatus.Approved;
 
-                <div class="col-12 col-md-6 mb-4">
-                    <div class="card shadow-lg rounded-4 p-4 h-100 border-0" style="background-color: #f9f9f9;">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h5 class="mb-0 text-primary fw-bold">@reservation.Branch?.Name</h5>
-                            <span class="badge px-3 py-2 fs-6
-                                @(reservation.Status == ReservationStatus.Approved ? "bg-success" :
-                                  reservation.Status == ReservationStatus.Pending ? "bg-warning text-dark" :
-                                  "bg-danger")">
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="reservation-card">
+                        <div class="reservation-header">
+                            <h5 class="reservation-title">@reservation.Branch?.Name</h5>
+                            <span class="status-badge status-@reservation.Status.ToString().ToLower()">
                                 @reservation.Status
                             </span>
                         </div>
 
-                        <p class="mb-1"><strong>Service:</strong> @reservation.ServiceType</p>
-                        <p class="mb-3"><strong>Date:</strong> @reservation.ReservationDate.ToString("dddd, dd MMMM yyyy hh:mm tt")</p>
+                        <div class="reservation-details">
+                            <div class="detail-item">
+                                <i class="fas fa-tasks"></i>
+                                <span>@reservation.ServiceType</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="far fa-calendar-alt"></i>
+                                <span>@reservation.ReservationDate.ToString("dddd, dd MMMM yyyy")</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="far fa-clock"></i>
+                                <span>@reservation.ReservationDate.ToString("hh:mm tt")</span>
+                            </div>
+                        </div>
 
-                        <div class="text-end mt-auto">
+                        <div class="text-end">
                             @if (isApproved && isFuture)
                             {
-                                <a class="btn btn-outline-primary fw-semibold"
-                                   href="@Url.Action("ReservationSuccess", "Reservation", new { reservationId = reservation.Id })">
+                                <a href="@Url.Action("ReservationSuccess", "Reservation", new { reservationId = reservation.Id })" 
+                                   class="action-button action-button-outline">
+                                    <i class="fas fa-qrcode"></i>
                                     View QR Code
                                 </a>
                             }
                             else if (isApproved && !isFuture)
                             {
-                                <span class="text-danger fst-italic">This ticket has expired.</span>
+                                <span class="text-danger">
+                                    <i class="fas fa-exclamation-circle me-2"></i>
+                                    This ticket has expired
+                                </span>
                             }
                         </div>
                     </div>
@@ -83,3 +259,7 @@
         </div>
     }
 </div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+}

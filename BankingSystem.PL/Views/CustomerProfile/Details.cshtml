@@ -272,78 +272,216 @@
     @if(Model?.Transactions?.Any()?? false)
     {
         <div class="transactions-section">
-            <div class="section-header">
-                <h4 class="mb-0">Recent Transactions</h4>
+            <div class="section-header d-flex justify-content-between align-items-center mb-4">
+                <h4 class="mb-0 d-flex align-items-center">
+                    <i class="fas fa-history me-2"></i>
+                    Recent Transactions
+                </h4>
+                <a asp-action="Details" asp-controller="CustomerTransactions" asp-route-id="@Model.DesiredCustomer.Id" class="view-more-btn">
+                    View All <i class="fas fa-arrow-right ms-2"></i>
+                </a>
             </div>
-            @foreach (var transaction in Model.Transactions.Take(3))
-            {
-                <!-- Transaction 1 -->
-                <div class="transaction-row">
-                    @switch(transaction.Type)
-                    {
-                        case (TransactionType.Deposit):
-                            <div class="transaction-icon transaction-deposit">
-                                <i class="bi bi-arrow-down-circle"></i>
-                            </div>
-                            break;
-                        case (TransactionType.Transfer):
-                            <div class="transaction-icon transaction-transfer">
-                                <i class="bi bi-arrow-left-right"></i>
-                            </div>
-                            break;
-                        case (TransactionType.Withdraw):
-                            <div class="transaction-icon transaction-withdraw">
-                                <i class="bi bi-arrow-up-circle"></i>
-                            </div>
-                            break;
-                        case (TransactionType.LoanPayment):
-                            <div class="transaction-icon transaction-loan">
-                                <i class="bi bi-arrow-down-circle"></i>
-                            </div>
-                            break;
-                    }
-                    <div class="transaction-details">
-                        <div class="transaction-title">
-                            @transaction.Type
-                            <span class="status-badge status-@transaction.TransactionStatus">@transaction.TransactionStatus</span>
-                        </div>
-                        <div class="transaction-meta">
-                            <div class="transaction-meta-item">
-                                <i class="bi bi-calendar3"></i>
-                                <span>@transaction.PaymentDate</span>
-                            </div>
-                            <div class="transaction-meta-item">
-                                <i class="bi bi-credit-card"></i>
-                                <span>Done via: @transaction.DoneVia</span>
-                            </div>
-                            @if (transaction.AccountDistenationNumber != null)
-                            {
-                                <div class="transaction-meta-item">
-                                    <i class="bi bi-wallet2"></i>
-                                    <span>Account #: @transaction.AccountDistenationNumber</span>
+            
+            <div class="transaction-list">
+                @foreach (var transaction in Model.Transactions.Take(5))
+                {
+                    <div class="transaction-card">
+                        @switch(transaction.Type)
+                        {
+                            case TransactionType.Deposit:
+                                <div class="transaction-icon deposit">
+                                    <i class="fas fa-arrow-down"></i>
                                 </div>
-                            }
+                                break;
+                            case TransactionType.Transfer:
+                                <div class="transaction-icon transfer">
+                                    <i class="fas fa-exchange-alt"></i>
+                                </div>
+                                break;
+                            case TransactionType.Withdraw:
+                                <div class="transaction-icon withdraw">
+                                    <i class="fas fa-arrow-up"></i>
+                                </div>
+                                break;
+                            case TransactionType.LoanPayment:
+                                <div class="transaction-icon loan">
+                                    <i class="fas fa-hand-holding-usd"></i>
+                                </div>
+                                break;
+                        }
+                        
+                        <div class="transaction-details">
+                            <div class="transaction-title">
+                                <span class="transaction-type">@transaction.Type</span>
+                                <span class="status-badge status-@transaction.TransactionStatus">
+                                    @transaction.TransactionStatus
+                                </span>
+                            </div>
+                            <div class="transaction-meta">
+                                <div class="transaction-meta-item">
+                                    <i class="far fa-calendar"></i>
+                                    <span>@transaction.PaymentDate.ToString("MMM dd, yyyy")</span>
+                                </div>
+                                <div class="transaction-meta-item">
+                                    <i class="fas fa-credit-card"></i>
+                                    <span>@transaction.DoneVia</span>
+                                </div>
+                                @if (transaction.AccountDistenationNumber != null)
+                                {
+                                    <div class="transaction-meta-item">
+                                        <i class="fas fa-wallet"></i>
+                                        <span>Account #@transaction.AccountDistenationNumber</span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="transaction-amount @(transaction.Type == TransactionType.Deposit || transaction.Type == TransactionType.LoanPayment ? "positive" : "negative")">
+                            @(transaction.Type == TransactionType.Deposit || transaction.Type == TransactionType.LoanPayment ? "+" : "-")$@transaction.Amount.ToString("N2")
                         </div>
                     </div>
-
-                    <div class="transaction-amount">
-                        $@transaction.Amount.ToString("N2")
-                    </div>
-                </div>
-            }
+                }
+            </div>
         </div>
 
-        <!-- View More Button -->
-        <a asp-action="Details" asp-controller="CustomerTransactions" asp-route-id="@Model.DesiredCustomer.Id" class="view-more-btn">
-            <i class="bi bi-list me-2"></i>
-            View All Transactions
-        </a>
+        <style>
+            .transactions-section {
+                margin-top: 2rem;
+            }
+
+            .transaction-list {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .transaction-card {
+                background: rgba(255, 255, 255, 0.9);
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                padding: 1.25rem;
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                transition: all 0.3s ease;
+            }
+
+            .transaction-card:hover {
+                transform: translateX(5px);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            }
+
+            .transaction-icon {
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.25rem;
+            }
+
+            .transaction-icon.deposit {
+                background: rgba(40, 167, 69, 0.1);
+                color: #28a745;
+            }
+
+            .transaction-icon.withdraw {
+                background: rgba(220, 53, 69, 0.1);
+                color: #dc3545;
+            }
+
+            .transaction-icon.transfer {
+                background: rgba(23, 162, 184, 0.1);
+                color: #17a2b8;
+            }
+
+            .transaction-icon.loan {
+                background: rgba(255, 193, 7, 0.1);
+                color: #ffc107;
+            }
+
+            .transaction-details {
+                flex: 1;
+            }
+
+            .transaction-title {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .transaction-type {
+                font-weight: 600;
+                color: #2c3e50;
+            }
+
+            .transaction-meta {
+                display: flex;
+                gap: 1.5rem;
+                color: #6c757d;
+                font-size: 0.875rem;
+            }
+
+            .transaction-meta-item {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .transaction-amount {
+                font-weight: 600;
+                font-size: 1.1rem;
+                min-width: 100px;
+                text-align: right;
+            }
+
+            .transaction-amount.positive {
+                color: #28a745;
+            }
+
+            .transaction-amount.negative {
+                color: #dc3545;
+            }
+
+            .status-badge {
+                padding: 0.25rem 0.5rem;
+                border-radius: 4px;
+                font-size: 0.75rem;
+                font-weight: 500;
+            }
+
+            .status-completed {
+                background: rgba(40, 167, 69, 0.1);
+                color: #28a745;
+            }
+
+            .status-pending {
+                background: rgba(255, 193, 7, 0.1);
+                color: #ffc107;
+            }
+
+            .status-failed {
+                background: rgba(220, 53, 69, 0.1);
+                color: #dc3545;
+            }
+
+            .view-more-btn {
+                display: inline-flex;
+                align-items: center;
+                color: #2c3e50;
+                text-decoration: none;
+                font-weight: 500;
+                transition: all 0.3s ease;
+            }
+
+            .view-more-btn:hover {
+                color: #3498db;
+                text-decoration: none;
+            }
+        </style>
     }
-
-
-        
-
-
 
     @if (Model.AccountsCount > 0)
     {
