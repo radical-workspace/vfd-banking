@@ -74,15 +74,19 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         public async Task<IActionResult> ApplyLoan(CustomerLoanVM model)
         {
             var customer = _UnitOfWork.Repository<Customer>()
-            .GetSingleIncluding(c => c.Id == model.CustomerId, c => c.Accounts);
+                .GetSingleIncluding(c => c.Id == model.CustomerId, c => c.Accounts);
 
-                    var accountSelectList = customer.Accounts
-            .Select(a => new SelectListItem
-            {
-               Value = a.Id.ToString(), // assuming Id is the PK and is int/long
-               Text = $"Account No: {a.Number} - {a.AccountType} - Balance: {a.Balance:C}"
-            })
-            .ToList();
+            // Prepare account select list
+            var accountSelectList = customer.Accounts
+                .Select(a => new SelectListItem
+                {
+                    Value = a.Id.ToString(),
+                    Text = $"Account No: {a.Number} - {a.AccountType} - Balance: {a.Balance:C}"
+                })
+                .ToList();
+
+            ViewBag.AccountSelectList = accountSelectList;
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -103,6 +107,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
             };
 
             _UnitOfWork.Repository<Loan>().Add(loan);
+            _UnitOfWork.Complete();
 
             // Process each financial document
             foreach (var document in model.FinancialDocuments)
@@ -112,7 +117,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                     var result = await _financialDocumentService.UploadFinancialDocument(
                         model.CustomerId,
                         document.DocumentFile,
-                        document.DocumentType, // You can specify the document type here
+                        document.DocumentType,
                         document.Description,
                         document.IssueDate,
                         loan.Id
@@ -121,6 +126,8 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                     if (!int.TryParse(result, out _))
                     {
                         ModelState.AddModelError("", $"Failed to upload document: {result}");
+
+                        ViewBag.AccountSelectList = accountSelectList;
                         return View(model);
                     }
                 }
@@ -130,6 +137,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
 
             return RedirectToAction("ThanksLoan", new { id = model.CustomerId });
         }
+
 
         public IActionResult ThanksLoan(string id)
         {
