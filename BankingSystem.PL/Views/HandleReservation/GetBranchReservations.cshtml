@@ -29,19 +29,19 @@
                         </div>
                    
                         <!-- Card Header with Customer Info -->
-                        <div class="card-header bg-white border-bottom-0 pb-0">
+                        <div class="card-header border-bottom-0 pb-0" style="background-color:rgb(63, 114, 175);">
                             <div class="d-flex align-items-center">
-                                <div class="avatar avatar-lg bg-light-primary rounded-circle me-3 mt-3">
-                                    <span class="avatar-initials text-primary">
-                                        @GetInitials(reservation.Customer?.FirstName, reservation.Customer?.LastName)
-                                    </span>
-                                </div>
+                                @* <div class="avatar avatar-lg bg-light-primary rounded-circle me-3 mt-3"> *@
+                                @*     <span class="avatar-initials text-white"> *@
+                                @*         @GetInitials(reservation.Customer?.FirstName, reservation.Customer?.LastName) *@
+                                @*     </span> *@
+                                @* </div> *@
                                 <hr />
                                 <div>
-                                    <h5 class="card-title mb-0 text-dark">
+                                    <h5 class="card-title mb-0 text-white">
                                         @reservation.Customer?.FirstName @reservation.Customer?.LastName
                                     </h5>
-                                    <small class="text-muted">
+                                    <small class=" text-white">
                                         @(reservation.Customer?.Email ?? "Unregistered Client")
                                     </small>
                                 </div>

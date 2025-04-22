@@ -7,16 +7,36 @@
 }
 <style>
     :root {
-        --primary-dark: rgb(63, 114, 175); /* new primary dark */
-        --primary-medium: rgb(157, 178, 191); /* new primary medium */
-        --primary-light: rgb(219, 226, 239); /* new primary light */
-        --secondary-dark: rgb(63, 114, 175); /* mapped to primary-dark because no exact secondary */
-        --secondary-light: rgb(219, 226, 239); /* mapped to primary-light */
-        --neutral-1: rgb(157, 178, 191); /* mapped to text-light */
-        --accent-1: rgb(63, 114, 175); /* mapped to primary-dark */
-        --accent-2: rgb(221, 230, 237); /* primary-lightest */
-        --accent-3: rgb(238, 244, 255); /* soft background you used */
-        --white: #ffffff; /* stays same */
+        /* Primary Colors */
+        --primary-medium: #1E201E; /* Deep charcoal - for headers/important elements */
+        --primary-dark: #3C3D37; /* Warm gray - primary actions */
+        --primary-light: #697565; /* Muted sage - secondary elements */
+        /* Secondary Colors */
+        --secondary-dark: #3C3D37; /* Same as primary-medium */
+        --secondary-light: #ECDFCC; /* Cream - backgrounds/accents */
+        /* Neutral Colors */
+        --neutral-1: #5A5D58; /* Medium gray - primary text */
+        --neutral-2: #8B8E87; /* Light gray */
+        --neutral-3: #C5C7C2; /* Very light gray */
+        /* Accent Colors */
+        --accent-1: #1E201E; /* Primary dark */
+        --accent-2: #697565; /* Primary light */
+        --accent-3: #F5F0E8; /* Light cream (derived from ECDFCC) */
+        /* System Colors */
+        --white: #FFFFFF;
+        --black: #121412; /* Slightly darker than primary-dark */
+        /* Status Colors */
+        --success: #5A7247; /* Muted green */
+        --warning: #B38B59; /* Warm amber */
+        --danger: #8C4A3F; /* Earthy red */
+        --info: #5D7B8C; /* Muted blue */
+        /* Text Contrast */
+        --text-on-dark: #ECDFCC; /* Cream text on dark backgrounds */
+        --text-on-light: #3C3D37; /* Dark text on light backgrounds */
+    }
+    body{
+        background-color: var(--primary-medium);
+        min-height: 100vh;
     }
 
     .branch-card {
@@ -211,7 +231,7 @@
 
                         <!-- Edit Business Hours Button -->
                         <div class="col-12 text-center mt-3">
-                            <button type="button" class="btn btn-outline-primary rounded-pill px-4 edit-btn">
+                            <button type="button" class="btn btn-outline-primary rounded-pill px-4 edit-btn text-white">
                                 <i class="bi bi-pencil-square me-2"></i>
                                 <span class="btn-text" style="color:white">Edit Business Hours</span>
                             </button>
@@ -248,7 +268,7 @@
                                             }
                                         </ul>
                                         <div class="text-end mt-2">
-                                            <a asp-controller="ManagerLoan" asp-action="GetAllLoans" class="btn btn-sm btn-primary">View All (@Model.Loans.Count)</a>
+                                            <a asp-controller="ManagerLoan" asp-action="GetAllLoans" class="btn btn-sm edit-btn text-white">View All (@Model.Loans.Count)</a>
                                         </div>
 
                                     }
@@ -280,7 +300,7 @@
                                             }
                                         </ul>
                                         <div class="text-end mt-2">
-                                            <a asp-controller="ManagerCustomer" asp-action="GetAllCustomers" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value" class="btn btn-sm btn-primary">View All (@Model.Customers.Count)</a>
+                                            <a asp-controller="ManagerCustomer" asp-action="GetAllCustomers" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value" class="btn btn-sm edit-btn text-white">View All (@Model.Customers.Count)</a>
                                         </div>
 
                                     }
@@ -313,7 +333,7 @@
                                         </ul>
 
                                         <div class="text-end mt-2">
-                                            <a class="btn btn-sm btn-primary" asp-controller="ManagerTeller" asp-action="GetAllTellers" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value">View All (@Model.Tellers.Count)</a>
+                                            <a class="btn btn-sm edit-btn text-white" asp-controller="ManagerTeller" asp-action="GetAllTellers" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value">View All (@Model.Tellers.Count)</a>
                                         </div>
                                     }
                                     else
@@ -353,7 +373,7 @@
                                                 </tbody>
                                             </table>
                                             <div class="text-end mt-2">
-                                                <a asp-controller="ManagerSavings" asp-action="GetAllSavings" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value" class="btn btn-sm btn-primary">
+                                                <a asp-controller="ManagerSavings" asp-action="GetAllSavings" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value" class="btn btn-sm edit-btn text-white">
                                                     View All (@Model.Savings.Count)
                                                 </a>
                                             </div>
