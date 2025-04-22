@@ -4,6 +4,11 @@
     padding: 0 1rem;
 }
 
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #3E5879;
+}
+
 .page-header {
     margin-bottom: 1.5rem;
     border-bottom: 2px solid #e9ecef;
@@ -170,7 +175,7 @@
 }
 
 .btn-apply-loan {
-    background-color: #0d6efd;
+    background-color: #213555 !important;
     color: white;
     border: none;
     border-radius: 0.5rem;
@@ -184,7 +189,7 @@
 }
 
     .btn-apply-loan:hover {
-        background-color: #0a58ca;
+        background-color: #3E5879;
         transform: translateY(-2px);
         box-shadow: 0 0.5rem 1rem rgba(13, 110, 253, 0.15);
     }

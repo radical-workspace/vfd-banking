@@ -9,8 +9,8 @@
 <div class="cards-container">
     <!-- Page Header -->
     <div class="page-header">
-        <h3><i class="bi bi-credit-card-fill me-2"></i>Your Bank Cards</h3>
-        <p>View and manage your credit and debit cards</p>
+        <h3 class="text-white"><i class="bi bi-credit-card-fill me-2"></i>Your Bank Cards</h3>
+        <p class="text-white">View and manage your credit and debit cards</p>
     </div>
 
     @if (Model == null || !Model.Any())
@@ -19,11 +19,11 @@
         <div id="no-card-view">
             <div class="no-card">
                 <div class="no-card-icon">
-                    <i class="bi bi-credit-card-fill"></i>
+                    <i class="bi bi-credit-card-fill" style="color: #213555;"></i>
                 </div>
                 <h3 class="empty-state-title">No card Found</h3>
                 <p class="empty-state-text">You don't have any card at the moment. </p>
-                <a asp-action="CreateReservation" asp-controller="Reservation" class="btn-add-card">
+                <a asp-action="CreateReservation" asp-controller="Reservation" class="btn-add-card" style="text-decoration: none;">
                     <i class="bi bi-plus-circle"></i>
                     <span>Apply for Your First Card</span>
                 </a>
@@ -163,6 +163,6 @@
 
     <!-- Footer -->
     <div class="footer">
-        <small>&copy; 2025 SecureBank. All rights reserved.</small>
+        <small class="text-muted">&copy; 2025 SecureBank. All rights reserved.</small>
     </div>
 </div>

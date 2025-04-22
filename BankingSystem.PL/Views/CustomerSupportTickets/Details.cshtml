@@ -7,15 +7,15 @@
 
 <div class="container">
     <div class="page-header mt-3">
-        <h3><i class="bi-chat-square-text"></i> Support Tickets</h3>
-        <p>View and manage your support requests</p>
+        <h3 class="text-white"><i class="bi-chat-square-text"></i> Support Tickets</h3>
+        <p class="text-white">View and manage your support requests</p>
     </div>
     <div class="col-md-12">
-        <div class="col-auto d-flex align-items-center justify-content-end mb-3">
+        <div class="col-auto d-flex align-items-center justify-content-end mb-3" style="background-color: white; border-radius: 10px;">
             <form asp-action="Details" asp-route-id="@Model.Id" method="post" class="ms-auto">
-                <label class="form-label me-2 fw-bold">Filter by Status:</label>
+                <label class="form-label me-2 fw-bold my-3">Filter by Status:</label>
                 <select asp-for="SelectedStatus" asp-items="ViewBag.statusList"
-                        class="btn btn-primary dropdown-toggle" onchange="this.form.submit()">
+                        class="btn btn-primary dropdown-toggle m-3" onchange="this.form.submit()">
                 </select>
             </form>
         </div>

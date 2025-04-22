@@ -11,8 +11,8 @@
 
 <style>
     :root {
-        --primary-dark: rgb(35, 78, 140); /* stronger and more elegant dark blue */
-        --primary-medium: rgb(97, 140, 185); /* smooth medium blue */
+        --primary-dark: #213555; /* stronger and more elegant dark blue */
+        --primary-medium: #3E5879; /* smooth medium blue */
         --primary-light: rgb(210, 225, 245); /* much lighter blue */
         --secondary-dark: rgb(56, 104, 160); /* balanced secondary dark */
         --secondary-light: rgb(230, 240, 250); /* very soft blue */
@@ -21,6 +21,19 @@
         --accent-2: rgb(200, 220, 240); /* light accent for cards, backgrounds */
         --accent-3: rgb(245, 250, 255); /* super light, almost white-blue background */
         --white: #ffffff; /* pure white */
+    }
+
+    body {
+        background-color: #F5EFE7;
+        margin: 0;
+        padding: 0;
+        background-image: url('/images/bank-img.jpeg') !important;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed; /* Optional: Fixed background on scroll */
+        font-family: Arial, sans-serif;
+        color: white; /* Adjust text color for visibility */
     }
 
     .registration-wrapper {
@@ -32,6 +45,7 @@
 
     .card-body {
         padding: 2.5rem;
+        background-color: white;
     }
 
     .form-header {
@@ -55,8 +69,8 @@
         align-items: center;
         justify-content: center;
         gap: 0.75rem;
-        background-color: #ffffff;
-        border: 1px solid #ddd;
+        background-color: ##f2f2f2;
+        border: 1px solid #dcdcdc;
         border-radius: 8px;
         padding: 0.65rem 1rem;
         font-weight: 500;
@@ -67,7 +81,7 @@
     }
 
         .google-btn:hover {
-            background-color: #f5f5f5;
+            background-color: #e0e0e0;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             text-decoration: none;
             color: #222;
@@ -92,7 +106,7 @@
                 </div>
 
                 <!-- Form Section -->
-                <div class="card-body px-5 py-4">
+                <div class="card-body px-4 py-4">
                     <form asp-action="Login" asp-controller="Account" asp-route-id="@userId" method="post">
 
                         <div asp-validation-summary="All" class="text-danger mb-3"></div>

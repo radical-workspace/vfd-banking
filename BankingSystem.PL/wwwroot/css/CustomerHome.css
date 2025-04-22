@@ -2,8 +2,8 @@
 :root {
     --primary-lightest: rgb(221, 230, 237);
     --primary-light: rgb(219, 226, 239);
-    --primary-medium: rgb(157, 178, 191);
-    --primary-dark: rgb(63, 114, 175);
+    --primary-medium: #3E5879;
+    --primary-dark: #213555;
     --text-dark: #2c3e50;
     --text-medium: rgb(63, 114, 175);
     --text-light: rgb(157, 178, 191);
@@ -16,6 +16,8 @@
 body {
     color: var(--text-dark);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #3E5879;
+
 }
 
 .profile-container {
@@ -26,7 +28,7 @@ body {
 
 /* Welcome Section */
 .welcome-section {
-    background: linear-gradient(135deg, #003366, #005580);
+    background: linear-gradient(135deg, black, #3E5879);
     color: var(--text-white);
     padding: 2rem;
     border-radius: 10px;
@@ -139,7 +141,7 @@ body {
 
 /* Account Cards */
 .account-card {
-    background: linear-gradient(135deg, var(--primary-dark), var(--primary-medium));
+    background: linear-gradient(135deg, var(--primary-dark), #225ca6);
     color: white;
     border-radius: 10px;
     padding: 1.5rem;

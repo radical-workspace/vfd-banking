@@ -18,7 +18,7 @@
     <style>
         :root {
             /* Main colors - using your blue palette */
-            --primary-dark: rgb(63, 114, 175);
+            --primary-dark: #213555;
             --primary-medium: rgb(157, 178, 191);
             --primary-light: rgb(219, 226, 239);
             --primary-lightest: rgb(221, 230, 237);
@@ -35,9 +35,16 @@
             --btn-hover-bg: rgb(93, 144, 205); /* Lighter blue for button hover */
         }
 
+        body {
+            /* background-color: #F5EFE7; */
+            background-color: white;
+            margin: 0;
+        }
+
         header {
-            background: linear-gradient(90deg, #003366 0%, #005580 100%) !important;
-            border-bottom: 3px solid var(--primary-medium) !important;
+            background: #213555 !important;
+            border-bottom-left-radius: 25px;
+            border-bottom-right-radius: 25px;
             box-shadow: 0 4px 12px var(--shadow) !important;
         }
 
@@ -120,7 +127,7 @@
         }
 
         .btn-primary {
-            background-color: var(--primary-dark) !important;
+            background-color: #213555 !important;
             border-color: var(--primary-dark) !important;
             color: var(--white) !important;
             font-weight: 600;
@@ -128,7 +135,7 @@
         }
 
             .btn-primary:hover {
-                background-color: var(--btn-hover-bg) !important;
+                background-color: #2d4b7a !important;
                 border-color: var(--btn-hover-bg) !important;
                 transform: translateY(-2px);
                 box-shadow: 0 4px 8px var(--shadow);
@@ -283,6 +290,7 @@
                             <a class="nav-link bogus" asp-area="" asp-controller="BogusData" asp-action="CreateBogusData">Create Bogus Data</a>
                         </li>
 
+                        
                         @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Customer"))
                         {
                             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -306,12 +314,13 @@
                                 <a class="nav-link" asp-area="" asp-controller="CustomerTransactions" asp-action="Details" asp-route-id="@userId">Transactions</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="CustomerSupportTickets" asp-action="Details" asp-route-id="@userId">Support Tickets</a>
+                                <a class="nav-link" asp-area="" asp-controller="CustomerSupportTickets" asp-action="Details" asp-route-id="@userId">Tickets</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Reservation" asp-action="GetCustomerAllReservations">Reservations</a>
                             </li>
                         }
+
                     </ul>
 
                     <!-- Right Side -->

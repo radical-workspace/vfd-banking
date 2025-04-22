@@ -14,9 +14,10 @@
 @*     <partial name="" /> *@
 @* } *@
 
+
 @* @if (User.IsInRole("Teller") && User.Identity?.IsAuthenticated == true) *@
 @* { *@
-@*     <partial name="" /> *@
+@*     <partial name="~/Views/Home/_TellerHomePartial.cshtml" /> *@
 @* } *@
 
 @* @if (User.IsInRole("Customer") && User.Identity?.IsAuthenticated == true)  *@

@@ -8,13 +8,13 @@
 <div class="accounts-container">
     <!-- Welcome Section -->
     <div class="welcome-section">
-        <div class="row align-items-center">
-            <div class="col-md-8">
+        <div class="row align-items-center text-white">
+            <div class="col-md-8 text-white">
                 <h2 class="mb-2">Your Bank Accounts</h2>
-                <p class="mb-0 text-muted">View and manage all your accounts in one place</p>
+                <p class="mb-0 ">View and manage all your accounts in one place</p>
             </div>
             <div class="col-md-4 text-md-end">
-                <div class="total-balance">$@Model.Sum(acc => acc.Balance ?? 0).ToString("N2")</div>
+                <div class="total-balance text-white">$@Model.Sum(acc => acc.Balance ?? 0).ToString("N2")</div>
                 <div class="balance-label">Total Balance</div>
                 
             </div>

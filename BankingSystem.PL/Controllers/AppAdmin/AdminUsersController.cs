@@ -55,5 +55,21 @@ namespace BankingSystem.PL.Controllers.AppAdmin
                                     a => a.Branch, a => a.Loans).ToList();
             return View(accounts);
         }
+        
+        
+        public ActionResult TellersDetails(string id)
+        {
+            var teller = _unitOfWork.Repository<Teller>().GetSingleIncluding(
+                t => t.Id == id,
+                t => t.Branch!,
+                t => t.Manager!
+            );
+
+            if (teller == null)
+                return NotFound();
+
+            return View(teller);
+        }
+
     }
 }
