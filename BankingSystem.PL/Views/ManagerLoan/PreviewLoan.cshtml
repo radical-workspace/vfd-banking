@@ -135,8 +135,6 @@
         <div class="card info-card mb-4">
             <div class="card-header py-3">
                 <h5 class="m-0"><i class="fas fa-info-circle me-2"></i>Loan Information</h5>
-                <p>CustomerId: @ViewBag.CustomerId</p>
-
             </div>
             <div class="card-body">
                 <div class="row">
@@ -189,25 +187,27 @@
 
                             <dt class="col-sm-5 info-label">Account Number:</dt>
                             <dd class="col-sm-7 info-value">@Model.Loan.AccountNumber</dd>
-							<dt class="col-sm-5 info-label">Documents:</dt>
-							<dd class="col-sm-7 info-value">
-								@if (Model.FinancialDocument?.Any() == true)
-								{
-									<ul>
-										@foreach (var document in Model.FinancialDocument)
-										{
-											<li>
-                                                <a href="@Url.Action("DownloadDocument", "ManagerLoan", new { customerId = document.CustomerId, loanId = document.LoanId })">Download Document</a>
+                            <dt class="col-sm-5 info-label">Documents:</dt>
+                            <dd class="col-sm-7 info-value ">
+                                @if (Model.FinancialDocument?.Any() == true)
+                                {
+                                    <ul>
+                                        @foreach (var document in Model.FinancialDocument)
+                                        {
+                                            <li>
+                                                <a href="@Url.Action("DownloadDocument", "ManagerLoan", new { customerId = document.CustomerId, loanId = document.LoanId })">
+                                                    Download Document
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <span>No documents available</span>
+                                }
+                            </dd>
 
-											</li>
-										}
-									</ul>
-								}
-								else
-								{
-									<span>No documents available</span>
-								}
-							</dd>
 
                         </dl>
                     </div>
