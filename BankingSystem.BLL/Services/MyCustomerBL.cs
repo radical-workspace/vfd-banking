@@ -26,7 +26,7 @@ namespace BankingSystem.BLL.Services
         {
             throw new NotImplementedException();
         }
-        public Customer? Get(int id, long number = 0)
+        public Customer? Get(int id, string? UID = "", long number = 0)
         {
             throw new NotImplementedException();
         }
@@ -88,7 +88,7 @@ namespace BankingSystem.BLL.Services
             throw new NotImplementedException();
         }
 
-        public void Update(Customer Entity)
+        public void Update(Customer Entity, string? TellerId = "")
         {
             throw new NotImplementedException();
         }

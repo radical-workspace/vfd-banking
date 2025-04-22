@@ -147,7 +147,7 @@
         <div id="accountSection" style="@(Model.ShowAccounts ? "display:block" : "display:none")">
             <div class="mb-3">
                 <label asp-for="SelectedAccountNumber" class="form-label">From Account</label>
-                <select asp-for="SelectedAccountNumber" asp-items="Model.UserAccounts" class="form-control">
+                <select asp-for="SelectedAccountNumber" asp-items="@Model.UserAccounts" class="form-control">
                     <option value="">-- Select Account --</option>
                 </select>
                 <span asp-validation-for="SelectedAccountNumber" class="text-danger"></span>
@@ -158,7 +158,7 @@
         <div id="cardSection" style="@(!Model.ShowAccounts ? "display:block" : "display:none")">
             <div class="mb-3">
                 <label asp-for="SelectedCardNumber" class="form-label">From Card</label>
-                <select asp-for="SelectedCardNumber" asp-items="Model.UserVisaCards" class="form-control">
+                <select asp-for="SelectedCardNumber" asp-items="@Model.UserVisaCards" class="form-control">
                     <option value="">-- Select Card --</option>
                 </select>
                 <span asp-validation-for="SelectedCardNumber" class="text-danger"></span>

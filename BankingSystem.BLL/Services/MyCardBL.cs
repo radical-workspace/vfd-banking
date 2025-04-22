@@ -33,7 +33,7 @@ namespace BankingSystem.BLL.Services
         }
 
 
-        public VisaCard? Get(int id, long number = 0)
+        public VisaCard? Get(int id, string? UID = "", long number = 0)
         {
             return _context.Cards
                    .Include(c => c.Account)
@@ -124,7 +124,7 @@ namespace BankingSystem.BLL.Services
             throw new NotImplementedException();
         }
 
-        public void Update(VisaCard Entity)
+        public void Update(VisaCard Entity, string? TellerId = "")
         {
             throw new NotImplementedException();
         }

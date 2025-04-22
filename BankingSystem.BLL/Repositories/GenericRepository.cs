@@ -32,7 +32,7 @@ namespace BankingSystem.BLL.Repositories
             _dbContext.Remove(Entity);
         }
 
-        public T? Get(int id, long number = 0)
+        public T? Get(int id, string? id2 = "", long number = 0)
         {
             return _dbContext.Find<T>(id); 
         }
@@ -49,7 +49,7 @@ namespace BankingSystem.BLL.Repositories
         }
 
 
-        public void Update(T Entity)
+        public void Update(T Entity, string? TellerId = "")
         {
             _dbContext.Update(Entity);
         }

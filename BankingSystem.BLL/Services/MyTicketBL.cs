@@ -13,16 +13,9 @@ using System.Threading.Tasks;
 
 namespace BankingSystem.BLL.Services
 {
-    public class MyTicketBL : IGenericRepository<SupportTicket>, ISearchPaginationRepo<SupportTicket>
+    public class MyTicketBL(BankingSystemContext context) : IGenericRepository<SupportTicket>, ISearchPaginationRepo<SupportTicket>
     {
-        private readonly BankingSystemContext _context;
-
-        public MyTicketBL(BankingSystemContext context)
-        {
-            _context = context;
-        }
-       
-
+        private readonly BankingSystemContext _context = context;
 
         public IQueryable<SupportTicket> GetAll(string? userID = "", int flag = 1)
         {
@@ -42,7 +35,7 @@ namespace BankingSystem.BLL.Services
         }
 
 
-        public SupportTicket? Get(int id, long number = 0)
+        public SupportTicket? Get(int id, string? UID = "", long number = 0)
         {
             return _context.SupportTickets
                 .Include(t => t.Teller)
@@ -53,13 +46,14 @@ namespace BankingSystem.BLL.Services
         }
 
 
-        public void Update(SupportTicket entity)
+        public void Update(SupportTicket entity, string? Id = "")
         {
             var existing = _context.SupportTickets.FirstOrDefault(t => t.Id == entity.Id);
             if (existing != null)
             {
                 existing.Response = entity.Response;
                 existing.Status = entity.Status;
+                existing.TellerId = Id;
                 _context.SaveChanges();
             }
         }
@@ -131,7 +125,7 @@ namespace BankingSystem.BLL.Services
             throw new NotImplementedException();
         }
 
-        
+
         public IEnumerable<SupportTicket> GetAllByPagination(string? ID, string? filter, out int totalRecords, out int totalPages, int pageNumber = 1)
         {
             throw new NotImplementedException();

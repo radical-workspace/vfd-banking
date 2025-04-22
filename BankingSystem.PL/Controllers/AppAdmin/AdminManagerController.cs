@@ -57,20 +57,28 @@ public class AdminManagerController(IUnitOfWork unitOfWork, IMapper mapper, User
                 BranchId = model.BranchId,
                 UserName = model.Email,
                 Email = model.Email,
+
+
+            // Use UserManager to create the Manager with hashed password
+
                 Discriminator = "Manager",
                 PhoneNumber = model.PhoneNumber
 
                 
             };
 
+
             var result = await _userManager.CreateAsync(manager, model.Password);
 
             if (result.Succeeded)
             {
+
+
                 await _userManager.AddToRoleAsync(manager, "Manager");
 
                 TempData["SuccessMessage"] = $"Manager '{manager.FirstName} {manager.LastName}' created successfully.";
                 ViewBag.Branches = new SelectList(_unitOfWork.Repository<Branch>().GetAll(), "Id", "Name", model.BranchId);
+
 
                 return RedirectToAction("Index", "Admin");
             }
@@ -81,6 +89,7 @@ public class AdminManagerController(IUnitOfWork unitOfWork, IMapper mapper, User
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
+
 
             ViewBag.Branches = new SelectList(_unitOfWork.Repository<Branch>().GetAll(), "Id", "Name", model.BranchId);
             return View(model);

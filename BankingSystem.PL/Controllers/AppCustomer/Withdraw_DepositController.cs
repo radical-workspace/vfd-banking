@@ -33,21 +33,24 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                     Value = a.Number.ToString(),
                     Text = $"Account: {a.Number} - Balance: {a.Balance:C}"
                 })],
-                UserVisaCards = [.. accounts.Select(c=> new SelectListItem {
-                    Value = c.Card!.Number.ToString(),
-                    Text = $"Card : {c.Card.Number} - Balance: {c.Balance:C}"
-                })],
+
+                UserVisaCards = accounts.Where(a => a.Card != null)
+                                       .Select(c => new SelectListItem
+                                       {
+                                           Value = c.Card.Number.ToString() ?? "",
+                                           Text = $"Card : {c.Card.Number} - Balance: {c.Balance:C}"
+                                       }).ToList(),
                 ShowAccounts = true
             };
             ViewBag.Process = TransactionType.Withdraw;
-            return View(viewModel);
+            return View("~/Views/Withdraw_Deposit/Withdraw.cshtml", viewModel);
         }
 
         [HttpPost]
         public IActionResult Withdraw(AccountsViewModel model, bool IsUsingVisa)
         {
 
-            if (!ModelState.IsValid) return View(model);
+            //if (!ModelState.IsValid) return View(model);
             var transaction = _transference.CreatePendingTransaction(model, User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
 
             // Get the selected account

@@ -414,6 +414,15 @@
     #main-content.fade-out {
         opacity: 0;
     }
+
+    .my-head {
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+    .my-head:hover {
+        font-size: 1.57rem;
+    }
 </style>
 
 
@@ -422,8 +431,10 @@
     <div class="sidebar" id="sidebar">
         <div class="logo">
             <div class="d-flex align-items-center">
-                <i class="bi bi-bank2 me-2 bnk-logo"></i>
-                <span class="logo-text">BankAdmin</span>
+                <a class="my-head" href="" onclick="location.reload();">
+                    <i class="bi bi-bank2 me-2 bnk-logo"></i>
+                    <span class="logo-text">BankAdmin</span>
+                </a>
             </div>
             <button class="sidebar-toggle" id="sidebarToggle">
                 <i class="bi bi-chevron-double-left sidebar-collapse-icon"></i>
@@ -499,6 +510,12 @@
                 @* </li> *@
 
                 <li class="nav-item">
+                    <a href="#" class="nav-link load-content" data-url="/AdminGenCertifications/GetAllCertifications">
+                        <i class="fa-solid fa-file-zipper"></i> <span>Certifications</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
                     <a href="#" class="nav-link load-content" data-url="/Admin/Edit">
                         <i class="bi bi-gear"></i> <span>Settings</span>
                     </a>
@@ -520,9 +537,11 @@
         </div>
     </div>
 
+    @* <h1>@(User.FindFirst(ClaimTypes.NameIdentifier)?.Value)</h1> *@
 
     <!-- Main Content -->
-    <div class="main-content" id="main-content"></div>
+    <div class="main-content" id="main-content">
+    </div>
 
 </div>
 
@@ -587,5 +606,53 @@
             icon.classList.remove('bi-chevron-double-right');
             icon.classList.add('bi-chevron-double-left');
         }
+    });
+
+
+    // Handle View All Transactions button click
+    document.addEventListener('click', function(e) {
+        if (e.target && e.target.id === 'viewAllTransactions') {
+            e.preventDefault();
+            const transactionsLink = document.querySelector('a[data-url="/AdminTransactions/GetAllTransactionsBranches"]');
+            if (transactionsLink) {
+                // Remove active class from all links
+                document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                // Add active class to transactions link
+                transactionsLink.classList.add('active');
+                // Trigger click on transactions link
+                transactionsLink.click();
+            }
+        }
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Check for active section parameter
+        const urlParams = new URLSearchParams(window.location.search);
+
+        if (urlParams.get('activeSection') === 'branches') {
+            // Clean the URL
+            history.replaceState(null, '', window.location.pathname);
+
+            // Find branches link and trigger content load
+            const branchesLink = document.querySelector('a[data-url="/AdminBankBranch/GetAllBranches"]');
+            if (branchesLink) {
+                // Add slight delay to ensure DOM is ready
+                setTimeout(() => {
+                    // Update active state
+                    document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                    branchesLink.classList.add('active');
+
+                    // Trigger content load
+                    branchesLink.click();
+                }, 50);
+            }
+        }
+
+        // Existing navigation code
+        const contentArea = document.getElementById("main-content");
+        // ... rest of your existing navigation script ...
     });
 </script>

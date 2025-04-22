@@ -26,16 +26,16 @@ namespace BankingSystem.PL.Controllers.AppManager
             var manager = _unitOfWork.Repository<DAL.Models.Manager>().GetSingleIncluding(x => x.Id == id);
             var branchID = manager?.BranchId;
 
-            if (branchID == null)
-                return NotFound("Manager or Branch not found");
+            //if (branchID == null)
+            //    return NotFound("Manager or Branch not found");
 
             var customers = _unitOfWork.Repository<Customer>()
                 .GetAllIncluding(c => c.Branch)
                 .Where(c => c.BranchId == branchID)
                 .ToList();
 
-            if (customers.Count == 0)
-                return NotFound("No customers found for this branch");
+            //if (customers.Count == 0)
+            //    return NotFound("No customers found for this branch");
 
             var customerView = _mapper.Map<List<Customer>, List<CustomerDetailsViewModel>>(customers);
             return View(customerView);

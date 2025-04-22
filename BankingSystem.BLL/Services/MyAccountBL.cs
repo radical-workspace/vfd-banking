@@ -98,7 +98,7 @@ namespace BankingSystem.BLL.Services
 
 
 
-        public Account? Get(int id, long number)
+        public Account? Get(int id, string? UID = "", long number = 0)
         {
             return _context.Accounts
                 //.IgnoreQueryFilters()
@@ -141,7 +141,7 @@ namespace BankingSystem.BLL.Services
         }
 
 
-        public void Update(Account Entity)
+        public void Update(Account Entity, string? TellerId = "")
         {
             if (Entity != null)
             {

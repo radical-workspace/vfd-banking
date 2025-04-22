@@ -2,7 +2,6 @@
 @{
     ViewData["Title"] = "Savings Management";
 }
-
 @if (TempData["Success"] != null)
 {
     <div class="alert alert-success">@TempData["Success"]</div>
@@ -11,7 +10,6 @@
 {
     <div class="alert alert-danger">@TempData["Error"]</div>
 }
-
 <div class="container-fluid mt-4 px-4">
     <div class="row justify-content-center">
         <div class="col-12">
@@ -21,7 +19,7 @@
                     <h3 class="text-white mb-4">
                         <i class="bi bi-piggy-bank-fill me-2"></i>Savings Accounts
                     </h3>
-                    <button class="btn btn-primary Add-btn w-75 py-2 mb-3" style="background-color: #deae9f; border: none;">
+                    <button class="btn btn-primary w-75 py-2 mb-3" id="addCurrencyBtn" style="background-color: #deae9f; border: none;">
                         <i class="bi bi-plus-circle me-2"></i>Add Currency
                     </button>
                     <div class="text-white mt-auto">
@@ -29,7 +27,6 @@
                         <p>Total Balance: @Model.Sum(x => x.Balance).ToString("C")</p>
                     </div>
                 </div>
-
                 <!-- Right Section (70%) -->
                 <div class="card-body p-4" style="width: 70%; overflow-y: auto;">
                     <div class="table-responsive">
@@ -70,6 +67,35 @@
     <input type="hidden" id="savingBalance" name="Balance" />
     @Html.AntiForgeryToken()
 </form>
+
+<!-- Add Currency Modal -->
+<div class="modal fade" id="addCurrencyModal" tabindex="-1" aria-labelledby="addCurrencyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: steelblue; color: white;">
+                <h5 class="modal-title" id="addCurrencyModalLabel"><i class="bi bi-plus-circle me-2"></i>Add New Currency</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="addSavingForm" action="@Url.Action("AddSaving", "ManagerSavings")" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="currencyInput" class="form-label">Currency</label>
+                        <input type="text" class="form-control" id="currencyInput" name="Currency" placeholder="USD, EUR, GBP..." required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="balanceInput" class="form-label">Initial Balance</label>
+                        <input type="number" class="form-control" id="balanceInput" name="Balance" step="0.01" min="0" value="0.00" required>
+                    </div>
+                    @Html.AntiForgeryToken()
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">Save Currency</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script src="~/js/ManagerSaving.js"></script>

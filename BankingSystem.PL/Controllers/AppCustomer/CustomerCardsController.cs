@@ -20,15 +20,17 @@ namespace BankingSystem.PL.Controllers.AppCustomer
 
         public IActionResult Details(string id)
         {
-            var customer = _UnitOfWork.Repository<Customer>()
-                                  .GetSingleDeepIncluding(c => c.Id == id,
-                                  q => q.Include(c => c.Accounts).ThenInclude(a => a.Card));
+            var cards = _UnitOfWork.Repository<VisaCard>().GetAllIncluding(c => c.Account)
+                                                            .Where(c => c.Account.CustomerId == id).ToList();
 
-            if (customer != null)
+
+            if (cards != null)
             {
 
-                var CardsModel = _mapper.Map<List<CustomerCardsViewModel>>(customer.Accounts?.Where(acc => acc.Card != null).Select(acc=>acc.Card) ?? new List<VisaCard>());
-                    return View(CardsModel);
+                var CardsModel = _mapper.Map<List<CustomerCardsViewModel>>(cards);
+
+                //var CardsModel = _mapper.Map<List<CustomerCardsViewModel>>(customer.Accounts?.Where(acc => acc.Card != null).Select(acc=>acc.Card) ?? new List<VisaCard>());
+                return View(CardsModel);
             }
             else
             {

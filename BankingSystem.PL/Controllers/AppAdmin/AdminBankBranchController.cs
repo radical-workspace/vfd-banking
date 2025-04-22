@@ -201,7 +201,7 @@ namespace BankingSystem.PL.Controllers.AppAdmin
                         existingBranch.MyManager = null;
                     }
                 }
-                
+
                 _unitOfWork.Repository<Branch>().Update(existingBranch);
                 _unitOfWork.Complete();
 

@@ -43,14 +43,14 @@ namespace BankingSystem.PL.Controllers.AppTeller
         }
 
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(SupportTicket ticket)
         {
             try
             {
-                _genericRepositoryTicket.Update(ticket);
+                var ID = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                _genericRepositoryTicket.Update(ticket, ID);
                 return RedirectToAction("Index");
             }
             catch

@@ -21,13 +21,18 @@ namespace BankingSystem.PL
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+
+            var environment = builder.Environment.IsDevelopment() ? "Development" : "Production";
+
             // Configure Entity Framework and Identity
-            builder.Configuration.AddEnvironmentVariables();
-            var DevelopmentconnectionString = builder.Configuration.GetConnectionString("MVCProjectDB");
+            //builder.Configuration.AddEnvironmentVariables();
+
+            var DeploymentConnectionString = Environment.GetEnvironmentVariable("MVCProjectDB", EnvironmentVariableTarget.User);
+            var DevelopmentConnectionString = builder.Configuration.GetConnectionString("MVCProjectDB");
            
            
             builder.Services.AddDbContext<BankingSystemContext>(options =>
-                                                                options.UseSqlServer(DevelopmentconnectionString)
+                                                                options.UseSqlServer(DeploymentConnectionString)
                                                                        .AddInterceptors(new SoftDeleteInterceptor()));
 
 
