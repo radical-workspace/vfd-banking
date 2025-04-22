@@ -17,6 +17,10 @@ namespace BankingSystem.DAL.Models
         public string ContentType { get; set; } = "application/pdf";
         public long FileSize { get; set; }
 
+        [ForeignKey(nameof(Loan))]
+        public int LoanId { get; set; }
+        public Loan Loan { get; set; }
+
         [ForeignKey(nameof(Customer))]
         public string CustomerId { get; set; } = string.Empty;
         public Customer Customer { get; set; } = null!;

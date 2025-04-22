@@ -3,6 +3,7 @@ using BankingSystem.BLL.Interfaces;
 using BankingSystem.DAL.Models;
 using BankingSystem.PL.ViewModels.Manager;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using System.Security.Claims;
 
 namespace BankingSystem.PL.Controllers.AppManager
@@ -11,7 +12,6 @@ namespace BankingSystem.PL.Controllers.AppManager
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IMapper _mapper = mapper;
-
         public IActionResult GetAllLoans()
         {
             var ManagerID = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -65,6 +65,51 @@ namespace BankingSystem.PL.Controllers.AppManager
 
             return RedirectToAction(nameof(GetAllLoans));
         }
+
+
+        [HttpGet]
+        public IActionResult DownloadDocument(string customerId, int loanId)
+        {
+            //customerId = "0578fd86-26c8-4fb4-a347-a0e8997a7a34";
+
+            if (string.IsNullOrEmpty(customerId))
+            {
+                return NotFound("CustomerId is required.");
+            }
+
+            var managerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var branch = _unitOfWork.Repository<Branch>()
+                .GetSingleIncluding(b => b.ManagerId == managerId, b => b.Customers);
+
+            if (branch == null)
+                return NotFound("Branch not found for the logged-in manager.");
+
+            var customer = _unitOfWork.Repository<Customer>()
+                .GetAllIncluding(c => c.FinancialDocument, c => c.Loans)
+                .FirstOrDefault(c => c.Id == customerId && c.BranchId == branch.Id);
+
+            if (customer == null)
+            {
+                return NotFound($"Customer not found. customerId: {customerId}, branchId: {branch.Id}");
+            }
+
+            bool hasLoan = customer.Loans.Any(l => l.Id == loanId);
+
+            if (!hasLoan)
+                return NotFound("Customer does not have this loan.");
+
+            var document = customer.FinancialDocument.FirstOrDefault(d => d.LoanId == loanId);
+
+            if (document == null || document.FileData == null)
+                return NotFound("Document not found or file data is missing.");
+
+            ViewBag.CustomerId = document.CustomerId;
+
+            return File(document.FileData, document.ContentType, document.FileName);
+        }
+
+
 
     }
 }

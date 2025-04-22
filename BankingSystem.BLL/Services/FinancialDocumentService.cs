@@ -6,7 +6,7 @@ public class FinancialDocumentService(IUnitOfWork unitOfWork)
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-    public async Task<string> UploadFinancialDocument(string userId, IFormFile file, string documentType, string description, DateTime? issueDate)
+    public async Task<string> UploadFinancialDocument(string userId, IFormFile file, string documentType, string description, DateTime? issueDate,int LoanID)
     {
         try
         {
@@ -39,7 +39,8 @@ public class FinancialDocumentService(IUnitOfWork unitOfWork)
                 FileName = file.FileName,
                 DocumentType = documentType,
                 Description = description,
-                IssueDate = issueDate.Value
+                IssueDate = issueDate.Value,
+                LoanId = LoanID
 
             };
 

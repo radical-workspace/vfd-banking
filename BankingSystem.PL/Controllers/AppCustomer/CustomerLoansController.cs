@@ -41,12 +41,12 @@ namespace BankingSystem.PL.Controllers.AppCustomer
             if (customer != null)
             {
                 var accountSelectList = customer.Accounts
-       .Select(a => new SelectListItem
-       {
-           Value = a.Id.ToString(), // assuming Id is the PK and is int/long
-           Text = $"Account No: {a.Number} - {a.AccountType} - Balance: {a.Balance:C}"
-       })
-       .ToList();
+               .Select(a => new SelectListItem
+               {
+                   Value = a.Id.ToString(), // assuming Id is the PK and is int/long
+                   Text = $"Account No: {a.Number} - {a.AccountType} - Balance: {a.Balance:C}"
+               })
+               .ToList();
 
                 var customerloanvm = new CustomerLoanVM()
                 {
@@ -73,19 +73,18 @@ namespace BankingSystem.PL.Controllers.AppCustomer
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ApplyLoan(CustomerLoanVM model)
         {
+            var customer = _UnitOfWork.Repository<Customer>()
+            .GetSingleIncluding(c => c.Id == model.CustomerId, c => c.Accounts);
+
+                    var accountSelectList = customer.Accounts
+            .Select(a => new SelectListItem
+            {
+               Value = a.Id.ToString(), // assuming Id is the PK and is int/long
+               Text = $"Account No: {a.Number} - {a.AccountType} - Balance: {a.Balance:C}"
+            })
+            .ToList();
             if (!ModelState.IsValid)
             {
-                var customer = _UnitOfWork.Repository<Customer>()
-                    .GetSingleIncluding(c => c.Id == model.CustomerId, c => c.Accounts);
-
-                model.Accounts = customer.Accounts
-                    .Select(a => new SelectListItem
-                    {
-                        Value = a.Id.ToString(),
-                        Text = $"Account No: {a.Number} - {a.AccountType} - Balance: {a.Balance:C}"
-                    })
-                    .ToList();
-
                 return View(model);
             }
 
@@ -115,7 +114,8 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                         document.DocumentFile,
                         document.DocumentType, // You can specify the document type here
                         document.Description,
-                        document.IssueDate
+                        document.IssueDate,
+                        loan.Id
                     );
 
                     if (!int.TryParse(result, out _))
