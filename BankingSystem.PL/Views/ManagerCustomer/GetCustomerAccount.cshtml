@@ -7,176 +7,228 @@
 
 <style>
     :root {
-        --primary-dark: rgb(63, 114, 175); /* new primary dark */
-        --primary-medium: rgb(157, 178, 191); /* new primary medium */
-        --primary-light: rgb(219, 226, 239); /* new primary light */
-        --secondary-dark: rgb(63, 114, 175); /* mapped to primary-dark because no exact secondary */
-        --secondary-light: rgb(219, 226, 239); /* mapped to primary-light */
-        --neutral-1: rgb(157, 178, 191); /* mapped to text-light */
-        --accent-1: rgb(63, 114, 175); /* mapped to primary-dark */
-        --accent-2: rgb(221, 230, 237); /* primary-lightest */
-        --accent-3: rgb(238, 244, 255); /* soft background you used */
-        --white: #ffffff; /* stays same */
+        --primary-dark: #2c3e50;
+        --primary-light: #ecf0f1;
+        --accent-primary: #3498db;
+        --accent-primary-hover: #2980b9;
+        --accent-secondary: #7f8c8d;
+        --accent-secondary-hover: #6c7a7d;
+        --text-primary: #2c3e50;
+        --text-light: #ecf0f1;
+        --success: #2ecc71;
+        --warning: #f1c40f;
+        --border-radius: 12px;
+        --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        --card-padding: 1.5rem;
     }
 
     .accounts-container {
-        background: var(--accent-3);
-        border-radius: 15px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        padding: 2rem;
+        max-width: 1400px;
+        margin: 2rem auto;
+        padding: 0 1rem;
     }
 
     .accounts-header {
-        color: var(--primary-dark);
-        border-bottom: 2px solid var(--accent-1);
-        padding-bottom: 1rem;
+        text-align: center;
         margin-bottom: 2rem;
+        color: var(--text-primary);
     }
 
+        .accounts-header h1 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .accounts-header p {
+            color: var(--accent-secondary);
+        }
+
     .account-card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        margin-bottom: 1.5rem;
         border: none;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
         transition: all 0.3s ease;
         height: 100%;
     }
 
         .account-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
     .account-card-header {
-        background: linear-gradient(90deg, var(--primary-dark), var(--primary-medium));
-        color: var(--white);
-        border-radius: 10px 10px 0 0 !important;
-        padding: 1rem 1.5rem;
+        background:  var(--primary-dark);
+        color: var(--text-light);
+        padding: 1rem var(--card-padding);
+        border-bottom: none;
     }
 
     .account-card-title {
+        margin: 0;
         font-weight: 600;
-        margin-bottom: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     .account-card-body {
-        padding: 1.5rem;
+        padding: var(--card-padding);
+    }
+
+    .account-info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .account-info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
     }
 
     .account-label {
-        color: var(--primary-medium);
         font-weight: 600;
+        color: var(--primary-dark);
         font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
     .account-value {
-        color: var(--primary-dark);
-        font-weight: 500;
+        color: var(--text-primary);
+        font-size: 1.1rem;
+        padding: 0.5rem;
+        background: var(--primary-light);
+        border-radius: 6px;
     }
-
-    .no-accounts {
-        background: var(--accent-2);
-        border-left: 4px solid var(--accent-1);
-        color: var(--primary-dark);
-        padding: 1.5rem;
-        border-radius: 8px;
-    }
-
-    .back-btn {
-        background-color: var(--primary-light);
-        color: var(--white);
-        border: none;
-        padding: 0.75rem 1.5rem;
-        transition: all 0.3s ease;
-    }
-
-        .back-btn:hover {
-            background-color: var(--primary-medium);
-            transform: translateY(-2px);
-        }
 
     .status-badge {
-        padding: 0.35rem 0.75rem;
+        display: inline-block;
+        padding: 0.35rem 1rem;
         border-radius: 50px;
         font-weight: 500;
         font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-active {
+        background-color: var(--success);
+        color: white;
+    }
+
+    .status-inactive {
+        background-color: var(--warning);
+        color: var(--text-primary);
+    }
+
+    .no-accounts {
+        background: var(--primary-light);
+        border-left: 4px solid var(--accent-primary);
+        color: var(--text-primary);
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        text-align: center;
+        margin: 2rem 0;
+    }
+
+    .back-button {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+
+    .btn-back {
+        background-color: var(--accent-secondary);
+        color: white;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: var(--border-radius);
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .btn-back:hover {
+            background-color: var(--accent-secondary-hover);
+            transform: translateY(-2px);
+            color: white;
+            text-decoration: none;
+        }
+
+    .icon {
+        margin-right: 0.5rem;
     }
 </style>
 
-<div class="container-fluid py-4">
-    <div class="row justify-content-center">
-        <div class="col-xxl-10 col-12">
-            <div class="accounts-container">
-                <h1 class="accounts-header">
-                    <i class="fas fa-wallet me-2"></i>Customer Accounts
-                </h1>
+<div class="accounts-container">
+    <div class="accounts-header">
+        <h1><i class="fas fa-wallet icon"></i>Customer Accounts</h1>
+        <p>View and manage customer's banking accounts</p>
+    </div>
 
-                @if (Model != null && Model.Any())
-                {
-                    <div class="row">
-                        @foreach (var account in Model)
-                        {
-                            <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
-                                <div class="card account-card">
-                                    <div class="card-header account-card-header">
-                                        <h5 class="account-card-title">
-                                            <i class="fas fa-@(account.AccountType == "Savings" ? "piggy-bank" : "money-bill-wave") me-2"></i>
-                                            Account #@account.Number
-                                        </h5>
-                                    </div>
-                                    <div class="card-body account-card-body">
-                                        <dl class="row">
-                                            <dt class="col-sm-5 account-label">
-                                                Balance
-                                            </dt>
-                                            <dd class="col-sm-7 account-value">
-                                                @account.Balance.ToString()
-                                            </dd>
-
-                                            <dt class="col-sm-5 account-label">
-                                                Created
-                                            </dt>
-                                            <dd class="col-sm-7 account-value">
-                                                @account.CreatedAt.ToString("dd MMM yyyy")
-                                            </dd>
-
-                                            <dt class="col-sm-5 account-label">
-                                                Type
-                                            </dt>
-                                            <dd class="col-sm-7 account-value">
-                                                @account.AccountType
-                                            </dd>
-
-                                            <dt class="col-sm-5 account-label">
-                                                Status
-                                            </dt>
-                                            <dd class="col-sm-7">
-                                                <span class="status-badge @(account.AccountStatus == "Active" ? "bg-success" : "bg-warning text-dark")">
-                                                    @account.AccountStatus
-                                                </span>
-                                            </dd>
-                                        </dl>
-                                    </div>
+    @if (Model != null && Model.Any())
+    {
+        <div class="row">
+            @foreach (var account in Model)
+            {
+                <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
+                    <div class="account-card">
+                        <div class="account-card-header">
+                            <h5 class="account-card-title">
+                                <i class="fas fa-@(account.AccountType == "Savings" ? "piggy-bank" : "money-bill-wave")"></i>
+                                Account #@account.Number
+                            </h5>
+                        </div>
+                        <div class="account-card-body">
+                            <div class="account-info-grid">
+                                <div class="account-info-item">
+                                    <span class="account-label">Balance</span>
+                                    <span class="account-value">@account.Balance.ToString()</span>
+                                </div>
+                                <div class="account-info-item">
+                                    <span class="account-label">Created</span>
+                                    <span class="account-value">@account.CreatedAt.ToString("dd MMM yyyy")</span>
+                                </div>
+                                <div class="account-info-item">
+                                    <span class="account-label">Type</span>
+                                    <span class="account-value">@account.AccountType</span>
+                                </div>
+                                <div class="account-info-item">
+                                    <span class="account-label">Status</span>
+                                    <span class="status-badge @(account.AccountStatus == "Active" ? "status-active" : "status-inactive")">
+                                        @account.AccountStatus
+                                    </span>
                                 </div>
                             </div>
-                        }
+                        </div>
                     </div>
-                }
-                else
-                {
-                    <div class="no-accounts">
-                        <i class="fas fa-info-circle me-2"></i> No accounts found for this customer.
-                    </div>
-                }
-
-                <div class="text-center mt-4">
-                    <a asp-controller="ManagerCustomer"
-                       asp-action="GetCustomerDetails"
-                       asp-route-id="@customerId"
-                       class="btn  btn-primary back-btn">
-                        <i class="fas fa-arrow-left me-2"></i> Back to Customer Details
-                    </a>
                 </div>
-            </div>
+            }
         </div>
+    }
+    else
+    {
+        <div class="no-accounts">
+            <i class="fas fa-info-circle icon"></i> No accounts found for this customer.
+        </div>
+    }
+
+    <div class="back-button">
+        <a asp-controller="ManagerCustomer"
+           asp-action="GetCustomerDetails"
+           asp-route-id="@customerId"
+           class="btn-back">
+            <i class="fas fa-arrow-left"></i> Back to Customer Details
+        </a>
     </div>
 </div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+}

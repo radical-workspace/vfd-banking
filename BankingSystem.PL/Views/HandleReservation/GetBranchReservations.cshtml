@@ -1,4 +1,5 @@
-﻿@using BankingSystem.DAL.Models
+﻿
+@using BankingSystem.DAL.Models
 @model IEnumerable<Reservation>
 
 @{
@@ -6,70 +7,220 @@
 }
 
 <div class="container mt-4">
-    <h2 class="text-primary text-center fw-bold mb-4">Branch Reservations</h2>
+    <h2 class="text-center mb-4 fw-bold" style="color: var(--primary-dark);">Branch Reservations</h2>
 
     @if (!Model.Any())
     {
-        <div class="alert alert-info text-center">
-            No reservations available for this branch.
+        <div class="alert alert-primary text-center rounded-4 shadow-sm" style="background-color: var(--accent-3); border-color: var(--primary-medium);">
+            <i class="bi bi-calendar-x me-2"></i>No reservations available for this branch.
         </div>
     }
     else
     {
-        <div class="row">
+        <div class="row g-4">
+
             @foreach (var reservation in Model)
             {
-                <div class="col-12 col-md-6 mb-4">
-                    <div class="card shadow-lg rounded-4 p-4 h-100 border-0" style="background-color: #f9f9f9;">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="text-primary fw-bold mb-0">@reservation.Customer?.FirstName @reservation.Customer?.LastName  </h5>
-                            <span class="badge px-3 py-2 fs-6
-                                @(reservation.Status == ReservationStatus.Approved ? "bg-success" :
-                                  reservation.Status == ReservationStatus.Pending ? "bg-warning text-dark" :
-                                  "bg-danger")">
-                                @reservation.Status
-                            </span>
+                <div class="col-12 col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                        <!-- Status ribbon -->
+                        <div class="position-absolute top-0 end-0 p-2 @GetStatusRibbonClass(reservation.Status)">
+                            <span class="text-white fw-bold small">@reservation.Status</span>
+                        </div>
+                   
+                        <!-- Card Header with Customer Info -->
+                        <div class="card-header bg-white border-bottom-0 pb-0">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar avatar-lg bg-light-primary rounded-circle me-3 mt-3">
+                                    <span class="avatar-initials text-primary">
+                                        @GetInitials(reservation.Customer?.FirstName, reservation.Customer?.LastName)
+                                    </span>
+                                </div>
+                                <hr />
+                                <div>
+                                    <h5 class="card-title mb-0 text-dark">
+                                        @reservation.Customer?.FirstName @reservation.Customer?.LastName
+                                    </h5>
+                                    <small class="text-muted">
+                                        @(reservation.Customer?.Email ?? "Unregistered Client")
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <!-- Card Body -->
+                        <div class="card-body pt-0">
+                            <!-- Reservation Time -->
+                            <div class="d-flex align-items-center mb-3 p-3 bg-light rounded">
+                                <i class="bi bi-calendar-event text-primary me-2 fs-5"></i>
+                                <div>
+                                    <div class="fw-bold">@reservation.ReservationDate.ToString("MMMM dd, yyyy")</div>
+                                    <div class="text-muted small">@reservation.ReservationDate.ToString("hh:mm tt")</div>
+                                </div>
+                            </div>
+                            <hr />
+                            <!-- Service Details -->
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-tools text-primary me-2"></i>
+                                    <h6 class="mb-0 text-uppercase small fw-bold text-dark">Service Details</h6>
+                                </div>
+                                <div class="ps-4">
+                                    <p class="mb-0 text-dark">@reservation.ServiceType</p>
+                                    @if (!string.IsNullOrEmpty(reservation.Notes))
+                                    {
+                                        <div class="mt-2 small text-muted">
+                                            <i class="bi bi-chat-square-text me-1"></i>
+                                            @reservation.Notes
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <hr />
+                            <!-- Contact Info -->
+                            <div class="mb-2">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-telephone text-primary me-2"></i>
+                                    <h6 class="mb-0 text-uppercase small fw-bold text-dark">Contact Info</h6>
+                                </div>
+                                <div class="ps-4">
+                                    <p class="mb-1 text-dark">
+                                        <i class="bi bi-envelope me-1"></i>
+                                        @(reservation.Customer?.Email ?? "No email")
+                                    </p>
+                                    <p class="mb-0 text-dark">
+                                        <i class="bi bi-phone me-1"></i>
+                                        @(reservation.Customer?.PhoneNumber ?? "No phone")
+                                    </p>
+                                </div>
+                            </div>
                         </div>
 
-                        <p class="mb-1"><strong>Service:</strong> @reservation.ServiceType</p>
-                        <p class="mb-1"><strong>Date:</strong> @reservation.ReservationDate.ToString("dddd, dd MMMM yyyy hh:mm tt")</p>
-
-
-                        <p class="mb-1">
-                            <strong>Email:</strong> @(reservation.Customer?.Email?.ToString() ?? "Client is not Registered Yet")
-                        </p>
-                        <p class="mb-1"><strong>Phone:</strong> @(reservation.Customer?.PhoneNumber?.ToString() ?? "No phone Registed")</p>
-
-
+                        <!-- Card Footer with Actions -->
                         @if (reservation.Status == ReservationStatus.Pending)
                         {
-                            <div class="d-flex justify-content-end gap-2">
-                                <form asp-action="UpdateReservationStatus" method="post">
-                                    <input type="hidden" name="id" value="@reservation.Id" />
-                                    <input type="hidden" name="status" value="Approved" />
-                                    <button type="submit" class="btn btn-success btn-sm fw-semibold">
-                                        Approve
-                                    </button>
-                                </form>
-
-                                <form asp-action="UpdateReservationStatus" method="post">
-                                    <input type="hidden" name="id" value="@reservation.Id" />
-                                    <input type="hidden" name="status" value="Rejected" />
-                                    <button type="submit" class="btn btn-danger btn-sm fw-semibold">
-                                        Reject
-                                    </button>
-                                </form>
+                            <div class="card-footer bg-white border-top-0 pt-0">
+                                <div class="d-flex justify-content-between gap-2">
+                                    <form asp-action="UpdateReservationStatus" method="post" class="w-100">
+                                        <input type="hidden" name="id" value="@reservation.Id" />
+                                        <input type="hidden" name="status" value="Rejected" />
+                                        <button type="submit" class="btn btn-outline-danger w-100 py-2">
+                                            <i class="bi bi-x-circle me-1"></i> Decline
+                                        </button>
+                                    </form>
+                                    <form asp-action="UpdateReservationStatus" method="post" class="w-100">
+                                        <input type="hidden" name="id" value="@reservation.Id" />
+                                        <input type="hidden" name="status" value="Approved" />
+                                        <button type="submit" class="btn btn-primary w-100 py-2">
+                                            <i class="bi bi-check-circle me-1"></i> Approve
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         }
                         else
                         {
-                            <div class="text-end">
-                                <span class="text-muted fst-italic">This reservation is already @reservation.Status.</span>
+                            <div class="card-footer bg-white border-top-0 mb-3">
+                                <div class="alert alert-@(reservation.Status == ReservationStatus.Approved ? "success" : "danger") mb-0 py-2">
+                                    <i class="bi @(reservation.Status == ReservationStatus.Approved ? "bi-check-circle" : "bi-x-circle") me-1"></i>
+                                    Reservation @reservation.Status
+                                </div>
                             </div>
                         }
                     </div>
                 </div>
             }
+  
         </div>
     }
 </div>
+
+@* <style>
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid var(--primary-medium);
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(63, 114, 175, 0.15);
+        }
+
+    .badge {
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-outline-danger {
+        border-color: var(--primary-medium);
+        color: var(--neutral-1);
+    }
+
+        .btn-outline-danger:hover {
+            background-color: var(--primary-dark);
+            color: var(--white);
+        }
+
+    .text-muted {
+        color: var(--primary-medium) !important;
+    }
+</style> *@
+<style>
+    /* Custom styles to enhance the design */
+    .avatar {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+    }
+
+    .avatar-initials {
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    .bg-light-primary {
+        background-color: rgba(63, 114, 175, 0.1);
+    }
+
+    .position-absolute {
+        z-index: 1;
+    }
+
+    .card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+        }
+
+    .status-ribbon {
+        position: absolute;
+        right: -25px;
+        top: 10px;
+        width: 100px;
+        text-align: center;
+        transform: rotate(45deg);
+    }
+</style>
+@functions {
+    string GetStatusRibbonClass(ReservationStatus status)
+    {
+        return status switch
+        {
+            ReservationStatus.Approved => "bg-success",
+            ReservationStatus.Pending => "bg-warning",
+            _ => "bg-danger"
+        };
+    }
+
+    string GetInitials(string firstName, string lastName)
+    {
+        if (string.IsNullOrEmpty(firstName)) return "?";
+        if (string.IsNullOrEmpty(lastName)) return firstName[0].ToString();
+        return $"{firstName[0]}{lastName[0]}";
+    }
+}

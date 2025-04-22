@@ -98,6 +98,9 @@ namespace BankingSystem.PL.Controllers.AppTeller
             Customerr.Transactions = _unitOfWork.Repository<Transaction>().GetAllIncluding(T => T.Payment).
                 Where(T => T.CustomerID == id).ToList();
 
+            //Customerr.SupportTickets = _unitOfWork.Repository<SupportTicket>().GetAll().Where(T => T.CustomerId == id).ToList();
+
+
             var mappedCustomer = _mapper.Map<Customer, CustomerDetailsViewModel>(Customerr);
 
             return View("GetCustomerDetails", mappedCustomer);

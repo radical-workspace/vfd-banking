@@ -6,178 +6,336 @@
     var customerId = ViewBag.CustomerId as string;
 }
 
-<h2>@Model.FirstName @Model.LastName's Details</h2>
+<style>
+    :root {
+        --primary-dark: #2c3e50;
+        --primary-light: #ecf0f1;
+        --accent-primary: #3498db;
+        --accent-primary-hover: #2980b9;
+        --accent-secondary: #7f8c8d;
+        --accent-secondary-hover: #6c7a7d;
+        --text-primary: #2c3e50;
+        --text-light: #ecf0f1;
+        --border-radius: 12px;
+        --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        --card-padding: 1.5rem;
+    }
 
-<div class="container">
+    .customer-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .customer-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: var(--text-primary);
+    }
+
+        .customer-header h2 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .customer-header p {
+            color: var(--accent-secondary);
+        }
+
+    .card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        margin-bottom: 1.5rem;
+        border: none;
+        overflow: hidden;
+    }
+
+    .card-header {
+        background: var(--primary-dark);
+        color: var(--text-light);
+        padding: 1rem var(--card-padding);
+        border-bottom: none;
+    }
+
+        .card-header h4 {
+            margin: 0;
+            font-weight: 600;
+        }
+
+    .card-body {
+        padding: var(--card-padding);
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: var(--primary-dark);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .info-value {
+        color: var(--text-primary);
+        font-size: 1.1rem;
+        padding: 0.5rem;
+        background: var(--primary-light);
+        border-radius: 6px;
+    }
+
+    .list-group-item {
+        border: none;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+        background: var(--primary-light);
+        border-radius: 6px;
+    }
+
+    .btn-primary {
+        background-color: var(--accent-primary);
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--border-radius);
+        transition: all 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            background-color: var(--accent-primary-hover);
+            transform: translateY(-2px);
+        }
+
+    .btn-secondary {
+        background-color: var(--accent-secondary);
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--border-radius);
+        transition: all 0.3s ease;
+    }
+
+        .btn-secondary:hover {
+            background-color: var(--accent-secondary-hover);
+            transform: translateY(-2px);
+        }
+
+    .section-title {
+        color: var(--primary-dark);
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .icon {
+        margin-right: 0.5rem;
+    }
+</style>
+
+<div class="customer-container">
+    <div class="customer-header">
+        <h2><i class="fas fa-user-circle icon"></i>@Model.FirstName @Model.LastName</h2>
+        <p>Customer ID: @customerId</p>
+    </div>
+
     <!-- Personal Information Card -->
-    <div class="card mb-4">
+    <div class="card">
         <div class="card-header">
-            <h4>Personal Information</h4>
+            <h4><i class="fas fa-user-tie icon"></i>Personal Information</h4>
         </div>
         <div class="card-body">
-            <p><strong>Full Name:</strong> @Model.FirstName @Model.LastName</p>
-            <p><strong>SSN:</strong> @Model.SSN</p>
-            <p><strong>Branch Name:</strong> @Model.BranchName</p>
-            <p><strong>Join Date:</strong> @Model.JoinDate.ToString("dd/MM/yyyy")</p>
-            <p><strong>Birth Date:</strong> @Model.BirthDate.ToString("dd/MM/yyyy")</p>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Full Name</span>
+                    <span class="info-value">@Model.FirstName @Model.LastName</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">SSN</span>
+                    <span class="info-value">@Model.SSN</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Branch</span>
+                    <span class="info-value">@Model.BranchName</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Join Date</span>
+                    <span class="info-value">@Model.JoinDate.ToString("dd/MM/yyyy")</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Birth Date</span>
+                    <span class="info-value">@Model.BirthDate.ToString("dd/MM/yyyy")</span>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Loan Details Card -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h4>Loan Details</h4>
+    <!-- Financial Information Grid -->
+    <div class="row">
+        <!-- Loan Details Card -->
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h4><i class="fas fa-hand-holding-usd icon"></i>Loan Details</h4>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        @foreach (var loan in Model.LoanDetails)
+                        {
+                            <div class="list-group-item">
+                                <strong>Loan Type:</strong> @loan.LoanType<br />
+                                <strong>Status:</strong> @loan.LoanStatus
+                            </div>
+                        }
+                    </div>
+                    <div class="action-buttons">
+                        <a asp-controller="ManagerCustomer"
+                           asp-action="GetCustomerLoan"
+                           asp-route-id="@customerId"
+                           class="btn btn-primary">
+                            <i class="fas fa-eye icon"></i>View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <ul class="list-group">
-                @foreach (var loan in Model.LoanDetails)
-                {
-                    <li class="list-group-item">
-                        <strong>Loan Type:</strong> @loan.LoanType <br />
-                        <strong>Loan Status:</strong> @loan.LoanStatus
-                    </li>
-                }
-            </ul>
-            <br />
 
-            <!-- View Loan Details Button -->
-            <a asp-controller="ManagerCustomer"
-               asp-action="GetCustomerLoan"
-               asp-route-id="@customerId"
-               class="btn btn-primary">
-                View Loan Details
-            </a>
+        <!-- Account Details Card -->
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h4><i class="fas fa-piggy-bank icon"></i>Account Details</h4>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        @foreach (var account in Model.AccountDetails)
+                        {
+                            <div class="list-group-item">
+                                <strong>Account #:</strong> @account.AccountNumber<br>
+                                <strong>Type:</strong> @account.AccountType<br>
+                                <strong>Status:</strong> @account.AccountStatus
+                            </div>
+                        }
+                    </div>
+                    <div class="action-buttons">
+                        <a asp-controller="ManagerCustomer"
+                           asp-action="GetCustomerAccount"
+                           asp-route-id="@customerId"
+                           class="btn btn-primary">
+                            <i class="fas fa-eye icon"></i>View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- Additional Information Grid -->
+    <div class="row mt-4">
+        <!-- Card Details -->
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h4><i class="fas fa-credit-card icon"></i>Card Details</h4>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        @foreach (var card in Model.CardDetails)
+                        {
+                            <div class="list-group-item">
+                                <strong>Type:</strong> @card.CardType<br>
+                                <strong>Number:</strong> @card.Number
+                            </div>
+                        }
+                    </div>
+                    <div class="action-buttons">
+                        <a asp-controller="ManagerCustomer"
+                           asp-action="GetCustomerCard"
+                           asp-route-id="@customerId"
+                           class="btn btn-primary">
+                            <i class="fas fa-eye icon"></i>View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <!-- Account Details Card -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h4>Account Details</h4>
+        <!-- Support Tickets -->
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h4><i class="fas fa-ticket-alt icon"></i>Support Tickets</h4>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        @foreach (var ticket in Model.SupportTicketDetails)
+                        {
+                            <div class="list-group-item">
+                                <strong>Status:</strong> @ticket.Status<br>
+                                <strong>Type:</strong> @ticket.Type
+                            </div>
+                        }
+                    </div>
+                    <div class="action-buttons">
+                        <a asp-controller="ManagerCustomer"
+                           asp-action="GetCustomerSupportTicket"
+                           asp-route-id="@customerId"
+                           class="btn btn-primary">
+                            <i class="fas fa-eye icon"></i>View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <ul class="list-group">
-                @foreach (var account in Model.AccountDetails)
-                {
-                    <li class="list-group-item">
-                        <strong>Account Number:</strong> @account.AccountNumber<br>
-                        <strong>Account Type:</strong> @account.AccountType<br>
-                        <strong>Account Status:</strong> @account.AccountStatus
-                    </li>
-                }
-            </ul>
-            <br />
 
-            <a asp-controller="ManagerCustomer"
-               asp-action="GetCustomerAccount"
-               asp-route-id="@customerId"
-               class="btn btn-primary">
-                View Account Details
-            </a>
-        </div>
-
-    </div>
-
-    <!-- Card Details Card -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h4>Card Details</h4>
-        </div>
-        <div class="card-body">
-            <ul class="list-group">
-                @foreach (var card in Model.CardDetails)
-                {
-                    <li class="list-group-item">
-                        <strong>Card Type:</strong> @card.CardType<br>
-                        <strong>Card Number:</strong> @card.Number
-                    </li>
-                }
-            </ul>
-            <br />
-
-            <a asp-controller="ManagerCustomer"
-               asp-action="GetCustomerCard"
-               asp-route-id="@customerId"
-               class="btn btn-primary">
-                View Card Details
-            </a>
-        </div>
-    </div>
-
-    <!-- Support Ticket Details Card -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h4>Support Ticket Details</h4>
-        </div>
-        <div class="card-body">
-            <ul class="list-group">
-                @foreach (var ticket in Model.SupportTicketDetails)
-                {
-                    <li class="list-group-item">
-                        <strong>Status:</strong> @ticket.Status<br>
-                        <strong>Type:</strong> @ticket.Type
-                    </li>
-                }
-            </ul>
-            <br />
-
-            <a asp-controller="ManagerCustomer"
-               asp-action="GetCustomerSupportTicket"
-               asp-route-id="@customerId"
-               class="btn btn-primary">
-                View Support Ticket Details
-            </a>
-        </div>
-    </div>
-
-    <!-- Transaction Details Card -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h4>Transaction Details</h4>
-        </div>
-        <div class="card-body">
-            <ul class="list-group">
-                @foreach (var transaction in Model.TransactionDetails)
-                {
-                    <li class="list-group-item">
-                        <strong>Transaction Type:</strong> @transaction.TransactionType
-                    </li>
-                }
-            </ul>
-            <br />
-            <a asp-controller="ManagerCustomer"
-               asp-action="GetCustomerTransaction"
-               asp-route-id="@customerId"
-               class="btn btn-primary">
-                View Transaction Details
-            </a>
-        </div>
-    </div>
-    <!-- Transaction Details Card -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h4>Certificate Details</h4>
-        </div>
-        <div class="card-body">
-            <ul class="list-group">
-                @foreach (var certificate in Model.CertificateDetails)
-                {
-                    <li class="list-group-item">
-                        <strong>Certificate Number:</strong> @certificate.CertificateNumber <br />
-                    </li>
-                }
-            </ul>
-            <br />
-            <a asp-controller="ManagerCustomer"
-               asp-action="GetCustomerCertificate"
-               asp-route-id="@customerId"
-               class="btn btn-primary">
-                View Certificate Details
-            </a>
+        <!-- Certificates -->
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h4><i class="fas fa-certificate icon"></i>Certificates</h4>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        @foreach (var certificate in Model.CertificateDetails)
+                        {
+                            <div class="list-group-item">
+                                <strong>Certificate #:</strong> @certificate.CertificateNumber
+                            </div>
+                        }
+                    </div>
+                    <div class="action-buttons">
+                        <a asp-controller="ManagerCustomer"
+                           asp-action="GetCustomerCertificate"
+                           asp-route-id="@customerId"
+                           class="btn btn-primary">
+                            <i class="fas fa-eye icon"></i>View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Back Button -->
-    @Html.ActionLink("Back", "GetAllCustomers", "ManagerCustomer", new { id = ManagerId }, new { @class = "btn btn-secondary" })
+    <div class="action-buttons mt-4">
+        @Html.ActionLink("Back to List", "GetAllCustomers", "ManagerCustomer", new { id = ManagerId }, new { @class = "btn btn-secondary" })
+    </div>
 </div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+}
