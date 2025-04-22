@@ -7,20 +7,24 @@
 
 <style>
     :root {
-        --primary-dark: #2c3e50;
-        --primary-light: #ecf0f1;
-        --accent-primary: #3498db;
-        --accent-primary-hover: #2980b9;
-        --accent-secondary: #7f8c8d;
-        --accent-secondary-hover: #6c7a7d;
-        --text-primary: #2c3e50;
-        --text-light: #ecf0f1;
-        --success: #2ecc71;
-        --warning: #f1c40f;
-        --danger: #e74c3c;
-        --border-radius: 12px;
-        --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        --card-padding: 1.5rem;
+        --primary-dark: rgb(63, 114, 175);
+        --primary-medium: rgb(157, 178, 191);
+        --primary-light: rgb(219, 226, 239);
+        --secondary-dark: rgb(63, 114, 175);
+        --secondary-light: rgb(219, 226, 239);
+        --neutral-1: rgb(157, 178, 191);
+        --accent-1: rgb(63, 114, 175);
+        --accent-2: rgb(221, 230, 237);
+        --accent-3: rgb(238, 244, 255);
+        --white: #ffffff;
+        --border-radius: 8px;
+        --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+    }
+
+    body {
+        background: var(--accent-3);
+        min-height: 100vh;
     }
 
     .loans-container {
@@ -32,136 +36,204 @@
     .loans-header {
         text-align: center;
         margin-bottom: 2rem;
-        color: var(--text-primary);
+        color: var(--primary-dark);
+        position: relative;
+        padding-bottom: 1rem;
     }
 
-        .loans-header h1 {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
+    .loans-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 3px;
+        background: var(--accent-1);
+        border-radius: 2px;
+    }
 
-        .loans-header p {
-            color: var(--accent-secondary);
-        }
+    .loans-header h1 {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .loans-header p {
+        color: var(--primary-medium);
+    }
 
     .loan-card {
-        background: white;
+        background: rgba(255, 255, 255, 0.9);
         border-radius: var(--border-radius);
         box-shadow: var(--box-shadow);
         margin-bottom: 1.5rem;
         border: none;
         overflow: hidden;
-        transition: all 0.3s ease;
-        height: 100%;
+        transition: var(--transition);
+        backdrop-filter: blur(10px);
     }
 
-        .loan-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
+    .loan-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        background: rgba(255, 255, 255, 0.95);
+    }
 
     .loan-card-header {
-        background: linear-gradient(135deg, var(--primary-dark), var(--accent-primary));
-        color: var(--text-light);
-        padding: 1rem var(--card-padding);
-        border-bottom: none;
+        background: linear-gradient(90deg, var(--primary-dark), var(--primary-medium));
+        color: var(--white);
+        padding: 1rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .loan-card-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 80px;
+        height: 100%;
+        background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1));
+        transform: skewX(-20deg);
     }
 
     .loan-card-title {
-        margin: 0;
         font-weight: 600;
+        margin: 0;
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        position: relative;
+        z-index: 1;
+        font-size: 1.1rem;
     }
 
     .loan-card-body {
-        padding: var(--card-padding);
+        padding: 1.25rem;
+        background: transparent;
     }
 
-    .loan-info-grid {
+    .loan-info {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-        margin-bottom: 1.5rem;
+        gap: 0.75rem;
     }
 
-    .loan-info-item {
+    .loan-item {
         display: flex;
         flex-direction: column;
         gap: 0.25rem;
     }
 
     .loan-label {
+        color: var(--primary-medium);
         font-weight: 600;
-        color: var(--primary-dark);
-        font-size: 0.9rem;
+        font-size: 0.75rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
 
     .loan-value {
-        color: var(--text-primary);
-        font-size: 1.1rem;
-        padding: 0.5rem;
-        background: var(--primary-light);
-        border-radius: 6px;
+        color: var(--primary-dark);
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .loan-number {
+        font-family: 'Courier New', monospace;
+        letter-spacing: 1px;
+    }
+
+    .amount-value {
+        font-weight: 600;
+        color: var(--primary-dark);
     }
 
     .status-badge {
-        display: inline-block;
-        padding: 0.35rem 1rem;
+        padding: 0.35rem 0.75rem;
         border-radius: 50px;
         font-weight: 500;
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+        font-size: 0.8rem;
+        display: inline-block;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .status-active {
-        background-color: var(--success);
-        color: white;
+        background-color: var(--accent-1);
+        color: var(--white);
     }
 
     .status-pending {
-        background-color: var(--warning);
-        color: var(--text-primary);
+        background-color: var(--primary-medium);
+        color: var(--white);
     }
 
     .status-overdue {
-        background-color: var(--danger);
-        color: white;
+        background-color: #e74c3c;
+        color: var(--white);
     }
 
-    .payments-table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-        margin-top: 1.5rem;
+    .payments-section {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 2px solid var(--accent-2);
     }
 
-        .payments-table th {
-            background: var(--primary-dark);
-            color: var(--text-light);
-            padding: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
-        }
+    .payments-header {
+        color: var(--primary-medium);
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.75rem;
+    }
 
-        .payments-table td {
-            padding: 0.75rem;
-            border-bottom: 1px solid var(--primary-light);
-        }
+    .payments-grid {
+        display: grid;
+        gap: 0.5rem;
+    }
 
-        .payments-table tr:last-child td {
-            border-bottom: none;
-        }
+    .payment-item {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        background: var(--accent-2);
+        border-radius: 6px;
+        align-items: center;
+    }
 
-        .payments-table tr:hover {
-            background-color: var(--primary-light);
-        }
+    .payment-amount {
+        font-weight: 500;
+        color: var(--primary-dark);
+    }
+
+    .payment-date {
+        color: var(--primary-medium);
+        font-size: 0.85rem;
+    }
+
+    .no-payments {
+        text-align: center;
+        padding: 1rem;
+        background: var(--accent-2);
+        border-radius: 6px;
+        color: var(--primary-medium);
+        font-size: 0.9rem;
+    }
+
+    .no-loans {
+        background: rgba(236, 240, 241, 0.8);
+        border-left: 4px solid var(--accent-1);
+        color: var(--primary-dark);
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        text-align: center;
+        margin: 2rem 0;
+        backdrop-filter: blur(5px);
+    }
 
     .back-button {
         display: flex;
@@ -170,36 +242,28 @@
     }
 
     .btn-back {
-        background-color: var(--accent-secondary);
-        color: white;
+        background-color: var(--primary-dark);
+        color: var(--white);
         border: none;
         padding: 0.75rem 2rem;
         border-radius: var(--border-radius);
-        transition: all 0.3s ease;
+        transition: var(--transition);
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
-        .btn-back:hover {
-            background-color: var(--accent-secondary-hover);
-            transform: translateY(-2px);
-            color: white;
-            text-decoration: none;
-        }
+    .btn-back:hover {
+        background-color: var(--primary-medium);
+        transform: translateY(-2px);
+        color: var(--white);
+        text-decoration: none;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
 
     .icon {
         margin-right: 0.5rem;
-    }
-
-    .no-loans {
-        background: var(--primary-light);
-        border-left: 4px solid var(--accent-primary);
-        color: var(--text-primary);
-        padding: 1.5rem;
-        border-radius: var(--border-radius);
-        text-align: center;
-        margin: 2rem 0;
     }
 </style>
 
@@ -223,72 +287,63 @@
                             </h5>
                         </div>
                         <div class="loan-card-body">
-                            <div class="loan-info-grid">
-                                <div class="loan-info-item">
+                            <div class="loan-info">
+                                <div class="loan-item">
                                     <span class="loan-label">Account #</span>
-                                    <span class="loan-value">@loan.AccountNumber</span>
+                                    <span class="loan-value loan-number">@loan.AccountNumber</span>
                                 </div>
-                                <div class="loan-info-item">
+                                <div class="loan-item">
                                     <span class="loan-label">Amount</span>
-                                    <span class="loan-value">@loan.LoanAmount.ToString("C")</span>
+                                    <span class="loan-value amount-value">@loan.LoanAmount.ToString("C")</span>
                                 </div>
-                                <div class="loan-info-item">
+                                <div class="loan-item">
                                     <span class="loan-label">Status</span>
                                     <span class="status-badge @(loan.LoanStatus == "Active" ? "status-active" : loan.LoanStatus == "Pending" ? "status-pending" : "status-overdue")">
                                         @loan.LoanStatus
                                     </span>
                                 </div>
-                                <div class="loan-info-item">
+                                <div class="loan-item">
                                     <span class="loan-label">Start Date</span>
                                     <span class="loan-value">@loan.StartDate.ToString("dd MMM yyyy")</span>
                                 </div>
-                                <div class="loan-info-item">
+                                <div class="loan-item">
                                     <span class="loan-label">Current Debt</span>
-                                    <span class="loan-value">@loan.CurrentDebt.ToString("C")</span>
+                                    <span class="loan-value amount-value">@loan.CurrentDebt.ToString("C")</span>
                                 </div>
-                                <div class="loan-info-item">
+                                <div class="loan-item">
                                     <span class="loan-label">Interest Rate</span>
-                                    <span class="loan-value">@loan.InterestRate%</span>
+                                    <span class="status-badge status-active">@loan.InterestRate%</span>
                                 </div>
-                                <div class="loan-info-item">
+                                <div class="loan-item">
                                     <span class="loan-label">Duration</span>
                                     <span class="loan-value">@loan.DurationInMonth months</span>
                                 </div>
                             </div>
 
-
                             @if (loan.Payments.Any())
                             {
-                                <h6 class="loan-label mb-3">Payment History</h6>
-                                <table class="payments-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Amount</th>
-                                            <th>Status</th>
-                                            <th>Date</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                                <div class="payments-section">
+                                    <div class="payments-header">Payment History</div>
+                                    <div class="payments-grid">
                                         @foreach (var payment in loan.Payments)
                                         {
-                                            <tr>
-                                                <td>@payment.Amount.ToString("C")</td>
-                                                <td>
-                                                    <span class="status-badge @(payment.Status == "Paid" ? "status-active" : payment.Status == "Pending" ? "status-pending" : "status-overdue")">
-                                                        @payment.Status
-                                                    </span>
-                                                </td>
-                                                <td>@payment.PaymentDate.ToString("dd MMM yyyy")</td>
-                                            </tr>
+                                            <div class="payment-item">
+                                                <span class="payment-amount">@payment.Amount.ToString("C")</span>
+                                                <span class="status-badge @(payment.Status == "Paid" ? "status-active" : payment.Status == "Pending" ? "status-pending" : "status-overdue")">
+                                                    @payment.Status
+                                                </span>
+                                                <span class="payment-date">@payment.PaymentDate.ToString("dd MMM yyyy")</span>
+                                            </div>
                                         }
-                                    </tbody>
-                                </table>
+                                    </div>
+                                </div>
                             }
                             else
                             {
-                                <p class="alert alert-danger">No Payments</p>
+                                <div class="no-payments">
+                                    <i class="fas fa-info-circle"></i> No payments recorded
+                                </div>
                             }
-
                         </div>
                     </div>
                 </div>

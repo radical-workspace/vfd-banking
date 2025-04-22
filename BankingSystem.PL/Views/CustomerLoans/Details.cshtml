@@ -13,7 +13,7 @@
         <p>View and manage your active loans</p>
     </div>
 
-    @if(Model == null || !Model.Any())
+    @if (Model == null || !Model.Any())
     {
         <!-- No Loans View -->
         <div id="no-loan-view">
@@ -79,7 +79,11 @@
                                 <h5>@loan.LoanType</h5>
                                 <p>Started on @loan.StartDate.ToShortDateString()</p>
                             </div>
-                            <div class="loan-status accepted">@loan.LoanStatus</div>
+                            <div class="loan-status @(loan.LoanStatus == LoanStatus.Accepted ? "accepted" :
+                                                                            loan.LoanStatus == LoanStatus.Pending ? "pending" :
+                                                                            "denied")">
+                                @loan.LoanStatus
+                            </div>
                         </div>
 
                         <div class="row">
@@ -175,4 +179,4 @@
 
     }
 </div>
-   
+

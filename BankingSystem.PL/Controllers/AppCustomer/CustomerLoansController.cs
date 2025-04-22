@@ -9,20 +9,13 @@ using BankingSystem.BLL;
 
 namespace BankingSystem.PL.Controllers.AppCustomer
 {
-    public class CustomerLoansController : Controller
+    public class CustomerLoansController(IUnitOfWork UnitOfWork, IMapper mapper, FinancialDocumentService financialDocumentService) : Controller
     {
-        private readonly IUnitOfWork _UnitOfWork;
-        private readonly IMapper _mapper;
-        private readonly FinancialDocumentService _financialDocumentService;
+        private readonly IUnitOfWork _UnitOfWork = UnitOfWork;
+        private readonly IMapper _mapper = mapper;
+        private readonly FinancialDocumentService _financialDocumentService = financialDocumentService;
 
-
-        public CustomerLoansController(IUnitOfWork UnitOfWork, IMapper mapper, FinancialDocumentService financialDocumentService)
-        {
-            _UnitOfWork = UnitOfWork;
-            _mapper = mapper;
-            _financialDocumentService = financialDocumentService;
-        }
-         public IActionResult Details(string id)
+        public IActionResult Details(string id)
         {
             var customer = _UnitOfWork.Repository<Customer>()
                                   .GetSingleIncluding(c => c.Id == id, c => c.Loans);
@@ -60,12 +53,12 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                     CustomerId = customer.Id,
                     Accounts = accountSelectList,
                     BranchId = customer.BranchId,
-                    FinancialDocuments = new List<FinancialDocumentVM>
-                    {
+                    FinancialDocuments =
+                    [
                         new (), // For Income Statement
                         new (), // For Asset Declaration
                         new ()  // For Tax Return
-                    }
+                    ]
                 };
                 return View(customerloanvm);
 
@@ -156,7 +149,7 @@ namespace BankingSystem.PL.Controllers.AppCustomer
                     CurrentDebt = loan.CurrentDebt,
                     InterestRate = loan.InterestRate,
                     DurationInMonth = loan.DurationInMonth,
-                    LoanStatus = loan.LoanStatus,
+                    LoanStatus = LoanStatus.Pending,
                     LoanType = loan.LoanType,
                     StartDate = loan.StartDate,
                     loanID = loan.Id,
