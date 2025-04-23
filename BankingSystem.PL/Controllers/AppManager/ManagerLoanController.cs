@@ -18,7 +18,7 @@ namespace BankingSystem.PL.Controllers.AppManager
             if (ManagerID == null) return NotFound();
 
             var branch = _unitOfWork.Repository<Branch>().GetSingleIncluding(b => b.MyManager.Id == ManagerID, b => b.MyManager);
-            if (branch == null) return NotFound();
+            if (branch == null) return NotFound("Not found.");
 
             var Loans = _unitOfWork.Repository<Loan>()
                 .GetAllIncluding(c => c.Customer, a => a.Account)

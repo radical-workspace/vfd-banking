@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BankingSystem.PL.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <link rel="preload" as="image" href="/images/bank-img.webp" type="image/webp">
 
 
     <style>
@@ -237,7 +239,7 @@
             <nav class="navbar navbar-expand-lg navbar-dark">
                 <div class="container-fluid">
                     <a class="navbar-brand myItem">
-                        <i class="bi bi-bank2 me-2"></i>Bank Elhaz
+                        <i class="bi bi-bank2 me-2"></i>Banking System
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
                             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -370,7 +372,7 @@
                                         @* { *@
                                         @*     <strong>Hello </strong> *@
                                         @* } *@
-                                        <u class="uname">Hello, <strong>@User.Identity.Name</strong></u>
+                                        <u class="uname">Hello, <strong>@User.Identity.Name.Split("@")[0].ToUpper()</strong></u>
                                     </span>
                                 </li>
                                 <li class="nav-item">
