@@ -24,8 +24,8 @@ namespace BankingSystem.PL.Controllers.AppManager
                                                                 s => s.Savings
                                                                 );
 
-            if (Branches == null)
-                    return NotFound($"Not found.");
+            //if (Branches == null)
+            //    return RedirectToAction("Error", "Home");
 
 
             var BranchDetails = new BranchDetailsViewModel

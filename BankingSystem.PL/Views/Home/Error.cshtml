@@ -154,7 +154,6 @@
     }
 </style>
 
-
 <div class="error-container">
     <div class="error-card">
         <div class="error-header">
@@ -171,11 +170,17 @@
             @if (Model.ShowRequestId)
             {
                 <div class="error-details">
-                    <h3>Error Details</h3>
+                    <h3>Error Message</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Msg:</span>
+                        <span class="detail-value monospace">@Model.Message</span>
+                    </div>
+                    
                     <div class="detail-item">
                         <span class="detail-label">Request ID:</span>
                         <span class="detail-value monospace">@Model.RequestId</span>
                     </div>
+
                     <div class="detail-item">
                         <span class="detail-label">Timestamp:</span>
                         <span class="detail-value">@DateTime.Now.ToString("f")</span>
