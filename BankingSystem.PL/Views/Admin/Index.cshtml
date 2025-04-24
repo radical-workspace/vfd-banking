@@ -631,6 +631,52 @@
     document.addEventListener("DOMContentLoaded", function() {
         // Check for active section parameter
         const urlParams = new URLSearchParams(window.location.search);
+        const activeSection = urlParams.get('activeSection');
+
+        if (activeSection) {
+            // Clean the URL
+            history.replaceState(null, '', window.location.pathname);
+
+            // Map section names to their corresponding URLs
+            const sectionToUrl = {
+                'dashboard': '/Admin/Dashboard',
+                'mybank': '/AdminBankBranch/GetBankDetails',
+                'branches': '/AdminBankBranch/GetAllBranches',
+                'managers': '/AdminManager/GetAllManagers',
+                'tellers': '/AdminUsers/GetAllTellers',
+                'customers': '/AdminUsers/GetAllCustomers',
+                'accounts': '/AdminUsers/GetAllAccounts',
+                'transactions': '/AdminTransactions/GetAllTransactionsBranches',
+                'certifications': '/AdminGenCertifications/GetAllCertifications',
+                'settings': '/Admin/Edit'
+            };
+
+            // Find the link with the corresponding URL and trigger click
+            const targetUrl = sectionToUrl[activeSection];
+            if (targetUrl) {
+                const navLink = document.querySelector(`a[data-url="${targetUrl}"]`);
+                if (navLink) {
+                    // Add slight delay to ensure DOM is ready
+                    setTimeout(() => {
+                        // Update active state
+                        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                        navLink.classList.add('active');
+
+                        // Trigger content load
+                        navLink.click();
+                    }, 50);
+                }
+            }
+        }
+    });
+</script>
+
+
+<!--
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Check for active section parameter
+        const urlParams = new URLSearchParams(window.location.search);
 
         if (urlParams.get('activeSection') === 'branches') {
             // Clean the URL
@@ -656,3 +702,4 @@
         // ... rest of your existing navigation script ...
     });
 </script>
+-->

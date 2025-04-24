@@ -177,12 +177,12 @@
 
         /* Specific styling for logout button */
         .btn-logout {
-            background-color: var(--primary-dark) !important;
+            /* background-color: var(--primary-dark) !important; */
             border-color: var(--primary-dark) !important;
         }
 
             .btn-logout:hover {
-                background-color: var(--btn-hover-bg) !important;
+                background-color: var(--nav-hover-bg) !important;
                 border-color: var(--primary-light) !important;
                 color: var(--white) !important;
                 box-shadow: 0 4px 12px rgba(63, 114, 175, 0.2);
@@ -377,7 +377,7 @@
                                 </li>
                                 <li class="nav-item">
                                     <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-                                        <button type="submit" class="btn text-white nav-link border-0 bg-transparent" style="color:#697565">Logout</button>
+                                        <button type="submit" class="btn text-white nav-link border-0 btn-logout bg-transparent" style="color:#697565">Logout</button>
                                     </form>
                                 </li>
                             }

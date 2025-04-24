@@ -1,9 +1,9 @@
-﻿@using BankingSystem.DAL.Models;
-@model Manager
+﻿@model BankingSystem.DAL.Models.Transaction
 
 @{
-    ViewData["Title"] = "Manager Details";
+    ViewData["Title"] = "Transaction Details";
 }
+
 
 <style>
     body {
@@ -38,7 +38,6 @@
     .detail-row {
         display: flex;
         justify-content: space-between;
-        align-items: center;
         border-bottom: 1px solid #444;
         padding: 1rem 0;
     }
@@ -47,21 +46,21 @@
         font-weight: 500;
         font-size: 0.95rem;
         color: #ccc;
-        flex-basis: 30%;
+        flex-basis: 35%;
     }
 
     .detail-value {
         font-size: 1rem;
         font-weight: 400;
-        flex-basis: 65%;
         text-align: right;
+        flex-basis: 60%;
         color: #eee;
     }
 
     .action-buttons {
         margin-top: 2rem;
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
     }
 
     .btn-custom {
@@ -87,70 +86,65 @@
             color: white;
         }
 
-    .btn-edit {
-        background-color: #333;
-        color: white;
-        border: none;
-    }
-
-        .btn-edit:hover {
-            background-color: #555;
-        }
-
     i {
         font-size: 0.9rem;
     }
 </style>
 
+
 <div class="container">
     <div class="details-card">
         <div class="details-header">
-            <i class="fas fa-user-tie me-2 fs-3"></i> Manager Details
+            <i class="fas fa-money-check-alt me-2 fs-3"></i> Transaction Details
         </div>
 
         <div class="detail-row">
-            <div class="fw-bold">@Html.DisplayNameFor(m => m.FirstName)</div>
-            <div class="fw-bold">@Html.DisplayFor(m => m.FirstName)</div>
+            <div class="detail-label">Status</div>
+            <div class="detail-value">@Model.Status</div>
         </div>
 
         <div class="detail-row">
-            <div class="fw-bold">@Html.DisplayNameFor(m => m.LastName)</div>
-            <div class="fw-bold">@Html.DisplayFor(m => m.LastName)</div>
+            <div class="detail-label">Type</div>
+            <div class="detail-value">@Model.Type</div>
         </div>
 
         <div class="detail-row">
-            <div class="fw-bold">Email</div>
-            <div class="fw-bold">@Html.DisplayFor(m => m.Email)</div>
+            <div class="detail-label">Done Via</div>
+            <div class="detail-value">@Model.DoneVia</div>
         </div>
 
         <div class="detail-row">
-            <div class="fw-bold">@Html.DisplayNameFor(m => m.Salary)</div>
-            <div class="fw-bold">@Html.DisplayFor(m => m.Salary)</div>
+            <div class="detail-label">Destination Account</div>
+            <div class="detail-value">@Model.AccountDistenationNumber</div>
         </div>
 
         <div class="detail-row">
-            <div class="fw-bold">Branch</div>
-            <div class="fw-bold">@Html.DisplayFor(m => m.Branch.Name)</div>
+            <div class="detail-label">Payment ID</div>
+            <div class="detail-value">@Model.Payment?.Id</div>
+        </div>
+
+        <div class="detail-row">
+            <div class="detail-label">Customer ID</div>
+            <div class="detail-value">@Model.Customer?.Id</div>
         </div>
         
         <div class="detail-row">
-            <div class="fw-bold">Addrees</div>
-            <div class="fw-bold">@Html.DisplayFor(m => m.Address)</div>
-        </div>
-        
-        <div class="detail-row">
-            <div class="fw-bold">BirthDate</div>
-            <div class="fw-bold">@Html.DisplayFor(m => m.BirthDate)</div>
-        </div>
-        
-        <div class="detail-row">
-            <div class="fw-bold">BirthDate</div>
-            <div class="fw-bold">@Html.DisplayFor(m => m.JoinDate)</div>
+            <div class="detail-label">Customer Name</div>
+            <div class="detail-value">@Model.Customer?.FirstName @Model.Customer?.LastName</div>
         </div>
 
+        <div class="detail-row">
+            <div class="detail-label">Account Number</div>
+            <div class="detail-value">@Model.Account?.Number</div>
+        </div>
+        
+        <div class="detail-row">
+            <div class="detail-label">Branch</div>
+            <div class="detail-value">@Model.Customer?.Branch?.Name</div>
+        </div>
 
         <div class="action-buttons">
-            <a asp-action="Index" asp-controller="Admin" asp-route-activeSection="managers" class="btn-custom btn-back">
+            <a asp-action="Index" asp-controller="Admin" asp-route-activeSection="transactions" class="btn-custom btn-back">
                 <i class="fas fa-arrow-left"></i> <span class="fw-bold">Back</span>
             </a>
         </div>
