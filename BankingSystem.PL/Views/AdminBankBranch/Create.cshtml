@@ -64,7 +64,7 @@
                                 <div class="form-group">
                                     <label asp-for="Location" class="form-label">Location</label>
                                     <div class="input-group">
-                                        <input asp-for="Location" id="locationInput" class="form-control" placeholder="Lat,Long (30.159,33.785)" />
+                                        <input asp-for="Location" id="locationInput" class="form-control" placeholder="Lat,Long (30.159,33.785)" readonly />
                                         <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#mapModal">
                                             <i class="fas fa-map-marker-alt"></i>
                                         </button>
@@ -128,6 +128,7 @@
         </div>
     </div>
 </div>
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
