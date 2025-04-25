@@ -1,0 +1,94 @@
+﻿@using BankingSystem.PL.ViewModels.Customer
+@model List<CustomerAccountsViewModel>
+@{
+    ViewData["Title"] = "Details";
+}
+<link rel="stylesheet" href="/css/CustomerAccounts.css" />
+
+<div class="accounts-container">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <div class="row align-items-center text-white">
+            <div class="col-md-8 text-white">
+                <h2 class="mb-2">Your Bank Accounts</h2>
+                <p class="mb-0 ">View and manage all your accounts in one place</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <div class="total-balance text-white">$@Model.Sum(acc => acc.Balance ?? 0).ToString("N2")</div>
+                <div class="balance-label">Total Balance</div>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Accounts Section -->
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <div class="section-header">
+                <h4 class="mb-0">Account Summary</h4>
+                @if (Model.Count() < 2)
+                {
+                    <a asp-action="CreateReservation" asp-controller="Reservation" class="btn btn-primary">
+                        <i class="bi bi-plus-circle me-2"></i>Open New Account
+                    </a>
+                }
+                else
+                {
+                    <button id="openAccountLimitSweet" type="button" class="btn btn btn-primary">
+                        <i class="bi bi-plus-circle me-2"></i>Open New Account
+                    </button>
+                    <script>
+                        document.getElementById('openAccountLimitSweet').addEventListener('click', function (e) {
+                            e.preventDefault();
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Account Limit',
+                                text: "Sorry, you can't open more than two accounts!",
+                                confirmButtonText: 'OK'
+                            });
+                        });
+                    </script>
+                }
+            </div>
+           
+
+
+            @foreach (var acc in Model)
+            {
+                <!-- Checking Account -->
+                <div class="account-row">
+                    <div class="account-status status-active">@acc.AccountStatus</div>
+                    <div class="row align-items-center">
+                        <div class="col-md-1">
+                            <div class="account-icon">
+                                <i class="bi bi-cash-coin"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="account-type">@acc.AccountType Account</div>
+                            <div class="account-balance">$@acc.Balance</div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="account-meta">
+                                <div class="account-number-badge">
+                                    <i class="bi bi-upc-scan"></i>
+                                    <span class="account-number-text">@acc.Number</span>
+                                </div>
+                                <div class="account-date-badge">
+                                    <i class="bi bi-calendar3"></i>
+                                    <span class="account-date-text">Created: @acc.CreatedAt.ToShortDateString()</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="mt-4 pt-3 border-top text-center text-muted">
+        <small>&copy; 2025 SecureBank. All rights reserved.</small>
+    </div>
+</div>
+

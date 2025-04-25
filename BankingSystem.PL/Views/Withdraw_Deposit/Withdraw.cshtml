@@ -1,0 +1,311 @@
+﻿@using BankingSystem.DAL.Models
+@using BankingSystem.PL.ViewModels.Customer
+@model BankingSystem.PL.ViewModels.Customer.AccountsViewModel
+
+@{
+    ViewData["Title"] = "Withdraw Money";
+    TransactionType IsDepositing = ViewBag.Process;
+    var proecessType = IsDepositing == TransactionType.Withdraw ? "Withdraw" : "Deposit";
+}
+
+<style>
+    /* Keep the same style definitions from transfer view */
+    :root {
+        --primary-dark: rgb(63, 114, 175); /* new primary dark */
+        --primary-medium: rgb(157, 178, 191); /* new primary medium */
+        --primary-light: rgb(219, 226, 239); /* new primary light */
+        --secondary-dark: rgb(63, 114, 175); /* mapped to primary-dark because no exact secondary */
+        --secondary-light: rgb(219, 226, 239); /* mapped to primary-light */
+        --neutral-1: rgb(157, 178, 191); /* mapped to text-light */
+        --accent-1: rgb(63, 114, 175); /* mapped to primary-dark */
+        --accent-2: rgb(221, 230, 237); /* primary-lightest */
+        --accent-3: rgb(238, 244, 255); /* soft background you used */
+        --white: #ffffff; /* stays same */
+    }
+
+    .transfer-container {
+        background: var(--accent-3);
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        max-width: 600px;
+        margin: 2rem auto;
+    }
+
+    .transfer-header {
+        color: var(--primary-dark);
+        border-bottom: 2px solid var(--accent-1);
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .form-label {
+        color: var(--primary-medium);
+        font-weight: 600;
+    }
+
+    .form-control {
+        border: 2px solid var(--secondary-light);
+        border-radius: 8px;
+        padding: 0.75rem 1.25rem;
+        transition: all 0.3s ease;
+    }
+
+        .form-control:focus {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 0 0.25rem rgba(222, 174, 159, 0.25);
+        }
+
+    .validation-message {
+        color: var(--accent-1);
+        font-size: 0.9rem;
+    }
+
+    .submit-btn {
+        background-color: var(--primary-medium);
+        border: none;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+        .submit-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+    .iban-hint {
+        font-size: 0.85rem;
+        color: var(--neutral-1);
+        margin-top: 0.25rem;
+    }
+
+    .amount-input {
+        position: relative;
+    }
+
+    .currency-symbol {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--primary-medium);
+        font-weight: 600;
+    }
+</style>
+
+<div class="transfer-container">
+    <h2 class="transfer-header">
+        @if (IsDepositing == TransactionType.Withdraw)
+        {
+            <i class="fas fa-money-bill-wave me-2"></i>
+            <text>Withdraw Money</text>
+        }
+        else
+        {
+
+            <i class="fas fa-money-bill-wave me-2"></i>
+            <text>Deposit Money</text>
+        }
+    </h2>
+
+    <form asp-action="@proecessType" method="post">
+        @Html.AntiForgeryToken()
+        <!-- Add this hidden input -->
+        <input type="hidden" id="IsUsingVisa" name="IsUsingVisa" value="@(!Model.ShowAccounts).ToString().ToLower()" />
+
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger validation-message"></div>
+
+        @if (IsDepositing == TransactionType.Withdraw)
+        {
+            <div class="transfer-options mb-4 text-center">
+
+                <button type="button" id="showAccounts" class="btn @(Model.ShowAccounts ? "btn-primary" : "btn-outline-dark")" onclick="setAccountType(true)">
+                    Withdraw from Account
+                </button>
+                <button type="button" id="showCards" class="btn @(!Model.ShowAccounts ? "btn-primary" : "btn-outline-dark")" onclick="setAccountType(false)">
+                    Withdraw from Card
+                </button>
+            </div>
+        }
+        else
+        {
+            <div class="transfer-options mb-4 text-center">
+
+                <button type="button" id="showAccounts" class="btn @(Model.ShowAccounts ? "btn-primary" : "btn-outline-dark")" onclick="setAccountType(true)">
+                    Deposit via Account
+                </button>
+                <button type="button" id="showCards" class="btn @(!Model.ShowAccounts ? "btn-primary" : "btn-outline-dark")" onclick="setAccountType(false)">
+                    Deposit via Card
+                </button>
+            </div>
+        }
+
+        <!-- Account Selection -->
+        <div id="accountSection" style="@(Model.ShowAccounts ? "display:block" : "display:none")">
+            <div class="mb-3">
+                <label asp-for="SelectedAccountNumber" class="form-label">From Account</label>
+                <select asp-for="SelectedAccountNumber" asp-items="@Model.UserAccounts" class="form-control">
+                    <option value="">-- Select Account --</option>
+                </select>
+                <span asp-validation-for="SelectedAccountNumber" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- Card Selection -->
+        <div id="cardSection" style="@(!Model.ShowAccounts ? "display:block" : "display:none")">
+            <div class="mb-3">
+                <label asp-for="SelectedCardNumber" class="form-label">From Card</label>
+                <select asp-for="SelectedCardNumber" asp-items="@Model.UserVisaCards" class="form-control">
+                    <option value="">-- Select Card --</option>
+                </select>
+                <span asp-validation-for="SelectedCardNumber" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- Amount Input -->
+        <div class="mb-4 amount-input">
+            @if (IsDepositing == TransactionType.Withdraw)
+            {
+                <label asp-for="Amount" class="form-label">Withdrawal Amount</label>
+
+            }
+            else
+            {
+                <label asp-for="Amount" class="form-label">Deposit Amount</label>
+
+            }
+            <div class="position-relative">
+                <span class="currency-symbol">$</span>
+                <input asp-for="Amount" type="number" step="0.01" class="form-control ps-4" placeholder="0.00" />
+            </div>
+            <span asp-validation-for="Amount" class="validation-message"></span>
+            @if (IsDepositing == TransactionType.Withdraw)
+            {
+                <div class="iban-hint">Service fee: $5 (included in total)</div>
+            }
+        </div>
+
+        <div class="mb-4" id="cardDetailsSection" style="@(!Model.ShowAccounts ? "display:block" : "display:none")">
+            <div class="row justify-content-center">
+                <div class="col-md-6 mx-auto">
+                    <label asp-for="VisaCVV" class="form-label">CVV</label>
+                    <input asp-for="VisaCVV" class="form-control" placeholder="XXX" />
+                    <span asp-validation-for="VisaCVV" class="validation-message"></span>
+                </div>
+            </div>
+        </div>
+
+        @if (IsDepositing == TransactionType.Deposit)
+        {
+            <!-- Deposit Destination Selection -->
+            <div class="transfer-options mb-4 text-center">
+                <div class="btn-group" role="group">
+                    <input type="radio" class="btn-check" asp-for="SelectedDestination"
+                           value="@AccountsViewModel.DepositDestination.Account" id="destAccount" checked>
+                    <label class="btn @(Model.SelectedDestination == AccountsViewModel.DepositDestination.Account ? "btn-primary" : "btn-outline-dark")"
+                           for="destAccount">
+                        <i class="fas fa-piggy-bank me-2"></i> Deposit to Account
+                    </label>
+
+                    <input type="radio" class="btn-check" asp-for="SelectedDestination"
+                           value="@AccountsViewModel.DepositDestination.Loan" id="destLoan">
+                    <label class="btn @(Model.SelectedDestination == AccountsViewModel.DepositDestination.Loan ? "btn-primary" : "btn-outline-dark")"
+                           for="destLoan">
+                        <i class="fas fa-hand-holding-usd me-2"></i> Pay Loan
+                    </label>
+                </div>
+            </div>
+
+            <!-- Loan Selection (Conditional) -->
+            <div id="loanSelection" style="display: none;">
+                <div class="mb-3">
+                    <label asp-for="SelectedLoanId" class="form-label">Select Loan</label>
+                    <select asp-for="SelectedLoanId" asp-items="Model.AvailableLoans" class="form-control">
+                        <option value="">-- Select Loan --</option>
+                    </select>
+                    <span asp-validation-for="SelectedLoanId" class="text-danger"></span>
+                </div>
+            </div>
+        }
+
+        <!-- Submit Button -->
+        <div class="mt-4 text-center">
+            <button type="submit" class="btn btn-primary submit-btn text-white"
+                    style="width: 200px; border-radius: 25px; padding: 10px 20px; font-size: 1.1rem;">
+                @if (IsDepositing == TransactionType.Withdraw)
+                {
+                    <i class="fas fa-coins me-2"></i>
+                    <text>Process Withdrawal</text>
+                }
+                else
+                {
+                    <i class="fas fa-coins me-2"></i>
+                    <text>Process Deposit</text>
+                }
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+                   function setAccountType(isAccount) {
+            // Update the hidden input value
+            $('#IsUsingVisa').val(!isAccount);
+
+            // Toggle sections visibility
+            $('#accountSection').toggle(isAccount);
+            $('#cardSection').toggle(!isAccount);
+            $('#cardDetailsSection').toggle(!isAccount);
+
+            // Update button states
+            const accountBtn = $('#showAccounts');
+            const cardBtn = $('#showCards');
+
+            if (isAccount) {
+                accountBtn.addClass('btn-primary').removeClass('btn-outline-dark');
+                cardBtn.addClass('btn-outline-dark').removeClass('btn-primary');
+            } else {
+                accountBtn.addClass('btn-outline-dark').removeClass('btn-primary');
+                cardBtn.addClass('btn-primary').removeClass('btn-outline-dark');
+            }
+
+            // Reset form fields when switching
+            if (isAccount) {
+                $('#SelectedCardNumber').val('');
+                $('#VisaCVV').val('');
+            } else {
+                $('#SelectedAccountNumber').val('');
+            }
+        }
+         $(document).ready(function() {
+            // Initialize based on model value
+            const isUsingVisa = $('#IsUsingVisa').val() === 'true';
+            setAccountType(!isUsingVisa); // Show accounts when NOT using Visa
+            });
+
+         $(document).ready(function() {
+            function toggleLoanSelection() {
+                const isLoanSelected = $('#destLoan').is(':checked');
+                $('#loanSelection').toggle(isLoanSelected);
+                $('#SelectedLoanId').prop('required', isLoanSelected);
+
+                // Update button styles
+                $('label[for="destAccount"]')
+                    .toggleClass('btn-primary btn-outline-dark', !isLoanSelected);
+                $('label[for="destLoan"]')
+                    .toggleClass('btn-primary btn-outline-dark', isLoanSelected);
+            }
+
+            $('input[name="SelectedDestination"]').change(toggleLoanSelection);
+            toggleLoanSelection(); // Initial check
+        });
+    </script>
+}

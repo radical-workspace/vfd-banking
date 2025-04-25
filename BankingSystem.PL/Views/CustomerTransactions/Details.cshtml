@@ -1,0 +1,105 @@
+﻿@using BankingSystem.DAL.Models
+@using BankingSystem.PL.ViewModels.Customer
+@model CustomerTransactionVM
+@{
+    ViewData["Title"] = "Details";
+}
+<link rel="stylesheet" href="/css/CustomerTransactions.css" />
+
+<div class="container">
+    <div class="page-header mt-4">
+        <h3 class="text-white"><i class="bi bi-cash-stack"></i> Transactions</h3>
+        <p class="text-white">View and manage your payment history</p>
+    </div>
+
+    <!-- Header with Filter -->
+    <div class="transaction-header">
+        <p class="header-title">Recent Transactions</p>
+        <form asp-action="Details" asp-route-id="@Model.Id" method="post" class="ms-auto">
+            <label class="form-label me-2 fw-bold">Filter by Status:</label>
+            <select asp-for="SelectedStatus" asp-items="ViewBag.statusList"
+            class="btn btn-primary dropdown-toggle" onchange="this.form.submit()">
+            </select>
+        </form>
+    </div>
+    @if (Model.Transactions == null || !Model.Transactions.Any())
+    {
+        <!-- No Transaction View -->
+        <div id="no-transaction-view">
+            <div class="no-transaction" style="border-radius: 0">
+                <div class="no-transaction-icon">
+                    <i class="bi bi-cash-stack" style="color: #213555;"></i>
+                </div>
+                <h3 class="empty-state-title">No transaction Found</h3>
+                <p class="empty-state-text">You don't have any transaction at the moment. </p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="transaction-list">
+
+            @foreach(var transaction in Model.Transactions)
+            {
+                <!-- Transaction 1 -->
+                <div class="transaction-item">
+                    <div class="transaction-icon type-@transaction.Type">
+                        @switch (transaction.Type)
+                        {
+                            case (TransactionType.Deposit):
+                                    <i class="bi bi-arrow-down-circle"></i>
+                                break;
+                            case (TransactionType.Transfer):
+                                    <i class="bi bi-arrow-left-right"></i>
+                                break;
+                            case (TransactionType.Withdraw):
+                                    <i class="bi bi-arrow-up-circle"></i>
+                                break;
+                            case (TransactionType.LoanPayment):
+                                    <i class="bi bi-arrow-down-circle"></i>
+                                break;
+                        }
+                    </div>
+                    <div class="transaction-info">
+                        <div class="transaction-primary">
+                            <div>
+                                <span class="transaction-type">@transaction.Type</span>
+                                @switch (transaction.TransactionStatus)
+                                {
+                                    case (TransactionStatus.Accepted):
+                                        <span class="badge bg-success status-badge">Accepted</span>
+                                        break;
+                                    case (TransactionStatus.Pending):
+                                        <span class="badge bg-warning status-badge">Pending</span>
+                                        break;
+                                    case (TransactionStatus.Denied):
+                                        <span class="badge bg-danger status-badge">Denied</span>
+                                        break;
+                                }
+                            </div>
+                            <span class="amount">+$@transaction.Amount.ToString("N2")</span>
+                        </div>
+                        <div class="transaction-secondary">
+                            <div class="transaction-details">
+                                <div class="transaction-detail">
+                                    <span class="detail-label">Done Via</span>
+                                    <span class="detail-value">@transaction.DoneVia</span>
+                                </div>
+                                <div class="transaction-detail">
+                                    <span class="detail-label">Account</span>
+                                    <span class="detail-value">**** @transaction.AccountDistenationNumber?.ToString().Substring(8)</span>
+                                </div>
+                                <div class="transaction-detail">
+                                    <span class="detail-label">Date</span>
+                                    <span class="detail-value">@transaction.PaymentDate.ToShortTimeString()</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    }
+</div>
+

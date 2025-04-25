@@ -1,0 +1,75 @@
+﻿@using BankingSystem.DAL.Models
+@model IEnumerable<Reservation>
+
+@{
+    ViewData["Title"] = "Branch Reservations";
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary text-center fw-bold mb-4">Branch Reservations</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            No reservations available for this branch.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var reservation in Model)
+            {
+                <div class="col-12 col-md-6 mb-4">
+                    <div class="card shadow-lg rounded-4 p-4 h-100 border-0" style="background-color: #f9f9f9;">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="text-primary fw-bold mb-0">@reservation.Customer?.FirstName @reservation.Customer?.LastName  </h5>
+                            <span class="badge px-3 py-2 fs-6
+                                @(reservation.Status == ReservationStatus.Approved ? "bg-success" :
+                                  reservation.Status == ReservationStatus.Pending ? "bg-warning text-dark" :
+                                  "bg-danger")">
+                                @reservation.Status
+                            </span>
+                        </div>
+
+                        <p class="mb-1"><strong>Service:</strong> @reservation.ServiceType</p>
+                        <p class="mb-1"><strong>Date:</strong> @reservation.ReservationDate.ToString("dddd, dd MMMM yyyy hh:mm tt")</p>
+
+
+                        <p class="mb-1">
+                            <strong>Email:</strong> @(reservation.Customer?.Email?.ToString() ?? "Client is not Registered Yet")
+                        </p>
+                        <p class="mb-1"><strong>Phone:</strong> @(reservation.Customer?.PhoneNumber?.ToString() ?? "No phone Registed")</p>
+
+
+                        @if (reservation.Status == ReservationStatus.Pending)
+                        {
+                            <div class="d-flex justify-content-end gap-2">
+                                <form asp-action="UpdateReservationStatus" method="post">
+                                    <input type="hidden" name="id" value="@reservation.Id" />
+                                    <input type="hidden" name="status" value="Approved" />
+                                    <button type="submit" class="btn btn-success btn-sm fw-semibold">
+                                        Approve
+                                    </button>
+                                </form>
+
+                                <form asp-action="UpdateReservationStatus" method="post">
+                                    <input type="hidden" name="id" value="@reservation.Id" />
+                                    <input type="hidden" name="status" value="Rejected" />
+                                    <button type="submit" class="btn btn-danger btn-sm fw-semibold">
+                                        Reject
+                                    </button>
+                                </form>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-end">
+                                <span class="text-muted fst-italic">This reservation is already @reservation.Status.</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

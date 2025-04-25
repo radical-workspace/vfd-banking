@@ -1,0 +1,64 @@
+﻿<style>
+    form {
+        margin-bottom: 10px;
+    }
+
+    .bogus-btn {
+        width: 250px;
+        background-color: #003366;
+        font-weight: bold;
+        transition: 0.1s;
+        color: white;
+    }
+
+    .bogus-btn:hover {
+        background-color: rgb(250, 205, 0);
+    }
+</style>
+
+
+
+<form asp-action="CreateAdmins" method="post">
+    <input type="submit" value="Create Admins" class="bogus-btn btn px-4 fw-bold mt-5">
+</form>
+
+<form asp-action="CreateManagers" method="post">
+    <input type="submit" value="Create Managers" class="bogus-btn btn px-4 fw-bold">
+</form>
+
+<form asp-action="CreateTellers" method="post">
+    <input type="submit" value="Create Tellers" class="bogus-btn btn px-4 fw-bold">
+</form>
+
+<form asp-action="CreateClients" method="post">
+    <input type="submit" value="Create Clients" class="bogus-btn btn px-4 fw-bold">
+</form>
+
+<form asp-action="CreateAccounts" method="post">
+    <input type="submit" value="Create Accounts" class="bogus-btn btn px-4 fw-bold">
+</form>
+
+<form asp-action="CreateBranches" method="post">
+    <input type="submit" value="Create Branches" class="bogus-btn btn px-4 fw-bold">
+</form>
+
+<form asp-action="CreateBanks" method="post">
+    <input type="submit" value="Create Banks" class="bogus-btn btn px-4 fw-bold">
+</form>
+
+<form asp-action="CreateTickets" method="post">
+    <input type="submit" value="Create Tickets" class="bogus-btn btn px-4 fw-bold">
+</form>
+
+
+
+<script>
+    document.querySelectorAll(".bogus-btn").forEach(button => {
+        button.addEventListener("click", (event) => {
+            var msg = confirm("Are you sure you want to create fake data?");
+
+            if(msg == false)
+                event.preventDefault();
+        });
+    });
+</script>

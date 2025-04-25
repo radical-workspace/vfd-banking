@@ -1,0 +1,385 @@
+﻿@model List<BankingSystem.PL.ViewModels.Manager.LoanViewModel>
+
+@{
+    ViewData["Title"] = "Customer Loans";
+    var customerId = ViewBag.CustomerId as string;
+}
+
+<style>
+    :root {
+        /* Primary Colors */
+        --primary-medium: #1E201E; /* Deep charcoal - for headers/important elements */
+        --primary-dark: #3C3D37; /* Warm gray - primary actions */
+        --primary-light: #697565; /* Muted sage - secondary elements */
+        /* Secondary Colors */
+        --secondary-dark: #3C3D37; /* Same as primary-medium */
+        --secondary-light: #ECDFCC; /* Cream - backgrounds/accents */
+        /* Neutral Colors */
+        --neutral-1: #5A5D58; /* Medium gray - primary text */
+        --neutral-2: #8B8E87; /* Light gray */
+        --neutral-3: #C5C7C2; /* Very light gray */
+        /* Accent Colors */
+        --accent-1: #1E201E; /* Primary dark */
+        --accent-2: #697565; /* Primary light */
+        --accent-3: #F5F0E8; /* Light cream (derived from ECDFCC) */
+        /* System Colors */
+        --white: #FFFFFF;
+        --black: #121412; /* Slightly darker than primary-dark */
+        /* Status Colors */
+        --success: #5A7247; /* Muted green */
+        --warning: #B38B59; /* Warm amber */
+        --danger: #8C4A3F; /* Earthy red */
+        --info: #5D7B8C; /* Muted blue */
+        /* Text Contrast */
+        --text-on-dark: #ECDFCC; /* Cream text on dark backgrounds */
+        --text-on-light: #3C3D37; /* Dark text on light backgrounds */
+    }
+
+    body {
+        background-color: var(--primary-medium);
+        min-height: 100vh;
+    }
+
+    .loans-container {
+        max-width: 1400px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .loans-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: var(--neutral-3);
+        position: relative;
+        padding-bottom: 1rem;
+    }
+
+    .loans-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 3px;
+        background: var(--accent-1);
+        border-radius: 2px;
+    }
+
+    .loans-header h1 {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .loans-header p {
+        color: var(--primary-medium);
+    }
+
+    .loan-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        margin-bottom: 1.5rem;
+        border: none;
+        overflow: hidden;
+        transition: var(--transition);
+        backdrop-filter: blur(10px);
+    }
+
+    .loan-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        background: rgba(255, 255, 255, 0.95);
+    }
+
+    .loan-card-header {
+        background: linear-gradient(90deg, var(--primary-dark), var(--primary-medium));
+        color: var(--white);
+        padding: 1rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .loan-card-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 80px;
+        height: 100%;
+        background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1));
+        transform: skewX(-20deg);
+    }
+
+    .loan-card-title {
+        font-weight: 600;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        position: relative;
+        z-index: 1;
+        font-size: 1.1rem;
+    }
+
+    .loan-card-body {
+        padding: 1.25rem;
+        background: transparent;
+    }
+
+    .loan-info {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .loan-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .loan-label {
+        color: var(--primary-medium);
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .loan-value {
+        color: var(--primary-dark);
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .loan-number {
+        font-family: 'Courier New', monospace;
+        letter-spacing: 1px;
+    }
+
+    .amount-value {
+        font-weight: 600;
+        color: var(--primary-dark);
+    }
+
+    .status-badge {
+        padding: 0.35rem 0.75rem;
+        border-radius: 50px;
+        font-weight: 500;
+        font-size: 0.8rem;
+        display: inline-block;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .status-active {
+        background-color: var(--accent-1);
+        color: var(--white);
+    }
+
+    .status-pending {
+        background-color: var(--primary-medium);
+        color: var(--white);
+    }
+
+    .status-overdue {
+        background-color: #e74c3c;
+        color: var(--white);
+    }
+
+    .payments-section {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 2px solid var(--accent-2);
+    }
+
+    .payments-header {
+        color: var(--primary-medium);
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.75rem;
+    }
+
+    .payments-grid {
+        display: grid;
+        gap: 0.5rem;
+    }
+
+    .payment-item {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        background: var(--accent-2);
+        border-radius: 6px;
+        align-items: center;
+    }
+
+    .payment-amount {
+        font-weight: 500;
+        color: var(--primary-dark);
+    }
+
+    .payment-date {
+        color: var(--primary-medium);
+        font-size: 0.85rem;
+    }
+
+    .no-payments {
+        text-align: center;
+        padding: 1rem;
+        background: var(--accent-2);
+        border-radius: 6px;
+        color: var(--primary-medium);
+        font-size: 0.9rem;
+    }
+
+    .no-loans {
+        background: rgba(236, 240, 241, 0.8);
+        border-left: 4px solid var(--accent-1);
+        color: var(--primary-dark);
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        text-align: center;
+        margin: 2rem 0;
+        backdrop-filter: blur(5px);
+    }
+
+    .back-button {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+
+    .btn-back {
+        background-color: var(--primary-dark);
+        color: var(--white);
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .btn-back:hover {
+        background-color: var(--primary-medium);
+        transform: translateY(-2px);
+        color: var(--white);
+        text-decoration: none;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .icon {
+        margin-right: 0.5rem;
+    }
+</style>
+
+<div class="loans-container">
+    <div class="loans-header">
+        <h1><i class="fas fa-hand-holding-usd icon"></i>Customer Loans</h1>
+        <p class="text-white">View and manage customer's loan accounts</p>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="row">
+            @foreach (var loan in Model)
+            {
+                <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
+                    <div class="loan-card">
+                        <div class="loan-card-header">
+                            <h5 class="loan-card-title">
+                                <i class="fas fa-file-invoice-dollar"></i>
+                                @loan.LoanType
+                            </h5>
+                        </div>
+                        <div class="loan-card-body">
+                            <div class="loan-info">
+                                <div class="loan-item">
+                                    <span class="loan-label">Account #</span>
+                                    <span class="loan-value loan-number">@loan.AccountNumber</span>
+                                </div>
+                                <div class="loan-item">
+                                    <span class="loan-label">Amount</span>
+                                    <span class="loan-value amount-value">@loan.LoanAmount.ToString("C")</span>
+                                </div>
+                                <div class="loan-item">
+                                    <span class="loan-label">Status</span>
+                                    <span class="status-badge @(loan.LoanStatus == "Active" ? "status-active" : loan.LoanStatus == "Pending" ? "status-pending" : "status-overdue")">
+                                        @loan.LoanStatus
+                                    </span>
+                                </div>
+                                <div class="loan-item">
+                                    <span class="loan-label">Start Date</span>
+                                    <span class="loan-value">@loan.StartDate.ToString("dd MMM yyyy")</span>
+                                </div>
+                                <div class="loan-item">
+                                    <span class="loan-label">Current Debt</span>
+                                    <span class="loan-value amount-value">@loan.CurrentDebt.ToString("C")</span>
+                                </div>
+                                <div class="loan-item">
+                                    <span class="loan-label">Interest Rate</span>
+                                    <span class="status-badge status-active">@loan.InterestRate%</span>
+                                </div>
+                                <div class="loan-item">
+                                    <span class="loan-label">Duration</span>
+                                    <span class="loan-value">@loan.DurationInMonth months</span>
+                                </div>
+                            </div>
+
+                            @if (loan.Payments.Any())
+                            {
+                                <div class="payments-section">
+                                    <div class="payments-header">Payment History</div>
+                                    <div class="payments-grid">
+                                        @foreach (var payment in loan.Payments)
+                                        {
+                                            <div class="payment-item">
+                                                <span class="payment-amount">@payment.Amount.ToString("C")</span>
+                                                <span class="status-badge @(payment.Status == "Paid" ? "status-active" : payment.Status == "Pending" ? "status-pending" : "status-overdue")">
+                                                    @payment.Status
+                                                </span>
+                                                <span class="payment-date">@payment.PaymentDate.ToString("dd MMM yyyy")</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="no-payments">
+                                    <i class="fas fa-info-circle"></i> No payments recorded
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="no-loans">
+            <i class="fas fa-info-circle icon"></i> No loans found for this customer.
+        </div>
+    }
+
+    <div class="back-button">
+        <a asp-controller="ManagerCustomer"
+           asp-action="GetCustomerDetails"
+           asp-route-id="@customerId"
+           class="btn-back">
+            <i class="fas fa-arrow-left"></i> Back to Customer Details
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+}

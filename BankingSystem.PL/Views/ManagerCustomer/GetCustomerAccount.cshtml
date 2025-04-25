@@ -1,0 +1,294 @@
+﻿@model List<BankingSystem.PL.ViewModels.Manager.CustomerAccountViewModel>
+
+@{
+    ViewData["Title"] = "Customer Accounts";
+    var customerId = ViewBag.CustomerId as string;
+}
+
+<style>
+    :root {
+        /* Primary Colors */
+        --primary-medium: #1E201E; /* Deep charcoal - for headers/important elements */
+        --primary-dark: #3C3D37; /* Warm gray - primary actions */
+        --primary-light: #697565; /* Muted sage - secondary elements */
+        /* Secondary Colors */
+        --secondary-dark: #3C3D37; /* Same as primary-medium */
+        --secondary-light: #ECDFCC; /* Cream - backgrounds/accents */
+        /* Neutral Colors */
+        --neutral-1: #5A5D58; /* Medium gray - primary text */
+        --neutral-2: #8B8E87; /* Light gray */
+        --neutral-3: #C5C7C2; /* Very light gray */
+        /* Accent Colors */
+        --accent-1: #1E201E; /* Primary dark */
+        --accent-2: #697565; /* Primary light */
+        --accent-3: #F5F0E8; /* Light cream (derived from ECDFCC) */
+        /* System Colors */
+        --white: #FFFFFF;
+        --black: #121412; /* Slightly darker than primary-dark */
+        /* Status Colors */
+        --success: #5A7247; /* Muted green */
+        --warning: #B38B59; /* Warm amber */
+        --danger: #8C4A3F; /* Earthy red */
+        --info: #5D7B8C; /* Muted blue */
+        /* Text Contrast */
+        --text-on-dark: #ECDFCC; /* Cream text on dark backgrounds */
+        --text-on-light: #3C3D37; /* Dark text on light backgrounds */
+    }
+
+    body {
+        background-color: var(--primary-medium);
+        min-height: 100vh;
+    }
+
+    .accounts-container {
+        max-width: 1400px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .accounts-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: var(--neutral-3);
+        position: relative;
+        padding-bottom: 1rem;
+    }
+
+    .accounts-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 3px;
+        background: var(--accent-1);
+        border-radius: 2px;
+    }
+
+    .accounts-header h1 {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .accounts-header p {
+        color: var(--primary-medium);
+    }
+
+    .account-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        margin-bottom: 1.5rem;
+        border: none;
+        overflow: hidden;
+        transition: var(--transition);
+        backdrop-filter: blur(10px);
+    }
+
+    .account-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        background: rgba(255, 255, 255, 0.95);
+    }
+
+    .account-card-header {
+        background: linear-gradient(90deg, var(--primary-medium), var(--primary-light));
+        color: var(--white);
+        padding: 1rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .account-card-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 80px;
+        height: 100%;
+        background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1));
+        transform: skewX(-20deg);
+    }
+
+    .account-card-title {
+        font-weight: 600;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        position: relative;
+        z-index: 1;
+        font-size: 1.1rem;
+    }
+
+    .account-card-body {
+        padding: 1.25rem;
+        background: transparent;
+    }
+
+    .account-info {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .account-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .account-label {
+        color: var(--primary-medium);
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .account-value {
+        color: var(--primary-dark);
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .account-number {
+        font-family: 'Courier New', monospace;
+        letter-spacing: 1px;
+    }
+
+    .amount-value {
+        font-weight: 600;
+        color: var(--primary-dark);
+    }
+
+    .status-badge {
+        padding: 0.35rem 0.75rem;
+        border-radius: 50px;
+        font-weight: 500;
+        font-size: 0.8rem;
+        display: inline-block;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .status-active {
+        background-color: var(--accent-1);
+        color: var(--white);
+    }
+
+    .status-inactive {
+        background-color: var(--primary-medium);
+        color: var(--white);
+    }
+
+    .no-accounts {
+        background: rgba(236, 240, 241, 0.8);
+        border-left: 4px solid var(--accent-1);
+        color: var(--primary-dark);
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        text-align: center;
+        margin: 2rem 0;
+        backdrop-filter: blur(5px);
+    }
+
+    .back-button {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+
+    .btn-back {
+        background-color: var(--primary-dark);
+        color: var(--white);
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .btn-back:hover {
+        background-color: var(--primary-medium);
+        transform: translateY(-2px);
+        color: var(--white);
+        text-decoration: none;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .icon {
+        margin-right: 0.5rem;
+    }
+</style>
+
+<div class="accounts-container">
+    <div class="accounts-header">
+        <h1><i class="fas fa-wallet icon"></i>Customer Accounts</h1>
+        <p class="text-white">View and manage customer's banking accounts</p>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="row">
+            @foreach (var account in Model)
+            {
+                <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
+                    <div class="account-card">
+                        <div class="account-card-header">
+                            <h5 class="account-card-title">
+                                <i class="fas fa-@(account.AccountType == "Savings" ? "piggy-bank" : "money-bill-wave")"></i>
+                                Account #@account.Number
+                            </h5>
+                        </div>
+                        <div class="account-card-body">
+                            <div class="account-info">
+                                <div class="account-item">
+                                    <span class="account-label">Balance</span>
+                                    <span class="account-value amount-value">@account.Balance.ToString()</span>
+                                </div>
+                                <div class="account-item">
+                                    <span class="account-label">Created</span>
+                                    <span class="account-value">@account.CreatedAt.ToString("dd MMM yyyy")</span>
+                                </div>
+                                <div class="account-item">
+                                    <span class="account-label">Type</span>
+                                    <span class="account-value">@account.AccountType</span>
+                                </div>
+                                <div class="account-item">
+                                    <span class="account-label">Status</span>
+                                    <span class="status-badge @(account.AccountStatus == "Active" ? "status-active" : "status-inactive")">
+                                        @account.AccountStatus
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="no-accounts">
+            <i class="fas fa-info-circle icon"></i> No accounts found for this customer.
+        </div>
+    }
+
+    <div class="back-button">
+        <a asp-controller="ManagerCustomer"
+           asp-action="GetCustomerDetails"
+           asp-route-id="@customerId"
+           class="btn-back">
+            <i class="fas fa-arrow-left"></i> Back to Customer Details
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+}

@@ -1,0 +1,158 @@
+﻿@using BankingSystem.PL.ViewModels.Customer
+@model List<CustomerCertificatesViewModel>
+@{
+    ViewData["Title"] = "Details";
+}
+<link rel="stylesheet" href="/css/CustomerCertificates.css" />
+
+
+<div class="certificates-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h3 class="text-white"><i class="bi bi-credit-card-fill me-2"></i>Your Bank Certificates</h3>
+        <p class="text-white">Certificates are a great way to grow your savings with fixed interest rates.</p>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <!-- No Certificates View -->
+        <div id="no-certificates-view">
+            <div class="no-certificates">
+                <div class="no-certificates-icon">
+                    <i class="bi bi-award" style="color: #213555;"></i>
+                </div>
+                <h3 class="empty-state-title">No Certificates Found</h3>
+                <p class="empty-state-text">You don't have any certificates at the moment. Certificates are a great way to earn higher interest rates on your savings with fixed terms.</p>
+                <a asp-action="ApplyCertificate" asp-route-id="@ViewBag.id" class="btn-add-certificate" style="background-color: #213555;">
+                    <i class="bi bi-plus-circle"></i>
+                    <span>Apply for Your First Certificate</span>
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div id="with-certificates-view">
+
+            <!-- Certificates Summary -->
+            <div class="summary-card">
+                <div class="section-header">
+                    <h4 class="mb-0">Certificates Summary</h4>
+                    <a asp-action="ApplyCertificate" asp-route-id="@ViewBag.id" class="btn-add-certificate">
+                        <i class="bi bi-plus-circle"></i>
+                        <span>Apply for New Certificate</span>
+                    </a>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="summary-item">
+                            <div class="summary-count text-primary">@Model.Count()</div>
+                            <div class="text-muted fw-bold">Total Certificates</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="summary-item">
+                            <div class="summary-count gold-color">@Model.Count(cer => cer.GeneralCertDetails.Name == "Gold")</div>
+                            <div class="text-muted fw-bold">Gold Certificates</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="summary-item">
+                            <div class="summary-count silver-color">@Model.Count(cer => cer.GeneralCertDetails.Name == "Silver")</div>
+                            <div class="text-muted fw-bold">Silver Certificates</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="summary-item">
+                            <div class="summary-count bronze-color">@Model.Count(cer => cer.GeneralCertDetails.Name == "Bronze")</div>
+                            <div class="text-muted fw-bold">Bronze Certificates</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section-header">
+            <h4 class="mb-0">Your Certificates</h4>
+        </div>
+        @foreach (var cert in Model)
+        {
+            <div id="with-certificates-view">
+
+                <!-- Certificates List -->
+                <div class="certificates-list">
+
+
+                    <!-- Gold Certificate -->
+                    <div class="certificate-row">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center">
+                                    @if (cert.GeneralCertDetails.Name == "Gold")
+                                    {
+                                        <div class="certificate-icon gold-icon me-3">
+                                            <i class="bi bi-award-fill"></i>
+                                        </div>
+                                        <div>
+                                            <div class="certificate-type">Gold Certificate</div>
+                                            <div class="certificate-amount">$@cert.Amount</div>
+                                        </div>
+                                    }
+                                    @if (cert.GeneralCertDetails.Name == "Silver")
+                                    {
+                                        <div class="certificate-icon silver-icon me-3">
+                                            <i class="bi bi-award-fill"></i>
+                                        </div>
+                                        <div>
+                                            <div class="certificate-type">Silver Certificate</div>
+                                            <div class="certificate-amount">$@cert.Amount</div>
+                                        </div>
+                                    }
+                                    @if (cert.GeneralCertDetails.Name == "Bronze")
+                                    {
+                                        <div class="certificate-icon bronze-icon me-3">
+                                            <i class="bi bi-award-fill"></i>
+                                        </div>
+                                        <div>
+                                            <div class="certificate-type">Bronze Certificate</div>
+                                            <div class="certificate-amount">$@cert.Amount</div>
+                                        </div>
+                                    }
+
+                                </div>
+                                <div class="certificate-meta">
+                                    <div class="certificate-badge">
+                                        <i class="bi bi-percent"></i>
+                                        <span class="certificate-text">@cert.GeneralCertDetails.InterestRate Interest Rate</span>
+                                    </div>
+                                    <div class="certificate-badge">
+                                        <i class="bi bi-clock"></i>
+                                        <span class="certificate-text">@cert.GeneralCertDetails.Duration Months</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="certificate-details">
+                                    <div class="detail-row">
+
+                                        <div class="detail-item">
+                                            <div class="detail-badge">
+                                                <span class="detail-label">Issue Date</span>
+                                                <span class="detail-value">@cert.IssueDate.ToShortDateString()</span>
+                                            </div>
+                                        </div>
+                                        <div class="detail-item">
+                                            <div class="detail-badge">
+                                                <span class="detail-label">Expiry Date</span>
+                                                <span class="detail-value">@cert.ExpiryDate.ToShortDateString()</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+

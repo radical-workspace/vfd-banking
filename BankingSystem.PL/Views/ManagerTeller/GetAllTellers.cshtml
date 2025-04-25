@@ -1,0 +1,176 @@
+﻿@model List<BankingSystem.PL.ViewModels.Manager.TellerDetailsViewModel>
+
+@{
+    ViewData["Title"] = "Teller Details";
+}
+<style>
+    :root {
+        /* Primary Colors */
+        --primary-medium: #1E201E; /* Deep charcoal - for headers/important elements */
+        --primary-dark: #3C3D37; /* Warm gray - primary actions */
+        --primary-light: #697565; /* Muted sage - secondary elements */
+        /* Secondary Colors */
+        --secondary-dark: #3C3D37; /* Same as primary-medium */
+        --secondary-light: #ECDFCC; /* Cream - backgrounds/accents */
+        /* Neutral Colors */
+        --neutral-1: #5A5D58; /* Medium gray - primary text */
+        --neutral-2: #8B8E87; /* Light gray */
+        --neutral-3: #C5C7C2; /* Very light gray */
+        /* Accent Colors */
+        --accent-1: #1E201E; /* Primary dark */
+        --accent-2: #697565; /* Primary light */
+        --accent-3: #F5F0E8; /* Light cream (derived from ECDFCC) */
+        /* System Colors */
+        --white: #FFFFFF;
+        --black: #121412; /* Slightly darker than primary-dark */
+        /* Status Colors */
+        --success: #5A7247; /* Muted green */
+        --warning: #B38B59; /* Warm amber */
+        --danger: #8C4A3F; /* Earthy red */
+        --info: #5D7B8C; /* Muted blue */
+        /* Text Contrast */
+        --text-on-dark: #ECDFCC; /* Cream text on dark backgrounds */
+        --text-on-light: #3C3D37; /* Dark text on light backgrounds */
+    }
+
+    body {
+        background-color: var(--primary-medium);
+        min-height: 100vh;
+    }
+    .tellers-container {
+        background: var(--accent-3);
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .tellers-header {
+        color: var(--primary-dark);
+        border-bottom: 2px solid var(--accent-1);
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .add-teller-btn {
+        background-color: var(--primary-medium);
+        border: none;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s ease;
+        margin-bottom: 2rem;
+    }
+
+        .add-teller-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+    .tellers-table {
+        background: var(--white);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+        .tellers-table thead {
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-medium));
+            color: var(--accent-3);
+        }
+
+        .tellers-table th {
+            font-weight: 500;
+            padding: 1rem;
+        }
+
+        .tellers-table td {
+            vertical-align: middle;
+            padding: 0.75rem 1rem;
+        }
+
+        .tellers-table tr:hover {
+            background-color: var(--accent-2);
+        }
+
+    .action-btn {
+        padding: 0.5rem 1rem;
+        margin: 0.25rem;
+        transition: all 0.3s ease;
+        border: none;
+    }
+
+    .btn-details {
+        background-color: var(--secondary-dark);
+    }
+
+    .btn-update {
+        background-color: var(--primary-light);
+    }
+
+    .btn-delete {
+        background-color: var(--accent-1);
+    }
+
+    .action-btn:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        opacity: 0.9;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-xxl-10 col-12">
+            <div class="tellers-container">
+                <h2 class="tellers-header">
+                    <i class="fas fa-user-tie me-2"></i>Teller Details
+                </h2>
+
+                <a class="btn  add-teller-btn text-white" asp-action="CreateTeller">
+                    <i class="fas fa-plus-circle me-2"></i>Add New Teller
+                </a>
+
+                <div class="table-responsive">
+                    <table class="table tellers-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Branch</th>
+                                <th>Email</th>
+                                <th>SSN</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var teller in Model)
+                            {
+                                <tr>
+                                    <td>@teller.FirstName @teller.LastName</td>
+                                    <td>@teller.BranchName</td>
+                                    <td>@teller.Email</td>
+                                    <td>@teller.SSN</td>
+                                    <td>
+                                        <a class="btn btn-details text-white action-btn"
+                                           asp-action="GetTellerDetails"
+                                           asp-route-id="@teller.Id">
+                                            <i class="fas fa-info-circle me-1"></i>Details
+                                        </a>
+                                        <a class="btn  btn-update text-white action-btn"
+                                           asp-action="EditTeller"
+                                           asp-route-id="@teller.Id">
+                                            <i class="fas fa-edit me-1"></i>Update
+                                        </a>
+                                        <a class="btn btn-delete text-white action-btn"
+                                           asp-action="DeleteTeller"
+                                           asp-route-id="@teller.Id">
+                                            <i class="fas fa-trash-alt me-1"></i>Delete
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

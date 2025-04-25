@@ -1,8 +1,34 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    // string userId = ViewBag.userId;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+@if (User.IsInRole("Admin") && User.Identity?.IsAuthenticated == true)
+{
+    <partial name="~/Views/Admin/Index.cshtml" />
+}
+
+
+@* @if (User.IsInRole("Manager") && User.Identity?.IsAuthenticated == true) *@
+@* { *@
+@*     <partial name="~/Views/ManagerSavings/GetAllSavings.cshtml" /> *@
+    @* @await Html.PartialAsync("~/Views/ManagerBranch/GetBranchDetails.cshtml", userId); *@
+@* } *@
+
+@* @if (User.IsInRole("Teller") && User.Identity?.IsAuthenticated == true) *@
+@* { *@
+@*     <partial name="~/Views/Home/_TellerHomePartial.cshtml" /> *@
+@* } *@
+
+@* @if (User.IsInRole("Customer") && User.Identity?.IsAuthenticated == true)  *@
+@*  { *@
+@*     <partial name="~\Views\CustomerAccounts\Index.cshtml" /> *@
+@*  } *@
+
+
+@if (User.Identity?.IsAuthenticated == false)
+{
+
+    <partial name="~/Views/CustomerAccounts/Index.cshtml" />
+}

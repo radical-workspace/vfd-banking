@@ -1,0 +1,185 @@
+﻿@model BankingSystem.PL.ViewModels.Customer.AccountsViewModel
+
+@{
+    ViewData["Title"] = "Transfer Money";
+}
+
+<style>
+    :root {
+        --primary-dark: rgb(63, 114, 175); /* new primary dark */
+        --primary-medium: rgb(157, 178, 191); /* new primary medium */
+        --primary-light: rgb(219, 226, 239); /* new primary light */
+        --secondary-dark: rgb(63, 114, 175); /* mapped to primary-dark because no exact secondary */
+        --secondary-light: rgb(219, 226, 239); /* mapped to primary-light */
+        --neutral-1: rgb(157, 178, 191); /* mapped to text-light */
+        --accent-1: rgb(63, 114, 175); /* mapped to primary-dark */
+        --accent-2: rgb(221, 230, 237); /* primary-lightest */
+        --accent-3: rgb(238, 244, 255); /* soft background you used */
+        --white: #ffffff; /* stays same */
+    }
+
+    .transfer-container {
+        background: var(--accent-3);
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        max-width: 600px;
+        margin: 2rem auto;
+    }
+
+    .transfer-header {
+        color: var(--primary-dark);
+        border-bottom: 2px solid var(--accent-1);
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .form-label {
+        color: var(--primary-medium);
+        font-weight: 600;
+    }
+
+    .form-control {
+        border: 2px solid var(--secondary-light);
+        border-radius: 8px;
+        padding: 0.75rem 1.25rem;
+        transition: all 0.3s ease;
+    }
+
+        .form-control:focus {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 0 0.25rem rgba(222, 174, 159, 0.25);
+        }
+
+    .validation-message {
+        color: var(--accent-1);
+        font-size: 0.9rem;
+    }
+
+    .submit-btn {
+        background-color: var(--primary-medium);
+        border: none;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+        .submit-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+    .iban-hint {
+        font-size: 0.85rem;
+        color: var(--neutral-1);
+        margin-top: 0.25rem;
+    }
+
+    .amount-input {
+        position: relative;
+    }
+
+    .currency-symbol {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--primary-medium);
+        font-weight: 600;
+    }
+</style>
+
+<div class="transfer-container">
+    <h2 class="transfer-header">
+        <i class="fas fa-exchange-alt me-2"></i>Transfer Money
+    </h2>
+
+    <form asp-action="TransferMoney" method="post">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" asp-for="ShowAccounts" id="ShowAccounts" />
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger validation-message"></div>
+
+        <div class="transfer-options mb-4 text-center">
+            <button type="button" id="showAccounts" class="btn @(Model.ShowAccounts ? "btn-primary" : "btn-outline-dark")">
+                Transfer from Account
+            </button>
+            <button type="button" id="showCards" class="btn @(!Model.ShowAccounts ? "btn-primary" : "btn-outline-dark")">
+                Transfer from Card
+            </button>
+        </div>
+
+        <!-- Account Section -->
+        <div id="accountSection" style="@(Model.ShowAccounts ? "display:block" : "display:none")">
+            <div class="form-group">
+                <label asp-for="SelectedAccountNumber"></label>
+                <select asp-for="SelectedAccountNumber" asp-items="Model.UserAccounts" class="form-control">
+                    <option value="">-- Select Account --</option>
+                </select>
+                <span asp-validation-for="SelectedAccountNumber" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- Card Section -->
+        <div id="cardSection" style="@(!Model.ShowAccounts ? "display:block" : "display:none")">
+            <div class="form-group">
+                <label asp-for="SelectedCardNumber"></label>
+                <select asp-for="SelectedCardNumber" asp-items="Model.UserVisaCards" class="form-control">
+                    <option value="">-- Select Card --</option>
+                </select>
+                <span asp-validation-for="SelectedCardNumber" class="text-danger"></span>
+            </div>
+
+            <!-- CVV Field -->
+            <div class="form-group" id="cardDetailsSection">
+                <label asp-for="VisaCVV"></label>
+                <input asp-for="VisaCVV" class="form-control" placeholder="123" />
+                <span asp-validation-for="VisaCVV" class="text-danger"></span>
+            </div>
+
+            <!-- Expiration Date -->
+            <div class="form-group">
+                <label asp-for="VisaExpDate"></label>
+                <input asp-for="VisaExpDate" type="date" class="form-control" />
+                <span asp-validation-for="VisaExpDate" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- Destination IBAN -->
+        <div class="mb-4">
+            <label asp-for="DestinationIban" class="form-label">To IBAN</label>
+            <input asp-for="DestinationIban" class="form-control" placeholder="Enter recipient's IBAN" />
+            <span asp-validation-for="DestinationIban" class="validation-message"></span>
+            <div class="iban-hint">Example: XX00 XXXX 0000 0000 0000 0000</div>
+        </div>
+
+        <!-- Amount -->
+        <div class="mb-4 amount-input">
+            <label asp-for="Amount" class="form-label">Amount</label>
+            <div class="position-relative">
+                <span class="currency-symbol">$</span>
+                <input asp-for="Amount" type="number" step="0.01" class="form-control ps-4" placeholder="0.00" />
+            </div>
+            <span asp-validation-for="Amount" class="validation-message"></span>
+            <div class="iban-hint">Maximum transfer limit: $500,000</div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary submit-btn text-white ">
+                <i class="fas fa-paper-plane me-2"></i>Transfer Funds
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="~/js/TransferMoney.js"></script>
+
+}

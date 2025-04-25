@@ -1,0 +1,349 @@
+﻿@model List<BankingSystem.PL.ViewModels.Manager.CustomerSupportTicketViewModel>
+
+@{
+    ViewData["Title"] = "Support Tickets";
+    var customerId = ViewBag.CustomerId as string;
+}
+
+<style>
+    :root {
+        /* Primary Colors */
+        --primary-medium: #1E201E; /* Deep charcoal - for headers/important elements */
+        --primary-dark: #3C3D37; /* Warm gray - primary actions */
+        --primary-light: #697565; /* Muted sage - secondary elements */
+        /* Secondary Colors */
+        --secondary-dark: #3C3D37; /* Same as primary-medium */
+        --secondary-light: #ECDFCC; /* Cream - backgrounds/accents */
+        /* Neutral Colors */
+        --neutral-1: #5A5D58; /* Medium gray - primary text */
+        --neutral-2: #8B8E87; /* Light gray */
+        --neutral-3: #C5C7C2; /* Very light gray */
+        /* Accent Colors */
+        --accent-1: #1E201E; /* Primary dark */
+        --accent-2: #697565; /* Primary light */
+        --accent-3: #F5F0E8; /* Light cream (derived from ECDFCC) */
+        /* System Colors */
+        --white: #FFFFFF;
+        --black: #121412; /* Slightly darker than primary-dark */
+        /* Status Colors */
+        --success: #5A7247; /* Muted green */
+        --warning: #B38B59; /* Warm amber */
+        --danger: #8C4A3F; /* Earthy red */
+        --info: #5D7B8C; /* Muted blue */
+        /* Text Contrast */
+        --text-on-dark: #ECDFCC; /* Cream text on dark backgrounds */
+        --text-on-light: #3C3D37; /* Dark text on light backgrounds */
+    }
+
+    body {
+        background-color: var(--primary-medium);
+        min-height: 100vh;
+    }
+    .tickets-container {
+        max-width: 1400px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .tickets-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: var(--neutral-1);
+        position: relative;
+        padding-bottom: 1rem;
+    }
+
+    .tickets-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 3px;
+        background: var(--accent-1);
+        border-radius: 2px;
+    }
+
+    .tickets-header h1 {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .tickets-header p {
+        color: var(--primary-medium);
+    }
+
+    .ticket-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        margin-bottom: 1.5rem;
+        border: none;
+        overflow: hidden;
+        transition: var(--transition);
+        backdrop-filter: blur(10px);
+    }
+
+    .ticket-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        background: rgba(255, 255, 255, 0.95);
+    }
+
+    .ticket-card-header {
+        background: linear-gradient(90deg, var(--primary-dark), var(--primary-medium));
+        color: var(--white);
+        padding: 1rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ticket-card-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 80px;
+        height: 100%;
+        background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1));
+        transform: skewX(-20deg);
+    }
+
+    .ticket-card-title {
+        font-weight: 600;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        position: relative;
+        z-index: 1;
+        font-size: 1.1rem;
+    }
+
+    .ticket-card-body {
+        padding: 1.25rem;
+        background: transparent;
+    }
+
+    .ticket-info {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .ticket-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .ticket-label {
+        color: var(--primary-medium);
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .ticket-value {
+        color: var(--primary-dark);
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .ticket-number {
+        font-family: 'Courier New', monospace;
+        letter-spacing: 1px;
+    }
+
+    .status-badge {
+        padding: 0.35rem 0.75rem;
+        border-radius: 50px;
+        font-weight: 500;
+        font-size: 0.8rem;
+        display: inline-block;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .status-open {
+        background-color: var(--primary-medium);
+        color: var(--white);
+    }
+
+    .status-closed {
+        background-color: var(--accent-1);
+        color: var(--white);
+    }
+
+    .status-pending {
+        background-color: var(--primary-dark);
+        color: var(--white);
+    }
+
+    .type-badge {
+        padding: 0.35rem 0.75rem;
+        border-radius: 50px;
+        font-weight: 500;
+        font-size: 0.8rem;
+        display: inline-block;
+        background-color: var(--primary-dark);
+        color: var(--white);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .ticket-description {
+        grid-column: 1 / -1;
+        margin-top: 0.75rem;
+    }
+
+    .ticket-description .ticket-value {
+        padding: 0.75rem;
+        background: var(--accent-2);
+        border-radius: 6px;
+        min-height: 3rem;
+        white-space: pre-wrap;
+    }
+
+    .ticket-response {
+        grid-column: 1 / -1;
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+        /* border-top: 2px solid var(--accent-2); */
+    }
+
+    .ticket-response .ticket-label {
+        color: var(--accent-1);
+    }
+
+    .ticket-response .ticket-value {
+        padding: 0.75rem;
+        background: var(--accent-2);
+
+        border-radius: 6px;
+        min-height: 3rem;
+        white-space: pre-wrap;
+    }
+
+    .no-tickets {
+        background: rgba(236, 240, 241, 0.8);
+        border-left: 4px solid var(--accent-1);
+        color: var(--primary-dark);
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        text-align: center;
+        margin: 2rem 0;
+        backdrop-filter: blur(5px);
+    }
+
+    .back-button {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+
+    .btn-back {
+        background-color: var(--primary-dark);
+        color: var(--white);
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .btn-back:hover {
+        background-color: var(--primary-medium);
+        transform: translateY(-2px);
+        color: var(--white);
+        text-decoration: none;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .icon {
+        margin-right: 0.5rem;
+    }
+</style>
+
+<div class="tickets-container">
+    <div class="tickets-header">
+        <h1><i class="fas fa-ticket-alt icon"></i>Support Tickets</h1>
+        <p class="text-white">View and manage customer's support requests</p>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="row">
+            @foreach (var ticket in Model)
+            {
+                <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
+                    <div class="ticket-card">
+                        <div class="ticket-card-header">
+                            <h5 class="ticket-card-title">
+                                <i class="fas fa-ticket-alt"></i>
+                                @ticket.Title
+                            </h5>
+                        </div>
+                        <div class="ticket-card-body">
+                            <div class="ticket-info">
+                                <div class="ticket-item">
+                                    <span class="ticket-label">Account #</span>
+                                    <span class="ticket-value ticket-number">@ticket.AccountNumber</span>
+                                </div>
+                                <div class="ticket-item">
+                                    <span class="ticket-label">Date</span>
+                                    <span class="ticket-value">@ticket.Date.ToString("dd MMM yyyy")</span>
+                                </div>
+                                <div class="ticket-item">
+                                    <span class="ticket-label">Status</span>
+                                    <span class="status-badge @(ticket.Status.ToString() == "Open" ? "status-open" :
+                                                                 ticket.Status.ToString() == "Closed" ? "status-closed" : "status-pending")">
+                                        @ticket.Status
+                                    </span>
+                                </div>
+                                <div class="ticket-item">
+                                    <span class="ticket-label">Type</span>
+                                    <span class="type-badge">@ticket.Type</span>
+                                </div>
+                                <div class="ticket-description">
+                                    <span class="ticket-label">Description</span>
+                                    <span class="ticket-value">@ticket.Description</span>
+                                </div>
+                                @if (!string.IsNullOrEmpty(ticket.Response))
+                                {
+                                    <div class="ticket-response">
+                                        <span class="ticket-label">Response</span>
+                                        <span class="ticket-value">@ticket.Response</span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="no-tickets">
+            <i class="fas fa-info-circle icon"></i> No support tickets found for this customer.
+        </div>
+    }
+
+    <div class="back-button">
+        <a asp-controller="ManagerCustomer"
+           asp-action="GetCustomerDetails"
+           asp-route-id="@customerId"
+           class="btn-back">
+            <i class="fas fa-arrow-left"></i> Back to Customer Details
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+}

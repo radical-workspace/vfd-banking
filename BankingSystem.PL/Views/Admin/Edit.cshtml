@@ -1,0 +1,143 @@
+﻿@using BankingSystem.DAL.Models;
+@model Admin
+
+@{
+    ViewData["Title"] = "Edit Admin Information";
+}
+
+
+<style>
+    body {
+        background-color: #1a1a1a !important;
+    }
+
+    .form-card {
+        background: rgba(255, 255, 255, 0.07);
+        border-radius: 1rem;
+        box-shadow: 0 8px 32px 0 rgba(255, 250, 250, 0.2);
+        backdrop-filter: blur(6.5px);
+        -webkit-backdrop-filter: blur(6.5px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        color: #fff;
+        max-width: 900px;
+        margin: auto;
+        padding: 2rem 2.5rem;
+    }
+
+    .form-header {
+        font-size: 1.7rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        text-align: center;
+        color: #f5f5f5;
+    }
+
+    label {
+        color: #ccc;
+        font-weight: 500;
+    }
+
+    .form-control {
+        background-color: transparent;
+        color: #eee;
+        border: 1px solid #444;
+        border-radius: 0.5rem;
+    }
+
+        .form-control:focus {
+            border-color: #888;
+            background-color: transparent;
+            box-shadow: none;
+            color: #fff;
+        }
+
+    .btn-custom {
+        border-radius: 0.5rem;
+        padding: 0.5rem 1.2rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+    }
+
+    .btn-back {
+        background-color: transparent;
+        border: 1px solid #aaa;
+        color: #aaa;
+        transition: all 0.2s;
+    }
+
+        .btn-back:hover {
+            background-color: #444;
+            color: white;
+        }
+
+    .btn-save {
+        background-color: #333;
+        color: white;
+        border: none;
+        padding-right: 60px;
+        padding-left: 60px;
+    }
+
+        .btn-save:hover {
+            background-color: #555;
+        }
+
+    .text-danger {
+        font-size: 0.85rem;
+    }
+</style>
+
+
+<div class="container">
+    <div class="form-card mt-4">
+        <div class="form-header">
+            <i class="fas fa-user-edit me-2 fs-3"></i> Edit Admin Information
+        </div>
+
+        <form asp-action="Edit" asp-route-userId="@ViewBag.userId" method="post">
+
+            @* <input type="hidden" asp-for="RowVersion" /> *@
+
+            <div class="col-md-12 mb-3">
+                <label asp-for="FirstName" class="fw-bold"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-12 mb-3">
+                <label asp-for="LastName" class="fw-bold"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-12 mb-3">
+                <label asp-for="Email" class="fw-bold"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-12 mb-3">
+                <label asp-for="Address" class="fw-bold"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+                
+
+            <div class="col-md-12">
+                <label asp-for="BirthDate" class="form-label"></label>
+                <input asp-for="BirthDate" class="form-control" type="date" />
+                <span asp-validation-for="BirthDate" class="text-danger"></span>
+            </div>
+
+            <div class="mt-5 text-center">
+                <button type="submit" class="btn-custom btn-save">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

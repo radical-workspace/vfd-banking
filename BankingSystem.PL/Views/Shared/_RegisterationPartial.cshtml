@@ -1,0 +1,285 @@
+﻿@using BankingSystem.DAL.Models
+﻿@using BankingSystem.PL.ViewModels.Auth
+@model RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+
+<style>
+    :root {
+        --primary-dark: rgb(63, 114, 175); /* new primary dark */
+        --primary-medium: rgb(157, 178, 191); /* new primary medium */
+        --primary-light: rgb(219, 226, 239); /* new primary light */
+        --secondary-dark: rgb(63, 114, 175); /* mapped to primary-dark because no exact secondary */
+        --secondary-light: rgb(219, 226, 239); /* mapped to primary-light */
+        --neutral-1: rgb(157, 178, 191); /* mapped to text-light */
+        --accent-1: rgb(63, 114, 175); /* mapped to primary-dark */
+        --accent-2: rgb(221, 230, 237); /* primary-lightest */
+        --accent-3: rgb(238, 244, 255); /* soft background you used */
+        --white: #ffffff; /* stays same */
+        --danger: darkred;
+    }
+
+    .register-container {
+        background: var(--accent-3);
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 2.5rem;
+    }
+
+    .form-header {
+        color: var(--primary-dark);
+        margin-bottom: 2rem;
+        text-align: center;
+        border-bottom: 2px solid var(--accent-1);
+        padding-bottom: 1rem;
+    }
+
+    .form-label {
+        color: black;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control, .form-select {
+        border: 2px solid var(--secondary-light);
+        border-radius: 50px !important;
+        padding: 0.75rem 1.25rem;
+        transition: all 0.3s ease;
+        background-color: var(--white);
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 0 0.25rem rgba(222, 174, 159, 0.25);
+        }
+
+        .form-control[readonly] {
+            background-color: var(--accent-2);
+        }
+
+    .validation-summary {
+        border-left: 4px solid var(--accent-1);
+        background-color: var(--accent-2);
+        border-radius: 8px;
+    }
+
+    .text-danger {
+        color: var(--danger) !important;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: block;
+    }
+
+    .submit-btn {
+        background-color: var(--primary-medium);
+        border: none;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        margin-top: 1.5rem;
+    }
+
+        .submit-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(10, 45, 46, 0.2);
+        }
+
+    .input-group {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .input-icon {
+        position: absolute;
+        right: 1.25rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--primary-light);
+    }
+</style>
+@if (!ViewData.ModelState.IsValid)
+{
+    <div asp-validation-summary="All" class="alert alert-danger validation-summary"></div>
+}
+
+<div class="row">
+    <!-- First Name -->
+    <div class="col-md-6 mb-4">
+        <label asp-for="FirstName" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="FirstName" class="form-control" placeholder="Enter first name" />
+            <i class="fas fa-user input-icon"></i>
+        </div>
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+
+    <!-- Last Name -->
+    <div class="col-md-6 mb-4">
+        <label asp-for="LastName" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="LastName" class="form-control" placeholder="Enter last name" />
+            <i class="fas fa-user input-icon"></i>
+        </div>
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+
+    <!-- Username -->
+    <div class="col-md-6 mb-4">
+        <label asp-for="UserName" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="UserName" class="form-control" placeholder="Choose username" />
+            <i class="fas fa-at input-icon"></i>
+        </div>
+        <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>
+
+    <!-- SSN -->
+    <div class="col-md-6 mb-4">
+        <label asp-for="SSN" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="SSN" class="form-control" placeholder="Enter SSN" />
+            <i class="fas fa-id-card input-icon"></i>
+        </div>
+        <span asp-validation-for="SSN" class="text-danger"></span>
+    </div>
+
+    <!-- Address -->
+    <div class="col-md-6 mb-4">
+        <label asp-for="Address" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="Address" class="form-control" placeholder="Enter address" />
+            <i class="fas fa-map-marker-alt input-icon"></i>
+        </div>
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+
+    <!-- Phone Number -->
+    <div class="col-md-6 mb-4">
+        <label asp-for="PhoneNumber" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="PhoneNumber" class="form-control" placeholder="Enter phone number" />
+            <i class="fas fa-phone input-icon"></i>
+        </div>
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    </div>
+
+    <!-- Email -->
+    <div class="col-md-6 mb-4">
+        <label asp-for="Email" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="Email" class="form-control" placeholder="Enter email" />
+            <i class="fas fa-envelope input-icon"></i>
+        </div>
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <!-- Birth Date -->
+    <div class="col-md-6 mb-4">
+        <label asp-for="BirthDate" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="BirthDate" type="date" class="form-control" />
+            @* <i class="fas fa-birthday-cake input-icon"></i> *@
+        </div>
+        <span asp-validation-for="BirthDate" class="text-danger"></span>
+    </div>
+
+    <!-- Password -->
+    <div class="col-md-6 mb-4">
+        <label asp-for="Password" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="Password" type="password" class="form-control" placeholder="Create password" />
+            <i class="fas fa-lock input-icon"></i>
+        </div>
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <!-- Confirm Password -->
+    <div class="col-md-6 mb-4">
+        <label asp-for="ConfirmPassword" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm password" />
+            <i class="fas fa-lock input-icon"></i>
+        </div>
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+
+    <!-- Join Date -->
+    <div class="col-md-6 mb-4">
+        <label asp-for="JoinDate" class="form-label"></label>
+        <div class="input-group">
+            <!-- Hidden input for posting the actual value -->
+            <input asp-for="JoinDate" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" type="hidden" />
+
+            <!-- Disabled input for showing to the user -->
+            <input value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" type="datetime-local" class="form-control" disabled />
+        </div>
+        <span asp-validation-for="JoinDate" class="text-danger"></span>
+    </div>
+
+
+    <!-- Role Selection -->
+    @if (ViewData["FixedRole"] != null)
+    {
+        var fixedRole = ViewData["FixedRole"].ToString();
+
+        if (fixedRole != "Customer")
+        {
+            <div class="col-md-6 mb-4">
+                <label asp-for="Salary" class="form-label"></label>
+                <div class="input-group">
+                    <input asp-for="Salary" type="number" class="form-control" placeholder="Add Salary" />
+                    <i class="fas fa-lock input-icon"></i>
+                </div>
+                <span asp-validation-for="Salary" class="text-danger"></span>
+            </div>
+        }
+
+        @* <input type="hidden" asp-for="Role" value="@fixedRole" /> *@
+
+        <div class="col-md-6 mb-4">
+            <label asp-for="Role" class="form-label">
+                <i class="fas fa-user-tag me-2"></i>Role
+            </label>
+            <div class="input-group">
+                <input type="text" class="form-control"
+                       value="@ViewData["FixedRole"]" readonly />
+                <input type="hidden" asp-for="Role" value="@ViewData["FixedRole"]" />
+            </div>
+        </div>
+    }
+    else
+    {
+        ViewData["FixedRole"] = "Customer";
+        <div class="col-md-6 mb-4">
+            <label asp-for="Role" class="form-label">
+                <i class="fas fa-user-tag me-2"></i>Role
+            </label>
+            <div class="input-group">
+                <input type="text" class="form-control"
+                       value="@ViewData["FixedRole"]" readonly />
+                <input type="hidden" asp-for="Role" value="@ViewData["FixedRole"]" />
+            </div>
+        </div>
+
+        @* <div class="col-md-6 mb-4"> 
+        @*     <label asp-for="Role" class="form-label"></label>  *@
+        @*     <div class="input-group">  *@
+        @*         <select asp-for="Role" asp-items="Model.AvailableRoles" class="form-select">  *@
+        @*             <option value="">-- Select Role --</option>  *@
+        @*         </select> *@
+        @*         <i class="fas fa-user-tag input-icon"></i>  *@
+        @*     </div>  *@
+        @*     <span asp-validation-for="Role" class="text-danger"></span>  *@
+        @* </div> *@
+    }
+</div>
+
+<div class="text-center">
+    <button type="submit" class="btn btn-primary submit-btn text-white">
+        <i class="fas fa-user-plus me-1"></i>Register
+    </button>
+</div>

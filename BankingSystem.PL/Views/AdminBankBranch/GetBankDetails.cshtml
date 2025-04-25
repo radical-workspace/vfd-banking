@@ -1,0 +1,390 @@
+﻿@model BankingSystem.DAL.Models.Bank
+
+@{
+    ViewData["Title"] = "Bank Details";
+}
+
+<style>
+    .bank-detail-card {
+        border: none;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        background-color: #c3c3c3;
+    }
+
+    .bank-logo {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--accent-hover);
+        color: white;
+        border-radius: 50%;
+    }
+
+    .card-body {
+        background-color: #ededed;
+    }
+
+    .detail-section {
+        padding: 1rem;
+    }
+
+    .section-title {
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--table-border);
+    }
+
+    .detail-item {
+        padding: 0.75rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+        .detail-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+    .stat-card {
+        transition: all 0.3s ease;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: rgba(108, 117, 125, 0.3) !important;
+        }
+
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--accent-1);
+        border-radius: 50%;
+        opacity: 0.8;
+    }
+
+    .admin-card {
+        transition: all 0.3s ease;
+    }
+
+        .admin-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+    .admin-avatar {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .branch-item {
+        transition: all 0.3s ease;
+    }
+
+        .branch-item:hover {
+            background-color: rgba(108, 117, 125, 0.3) !important;
+            transform: translateX(3px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Added shadow for better effect */
+        }
+
+
+    .breadcrumb-item a {
+        color: var(--text-secondary);
+        text-decoration: none;
+    }
+
+    .breadcrumb-item.active {
+        color: var(--text-primary);
+    }
+
+    .my-sec {
+        height: 300px;
+    }
+
+
+    .v-branches {
+        font-weight: bold;
+        color: var(--accent-color);
+    }
+
+        .v-branches:hover {
+            color: var(--accent-hover);
+        }
+
+    .my-p {
+        color: black !important;
+    }
+
+    .my-pw {
+        font-weight: bold;
+        color: darkred;
+    }
+
+    .my-logo {
+        color: black;
+    }
+
+    .logo2 {
+        background-color: transparent;
+    }
+
+    .my-card {
+        background-color: #e3e3e3;
+    }
+
+    /* #v-bran:hover { */
+    /*     background-color:; */
+    /* } */
+</style>
+
+
+<div class="container-fluid px-4">
+    <!-- Header with Back Button -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1">
+                Bank Details
+            </h2>
+
+        </div>
+        @* <a asp-action="Index" class="btn btn-outline-secondary"> *@
+        @*     <i class="fas fa-arrow-left me-2"></i>Back to List *@
+        @* </a> *@
+    </div>
+
+    <!-- Main Card -->
+    <div class="card bank-detail-card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <div class="bank-logo me-3">
+                    <i class="fas fa-university text-accent-1 fs-3"></i>
+                </div>
+                <div>
+                    <h3 class="mb-0">@Model.Name</h3>
+                    <small class="text-text-secondary">Bank ID: @Model.Id</small>
+                </div>
+            </div>
+
+            @* <span class="badge @(Model.IsDeleted ? "bg-danger" : "bg-success") fs-6"> *@
+            @*     @(Model.IsDeleted ? "Inactive" : "Active") *@
+            @* </span> *@
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <!-- Basic Information Column -->
+                <div class="col-lg-6">
+                    <div class="detail-section mb-5 my-sec">
+                        <h5 class="section-title text-text-secondary mb-4">
+                            <i class="fas fa-info-circle me-2"></i>Basic Information
+                        </h5>
+                        <div class="row g-3n my-card">
+                            <div class="col-md-6 stat-card p-3">
+                                <div class="bg-secondary-dark rounded h-100">
+                                    <small class="text-text-secondary fw-bold">Bank Name</small>
+                                    <p>@Model.Name</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="bg-secondary-dark rounded h-100 stat-card p-3">
+                                    <small class="text-text-secondary fw-bold">Status</small>
+                                    <p>
+                                        <span class="badge @(Model.IsDeleted ? "bg-danger" : "bg-success")">
+                                            @(Model.IsDeleted ? "Inactive" : "Active")
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-12 my-mr stat-card p-3 mt-0">
+                                <div class="bg-secondary-dark">
+                                    <small class="text-text-secondary fw-bold">Headquarters Address</small>
+                                    <p>@Model.CentralAddress</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admin Information -->
+                    @if (Model.Admin != null)
+                    {
+                        <div class="detail-section">
+                            <h5 class="section-title text-text-secondary mb-4">
+                                <i class="fas fa-user-shield me-2"></i>Bank Administrator
+                            </h5>
+                            <div class="admin-card my-card p-3 bg-secondary-dark rounded stat-card p-3 bg-secondary-dark rounded h-100">
+                                <div class="d-flex align-items-center">
+                                    <div class="admin-avatar me-3">
+                                        <i class="fas fa-user-circle text-accent-1 fs-1"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">@Model.Admin.FirstName @Model.Admin.LastName</h6>
+                                        <small class="text-text-secondary d-block mb-1">
+                                            <i class="fas fa-envelope me-1"></i>@Model.Admin.Email
+                                        </small>
+                                        <small class="text-text-secondary">
+                                            <i class="fas fa-phone me-1"></i>@(Model.Admin.PhoneNumber ?? "Not provided")
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Statistics Column -->
+                <div class="col-lg-6">
+                    <div class="detail-section mb-5 my-sec">
+                        <h5 class="section-title text-text-secondary mb-4">
+                            <i class="fas fa-chart-pie me-2"></i>Bank Statistics
+                        </h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="stat-card p-3 bg-secondary-dark rounded h-100 my-card">
+                                    <div class="d-flex align-items-center">
+                                        <div class="stat-icon me-3 logo2">
+                                            <i class="fas fa-code-branch text-accent-1 fs-3 my-logo"></i>
+                                        </div>
+                                        <div>
+                                            <small class="text-text-secondary">Total Branches</small>
+                                            <h3 class="mb-0">@(Model.Branches?.Count ?? 0)</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="stat-card p-3 bg-secondary-dark rounded h-100 my-card">
+                                    <div class="d-flex align-items-center">
+                                        <div class="stat-icon me-3 logo2">
+                                            <i class="fas fa-users text-accent-1 fs-3 my-logo"></i>
+                                        </div>
+                                        <div>
+                                            <small class="text-text-secondary">Total Employees</small>
+                                            <h3 class="mb-0">@ViewBag.tellersNumber</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="stat-card p-3 bg-secondary-dark rounded h-100 my-card">
+                                    <div class="d-flex align-items-center">
+                                        <div class="stat-icon me-3 logo2">
+                                            <i class="fas fa-user-friends text-accent-1 fs-3 my-logo"></i>
+                                        </div>
+                                        <div>
+                                            <small class="text-text-secondary">Total Customers</small>
+                                            <h3 class="mb-0">@ViewBag.customersNumber</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="stat-card p-3 bg-secondary-dark rounded h-100 my-card">
+                                    <div class="d-flex align-items-center">
+                                        <div class="stat-icon me-3 logo2">
+                                            <i class="fas fa-hand-holding-usd text-accent-1 fs-3 my-logo"></i>
+                                        </div>
+                                        <div>
+                                            <small class="text-text-secondary">Total Accounts</small>
+                                            <h3 class="mb-0">@ViewBag.accountsNumber</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Branches -->
+                    <div class="detail-section">
+                        <h5 class="section-title text-text-secondary mb-4">
+                            <i class="fas fa-map-marked-alt me-2"></i>All Branches
+                        </h5>
+                        <div class="branches-list" style="max-height: 300px; overflow-y: auto; overflow-x: hidden;">
+                            @if (Model.Branches?.Any() == true)
+                            {
+                                foreach (var branch in Model.Branches)
+                                {
+                                    <div class="rounded mb-2">
+                                        <div class="d-flex justify-content-between align-items-center stat-card p-3 my-card rounded h-100">
+                                            <div>
+                                                <h6 class="mb-0">@branch.Name</h6>
+                                                <small class="text-text-secondary">
+                                                    <i class="fas fa-map-marker-alt me-1"></i>@branch.Location
+                                                </small>
+                                            </div>
+                                            <span class="px-4 badge @(branch.IsDeleted ? "bg-danger" : "bg-success")">
+                                                @(branch.IsDeleted ? "Inactive" : "Active")
+                                            </span>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="alert alert-secondary">
+                                    No branches found for this bank
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            
+            </div>
+        </div>
+
+        <!-- Card Footer with Actions -->
+        <div class="card-footer bg-transparent border-top border-table-border">
+            <div class="d-flex justify-content-end">
+                @* <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-dark me-2"> *@
+                @*     <i class="fas fa-edit me-2"></i>Edit Bank *@
+                @* </a> *@
+                @* <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"> *@
+                @*     <i class="fas fa-trash-alt me-2"></i> <span class="fw-bold">Delete Bank</span> *@
+                @* </button> *@
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-secondary-dark">
+            <div class="modal-header border-table-border">
+                <h5 class="modal-title my-p fw-bold">Confirm Deletion</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="my-p">Are you sure you want to delete this bank? This action cannot be undone.</p>
+                <p class="text-warning-color my-pw"><strong>Warning:</strong> <span class="my-p">This will affect all associated branches, accounts, and customers.</span></p>
+            </div>
+            <div class="modal-footer border-table-border">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash-alt me-2"></i>Delete Bank
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        // Initialize tooltips
+        $(function () {
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}

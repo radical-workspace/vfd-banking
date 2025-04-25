@@ -1,0 +1,292 @@
+﻿@using BankingSystem.DAL.Models
+@model TicketDetailsView
+
+@{
+    ViewData["Title"] = "Ticket Details";
+}
+
+<style>
+    :root {
+        /* Primary Colors */
+        --primary-medium: #1E201E; /* Deep charcoal - for headers/important elements */
+        --primary-dark: #3C3D37; /* Warm gray - primary actions */
+        --primary-light: #697565; /* Muted sage - secondary elements */
+        /* Secondary Colors */
+        --secondary-dark: #3C3D37; /* Same as primary-medium */
+        --secondary-light: #ECDFCC; /* Cream - backgrounds/accents */
+        /* Neutral Colors */
+        --neutral-1: #5A5D58; /* Medium gray - primary text */
+        --neutral-2: #8B8E87; /* Light gray */
+        --neutral-3: #C5C7C2; /* Very light gray */
+        /* Accent Colors */
+        --accent-1: #1E201E; /* Primary dark */
+        --accent-2: #697565; /* Primary light */
+        --accent-3: #F5F0E8; /* Light cream (derived from ECDFCC) */
+        /* System Colors */
+        --white: #FFFFFF;
+        --black: #121412; /* Slightly darker than primary-dark */
+        /* Status Colors */
+        --success: #5A7247; /* Muted green */
+        --warning: #B38B59; /* Warm amber */
+        --danger: #8C4A3F; /* Earthy red */
+        --info: #5D7B8C; /* Muted blue */
+        /* Text Contrast */
+        --text-on-dark: #ECDFCC; /* Cream text on dark backgrounds */
+        --text-on-light: #3C3D37; /* Dark text on light backgrounds */
+    }
+
+    body {
+        background-color: var(--primary-medium);
+        min-height: 100vh;
+    }
+
+    .ticket-container {
+        background: var(--accent-3);
+        padding: 2rem;
+        border-radius: 15px;
+    }
+
+    .ticket-header {
+        color: var(--primary-dark);
+        border-bottom: 2px solid var(--accent-1);
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .back-btn {
+        background-color: var(--primary-light);
+        color: var(--white);
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+        .back-btn:hover {
+            background-color: var(--primary-medium);
+            transform: translateY(-2px);
+        }
+
+    .info-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+    }
+
+    .info-card-header {
+        background: linear-gradient(90deg, var(--primary-dark), var(--primary-medium)) !important;
+        color: var(--white) !important;
+        border-radius: 10px 10px 0 0 !important;
+    }
+
+    .description-card-header {
+        background: var(--primary-light) !important;
+    }
+
+    .response-card-header {
+        background: var(--secondary-dark) !important;
+    }
+
+    .actions-card-header {
+        background: var(--accent-1) !important;
+        color: var(--primary-dark) !important;
+    }
+
+    .info-label {
+        color: var(--primary-medium);
+        font-weight: 600;
+    }
+
+    .info-value {
+        color: var(--primary-dark);
+        font-weight: 500;
+    }
+
+    .badge-status {
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 500;
+    }
+
+    .card-text {
+        white-space: pre-line;
+        line-height: 1.6;
+    }
+
+    .action-btn {
+        transition: all 0.3s ease;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+    .btn-start {
+        background-color: var(--primary-medium);
+        border: none;
+    }
+
+    .btn-resolve {
+        background-color: var(--secondary-dark);
+        border: none;
+    }
+
+    .btn-response {
+        background-color: var(--primary-light);
+        border: none;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="ticket-container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="ticket-header">
+                <i class="fas fa-ticket-alt me-2"></i>Ticket Details
+            </h1>
+            <a asp-action="GetAllTickets" class="btn back-btn">
+                <i class="fas fa-chevron-left me-2"></i>Back to List
+            </a>
+        </div>
+
+        <!-- Ticket Information Card -->
+        <div class="card info-card">
+            <div class="card-header info-card-header py-3">
+                <h5 class="m-0"><i class="fas fa-info-circle me-2"></i>Ticket Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Left Column -->
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4 info-label">Title:</dt>
+                            <dd class="col-sm-8 info-value">@Model.Ticket.Title</dd>
+
+                            <dt class="col-sm-4 info-label">Status:</dt>
+                            <dd class="col-sm-8">
+                                <span class="badge-status @GetStatusBadgeClass(Model.Ticket.Status)">
+                                    @Model.Ticket.Status
+                                </span>
+                            </dd>
+
+                            <dt class="col-sm-4 info-label">Date Created:</dt>
+                            <dd class="col-sm-8 info-value">@Model.Ticket.Date.ToString("dd MMM yyyy")</dd>
+                        </dl>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4 info-label">Customer:</dt>
+                            <dd class="col-sm-8 info-value">@Model.Ticket.CustomerName</dd>
+
+                            <dt class="col-sm-4 info-label">Teller:</dt>
+                            <dd class="col-sm-8 info-value">@Model.Ticket.TellerName</dd>
+
+                            <dt class="col-sm-4 info-label">Account Number:</dt>
+                            <dd class="col-sm-8 info-value">@Model.Ticket.CustomerAccountNumber</dd>
+
+                            <dt class="col-sm-4 info-label">Type:</dt>
+                            <dd class="col-sm-8 info-value">@Model.Ticket.Type</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Description Card -->
+        <div class="card info-card">
+            <div class="card-header description-card-header py-3">
+                <h5 class="m-0"><i class="fas fa-align-left me-2"></i>Description</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">@Model.Description</p>
+            </div>
+        </div>
+
+        <!-- Response Card -->
+        @if (!string.IsNullOrEmpty(Model.Response))
+        {
+            <div class="card info-card">
+                <div class="card-header response-card-header py-3">
+                    <h5 class="m-0"><i class="fas fa-comment-dots me-2"></i>Official Response</h5>
+                </div>
+
+                <div class="card-body">
+                    <p class="card-text">Teller in Charge : @Model.Ticket.TellerName </p>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">@Model.Response</p>
+                </div>
+
+            </div>
+        }
+
+        <!-- Actions Card -->
+        @* @if (Model.Ticket.Status == SupportTicketStatus.Pending || Model.Ticket.Status == SupportTicketStatus.InProgress) *@
+        @* { *@
+        @*     <div class="card info-card"> *@
+        @*         <div class="card-header actions-card-header py-3"> *@
+        @*             <h5 class="m-0"><i class="fas fa-tools me-2"></i>Ticket Actions</h5> *@
+        @*         </div> *@
+        @*         <div class="card-body"> *@
+        @*             <div class="d-flex flex-wrap"> *@
+        @*                 @if (Model.Ticket.Status == SupportTicketStatus.Pending) *@
+        @*                 { *@
+        @*                     <a asp-action="StartProgress" asp-route-ticketId="@Model.Id" *@
+        @*                        class="btn btn-start text-white action-btn"> *@
+        @*                         <i class="fas fa-play-circle me-2"></i>Start Progress *@
+        @*                     </a> *@
+        @*                 } *@
+        @*                 @if (Model.Ticket.Status == SupportTicketStatus.InProgress) *@
+        @*                 { *@
+        @*                     <a asp-action="ResolveTicket" asp-route-ticketId="@Model.Id" *@
+        @*                        class="btn btn-resolve text-white action-btn"> *@
+        @*                         <i class="fas fa-check-circle me-2"></i>Mark Resolved *@
+        @*                     </a> *@
+        @*                 } *@
+        @*                 <a asp-action="AddResponse" asp-route-ticketId="@Model.Id" *@
+        @*                    class="btn btn-response text-white action-btn"> *@
+        @*                     <i class="fas fa-comment-medical me-2"></i>Add Response *@
+        @*                 </a> *@
+        @*             </div> *@
+        @*         </div> *@
+        @*     </div> *@
+        @* } *@
+    </div>
+</div>
+
+@functions {
+    string GetStatusBadgeClass(SupportTicketStatus status)
+    {
+        return status switch
+        {
+            SupportTicketStatus.Pending => "bg-warning text-dark",
+            SupportTicketStatus.InProgress => "bg-info",
+            SupportTicketStatus.Resolved => "bg-success",
+            SupportTicketStatus.Denied => "bg-secondary",
+            _ => "bg-secondary"
+        };
+    }
+}
+
+<style>
+    /*     dt { */
+    /*         font-weight: 500; */
+    /*         color: #6c757d; */
+    /*     } */
+
+    /*     .card { */
+    /*         border-radius: 0.35rem; */
+    /*     } */
+
+    /*     .badge { */
+    /*         font-size: 0.85em; */
+    /*         padding: 0.5em 0.75em; */
+    /*     } */
+
+    /*     .card-text { */
+    /*         white-space: pre-wrap; */
+    /*     } */
+</style>

@@ -1,0 +1,261 @@
+﻿@model BankingSystem.DAL.Models.Reservation
+@{
+    ViewData["Title"] = "Reservation Success";
+}
+
+<style>
+    :root {
+        --primary-dark: rgb(63, 114, 175);
+        --primary-medium: rgb(157, 178, 191);
+        --primary-light: rgb(219, 226, 239);
+        --secondary-dark: rgb(63, 114, 175);
+        --secondary-light: rgb(219, 226, 239);
+        --neutral-1: rgb(157, 178, 191);
+        --accent-1: rgb(63, 114, 175);
+        --accent-2: rgb(221, 230, 237);
+        --accent-3: rgb(238, 244, 255);
+        --white: #ffffff;
+        --border-radius: 8px;
+        --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+    }
+
+    body {
+        background-color: #3E5879;
+        min-height: 100vh;
+    }
+
+    .success-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .success-alert {
+        background: rgba(40, 167, 69, 0.1);
+        border: 1px solid rgba(40, 167, 69, 0.2);
+        color: #28a745;
+        padding: 1rem;
+        border-radius: var(--border-radius);
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .success-alert i {
+        font-size: 1.5rem;
+    }
+
+    .info-card {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        overflow: hidden;
+        transition: var(--transition);
+    }
+
+    .info-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-header {
+        background: var(--primary-dark);
+        color: var(--white);
+        padding: 1.25rem;
+        border-bottom: none;
+    }
+
+    .card-title {
+        margin: 0;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .info-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--accent-2);
+    }
+
+    .info-item:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: var(--primary-dark);
+        min-width: 120px;
+    }
+
+    .info-value {
+        color: var(--neutral-1);
+    }
+
+    .qr-code-container {
+        text-align: center;
+        padding: 1.5rem;
+    }
+
+    .qr-code {
+        max-width: 200px;
+        margin-bottom: 1.5rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+    }
+
+    .action-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--border-radius);
+        text-decoration: none;
+        transition: var(--transition);
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+    }
+
+    .action-button-primary {
+        background: var(--primary-dark);
+        color: var(--white);
+    }
+
+    .action-button-primary:hover {
+        background: var(--primary-medium);
+        color: var(--white);
+        text-decoration: none;
+    }
+
+    .action-button-success {
+        background: #28a745;
+        color: var(--white);
+    }
+
+    .action-button-success:hover {
+        background: #218838;
+        color: var(--white);
+        text-decoration: none;
+    }
+
+    .action-buttons {
+        margin-top: 2rem;
+        text-align: center;
+    }
+</style>
+
+<div class="success-container">
+    <div class="success-alert">
+        <i class="fas fa-check-circle"></i>
+        <div>
+            <strong>Success!</strong> Your reservation has been created successfully.
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="info-card">
+                <div class="card-header">
+                    <h4 class="card-title">
+                        <i class="fas fa-info-circle"></i>
+                        Reservation Information
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <ul class="info-list">
+                        <li class="info-item">
+                            <span class="info-label">Reservation ID:</span>
+                            <span class="info-value">@Model.Id</span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">Branch:</span>
+                            <span class="info-value">@Model.Branch?.Name</span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">Date:</span>
+                            <span class="info-value">@Model.ReservationDate.ToString("dd MMM yyyy")</span>
+                        </li>
+                        <li class="info-item">
+                            <span class="info-label">Service Type:</span>
+                            <span class="info-value">@Model.ServiceType</span>
+                        </li>
+                        @if (!string.IsNullOrEmpty(Model.Notes))
+                        {
+                            <li class="info-item">
+                                <span class="info-label">Notes:</span>
+                                <span class="info-value">@Model.Notes</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="info-card">
+                <div class="card-header">
+                    <h4 class="card-title">
+                        <i class="fas fa-qrcode"></i>
+                        QR Code
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="qr-code-container">
+                        @if (ViewBag.QrCodeImage != null)
+                        {
+                            <img src="data:image/png;base64,@ViewBag.QrCodeImage" alt="QR Code" class="qr-code" />
+                            <br />
+                            <a href="@Url.Action("DownloadQrCode", "Reservation", new { reservationId = Model.Id })" 
+                               class="action-button action-button-success">
+                                <i class="fas fa-download"></i>
+                                Download QR Code
+                            </a>
+                        }
+                        else
+                        {
+                            <p class="text-muted">No QR code available.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        @if (User.Identity!.IsAuthenticated)
+        {
+            <a href="@Url.Action("GetCustomerAllReservations", "Reservation")" class="action-button action-button-primary">
+                <i class="fas fa-arrow-left"></i>
+                Back to Your Reservations
+            </a>
+        }
+        else
+        {
+            <a href="@Url.Action("Index", "Home")" class="action-button action-button-primary">
+                <i class="fas fa-home"></i>
+                Back to Home
+            </a>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+}
+

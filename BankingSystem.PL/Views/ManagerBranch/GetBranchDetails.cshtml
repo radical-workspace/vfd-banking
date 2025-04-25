@@ -1,0 +1,402 @@
+﻿@using BankingSystem.PL.ViewModels.Manager
+@using System.Security.Claims
+@model BranchDetailsViewModel
+
+@{
+    ViewData["Title"] = "Branch Details";
+}
+<style>
+    :root {
+        /* Primary Colors */
+        --primary-medium: #1E201E; /* Deep charcoal - for headers/important elements */
+        --primary-dark: #3C3D37; /* Warm gray - primary actions */
+        --primary-light: #697565; /* Muted sage - secondary elements */
+        /* Secondary Colors */
+        --secondary-dark: #3C3D37; /* Same as primary-medium */
+        --secondary-light: #ECDFCC; /* Cream - backgrounds/accents */
+        /* Neutral Colors */
+        --neutral-1: #5A5D58; /* Medium gray - primary text */
+        --neutral-2: #8B8E87; /* Light gray */
+        --neutral-3: #C5C7C2; /* Very light gray */
+        /* Accent Colors */
+        --accent-1: #1E201E; /* Primary dark */
+        --accent-2: #697565; /* Primary light */
+        --accent-3: #F5F0E8; /* Light cream (derived from ECDFCC) */
+        /* System Colors */
+        --white: #FFFFFF;
+        --black: #121412; /* Slightly darker than primary-dark */
+        /* Status Colors */
+        --success: #5A7247; /* Muted green */
+        --warning: #B38B59; /* Warm amber */
+        --danger: #8C4A3F; /* Earthy red */
+        --info: #5D7B8C; /* Muted blue */
+        /* Text Contrast */
+        --text-on-dark: #ECDFCC; /* Cream text on dark backgrounds */
+        --text-on-light: #3C3D37; /* Dark text on light backgrounds */
+    }
+    body{
+        background-color: var(--primary-medium);
+        min-height: 100vh;
+    }
+
+    .branch-card {
+        border: 2px solid var(--accent-2);
+        border-radius: 1rem;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+        background: var(--accent-3);
+    }
+
+        .branch-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .card-header {
+        background: var(--primary-dark) !important;
+        color: var(--accent-3) !important;
+        padding: 1.5rem;
+        border-bottom: 3px solid var(--accent-1);
+    }
+
+    .section-heading {
+        color: black;
+        border-bottom: 2px solid var(--accent-1);
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        color: black;
+        font-weight: 600;
+    }
+
+    .input-group-text {
+        background: var(--accent-2) !important;
+        border: none;
+        color: var(--primary-dark);
+    }
+
+    .form-control:read-only {
+        background: var(--neutral-1);
+        border: 2px solid var(--accent-2);
+   
+    }
+
+    .edit-btn {
+        background: var(--accent-1);
+        color: black;
+        border: 2px solid var(--accent-1);
+        transition: all 0.3s ease;
+    }
+
+        .edit-btn:hover {
+            background: var(--accent-2);
+            transform: scale(1.05);
+        }
+
+    .entity-card {
+        background: var(--white);
+        border: 2px solid var(--accent-2);
+        border-radius: 0.8rem;
+        transition: all 0.3s ease;
+    }
+
+        .entity-card:hover {
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .entity-card .card-header {
+            background: var(--primary-medium) !important;
+            color: var(--white) !important;
+            border-radius: 0.8rem 0.8rem 0 0 !important;
+        }
+
+    .list-group-item {
+        background: var(--accent-3);
+        border: 1px solid var(--accent-2);
+    }
+
+    .badge {
+        background: var(--primary-light) !important;
+    }
+
+    .btn-outline-primary {
+        border-color: var(--primary-medium);
+        color: var(--primary-medium);
+    }
+
+    .btn-outline-primary:hover {
+        background: var(--primary-medium);
+        color: var(--white);
+    }
+
+    .table-hover tbody tr:hover {
+        background: var(--accent-2);
+    }
+
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .entity-card {
+        animation: slideIn 0.5s ease-out;
+    }
+</style>
+
+
+
+<div class="container-fluid mt-4 px-5">  
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="branch-card w-100">
+                <div class="card-header">
+                    <h3 class="mb-0 text-center">
+                        <i class="bi bi-bank me-2"></i>Branch Details
+                    </h3>
+                </div>
+                <div class="card-body px-4 py-4">
+
+                    <!-- Basic Information Section -->
+                    <div class="col-12">
+                        <h5 class="section-heading">
+                            <i class="bi bi-info-circle me-2"></i>Basic Information
+                        </h5>
+                    </div>
+
+                    <!-- Branch -->
+                    <div class="row">
+
+                        <!-- Branch Name -->
+                        <div class="col-md-6">
+                            <label asp-for="Name" class="form-label fw-semibold">Branch Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-building"></i></span>
+                                <input asp-for="Name" class="form-control rounded-end " readonly />
+                            </div>
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Location -->
+                        <div class="col-md-6">
+                            <label asp-for="Location" class="form-label fw-semibold">Location</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-geo-alt"></i></span>
+                                <input asp-for="Location" class="form-control rounded-end " readonly />
+                            </div>
+                            <span asp-validation-for="Location" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- Operating Hours Section -->
+                    <div class="col-12 mt-4">
+                        <h5 class="section-heading">
+                            <i class="bi bi-clock me-2"></i>Operating Hours
+                        </h5>
+                    </div>
+
+                    <!-- Business Hours Form -->
+                    <form asp-action="EditBusinessHours" method="post" id="businessHoursForm">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="Timing.BranchId" value="@Model.Id" />
+
+                        <!-- Opening Time -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label asp-for="Opens" class="form-label fw-semibold">Opening Time</label>
+                                <div class="input-group opening-time">
+                                    <span class="input-group-text bg-light"><i class="bi bi-sun"></i></span>
+                                    <input asp-for="Opens" type="time" class="form-control rounded-end" readonly id="Opens" name="Timing.Opens" />
+                                </div>
+                                <span asp-validation-for="Opens" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Closing Time -->
+                            <div class="col-md-6">
+                                <label asp-for="Closes" class="form-label fw-semibold">Closing Time</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="bi bi-moon"></i></span>
+                                    <input asp-for="Closes" type="time" class="form-control rounded-end" readonly id="Closes" name="Timing.Closes" />
+                                </div>
+                                <span asp-validation-for="Closes" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Edit Business Hours Button -->
+                        <div class="col-12 text-center mt-3">
+                            <button type="button" class="btn btn-outline-primary rounded-pill px-4 edit-btn text-white">
+                                <i class="bi bi-pencil-square me-2"></i>
+                                <span class="btn-text" style="color:white">Edit Business Hours</span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Related Entities Section -->
+                    <div class="col-12 mt-4">
+                        <h5 class="section-heading">
+                            <i class="bi bi-diagram-3 me-2"></i>Related Entities
+                        </h5>
+                    </div>
+
+                    <!-- Cards for Related Entities -->
+                    <div class="row g-3">
+                        <!-- Loans Card -->
+                        <div class="col-md-6">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0 fw-semibold">
+                                        <i class="bi bi-cash-coin me-2"></i>Loans
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    @if (Model.Loans != null && Model.Loans.Any())
+                                    {
+                                        <ul class="list-group list-group-flush small">
+                                            @foreach (var loan in Model.Loans.Take(3))
+                                            {
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    <span>@loan.LoanAmount.ToString("C")</span>
+                                                    <span class="badge bg-secondary">@loan.CurrentDebt.ToString("C")</span>
+                                                </li>
+                                            }
+                                        </ul>
+                                        <div class="text-end mt-2">
+                                            <a asp-controller="ManagerLoan" asp-action="GetAllLoans" class="btn btn-sm edit-btn text-white">View All (@Model.Loans.Count)</a>
+                                        </div>
+
+                                    }
+                                    else
+                                    {
+                                        <p class="text-muted small mb-0">No loans available</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Customers Card -->
+                        <div class="col-md-6">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0 fw-semibold">
+                                        <i class="bi bi-people me-2"></i>Customers
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    @if (Model.Customers != null && Model.Customers.Any())
+                                    {
+                                        <ul class="list-group list-group-flush small">
+                                            @foreach (var customer in Model.Customers.Take(3))
+                                            {
+                                                <li class="list-group-item">
+                                                    <i class="bi bi-person me-2"></i>@customer.FirstName @customer.LastName
+                                                </li>
+                                            }
+                                        </ul>
+                                        <div class="text-end mt-2">
+                                            <a asp-controller="ManagerCustomer" asp-action="GetAllCustomers" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value" class="btn btn-sm edit-btn text-white">View All (@Model.Customers.Count)</a>
+                                        </div>
+
+                                    }
+                                    else
+                                    {
+                                        <p class="text-muted small mb-0">No customers available</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tellers Card -->
+                        <div class="col-md-6">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0 fw-semibold">
+                                        <i class="bi bi-person-badge me-2"></i>Tellers
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    @if (Model.Tellers != null && Model.Tellers.Any())
+                                    {
+                                        <ul class="list-group list-group-flush small">
+                                            @foreach (var teller in Model.Tellers.Take(3))
+                                            {
+                                                <li class="list-group-item">
+                                                    <i class="bi bi-person-vcard me-2"></i>@teller.FirstName @teller.LastName
+                                                </li>
+                                            }
+                                        </ul>
+
+                                        <div class="text-end mt-2">
+                                            <a class="btn btn-sm edit-btn text-white" asp-controller="ManagerTeller" asp-action="GetAllTellers" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value">View All (@Model.Tellers.Count)</a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <p class="text-muted small mb-0">No tellers available</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0 fw-semibold">
+                                        <i class="bi bi-piggy-bank me-2"></i>Savings Accounts
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    @if (Model.Savings != null && Model.Savings.Any())
+                                    {
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Account</th>
+                                                        <th>Currency</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var saving in Model.Savings.Take(5))
+                                                    {
+                                                        <tr>
+                                                            <td>@saving.Currency</td>
+                                                            <td>@saving.Balance.ToString("C")</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                            <div class="text-end mt-2">
+                                                <a asp-controller="ManagerSavings" asp-action="GetAllSavings" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier)?.Value" class="btn btn-sm edit-btn text-white">
+                                                    View All (@Model.Savings.Count)
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <p class="text-muted small mb-0">No savings accounts available</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/EditWorkingTime.js"></script>
+
+}

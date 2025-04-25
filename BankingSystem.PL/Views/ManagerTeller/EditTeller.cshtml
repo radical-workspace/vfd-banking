@@ -1,0 +1,333 @@
+﻿@using System.Security.Claims
+@model BankingSystem.PL.ViewModels.Manager.TellerDetailsViewModel
+
+@{
+    ViewData["Title"] = "Edit Teller";
+    var ManagerId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+}
+
+<style>
+
+    :root {
+        /* Primary Colors */
+        --primary-medium: #1E201E; /* Deep charcoal - for headers/important elements */
+        --primary-dark: #3C3D37; /* Warm gray - primary actions */
+        --primary-light: #697565; /* Muted sage - secondary elements */
+        /* Secondary Colors */
+        --secondary-dark: #3C3D37; /* Same as primary-medium */
+        --secondary-light: #ECDFCC; /* Cream - backgrounds/accents */
+        /* Neutral Colors */
+        --neutral-1: #5A5D58; /* Medium gray - primary text */
+        --neutral-2: #8B8E87; /* Light gray */
+        --neutral-3: #C5C7C2; /* Very light gray */
+        /* Accent Colors */
+        --accent-1: #1E201E; /* Primary dark */
+        --accent-2: #697565; /* Primary light */
+        --accent-3: #F5F0E8; /* Light cream (derived from ECDFCC) */
+        /* System Colors */
+        --white: #FFFFFF;
+        --black: #121412; /* Slightly darker than primary-dark */
+        /* Status Colors */
+        --success: #5A7247; /* Muted green */
+        --warning: #B38B59; /* Warm amber */
+        --danger: #8C4A3F; /* Earthy red */
+        --info: #5D7B8C; /* Muted blue */
+        /* Text Contrast */
+        --text-on-dark: #ECDFCC; /* Cream text on dark backgrounds */
+        --text-on-light: #3C3D37; /* Dark text on light backgrounds */
+    }
+
+    body {
+        background-color: var(--primary-medium);
+        min-height: 100vh;
+    }
+
+
+    .edit-container {
+        background: var(--accent-3);
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        max-width: 1200px;
+        margin: 2rem auto;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-label {
+        color: black;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        border: 2px solid var(--secondary-light);
+        border-radius: 8px;
+        padding: 0.75rem 1.25rem;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+
+        .form-control:focus {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 0 0.25rem rgba(222, 174, 159, 0.25);
+        }
+
+    .button-group {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+        margin-top: 2rem;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-medium);
+        border: none;
+        padding: 0.75rem 2rem;
+        min-width: 150px;
+    }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+    .btn-secondary {
+        background-color: var(--neutral-1);
+        border: none;
+        padding: 0.75rem 2rem;
+        min-width: 150px;
+    }
+
+    .edit-container {
+        background: var(--accent-3);
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        max-width: 1200px;
+        margin: 2rem auto;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+        position: relative;
+    }
+
+    .form-label {
+        color: black;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .form-control {
+        border: 2px solid var(--secondary-light);
+        border-radius: 8px;
+        padding: 0.75rem 1.25rem 0.75rem 2.5rem;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+
+        .form-control:focus {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 0 0.25rem rgba(222, 174, 159, 0.25);
+        }
+
+    .input-icon {
+        position: absolute;
+        left: 1rem;
+        top: 2.5rem;
+        color: var(--primary-medium);
+    }
+
+    .edit-container {
+        background: var(--accent-3);
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        max-width: 1200px;
+        margin: 2rem auto;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+        position: relative;
+    }
+
+    .form-label {
+        color: black;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .form-control {
+        border: 2px solid var(--secondary-light);
+        border-radius: 8px;
+        padding: 0.75rem 1.25rem 0.75rem 2.5rem;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+
+        .form-control:focus {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 0 0.25rem rgba(222, 174, 159, 0.25);
+        }
+
+    .input-icon {
+        position: absolute;
+        left: 1rem;
+        top: 2.5rem;
+        color: var(--primary-medium);
+    }
+
+</style>
+
+
+<div class="edit-container">
+    <h2 class="transfer-header mb-4">
+        <i class="fas fa-user-edit me-2"></i>Edit Teller
+    </h2>
+
+    <form asp-action="EditTeller" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+
+        <div class="form-grid">
+            <!-- Row 1 -->
+            <div class="form-group">
+                <label asp-for="FirstName" class="form-label">
+                    <i class="fas fa-user"></i>First Name
+                </label>
+                @* <i class="fas fa-user input-icon"></i> *@
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="LastName" class="form-label">
+                    <i class="fas fa-user"></i>Last Name
+                </label>
+                @* <i class="fas fa-user input-icon"></i> *@
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="form-group">
+                <label asp-for="Email" class="form-label">
+                    <i class="fas fa-envelope"></i>Email
+                </label>
+                @* <i class="fas fa-envelope input-icon"></i> *@
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="form-label">
+                    <i class="fas fa-phone"></i>Phone Number
+                </label>
+                @* <i class="fas fa-phone input-icon"></i> *@
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+
+            <!-- Row 3 -->
+            <div class="form-group">
+                <label asp-for="SSN" class="form-label">
+                    <i class="fas fa-id-card"></i>SSN
+                </label>
+                @* <i class="fas fa-id-card input-icon"></i> *@
+                <input asp-for="SSN" class="form-control" />
+                <span asp-validation-for="SSN" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Address" class="form-label">
+                    <i class="fas fa-map-marker-alt"></i>Address
+                </label>
+                @* <i class="fas fa-map-marker-alt input-icon"></i> *@
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+
+            <!-- Row 4 -->
+            <div class="form-group">
+                <label asp-for="JoinDate" class="form-label">
+                    <i class="fas fa-calendar-day"></i>Join Date
+                </label>
+                @* <i class="fas fa-calendar-day input-icon"></i> *@
+                <input asp-for="JoinDate" class="form-control" type="date" />
+                <span asp-validation-for="JoinDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="BirthDate" class="form-label">
+                    <i class="fas fa-birthday-cake"></i>Birth Date
+                </label>
+                @* <i class="fas fa-birthday-cake input-icon"></i> *@
+                <input asp-for="BirthDate" class="form-control" type="date" />
+                <span asp-validation-for="BirthDate" class="text-danger"></span>
+            </div>
+
+            <!-- Row 5 -->
+            <div class="form-group">
+                <label asp-for="Salary" class="form-label">
+                    <i class="fas fa-money-bill-wave"></i>Salary
+                </label>
+                @* <i class="fas fa-money-bill-wave input-icon"></i> *@
+                <input asp-for="Salary" class="form-control" />
+                <span asp-validation-for="Salary" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-building"></i>Branch
+                </label>
+                @* <i class="fas fa-building input-icon"></i> *@
+                <input type="text" class="form-control" value="@Model.BranchName" readonly />
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save me-2"></i>Save Changes
+            </button>
+            <a asp-action="GetAllTellers" asp-route-id="@ManagerId" class="btn btn-secondary">
+                <i class="fas fa-times me-2"></i>Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <!-- Add Font Awesome if not already included -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+}

@@ -1,0 +1,113 @@
+﻿@using BankingSystem.PL.ViewModels.Auth
+@model RegisterViewModel
+<style>
+:root {
+    --primary-dark: rgb(35, 78, 140); /* stronger and more elegant dark blue */
+    --primary-medium: rgb(97, 140, 185); /* smooth medium blue */
+    --primary-light: rgb(210, 225, 245); /* much lighter blue */
+    --secondary-dark: rgb(56, 104, 160); /* balanced secondary dark */
+    --secondary-light: rgb(230, 240, 250); /* very soft blue */
+    --neutral-1: rgb(120, 140, 160); /* nice muted gray-blue for neutral elements */
+    --accent-1: rgb(45, 95, 150); /* slightly richer than primary-dark */
+    --accent-2: rgb(200, 220, 240); /* light accent for cards, backgrounds */
+    --accent-3: rgb(245, 250, 255); /* super light, almost white-blue background */
+    --white: #ffffff; /* pure white */
+}
+
+    .registration-wrapper {
+        background: var(--primary-light);
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .card-body {
+        background-color: var(--primary-light);
+        padding: 2.5rem;
+    }
+
+    .form-header {
+        background: linear-gradient(90deg, var(--primary-dark), var(--accent-1));
+        color: var(--white);
+        padding: 2rem;
+        text-align: center;
+    }
+
+        .form-header h2 {
+            margin-bottom: 0;
+        }
+
+        .form-header i {
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+        }
+
+    .role-badge {
+        background-color: var(--primary-light);
+        color: var(--accent-1);
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        display: inline-block;
+        margin-top: 1rem;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="registration-wrapper">
+                <!-- Header Section -->
+                <div class="form-header">
+                    <h2 class="text-white">
+                        <i class="fas fa-user-plus text-white"></i>
+                        @(ViewData["FixedRole"] != null ? $"New Registration" : "Create New Account")
+                    </h2>
+                    @if (ViewData["FixedRole"] != null)
+                    {
+                        <span class="role-badge">
+                            <i class="fas fa-user-tag"></i> @ViewData["FixedRole"] Role
+                        </span>
+                    }
+                </div>
+
+                <!-- Form Section -->
+                <div class="card-body px-5 py-4">
+
+                    @if (ViewData["FixedRole"] == "Customer")
+                    {
+                        <form asp-action="CreateCustomer" asp-controller="HandleCustomer" method="post" class="row g-3 needs-validation" novalidate>
+                            <partial name="_RegisterationPartial" />
+                        </form>
+                    }
+                    else if (ViewData["FixedRole"] == "Teller")
+                    {
+                        <form asp-action="CreateTeller" asp-controller="ManagerTeller" method="post" class="row g-3 needs-validation" novalidate>
+                            <partial name="_RegisterationPartial" />
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-controller="Account" asp-action="Register" method="post" class="row g-3 needs-validation" novalidate>
+                            <partial name="_RegisterationPartial" />
+                        </form>
+                    }
+
+                </div>
+
+                @* <div class="text-center py-3 bg-light"> *@
+                @*     <small> *@
+                @*         You already have an account? *@
+                @*         <a asp-controller="Account" asp-action="Login" class="text-primary fw-bold">Login</a> *@
+                @*     </small> *@
+                @* </div> *@
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

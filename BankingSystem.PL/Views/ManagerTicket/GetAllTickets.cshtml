@@ -1,0 +1,282 @@
+﻿@using BankingSystem.DAL.Models
+@model List<TicketsViewModel>
+@{
+    ViewData["Title"] = "Support Tickets List";
+}
+<style>
+    :root {
+        /* Primary Colors */
+        --primary-medium: #1E201E; /* Deep charcoal - for headers/important elements */
+        --primary-dark: #3C3D37; /* Warm gray - primary actions */
+        --primary-light: #697565; /* Muted sage - secondary elements */
+        /* Secondary Colors */
+        --secondary-dark: #3C3D37; /* Same as primary-medium */
+        --secondary-light: #ECDFCC; /* Cream - backgrounds/accents */
+        /* Neutral Colors */
+        --neutral-1: #5A5D58; /* Medium gray - primary text */
+        --neutral-2: #8B8E87; /* Light gray */
+        --neutral-3: #C5C7C2; /* Very light gray */
+        /* Accent Colors */
+        --accent-1: #1E201E; /* Primary dark */
+        --accent-2: #697565; /* Primary light */
+        --accent-3: #F5F0E8; /* Light cream (derived from ECDFCC) */
+        /* System Colors */
+        --white: #FFFFFF;
+        --black: #121412; /* Slightly darker than primary-dark */
+        /* Status Colors */
+        --success: #5A7247; /* Muted green */
+        --warning: #B38B59; /* Warm amber */
+        --danger: #8C4A3F; /* Earthy red */
+        --info: #5D7B8C; /* Muted blue */
+        /* Text Contrast */
+        --text-on-dark: #ECDFCC; /* Cream text on dark backgrounds */
+        --text-on-light: #3C3D37; /* Dark text on light backgrounds */
+    }
+
+    body {
+        background-color: var(--primary-medium);
+        min-height: 100vh;
+    }
+
+    .tickets-container {
+        background: var(--accent-3);
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+    }
+
+    .tickets-header {
+        color: var(--primary-dark);
+        border-bottom: 2px solid var(--accent-1);
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .search-container {
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+        .search-container input {
+            padding-left: 2.5rem;
+            border: 2px solid var(--secondary-light);
+            border-radius: 8px;
+        }
+
+        .search-container label {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-light);
+        }
+
+    .filter-section {
+        background: var(--white);
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .filter-title {
+        color: var(--primary-medium);
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .filter-btn {
+        transition: all 0.3s ease;
+        border-width: 2px;
+    }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary-medium);
+            color: white !important;
+            border-color: var(--primary-medium);
+        }
+
+    .tickets-table {
+        background: var(--white);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+        .tickets-table thead {
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-medium));
+            color: var(--accent-3);
+        }
+
+        .tickets-table th {
+            font-weight: 500;
+            padding: 1rem;
+        }
+
+        .tickets-table td {
+            vertical-align: middle;
+            padding: 0.75rem 1rem;
+        }
+
+        .tickets-table tr:hover {
+            background-color: var(--accent-2);
+        }
+
+    .badge {
+        padding: 0.5em 0.75em;
+        font-weight: 500;
+        border-radius: 8px;
+    }
+
+    .btn-details {
+        background-color: var(--primary-light);
+        border: none;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+        .btn-details:hover {
+            background-color: var(--primary-medium);
+            transform: translateY(-2px);
+        }
+
+    .no-tickets {
+        background: var(--accent-2);
+        border-left: 4px solid var(--accent-1);
+        color: var(--primary-dark);
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-xxl-10 col-12">
+            <div class="tickets-container">
+                <h2 class="tickets-header">
+                    <i class="fas fa-ticket-alt me-2"></i>Support Tickets in Your Branch
+                </h2>
+
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search by Account Number or Customer Name" class="form-control" />
+                    <label><i class="fas fa-search"></i></label>
+                </div>
+
+                @if (!Model.Any())
+                {
+                    <div class="alert no-tickets" role="alert">
+                        <i class="fas fa-info-circle me-2"></i> No support tickets found in this branch.
+                    </div>
+                }
+                else
+                {
+                    <div class="filter-section">
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <h4 class="filter-title"><i class="fas fa-tag me-2"></i>Ticket Type</h4>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <button class="btn btn-outline-primary filter-btn active" data-filter-type="ticket-type" data-filter-value="all">
+                                        All Types
+                                    </button>
+                                    <button class="btn btn-outline-primary filter-btn" data-filter-type="ticket-type" data-filter-value="Technical">
+                                        <i class="fas fa-laptop me-2"></i>Technical
+                                    </button>
+                                    <button class="btn btn-outline-primary filter-btn" data-filter-type="ticket-type" data-filter-value="Billing">
+                                        <i class="fas fa-receipt me-2"></i>Billing
+                                    </button>
+                                    <button class="btn btn-outline-primary filter-btn" data-filter-type="ticket-type" data-filter-value="Account">
+                                        <i class="fas fa-user me-2"></i>Account
+                                    </button>
+                                    <button class="btn btn-outline-primary filter-btn" data-filter-type="ticket-type" data-filter-value="Other">
+                                        <i class="fas fa-ellipsis-h me-2"></i>Other
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <h4 class="filter-title"><i class="fas fa-info-circle me-2"></i>Ticket Status</h4>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <button class="btn btn-outline-primary filter-btn active" data-filter-type="ticket-status" data-filter-value="all">
+                                        All Statuses
+                                    </button>
+                                    <button class="btn btn-outline-warning filter-btn" data-filter-type="ticket-status" data-filter-value="Pending">
+                                        <i class="fas fa-clock me-2"></i>Pending
+                                    </button>
+                                    <button class="btn btn-outline-info filter-btn" data-filter-type="ticket-status" data-filter-value="InProgress">
+                                        <i class="fas fa-spinner me-2"></i>In Progress
+                                    </button>
+                                    <button class="btn btn-outline-success filter-btn" data-filter-type="ticket-status" data-filter-value="Resolved">
+                                        <i class="fas fa-check-circle me-2"></i>Resolved
+                                    </button>
+                                    <button class="btn btn-outline-secondary filter-btn" data-filter-type="ticket-status" data-filter-value="Closed">
+                                        <i class="fas fa-archive me-2"></i>Closed
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table tickets-table">
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th>Account</th>
+                                    <th>Title</th>
+                                    <th>Type</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Teller</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var ticket in Model)
+                                {
+                                    <tr data-ticket-type="@ticket.Type" data-ticket-status="@ticket.Status" data-search="@($"{ticket.CustomerAccountNumber} {ticket.CustomerName}")">
+                                        <td>@ticket.CustomerName</td>
+                                        <td>@ticket.CustomerAccountNumber</td>
+                                        <td>@ticket.Title</td>
+                                        <td>@ticket.Type</td>
+                                        <td>@ticket.Date.ToString("MMM d, yyyy")</td>
+                                        <td>
+                                            @{
+                                                var statusClass = ticket.Status switch
+                                                {
+                                                    SupportTicketStatus.Pending => "bg-warning text-dark",
+                                                    SupportTicketStatus.InProgress => "bg-info",
+                                                    SupportTicketStatus.Resolved => "bg-success",
+                                                    SupportTicketStatus.Denied => "bg-secondary",
+                                                    _ => "bg-secondary"
+                                                };
+                                            }
+                                            <span class="badge @statusClass">@ticket.Status</span>
+                                        </td>
+                                        <td>@ticket.TellerName</td>
+                                        <td>
+                                            <a asp-controller="ManagerTicket"
+                                               asp-action="PreviewTicket"
+                                               asp-route-TicketId="@ticket.Id"
+                                               class="btn btn-details text-white">
+                                                <i class="fas fa-eye me-1"></i> Details
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/js/FilteringTickets.js"></script>
+}

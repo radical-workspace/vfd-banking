@@ -1,50 +1,428 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
 <html lang="en">
-<head>
+<head >
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - BankingSystem.PL</title>
-    <script type="importmap"></script>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BankingSystem.PL.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <link rel="preload" as="image" href="/images/bank-img.webp" type="image/webp">
+
+
+    <style>
+    :root {
+        /* Default colors (blue palette) - applies to everyone */
+        --primary-dark: rgb(63, 114, 175);
+        --primary-medium: rgb(157, 178, 191);
+        --primary-light: rgb(219, 226, 239);
+        --secondary-dark: rgb(63, 114, 175);
+        --secondary-light: rgb(219, 226, 239);
+        --neutral-1: rgb(157, 178, 191);
+        --accent-1: rgb(63, 114, 175);
+        --accent-2: rgb(221, 230, 237);
+        --accent-3: rgb(238, 244, 255);
+        --white: #ffffff;
+        --shadow: rgba(63, 114, 175, 0.1);
+        --nav-hover-bg: rgba(221, 230, 237, 0.3);
+        --btn-hover-bg: rgb(93, 144, 205);
+        
+        /* Header defaults (blue) */
+        --header-bg: #213555;
+        --header-text: white;
+    }
+
+    @if (User.IsInRole("Manager"))
+    {
+        <text>
+        :root {
+            /* Override only these variables for managers */
+            --header-bg: #697565; /* Cream */
+            --header-text: #1E201E; /* Dark charcoal */
+            --primary-dark: #1E201E;
+            --primary-medium: #3C3D37;
+            --primary-light: #697565;
+            --secondary-light: #ECDFCC;
+            --nav-hover-bg: rgba(30, 32, 30, 0.1);
+        }
+        </text>
+    }
+        body {
+            /* background-color: #F5EFE7; */
+            background-color: white;
+            margin: 0;
+        }
+
+        .myItem:hover {
+            cursor: default;
+        }
+
+        .manager-header {
+            background: #1E201E;
+            color: #ECDFCC;
+        }
+
+        .default-header {
+            background: #213555;
+            color: white;
+        }
+
+        header {
+            background: var(--header-bg) !important;
+            color: var(--header-text) !important;
+            border-bottom-left-radius: 25px;
+            border-bottom-right-radius: 25px;
+            box-shadow: 0 4px 12px var(--shadow) !important;
+        }
+
+        .qr-code {
+            max-width: 150px;
+            max-height: 150px;
+            margin-bottom: 20px;
+        }
+
+        .navbar-brand {
+            color: var(--white) !important;
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+            .navbar-brand:hover {
+                color: var(--primary-lightest) !important;
+                transform: scale(1.02);
+            }
+
+        .navbar-toggler {
+            border-color: var(--primary-light) !important;
+            color: var(--white) !important;
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+
+        .nav-link {
+            color: var(--white) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            margin: 0 0.25rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+            .nav-link:hover {
+                color: var(--white) !important;
+                background-color: var(--nav-hover-bg);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-link::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                width: 0;
+                height: 2px;
+                background: var(--primary-light);
+                transition: all 0.3s ease;
+                transform: translateX(-50%);
+            }
+
+            .nav-link:hover::after {
+                width: 70%;
+            }
+
+        .nav-item.active .nav-link {
+            background-color: rgba(157, 178, 191, 0.3);
+            font-weight: 600;
+        }
+
+            .nav-item.active .nav-link::after {
+                width: 70%;
+            }
+
+        .uname {
+            text-decoration: none;
+        }
+
+            .uname:hover {
+                cursor: default;
+            }
+
+        .btn-primary {
+            background-color: #213555 !important;
+            border-color: var(--primary-dark) !important;
+            color: var(--white) !important;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+            .btn-primary:hover {
+                background-color: #2d4b7a !important;
+                border-color: var(--btn-hover-bg) !important;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px var(--shadow);
+            }
+
+        /* Specific styling for logout button */
+        .btn-logout {
+            /* background-color: var(--primary-dark) !important; */
+            border-color: var(--primary-dark) !important;
+        }
+
+            .btn-logout:hover {
+                background-color: var(--nav-hover-bg) !important;
+                border-color: var(--primary-light) !important;
+                color: var(--white) !important;
+                box-shadow: 0 4px 12px rgba(63, 114, 175, 0.2);
+            }
+
+        .navbar-nav .btn-primary {
+            padding: 0.375rem 1rem;
+        }
+
+        .bogus:hover {
+            background-color: var(--nav-hover-bg) !important;
+        }
+
+        /* User greeting styles */
+        .nav-link span {
+            color: var(--primary-lightest);
+        }
+
+            .nav-link span strong {
+                color: var(--primary-light);
+            }
+
+            .nav-link span u {
+                text-decoration: none;
+                color: var(--white);
+                font-weight: 500;
+            }
+
+        /* Mobile menu styles */
+        @@media (max-width: 991.98px) {
+            .navbar-collapse {
+                background: linear-gradient(135deg, #005580 0%, #003366 100%);
+                padding: 1rem;
+                border-radius: 0.5rem;
+                margin-top: 0.5rem;
+                box-shadow: 0 4px 12px var(--shadow);
+            }
+
+            .nav-item {
+                margin-bottom: 0.5rem;
+            }
+
+            .nav-link:hover {
+                background-color: var(--nav-hover-bg);
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BankingSystem.PL</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+    @if (!User.IsInRole("Admin"))
+    {
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-dark">
+                <div class="container-fluid">
+                    <a class="navbar-brand myItem">
+                        <i class="bi bi-bank2 me-2"></i>Banking System
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
+                        <!-- Left Side -->
+                        <ul class="navbar-nav me-auto">
+                            @if (User.Identity?.IsAuthenticated == false)
+                            {
+                                <li class="nav-item">
+                                    @* <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a> *@
+                                    @* <li class="nav-item"> *@
+                                    @*     <a class="nav-link text-white" asp-area="" asp-controller="BogusData" asp-action="CreateBogusData">Create Bogus Data</a> *@
+                                    @* </li> *@
+                                    @* <li class="nav-item"> *@
+                                    @*     <a class="nav-link text-white" asp-area="" asp-controller="Reservation" asp-action="CreateReservation">Make Reservations</a> *@
+                                    @* </li> *@
+                                </li>
+                            }
+
+
+                            @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Manager"))
+                            {
+                                var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="ManagerTeller" asp-action="GetAllTellers" asp-route-id="@userId">Employees</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="ManagerBranch" asp-action="GetBranchDetails" asp-route-id="@userId">Branch</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="ManagerSavings" asp-action="GetAllSavings">Savings</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="ManagerLoan" asp-action="GetAllLoans">Loans</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="ManagerTicket" asp-action="GetAllTickets">Tickets</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="ManagerCustomer" asp-action="GetAllCustomers" asp-route-id="@userId">Customer</a>
+                                </li>
+                            }
+
+                            @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Dashboard">Admin Dashboard</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Users" asp-action="Manage">Manage Users</a>
+                                </li>
+                            }
+
+
+                            @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Teller"))
+                            {
+                                var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="HandleCustomer" asp-action="GetAllCustomers" asp-route-id="@userId">Customers</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="HandleAccount" asp-action="Index">Accounts</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="HandleCard" asp-action="GetAllCards">Cards</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="HandleTicket" asp-action="Index">Tickets</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="HandleReservation" asp-action="GetBranchReservations">Reservations</a>
+                                </li>
+                            }
+
+                            <li class="nav-item">
+                                <a class="nav-link bogus" asp-area="" asp-controller="BogusData" asp-action="CreateBogusData">Create Bogus Data</a>
+                            </li>
+
+
+                            @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Customer"))
+                            {
+                                var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="CustomerProfile" asp-action="Details" asp-route-id="@userId">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="CustomerAccounts" asp-action="Details" asp-route-id="@userId">Accounts</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="CustomerCards" asp-action="Details" asp-route-id="@userId">Cards</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="CustomerLoans" asp-action="Details" asp-route-id="@userId">Loans</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="CustomerCertificates" asp-action="Details" asp-route-id="@userId">Certificates</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="CustomerTransactions" asp-action="Details" asp-route-id="@userId">Transactions</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="CustomerSupportTickets" asp-action="Details" asp-route-id="@userId">Tickets</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Reservation" asp-action="GetCustomerAllReservations">Reservations</a>
+                                </li>
+                            }
+
+                        </ul>
+
+                        <!-- Right Side -->
+                        <ul class="navbar-nav ms-auto">
+                            @if (User.Identity?.IsAuthenticated == true)
+                            {
+                                <li class="nav-item">
+                                    <span class="nav-link">
+                                        @* @if (User.IsInRole("Admin")) *@
+                                        @* { *@
+                                        @*     <strong>Admin</strong> *@
+                                        @* } *@
+                                        @* else if (User.IsInRole("Manager")) *@
+                                        @* { *@
+                                        @*     <strong>Manager</strong> *@
+                                        @* } *@
+                                        @* else if (User.IsInRole("Customer")) *@
+                                        @* { *@
+                                        @*     <strong>Hello </strong> *@
+                                        @* } *@
+                                        <u class="uname">Hello, <strong>@User.Identity.Name.Split("@")[0].ToUpper()</strong></u>
+                                    </span>
+                                </li>
+                                <li class="nav-item">
+                                    <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                        <button type="submit" class="btn text-white nav-link border-0 btn-logout bg-transparent" style="color:#697565">Logout</button>
+                                    </form>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link btn btn-primary text-white" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                                </li>
+                                @* <li class="nav-item ms-3"> *@
+                                @*     <a class="nav-link btn btn-primary text-white" asp-area="" asp-controller="Account" asp-action="Register">Register</a> *@
+                                @* </li> *@
+
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Reservation" asp-action="CreateReservation">Make Reservations</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+
+
                 </div>
-            </div>
-        </nav>
-    </header>
+            </nav>
+        </header>
+    }
+
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - BankingSystem.PL - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
     @await RenderSectionAsync("Scripts", required: false)
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+
+
 </body>
 </html>

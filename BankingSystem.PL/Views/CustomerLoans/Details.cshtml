@@ -1,0 +1,182 @@
+﻿@using BankingSystem.DAL.Models
+@using BankingSystem.PL.ViewModels.Customer
+@model List<CustomerLoansViewModel>
+@{
+    ViewData["Title"] = "Loans Details";
+}
+<link rel="stylesheet" href="/css/CustomerLoans.css" />
+
+<div class="loans-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h3 class="text-white"><i class="bi bi-cash-coin me-2"></i>Your Loans</h3>
+        <p class="text-white">View and manage your active loans</p>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <!-- No Loans View -->
+        <div id="no-loan-view">
+            <div class="no-loan">
+                <div class="no-loan-icon">
+                    <i class="bi bi-cash-coin" style="color: #213555;"></i>
+                </div>
+                <h3 class="empty-state-title">No Loan Found</h3>
+                <p class="empty-state-text">You don't have any Loan at the moment. </p>
+                <a asp-action="ApplyLoan" asp-route-id="@ViewBag.id" class="btn-apply-loan">
+                    <i class="bi bi-plus-circle"></i>
+                    <span>Apply for Your First Loan</span>
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Loans Summary -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4>Loans Summary</h4>
+                <a asp-action="ApplyLoan" asp-route-id="@ViewBag.id" class="btn-apply-loan">
+                    <i class="bi bi-plus-circle"></i>
+                    <span>Apply for new Loan</span>
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 text-center mb-3">
+                        <div class="h1 text-primary mb-2">@Model.Count()</div>
+                        <div class="text-muted ">Total Loans</div>
+                    </div>
+                    <div class="col-md-3 text-center mb-3">
+                        <div class="h1 text-primary mb-2">$@Model.Sum(loan => loan.LoanAmount)</div>
+                        <div class="text-muted ">Total Amount</div>
+                    </div>
+                    <div class="col-md-3 text-center mb-3">
+                        <div class="h1 text-primary mb-2">$@Model.Sum(loan => loan.CurrentDebt) </div>
+                        <div class="text-muted">Current Debt</div>
+                    </div>
+                    <div class="col-md-3 text-center mb-3">
+                        <div class="h1 text-success mb-2">@Model.Count(loan => loan.LoanStatus == LoanStatus.Accepted)</div>
+                        <div class="text-muted">Active Loans</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @foreach (var loan in Model)
+        {
+            var progress = (loan.LoanAmount - loan.CurrentDebt) / (double)loan.LoanAmount * 100;
+            var monthlyPayment = ((loan.LoanAmount / loan.DurationInMonth).ToString("N2"));
+            var endDate = loan.StartDate.AddMonths(loan.DurationInMonth).ToShortDateString();
+            <div class="card">
+                <div class="card-body">
+                    <div class="loan-card">
+                        <div class="loan-header">
+                            <div class="loan-icon">
+                                <i class="bi bi-cash-coin"></i>
+                            </div>
+                            <div class="loan-title">
+                                <h5>@loan.LoanType</h5>
+                                <p>Started on @loan.StartDate.ToShortDateString()</p>
+                            </div>
+                            <div class="loan-status @(loan.LoanStatus == LoanStatus.Accepted ? "accepted" :
+                                                                            loan.LoanStatus == LoanStatus.Pending ? "pending" :
+                                                                            "denied")">
+                                @loan.LoanStatus
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="loan-details-row">
+                                    <div class="loan-details-label">Loan Amount</div>
+                                    <div class="loan-details-value">$@loan.LoanAmount</div>
+                                </div>
+                                <div class="loan-details-row">
+                                    <div class="loan-details-label">Current Debt</div>
+                                    <div class="loan-details-value">$@loan.CurrentDebt</div>
+                                </div>
+                                <div class="loan-details-row">
+                                    <div class="loan-details-label">Interest Rate</div>
+                                    <div class="loan-details-value">@loan.InterestRate%</div>
+                                </div>
+                                <div class="loan-details-row">
+                                    <div class="loan-details-label">Duration</div>
+                                    <div class="loan-details-value">@loan.DurationInMonth Months</div>
+                                </div>
+                            </div>
+                            @if (loan.LoanStatus == LoanStatus.Accepted || loan.LoanStatus == LoanStatus.Paid)
+                            {
+                                <div class="col-md-6 ">
+                                    <h6 class="mb-2">Repayment Progress</h6>
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span> <b>$@(loan.LoanAmount - loan.CurrentDebt)</b> remaining</span>
+                                        <span> <b>@progress.ToString("0.00")%</b> paid</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width:@progress%" aria-valuenow="@progress" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between mt-3">
+                                        <div>
+                                            <div class="text-muted">Monthly Payment</div>
+                                            <div class="fw-bold">$@monthlyPayment</div>
+                                        </div>
+                                        @if (loan.LoanStatus == LoanStatus.Accepted)
+                                        {
+                                            <div>
+                                                <div class="text-muted">End Date</div>
+                                                <div class="fw-bold">@endDate</div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div>
+                                                <div class="text-muted">Completion Date</div>
+                                                <div class="fw-bold">@endDate</div>
+                                            </div>
+                                            <div>
+                                                <div class="text-muted">Status</div>
+                                                <div class="fw-bold text-success">Paid Off</div>
+                                            </div>
+                                        }
+
+
+                                    </div>
+                                </div>
+                            }
+                            @if (loan.LoanStatus == LoanStatus.Pending)
+                            {
+                                <div class="col-md-6">
+                                    <div class="alert alert-warning" role="alert">
+                                        <i class="bi bi-exclamation-triangle me-2"></i>
+                                        <strong>Application Under Review</strong>
+                                        <p class="mb-0 mt-2"> <br /> Your loan application is currently being reviewed by our team.<br />You will be notified once a decision has been made.</p>
+                                    </div>
+                                </div>
+                            }
+                            @if (loan.LoanStatus == LoanStatus.Denied)
+                            {
+                                <div class="col-md-6">
+                                    <div class="alert alert-danger" role="alert">
+                                        <i class="bi bi-exclamation-triangle me-2"></i>
+                                        <strong>Application Denied !</strong>
+                                        <p class="mb-0 mt-2">
+                                            <br /> We're sorry to inform you that your application was not approved.<br />If you have any questions , please contact our support team.
+                                        </p>
+                                    </div>
+                                </div>
+                                <a asp-action="ApplyTicket" asp-controller="CustomerSupportTickets" asp-route-id="@ViewBag.id" class="btn btn-primary px-4 py-2">
+                                    <i class="bi bi-ticket-detailed me-2"></i>Get Help
+                                </a>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+
+    }
+</div>
+
