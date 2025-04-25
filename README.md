@@ -61,15 +61,16 @@ The Banking System Web Application is designed to enable users to securely manag
 The project is built using the following technologies:
 
 - **Frontend**:
-  - HTML (62%)
-  - CSS (2.7%)
+  - HTML 
+  - CSS 
+  - JS
+  - JQuery
+  - Bootstrap
 
 - **Backend**:
-  - C# (34.2%)
-
-- **Other**:
-  - Database integration for data storage and retrieval.
-  - APIs for seamless communication between frontend and backend.
+  - C# 
+  - ASP.NET MVC
+  - MSSQL Server
 
 ---
 
@@ -89,7 +90,7 @@ Ensure you have the following installed:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/lsa3edii/Banking_System_WebApp.git
+   git clone https://github.com/YoussefRaof/Banking_System_WebApp
    ```
 2. Open the project in Visual Studio.
 3. Restore NuGet packages:
@@ -139,12 +140,6 @@ Banking_System_WebApp/
 
 ---
 
-## Screenshots
-
-_Add screenshots of key pages like the login page, dashboard, and transaction history here._
-
----
-
 ## Contributing
 
 Contributions are welcome! Follow these steps to contribute:
@@ -170,23 +165,5 @@ Contributions are welcome! Follow these steps to contribute:
 
 This project is licensed under the **MIT License**. See the `LICENSE` file for more details.
 
----
-
-## Contact
-
-For questions or feedback, reach out:
-
-- **GitHub**: [lsa3edii](https://github.com/lsa3edii)
-- **Email**: _Add your email here (optional)_
-
----
-
 Thank you for exploring the **Banking System Web Application**! 🚀
 ```
-
-### Suggestions for Enhancements:
-1. Add screenshots of the application to the `Screenshots` section.
-2. If the application uses a specific database schema, include a description or diagram of it.
-3. Include instructions for running tests (if any exist).
-
-Feel free to share additional details, and I can adjust this further!
