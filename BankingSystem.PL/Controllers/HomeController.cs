@@ -28,12 +28,17 @@ namespace BankingSystem.PL.Controllers
         }
 
 
-        public IActionResult Error()
+        public IActionResult Error(string message)
         {
-            return View(new ErrorViewModel
+            var errorViewModel = new ErrorViewModel
             {
-                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
-            });
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+                Message = string.IsNullOrEmpty(message)
+                    ? "An error occurred while processing your request."
+                    : message
+            };
+
+            return View(errorViewModel);
         }
 
     }

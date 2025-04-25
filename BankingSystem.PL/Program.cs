@@ -8,6 +8,7 @@ using BankingSystem.DAL.Data.Configurations;
 using BankingSystem.BLL;
 using BankingSystem.BLL.Interfaces;
 using BankingSystem.PL.Helpers;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace BankingSystem.PL
 {
@@ -19,7 +20,11 @@ namespace BankingSystem.PL
 
             #region Configure Services
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
+            //builder.Services.AddControllersWithViews(options =>
+            //{
+            //    options.Filters.Add<HandleErrorFilter>();
+            //});
+            //builder.Services.AddScoped<HandleErrorFilter>();
 
 
             var environment = builder.Environment.IsDevelopment() ? "Development" : "Production";
@@ -43,9 +48,6 @@ namespace BankingSystem.PL
                 op.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
             });
 
-
-
-
             #endregion
 
 
@@ -54,7 +56,19 @@ namespace BankingSystem.PL
             // Configure the HTTP request pipeline.
             //if (!app.Environment.IsDevelopment())
             //{
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler(appBuilder => {
+                    appBuilder.Run(async context => {
+                        var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+                        var exception = exceptionHandlerPathFeature?.Error;
+
+                        // Get error message from the exception
+                        string errorMessage = exception?.Message ?? "An unexpected error occurred";
+
+                        // Store the error message in TempData (requires AddControllersWithViews)
+                        context.Response.Redirect($"/Home/Error?message={Uri.EscapeDataString(errorMessage)}");
+                        await Task.CompletedTask;
+                    });
+                });
 
                 //app.UseDeveloperExceptionPage();
 
