@@ -1,4 +1,3 @@
-```
 # Banking System Web Application
 
 Welcome to the **Banking System Web Application** repository! This project is a robust and secure web-based banking platform designed to simplify the management of banking operations for users and administrators. With its intuitive interface and powerful backend, it provides essential banking functionalities ranging from account management to transaction processing.
